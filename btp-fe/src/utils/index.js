@@ -1,0 +1,1 @@
+export { useFetchSuspense } from "./useFetchSuspense";
