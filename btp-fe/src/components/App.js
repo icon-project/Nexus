@@ -20,8 +20,9 @@ const appStyles = css`
 
 export const App = () => {
   const [{ matches, children }, send] = useMachine(appMachine, {
-    devTools: false,
+    devTools: process.env.NODE_ENV == "development",
   });
+
   return (
     <StrictMode>
       <Global styles={appStyles} />
