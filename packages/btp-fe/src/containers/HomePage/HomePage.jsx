@@ -1,9 +1,11 @@
-import Button from '../../components/Button/Button'
+import Button from '../../components/Button/Button';
 function HomePage() {
-  return <div>
+  return (
+    <div>
       <h1>Home Page</h1>
       <Button>Click</Button>
-    </div>;
+    </div>
+  );
 }
 
 export default HomePage;
