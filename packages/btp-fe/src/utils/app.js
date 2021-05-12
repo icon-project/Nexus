@@ -1,5 +1,4 @@
 import { GENDER, STATUS_FILTER_TYPES, GENERAL_FILTER_TYPES, COLLECTION_TYPES } from './constants';
-import { DatePicker } from '../components/DatePicker';
 import { Input, Select, InputNumber } from 'antd';
 
 const getGenderLabel = (genderId) => {
@@ -76,9 +75,6 @@ const handleRenderInput = (value, filtersData) => {
       break;
     case COLLECTION_TYPES.NUMBER.includes(type):
       inputType = <InputNumber />;
-      break;
-    case COLLECTION_TYPES.DATE.includes(type):
-      inputType = <DatePicker />;
       break;
     case COLLECTION_TYPES.BOOLEAN.includes(type):
       inputType = (
