@@ -7,10 +7,8 @@ import PropTypes from 'prop-types';
 import { Layout as AtndLayout, Breadcrumb } from 'antd';
 import { Header } from '../Header';
 import { Footer } from '../Footer';
-import { Brand } from '../Brand';
-import { Sidebar } from '../Sidebar';
 import { colors } from '../Styles/Colors';
-import { SettingTheme } from '../SettingTheme';
+
 
 import { mediumSize, media } from '../Styles/Media';
 
@@ -67,9 +65,6 @@ const Layout = ({
   className,
   children,
   breadcrumbItems,
-  menuList,
-  menuOpenedKey,
-  menuSelectedKey,
 }) => {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(!!mediumSize());
@@ -80,20 +75,10 @@ const Layout = ({
 
   return (
     <StyledLayout className={className}>
-      <Sidebar
-        items={menuList}
-        collapsed={collapsed}
-        toggleSidebar={toggleSidebar}
-        openedKey={menuOpenedKey}
-        selectedKey={menuSelectedKey}
-      >
-        <Brand collapsed={collapsed} />
-      </Sidebar>
       <AtndLayout className="site-layout">
         <Header toggleSidebar={toggleSidebar} items={items} userName="Admin" />
         <div className="main-wrapper">
           <Content>
-            <SettingTheme />
             {breadcrumbItems.length > 0 && (
               <Breadcrumb>
                 {breadcrumbItems.map((item, index) => (
