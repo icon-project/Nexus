@@ -1,0 +1,95 @@
+import { init } from '@rematch/core';
+import {{camelCase model}}Model from '../{{camelCase model}}Model';
+import api from 'server/api';
+
+jest.mock('server/api');
+
+describe('{{camelCase model}}Model', () => {
+  describe('reducers', () => {
+    it('add', () => {
+      const store = init({
+        models: { {{camelCase model}}Model },
+      });
+
+      const nObj = {};
+
+      store.dispatch.{{camelCase model}}Model.add(nObj);
+
+      expect(store.getState().{{camelCase model}}Model).toEqual({
+        {{camelCase model}}s: [nObj],
+      });
+    });
+
+    it('remove', () => {
+      {{camelCase model}}Model.state.{{camelCase model}}s = [{ id: 1 }, { id: 2 }];
+
+      const store = init({
+        models: { {{camelCase model}}Model },
+      });
+
+      store.dispatch.{{camelCase model}}Model.remove(2);
+
+      expect(store.getState().{{camelCase model}}Model).toEqual({
+        {{camelCase model}}s: [{ id: 1 }],
+      });
+    });
+
+    it('edit', () => {
+      {{camelCase model}}Model.state.{{camelCase model}}s = [
+        { id: 1, name: 'n 1' },
+        { id: 2, name: 'n 2' },
+      ];
+
+      const store = init({
+        models: { {{camelCase model}}Model },
+      });
+
+      store.dispatch.{{camelCase model}}Model.edit({ id: 2, name: 'n 2 edited' });
+
+      expect(store.getState().{{camelCase model}}Model).toEqual({
+        {{camelCase model}}s: [
+          { id: 1, name: 'n 1' },
+          { id: 2, name: 'n 2 edited' },
+        ],
+      });
+    });
+  });
+
+  describe('effects', () => {
+    it('create', async () => {
+      const store = init({
+        models: { {{camelCase model}}Model },
+      });
+      const spyAdd = jest.spyOn(store.dispatch.{{camelCase model}}Model, 'add');
+      const nObj = {};
+      await store.dispatch.{{camelCase model}}Model.create(nObj);
+
+      expect(api.post).toBeCalledWith('/{{kebabCase model}}', nObj);
+      expect(spyAdd).toBeCalledWith(nObj);
+    });
+
+    it('update', async () => {
+      const store = init({
+        models: { {{camelCase model}}Model },
+      });
+      const spy = jest.spyOn(store.dispatch.{{camelCase model}}Model, 'edit');
+      const nObj = {};
+      await store.dispatch.{{camelCase model}}Model.update(nObj);
+
+      expect(api.put).toBeCalledWith('/{{kebabCase model}}', nObj);
+      expect(spy).toBeCalledWith(nObj);
+    });
+
+    it('delete', async () => {
+      const store = init({
+        models: { {{camelCase model}}Model },
+      });
+      const spy = jest.spyOn(store.dispatch.{{camelCase model}}Model, 'remove');
+      const id = 1;
+      await store.dispatch.{{camelCase model}}Model.delete(id);
+
+      expect(api.delete).toBeCalledWith(`/{{kebabCase model}}/${id}`);
+      expect(spy).toBeCalledWith(id);
+    });
+  });
+});

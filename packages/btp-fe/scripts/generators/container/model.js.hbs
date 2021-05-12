@@ -1,0 +1,22 @@
+const {{camelCase name}}Model = {
+  name: '{{camelCase name}}Model',
+  state: {
+    count: 0,
+  },
+  reducers: {
+    up(state, payload) {
+      return {
+        ...state,
+        count: state.count + payload,
+      };
+    },
+  },
+  // eslint-disable-next-line no-unused-vars
+  effects: (dispatch) => ({
+    async asyncUp(payload) {
+      this.up(payload);
+    },
+  }),
+};
+
+export default {{camelCase name}}Model;

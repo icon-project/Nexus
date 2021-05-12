@@ -1,0 +1,7 @@
+{
+  "conventionalCommits.scopes": [
+    "admin-page-component",
+    "admin-page-container",
+    "admin-page-config"
+  ]
+}

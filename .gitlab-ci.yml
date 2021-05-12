@@ -1,0 +1,25 @@
+image: node:10.16.3
+
+before_script:
+  - yarn
+  - export IS_OFFLINE=true
+  - export FORCE_COLOR=1
+
+cache:
+  paths:
+    - node_modules/
+    - packages/*/node_modules/
+
+stages:
+  - test
+
+fe-test:mr:
+  stage: test
+  script: 
+    - yarn lerna bootstrap --scope admin-boilerplate
+    - yarn lerna run --stream --scope admin-boilerplate test -- -- --watchAll=false
+  only:
+    refs:
+      - merge_requests
+    changes: 
+      - packages/admin-boilerplate/**/*.{js,jsx}

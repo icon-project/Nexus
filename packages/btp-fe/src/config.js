@@ -1,0 +1,1 @@
+exports.supportedLngs = ['en', 'ko'];

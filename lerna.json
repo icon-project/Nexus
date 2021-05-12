@@ -1,0 +1,13 @@
+{
+  "packages": ["packages/*"],
+  "version": "0.2.0",
+  "npmClient": "yarn",
+  "command": {
+    "version": {
+      "conventionalCommits": true,
+      "createRelease": "gitlab",
+      "noPush": false,
+      "yes": true
+    }
+  }
+}

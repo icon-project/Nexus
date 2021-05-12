@@ -1,0 +1,29 @@
+import { init } from '@rematch/core';
+import {{camelCase name}}Model from '../{{camelCase name}}Model';
+
+describe('{{camelCase name}}Model', () => {
+  describe('reducers', () => {
+    it('up', () => {
+      const store = init({
+        models: {{curly true}} {{camelCase name}}Model {{curly}},
+      });
+
+      store.dispatch.{{camelCase name}}Model.up(10);
+
+      expect(store.getState().{{camelCase name}}Model).toEqual({ count: 10 });
+    });
+  });
+  describe('effects', () => {
+    it('asyncUp', async () => {
+      const store = init({
+        models: {{curly true}} {{camelCase name}}Model {{curly}},
+      });
+      const spy = jest.spyOn(store.dispatch.{{camelCase name}}Model, 'up');
+
+      await store.dispatch.{{camelCase name}}Model.asyncUp(10);
+
+      expect(spy).toBeCalledWith(10);
+    })
+  });
+	
+});
