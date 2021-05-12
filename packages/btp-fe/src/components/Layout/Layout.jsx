@@ -9,7 +9,6 @@ import { Header } from '../Header';
 import { Footer } from '../Footer';
 import { colors } from '../Styles/Colors';
 
-
 import { mediumSize, media } from '../Styles/Media';
 
 import { UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
@@ -61,11 +60,7 @@ const items = [
   { title: i18n.t('dropdown.logout', 'Logout'), icon: <LogoutOutlined />, path: '/' },
 ];
 
-const Layout = ({
-  className,
-  children,
-  breadcrumbItems,
-}) => {
+const Layout = ({ className, children, breadcrumbItems }) => {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(!!mediumSize());
 
