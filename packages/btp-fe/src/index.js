@@ -2,11 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import WebFont from 'webfontloader';
 
 import App from './App';
 import 'i18n';
 import reportWebVitals from './reportWebVitals';
 import store, { history } from './store';
+
+const defaultFonts = ['Poppins:wght@100;400;600;700&display=swap'].filter(Boolean);
+
+WebFont.load({
+  google: {
+    families: defaultFonts,
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
