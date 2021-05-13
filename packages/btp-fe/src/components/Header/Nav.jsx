@@ -1,61 +1,61 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const NavStyled = styled.div`
-  display: inline-block;
-  ul {
-    visibility: inherit;
-    margin-left: 32.5px;
-    li {
-      display: inline-block;
-      margin-left: 4px;
-      margin-top: 8px;
+const NavStyled = styled.ul`
+  display: flex;
+  flex-flow: nowrap;
+  /* margin-left: 32.5px; */
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 auto 0 32.5px;
+  li {
+    button {
+      background-color: transparent;
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
       line-height: 20px;
-      button {
-        font-size: 16px;
-        color: #f4f4f6;
-        background-color: transparent;
-        padding: 8px 16px;
-        border: none;
-        text-align: center;
-        border-radius: 4px;
-        &.active {
-          background-color: rgba(216, 216, 216, 0);
-        }
-        &:hover {
-          background-color: #28262f;
-        }
+      padding: 8px 16px;
+      border-radius: 4px;
+      margin-right: 4px;
+      &:focus,
+      :hover {
+        background-color: #28262f;
       }
-      &:after {
-        display: none;
-      }
-      &:last-child {
-        margin-right: 0;
-      }
+    }
+    &:last-child {
+      margin-right: 0;
     }
   }
 `;
 
+const buttonContents = [
+  { text: 'Transfer', effect: null },
+  { text: 'Overview', effect: null },
+  { text: 'Network', effect: null },
+  { text: 'Governance', effect: null },
+  { text: 'Auction', effect: null },
+];
+const Button = ({ text, onClick }) => {
+  return (
+    <li>
+      <button onClick={onClick} active>
+        {text}
+      </button>
+    </li>
+  );
+};
+
 const Nav = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
+  };
   return (
     <NavStyled>
-      <ul>
-        <li>
-          <button>Transfer</button>
-        </li>
-        <li>
-          <button>Overview</button>
-        </li>
-        <li>
-          <button>Network</button>
-        </li>
-        <li>
-          <button>Governance</button>
-        </li>
-        <li>
-          <button>Auction</button>
-        </li>
-      </ul>
+      {buttonContents.map((e) => (
+        <Button key={e.text} text={e.text} onClick={e.effect || handleClick} />
+      ))}
     </NavStyled>
   );
 };
