@@ -1,11 +1,6 @@
-import Button from '../../components/Button/Button';
+import { Layout } from 'components/Layout';
 function HomePage() {
-  return (
-    <div>
-      <h1>Home Page</h1>
-      <Button>Click</Button>
-    </div>
-  );
+  return <Layout></Layout>;
 }
 
 export default HomePage;

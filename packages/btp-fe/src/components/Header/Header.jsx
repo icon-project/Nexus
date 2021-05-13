@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
-import { MenuUnfoldOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
-
+import Nav from './Nav';
 import { colors } from '../Styles/Colors';
 import { BellOutlined } from '@ant-design/icons';
-import { Logo } from '../Logo';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 
 import { media } from '../Styles/Media';
@@ -15,10 +13,11 @@ import defaultAvatar from '../../assets/images/profile-img.png';
 
 const StyledHeader = styled(Layout.Header)`
   padding: 0px;
-  height: 48px;
+  height: 80px;
   width: 100%;
   color: ${colors.textColor};
-  background-color: ${colors.backgroundColor};
+  background-color: #131217;
+  border-bottom: 1px solid #353242;
   .admin-header-layout-side {
     position: relative;
     display: flex;
@@ -26,7 +25,7 @@ const StyledHeader = styled(Layout.Header)`
     height: 100%;
     padding: 0 16px;
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-    background-color: ${colors.backgroundColor};
+    background-color: #131217;
     .left-side,
     .right-side {
       display: flex;
@@ -58,6 +57,23 @@ const StyledHeader = styled(Layout.Header)`
     }
   }
 
+  .btp-dashboard {
+    color: #99a3ff;
+    /* Header/X-Small/Bold */
+
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 28px;
+    /* identical to box height, or 133% */
+
+    text-align: center;
+    letter-spacing: 1px;
+    margin-top: 26px;
+    margin-left: 40.5px;
+  }
+
   .anticon-menu-unfold {
     display: flex;
     align-items: center;
@@ -80,15 +96,13 @@ const StyledHeader = styled(Layout.Header)`
   `}
 `;
 
-const Header = ({ toggleSidebar = () => {}, items, userName }) => {
+const Header = ({ items, userName }) => {
   return (
     <StyledHeader>
       <div className="admin-header-layout-side">
         <div className="left-side">
-          <span className="admin-header-index-action">
-            <Logo height="28px" />
-          </span>
-          <MenuUnfoldOutlined onClick={toggleSidebar} />
+          <span className="btp-dashboard">BTP Dashboard</span>
+          <Nav />
         </div>
         <div className="right-side">
           <span className="admin-header-index-action">

@@ -1,15 +1,10 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { Layout as AtndLayout, Breadcrumb } from 'antd';
 import { Header } from '../Header';
-import { Footer } from '../Footer';
 import { colors } from '../Styles/Colors';
-
-import { mediumSize, media } from '../Styles/Media';
 
 import { UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import i18n from '../../i18n';
@@ -24,29 +19,12 @@ const StyledLayout = styled(AtndLayout)`
     }
   }
   .main {
-    margin: 24px;
-    min-height: 360px;
-    background-color: ${colors.backgroundColor};
+    min-height: 100vh;
+    background-color: #131217;
   }
   .ant-menu {
     height: auto;
   }
-
-  ${media.md`
-    max-height: 100vh;
-
-  .site-layout {
-    .ant-layout-header {
-      position: sticky;
-      top: 0;
-      left: 0;
-      z-index: 99;
-    }
-    .main-wrapper {
-      overflow: auto;
-    }
-  }
-  `}
 `;
 
 const items = [
@@ -61,17 +39,10 @@ const items = [
 ];
 
 const Layout = ({ className, children, breadcrumbItems }) => {
-  const { t } = useTranslation();
-  const [collapsed, setCollapsed] = useState(!!mediumSize());
-
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
   return (
     <StyledLayout className={className}>
       <AtndLayout className="site-layout">
-        <Header toggleSidebar={toggleSidebar} items={items} userName="Admin" />
+        <Header items={items} userName="Admin" />
         <div className="main-wrapper">
           <Content>
             {breadcrumbItems.length > 0 && (
@@ -85,7 +56,6 @@ const Layout = ({ className, children, breadcrumbItems }) => {
             )}
             <div className="main">{children}</div>
           </Content>
-          <Footer className="footer" companyName={t('footer.company_name', 'Lecle Vietnam')} />
         </div>
       </AtndLayout>
     </StyledLayout>

@@ -48,7 +48,7 @@ Brand.propTypes = {
 };
 
 Brand.defaultProps = {
-  brandName: 'Lecle Vietnam',
+  brandName: '',
   bgColor: '#00152a',
   color: '#fff',
 };
