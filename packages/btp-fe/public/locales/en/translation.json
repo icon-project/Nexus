@@ -5,6 +5,27 @@
     "setting": "Setting"
   },
   "footer": {
-    "company_name": "Lecle Vietnam"
+    "company_name": ""
+  },
+  "gender": {
+    "female": "Female",
+    "male": "Male",
+    "other": "Other"
+  },
+  "not_found_page": {
+    "back_home": "Back Home",
+    "description": "Sorry, the page you visited does not exist.",
+    "page_title": "Page Not Found",
+    "title": "404"
+  },
+  "status": {
+    "contains": "contains",
+    "contains_case_sensitive": "contains (case sensitive)",
+    "equal": "equal",
+    "is_greater_than": "is greater than",
+    "is_greater_than_or_equal_to": "is greater than or equal to",
+    "is_less_than": "is less than",
+    "is_less_than_or_equal_to": "is less than or equal to",
+    "not_equal": "not equal"
   }
 }
