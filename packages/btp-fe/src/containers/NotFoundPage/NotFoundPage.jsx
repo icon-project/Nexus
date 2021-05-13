@@ -35,7 +35,7 @@ const NotFoundPage = ({ history }) => {
           </Button>
         }
       />
-      <Footer className="footer" companyName={t('footer.company_name', 'Lecle Vietnam')} />
+      <Footer className="footer" companyName={t('footer.company_name', '')} />
     </NotFoundPageWrapper>
   );
 };
