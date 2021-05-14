@@ -1,11 +1,9 @@
-import { Card as AntCard } from 'antd';
+import { Card as AntCard, Row, Col } from 'antd';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
-import { Select } from 'antd';
+import { SelectNetwork } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
-import VectorIconSrc from 'assets/images/Ellipse.svg';
+import VectorIconSrc from 'assets/images/vector-icon.svg';
 
-const { Option } = Select;
 const CardStyled = styled(AntCard)`
   font-family: Poppins;
   font-style: normal;
@@ -66,22 +64,14 @@ export const TransferCard = () => {
         <Row>
           <Col span={12}>Send</Col>
           <Col span={12} className="right-side">
-            <Select defaultValue="eth" style={{ width: 150 }}>
-              <Option value="btc">BTC</Option>
-              <Option value="bch">BCH</Option>
-              <Option value="eth">ETH</Option>
-            </Select>
+            <select></select>
           </Col>
         </Row>
         <hr />
         <Row>
           <Col span={12}>To</Col>
           <Col span={12} className="right-side">
-            <Select defaultValue="bsc" style={{ width: 190 }}>
-              <Option value="bsc">Binance Smart Chain</Option>
-              <Option value="edgeware">Edgeware</Option>
-              <Option value="icx">ICON blockchain</Option>
-            </Select>
+            <SelectNetwork />
           </Col>
         </Row>
         <Row className="button-section">
