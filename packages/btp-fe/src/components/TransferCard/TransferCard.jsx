@@ -1,6 +1,6 @@
 import { Card as AntCard, Row, Col } from 'antd';
 import styled from 'styled-components';
-import { SelectNetwork } from 'components/Select';
+import { SelectNetwork, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import VectorIconSrc from 'assets/images/vector-icon.svg';
 
@@ -36,10 +36,10 @@ const CardStyled = styled(AntCard)`
     justify-content: flex-end;
   }
   hr {
-    margin-top: 26px;
+    margin-top: 45px;
     border-top: 1px solid #353242;
     text-align: center;
-    margin-bottom: 26px;
+    margin-bottom: 45px;
   }
   hr:after {
     content: '';
@@ -52,7 +52,7 @@ const CardStyled = styled(AntCard)`
   }
 `;
 export const TransferCard = () => {
-  window.localStorage.setItem('wallet-status', 'connectedd');
+  window.localStorage.setItem('wallet-status', 'connected');
   const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
@@ -64,7 +64,7 @@ export const TransferCard = () => {
         <Row>
           <Col span={12}>Send</Col>
           <Col span={12} className="right-side">
-            <select></select>
+            <SelectAsset />
           </Col>
         </Row>
         <hr />
