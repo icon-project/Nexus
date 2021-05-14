@@ -1,85 +1,136 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
-import PropTypes from 'prop-types';
+
 import Nav from './Nav';
+import { WalletSelector } from './WalletSelector';
+import { WalletDetails } from './WalletDetails';
+import { Modal } from '../NotificationModal';
+import { PrimaryButton, HamburgerButton } from '../Button';
+
+import { useDispatch, useSelect } from 'hooks/useRematch';
+import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
+import { resetTransferStep } from 'connectors/ICONex/utils';
+import { wallets } from 'utils/constants';
+import { METAMASK_LOCAL_ADDRESS, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { EthereumInstance } from 'connectors/MetaMask';
+
+import { Header as Heading, SubTitle, Text } from '../Typography';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from '../Styles/Colors';
-import { Dropdown } from '../Dropdown';
-import defaultAvatar from '../../assets/images/avatar.svg';
+import { media } from '../Styles/Media';
+
+import defaultAvatar from 'assets/images/avatar.svg';
+import MetaMask from 'assets/images/metal-mask.svg';
+import ICONex from 'assets/images/icon-ex.svg';
+import Hana from 'assets/images/hana-wallet.png';
+
+const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
 
 const StyledHeader = styled(Layout.Header)`
   height: 80px;
   width: 100%;
   padding: 0 160px 0 40.5px;
-  /* color: ${colors.textColor}; */
-  color: #fff;
-  background-color: #131217;
-  border-bottom: 1px solid #353242;
+  color: ${grayText};
+  background-color: ${darkBG};
+  border-bottom: 1px solid ${grayLine};
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .left-side {
     min-width: 175px;
-    color: #99a3ff;
-    font-family: Poppins;
-    font-weight: 700;
-    font-size: 21px;
-    line-height: 28px;
   }
+
   .right-side {
+    ${SubTitleMixin.smBold};
+
+    flex: 1;
     display: flex;
     align-items: center;
-    min-width: 305px;
-    margin-left: 80px;
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 100;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 1px;
-    br {
-      margin: 10px;
-    }
-    line-height: 0.8;
-    display: flex;
     flex-wrap: nowrap;
+    min-width: 305px;
+
     .user-avatar {
       margin-left: 20px;
+      cursor: pointer;
     }
-    .wallet-nfo {
-      padding-top: 4px;
-      margin-left: 8px;
-    }
-    .currency-ctn {
-      display: inline-block;
-      padding-top: 10px;
-      font-weight: bold;
-      font-size: 16px;
-      line-height: 24px;
-      letter-spacing: 0.75px;
-      .unit {
-        margin-left: 4px;
+
+    .account-info {
+      display: flex;
+      align-items: center;
+
+      .wallet-info {
+        margin-left: 8px;
+
+        .address {
+          margin-bottom: 4px;
+        }
       }
     }
-    .dropdown-hoverable {
-      display: flex;
-      flex-wrap: nowrap;
-    }
   }
+
+  .connect-a-wallet-card {
+    margin-top: 21px;
+  }
+
   .connect-to-wallet-btn {
+    ${SubTitleMixin.smBold};
     height: 44px;
-    padding: 12px 16px;
     min-width: 170px;
-    background: #5465ff;
     border-radius: 100px;
-    font-size: 14px;
-    line-height: 20px;
     text-align: center;
-    letter-spacing: 1px;
   }
+
+  .menu-icon {
+    display: none;
+  }
+
+  ${media.smallDesktop`
+    padding: 0 40.5px;
+  `};
+
+  ${media.minWidthHeader`
+    padding: 0 20px;
+    position: relative;
+
+    .menu-icon {
+      display: block;
+    }
+
+    .right-side {
+      display: ${({ $showMenu }) => ($showMenu ? 'flex' : 'none')};
+      position: absolute;
+      top: 80px;
+      left: 0;
+      z-index: 101;
+
+      min-height: calc(100vh - 80px);
+      width: 100%;
+      background-color: ${grayLine};
+      flex-direction: column-reverse;
+      justify-content: flex-end;
+
+      .connect-to-wallet-btn {
+        margin-top: 100px;
+      }
+      .account-info {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+
+        .user-avatar, .wallet-info {
+          margin: 5px 0;
+          text-align: center;
+        }
+      }
+    }
+  `}
 `;
 
 const hashShortener = (hashStr) => {
+  if (!hashStr) return '';
   const len = hashStr.length;
   if (len <= 10) {
     return hashStr;
@@ -88,62 +139,227 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-const defaultWallet = {
-  id: 'demo',
-  name: 'Etherum Mainnet',
-  hash: '123afx123afa4aweasdfasdf',
-  amount: 10,
-  unit: 'ETH',
-};
-
 const defaultUser = {
   id: 'test',
   userName: '@dsng',
   authorized: false,
   avatar: defaultAvatar,
 };
-
-const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => {
-  const [authorized, setAuthorized] = useState(false);
-  const handleConnect = (e) => {
-    e.preventDefault();
-    setAuthorized((prev) => !prev);
-  };
-  window.testAuth = setAuthorized;
-  return (
-    <StyledHeader>
-      <div className="left-side">BTP Dashboard</div>
-      <Nav />
-      {userStatus.authorized || authorized ? (
-        <div className="right-side">
-          <span className="wallet-name">{wallet.name}</span>
-          <Dropdown items={items} fullWidthOnMobile handleLogout={handleConnect}>
-            <div className="dropdown-hoverable">
-              <Avatar className="user-avatar" src={userStatus.avatar} size={48} />
-              <span className="wallet-nfo">
-                <span>{hashShortener(wallet.hash)}</span>
-                <br />
-                <span className="currency-ctn">
-                  <span>{wallet.amount}</span>
-                  <span className="unit">{wallet.unit}</span>
-                </span>
-              </span>
-            </div>
-          </Dropdown>
-        </div>
-      ) : (
-        <button className="connect-to-wallet-btn" onClick={handleConnect}>
-          Connect a Wallet
-        </button>
-      )}
-    </StyledHeader>
-  );
+const mockWallets = {
+  metamask: {
+    id: 'metamask',
+    title: 'MetaMask Wallet',
+    network: 'Etherum Mainnet',
+    hash: '123afx123afa4aweasdfasdf',
+    amount: 10,
+    unit: 'ETH',
+    icon: MetaMask,
+  },
+  iconex: {
+    id: 'iconex',
+    title: 'ICONex Wallet',
+    network: 'Etherum Mainnet',
+    hash: '123afx123afa4aweasdfasdf',
+    amount: 10,
+    unit: 'ETH',
+    icon: ICONex,
+  },
+  hana: {
+    id: 'hana',
+    title: 'Hana Wallet',
+    icon: Hana,
+  },
 };
 
-Header.propTypes = {
-  toggleSidebar: PropTypes.func,
-  userName: PropTypes.string,
-  items: PropTypes.array.isRequired,
+const Header = ({ userStatus = defaultUser }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
+  const [loading, setLoading] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
+
+  useEffect(() => {
+    if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
+      EthereumInstance.getEthereumAccounts();
+    }
+  }, []);
+
+  useEffect(() => {
+    // wait after 2s for initial addICONexListener
+    setTimeout(() => {
+      checkICONexInstalled(() => {
+        setCheckingICONexInstalled(false);
+      });
+    }, 2001);
+  }, []);
+
+  const {
+    accountInfo: {
+      address,
+      balance,
+      refundableBalance,
+      unit,
+      wallet,
+      cancelConfirmation,
+      currentNetwork,
+    },
+  } = useSelect(({ account }) => ({
+    accountInfo: account.selectAccountInfo,
+  }));
+
+  const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
+    resetAccountInfo,
+  }));
+
+  const shortedAddress = hashShortener(address);
+
+  const toggleModal = () => {
+    setShowModal((prev) => !prev);
+    setShowDetail(false);
+  };
+  const handleConnect = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    resetAccountInfo();
+    localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
+    if (selectedWallet === wallets.iconex || selectedWallet === wallets.hana) {
+      const hasAccount = requestAddress();
+
+      if (!hasAccount) {
+        setLoading(false);
+      }
+    } else if (selectedWallet === wallets.metamask) {
+      const isConnected = await EthereumInstance.connectMetaMaskWallet();
+      if (isConnected) {
+        await EthereumInstance.getEthereumAccounts();
+      }
+      setLoading(false);
+    }
+  };
+  const handleSelectWallet = (wallet) => {
+    if (wallet) setSelectedWallet(wallet);
+  };
+
+  const onDisconnectWallet = () => {
+    resetTransferStep();
+    resetAccountInfo();
+    toggleModal();
+  };
+
+  const onSwitchWallet = () => {
+    setShowDetail(false);
+  };
+
+  const onAvatarClicked = () => {
+    setShowDetail(true);
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (address) {
+      setLoading(false);
+      setShowDetail(true);
+    }
+  }, [address]);
+
+  return (
+    <StyledHeader $showMenu={showMenu}>
+      {showModal && (
+        <>
+          {loading && !cancelConfirmation ? (
+            <Modal
+              icon="loader"
+              desc="Please wait a moment."
+              width="352px"
+              display
+              setDisplay={setShowModal}
+            />
+          ) : showDetail ? (
+            <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
+              <WalletDetails
+                networkName={currentNetwork}
+                userAvatar={userStatus.avatar}
+                balance={balance}
+                refundableBalance={refundableBalance}
+                unit={unit}
+                address={address}
+                shortedAddress={shortedAddress}
+                onDisconnectWallet={onDisconnectWallet}
+                onSwitchWallet={onSwitchWallet}
+              />
+            </Modal>
+          ) : (
+            <Modal
+              title="Connect a wallet"
+              button={{ onClick: handleConnect, text: 'Next' }}
+              display
+              setDisplay={setShowModal}
+            >
+              <div className="connect-a-wallet-card">
+                <WalletSelector
+                  type={wallets.metamask}
+                  wallet={mockWallets}
+                  active={selectedWallet == wallets.metamask}
+                  onClick={() => handleSelectWallet(wallets.metamask)}
+                  isInstalled={EthereumInstance.isMetaMaskInstalled()}
+                />
+                <WalletSelector
+                  type={wallets.iconex}
+                  wallet={mockWallets}
+                  active={selectedWallet == wallets.iconex}
+                  onClick={() => handleSelectWallet(wallets.iconex)}
+                  isCheckingInstalled={checkingICONexInstalled}
+                  isInstalled={isICONexInstalled()}
+                />
+                <WalletSelector
+                  type={wallets.hana}
+                  wallet={mockWallets}
+                  active={selectedWallet == wallets.hana}
+                  onClick={() => handleSelectWallet(wallets.hana)}
+                  isCheckingInstalled={checkingICONexInstalled}
+                  isInstalled={isICONexInstalled()}
+                />
+              </div>
+            </Modal>
+          )}
+        </>
+      )}
+      <div className="left-side">
+        <Heading className="xs bold" color={primaryBrandLight}>
+          BTP Dashboard
+        </Heading>
+      </div>
+      <HamburgerButton
+        className={`menu-icon ${showMenu && 'active'}`}
+        onClick={() => setShowMenu(!showMenu)}
+      />
+      <div className="right-side">
+        <Nav setShowMenu={setShowMenu} />
+        {address ? (
+          <div className="account-info">
+            <SubTitle className="sm">{currentNetwork}</SubTitle>
+            <Avatar
+              className="user-avatar"
+              src={userStatus.avatar}
+              size={48}
+              onClick={onAvatarClicked}
+            />
+            <span className="wallet-info">
+              <Text className="sm address">{shortedAddress}</Text>
+              <SubTitle className="md bold">
+                {balance} {unit}
+              </SubTitle>
+            </span>
+          </div>
+        ) : (
+          <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+            Connect a Wallet
+          </PrimaryButton>
+        )}
+      </div>
+    </StyledHeader>
+  );
 };
 
 export default Header;
