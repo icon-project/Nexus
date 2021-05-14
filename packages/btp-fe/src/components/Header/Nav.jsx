@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const NavStyled = styled.ul`
   display: flex;
@@ -9,7 +10,7 @@ const NavStyled = styled.ul`
   align-items: center;
   margin: 0 auto 0 32.5px;
   li {
-    button {
+    .nav-link {
       background-color: transparent;
       font-family: Poppins;
       font-style: normal;
@@ -19,6 +20,7 @@ const NavStyled = styled.ul`
       padding: 8px 16px;
       border-radius: 4px;
       margin-right: 4px;
+      color: white;
       &:focus,
       :hover {
         background-color: #28262f;
@@ -37,12 +39,12 @@ const buttonContents = [
   { text: 'Governance', effect: null },
   { text: 'Auction', effect: null },
 ];
-const Button = ({ text, onClick }) => {
+const Button = ({ text }) => {
   return (
     <li>
-      <button onClick={onClick} active>
-        {text}
-      </button>
+      <NavLink to={`/${text.toLowerCase()}`}>
+        <button className="nav-link">{text}</button>
+      </NavLink>
     </li>
   );
 };

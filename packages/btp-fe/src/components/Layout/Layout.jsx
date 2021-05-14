@@ -28,14 +28,19 @@ const StyledLayout = styled(AtndLayout)`
 `;
 
 const items = [
-  { title: i18n.t('dropdown.my_profile', 'My Profile'), icon: <UserOutlined />, path: '/' },
+  { title: i18n.t('dropdown.my_profile', 'My Profile'), icon: <UserOutlined />, path: '/profile' },
   {
     title: i18n.t('dropdown.setting', 'Setting'),
     icon: <SettingOutlined />,
-    path: '/',
+    path: '/setting',
     hasDivider: true,
   },
-  { title: i18n.t('dropdown.logout', 'Logout'), icon: <LogoutOutlined />, path: '/' },
+  {
+    title: i18n.t('dropdown.logout', 'Logout'),
+    icon: <LogoutOutlined />,
+    path: '/',
+    effect: 'logUserOut',
+  },
 ];
 
 const Layout = ({ className, children, breadcrumbItems }) => {

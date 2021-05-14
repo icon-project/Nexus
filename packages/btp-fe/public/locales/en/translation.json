@@ -3,14 +3,5 @@
     "logout": "Logout",
     "my_profile": "My Profile",
     "setting": "Setting"
-  },
-  "footer": {
-    "company_name": ""
-  },
-  "not_found_page": {
-    "back_home": "Back Home",
-    "description": "Sorry, the page you visited does not exist.",
-    "page_title": "Page Not Found",
-    "title": "404"
   }
 }

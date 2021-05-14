@@ -5,21 +5,30 @@ import { Link } from 'react-router-dom';
 import { extraSmallSize } from '../Styles/Media';
 
 const MenuItem = ({ path, title, ...others }) => {
+  const logOut = (e) => {
+    console.log('click logout');
+    others.handleLogout(e);
+  };
   return (
     <Menu.Item {...others}>
-      <Link to={path}>{title}</Link>
+      {others.effect == 'logUserOut' ? (
+        <button onClick={logOut}>{title}</button>
+      ) : (
+        <Link to={path}>{title}</Link>
+      )}
     </Menu.Item>
   );
 };
 
 const Dropdown = ({ items, children, fullWidthOnMobile, ...rest }) => {
+  const { handleLogout } = rest;
   const menu = () => {
     return (
       <Menu>
         {items.map(({ title, hasDivider, ...rest }) => {
           return (
             <React.Fragment key={title}>
-              <MenuItem title={title} {...rest} />
+              <MenuItem title={title} {...rest} handleLogout={handleLogout} />
               {hasDivider && <Menu.Divider />}
             </React.Fragment>
           );
