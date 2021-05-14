@@ -6,7 +6,7 @@ import { extraSmallSize } from '../Styles/Media';
 
 const MenuItem = ({ path, title, ...others }) => {
   const logOut = (e) => {
-    console.log('click logout');
+    // console.log('click logout');
     others.handleLogout(e);
   };
   return (
@@ -25,10 +25,10 @@ const Dropdown = ({ items, children, fullWidthOnMobile, ...rest }) => {
   const menu = () => {
     return (
       <Menu>
-        {items.map(({ title, hasDivider, ...rest }) => {
+        {items.map(({ title, hasDivider, ...ItemRest }) => {
           return (
             <React.Fragment key={title}>
-              <MenuItem title={title} {...rest} handleLogout={handleLogout} />
+              <MenuItem title={title} {...ItemRest} handleLogout={handleLogout} />
               {hasDivider && <Menu.Divider />}
             </React.Fragment>
           );
