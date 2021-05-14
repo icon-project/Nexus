@@ -3,14 +3,5 @@
     "logout": "",
     "my_profile": "",
     "setting": ""
-  },
-  "footer": {
-    "company_name": ""
-  },
-  "not_found_page": {
-    "back_home": "",
-    "description": "",
-    "page_title": "",
-    "title": ""
   }
 }

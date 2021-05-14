@@ -65,7 +65,7 @@ const StyledHeader = styled(Layout.Header)`
         margin-left: 4px;
       }
     }
-    .dropdown-control {
+    .dropdown-hoverable {
       display: flex;
       flex-wrap: nowrap;
     }
@@ -92,25 +92,22 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-const Header = ({
-  items,
-  userStatus,
-  wallet = {
-    id: 'demo',
-    name: 'Etherum Mainnet',
-    hash: '123afx123afa4aweasdfasdf',
-    amount: 10,
-    unit: 'ETH',
-  },
-}) => {
-  if (!userStatus) {
-    userStatus = {
-      id: 'test',
-      userName: '@dsng',
-      authorized: false,
-      avatar: defaultAvatar,
-    };
-  }
+const defaultWallet = {
+  id: 'demo',
+  name: 'Etherum Mainnet',
+  hash: '123afx123afa4aweasdfasdf',
+  amount: 10,
+  unit: 'ETH',
+};
+
+const defaultUser = {
+  id: 'test',
+  userName: '@dsng',
+  authorized: false,
+  avatar: defaultAvatar,
+};
+
+const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => {
   const [authorized, setAuthorized] = useState(false);
   const handleConnect = (e) => {
     e.preventDefault();
@@ -127,8 +124,8 @@ const Header = ({
             <BellOutlined />
           </span> */}
           <span className="wallet-name">{wallet.name}</span>
-          <Dropdown items={items} fullWidthOnMobile>
-            <div className="dropdown-control">
+          <Dropdown items={items} fullWidthOnMobile handleLogout={handleConnect}>
+            <div className="dropdown-hoverable">
               <Avatar className="user-avatar" src={userStatus.avatar} size={48} />
               <span className="wallet-nfo">
                 <span>{hashShortener(wallet.hash)}</span>
