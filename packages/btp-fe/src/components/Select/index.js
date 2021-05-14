@@ -1,3 +1,3 @@
 import SelectNetwork from './SelectNetwork';
-
-export { SelectNetwork };
+import SelectAsset from './SelectAsset';
+export { SelectNetwork, SelectAsset };
