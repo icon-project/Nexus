@@ -25,7 +25,6 @@ const CardStyled = styled(AntCard)`
     text-align: center;
     color: #878491;
     margin-bottom: 37px;
-    padding: 0 22px;
   }
   .ant-card-body {
     background-color: #1d1b22;
@@ -44,7 +43,7 @@ const CardStyled = styled(AntCard)`
   hr:after {
     content: '';
     background-image: url(${VectorIconSrc});
-    padding-top: 22px;
+    padding-top: 17px;
     padding-right: 40px;
   }
   .button-section {

@@ -4,12 +4,8 @@ import { Layout, Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import Nav from './Nav';
 import { colors } from '../Styles/Colors';
-// import { BellOutlined } from '@ant-design/icons';
-// import { LanguageSwitcher } from '../LanguageSwitcher';
-
-// import { media } from '../Styles/Media';
 import { Dropdown } from '../Dropdown';
-import defaultAvatar from '../../assets/images/profile-img.png';
+import defaultAvatar from '../../assets/images/avatar.svg';
 
 const StyledHeader = styled(Layout.Header)`
   height: 80px;
@@ -120,9 +116,6 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
       <Nav />
       {userStatus.authorized || authorized ? (
         <div className="right-side">
-          {/* <span className="">
-            <BellOutlined />
-          </span> */}
           <span className="wallet-name">{wallet.name}</span>
           <Dropdown items={items} fullWidthOnMobile handleLogout={handleConnect}>
             <div className="dropdown-hoverable">
@@ -137,8 +130,6 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
               </span>
             </div>
           </Dropdown>
-
-          {/* <LanguageSwitcher /> */}
         </div>
       ) : (
         <button className="connect-to-wallet-btn" onClick={handleConnect}>
