@@ -3,29 +3,5 @@
     "logout": "",
     "my_profile": "",
     "setting": ""
-  },
-  "footer": {
-    "company_name": ""
-  },
-  "gender": {
-    "female": "",
-    "male": "",
-    "other": ""
-  },
-  "not_found_page": {
-    "back_home": "",
-    "description": "",
-    "page_title": "",
-    "title": ""
-  },
-  "status": {
-    "contains": "",
-    "contains_case_sensitive": "",
-    "equal": "",
-    "is_greater_than": "",
-    "is_greater_than_or_equal_to": "",
-    "is_less_than": "",
-    "is_less_than_or_equal_to": "",
-    "not_equal": ""
   }
 }

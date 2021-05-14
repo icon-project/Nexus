@@ -1,122 +1,150 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import Nav from './Nav';
 import { colors } from '../Styles/Colors';
-import { BellOutlined } from '@ant-design/icons';
-import { LanguageSwitcher } from '../LanguageSwitcher';
+// import { BellOutlined } from '@ant-design/icons';
+// import { LanguageSwitcher } from '../LanguageSwitcher';
 
-import { media } from '../Styles/Media';
+// import { media } from '../Styles/Media';
 import { Dropdown } from '../Dropdown';
 import defaultAvatar from '../../assets/images/profile-img.png';
 
 const StyledHeader = styled(Layout.Header)`
-  padding: 0px;
   height: 80px;
   width: 100%;
-  color: ${colors.textColor};
+  padding: 0 160px 0 40.5px;
+  /* color: ${colors.textColor}; */
+  color: #fff;
   background-color: #131217;
   border-bottom: 1px solid #353242;
-  .admin-header-layout-side {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding: 0 16px;
-    box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-    background-color: #131217;
-    .left-side,
-    .right-side {
-      display: flex;
-      .admin-header-index-action {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        padding: 0 12px;
-        cursor: pointer;
-        transition: all 0.3s;
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.025);
-        }
-        .admin-avatar {
-          margin: 20px 8px 20px 0;
-        }
-      }
-    }
-    .left-side {
-      flex: 1 1 0%;
-      height: 100%;
-      .admin-header-index-action {
-        padding: 0;
-      }
-    }
-    .right-side {
-      height: 100%;
-      overflow: hidden;
-    }
-  }
-
-  .btp-dashboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .left-side {
+    min-width: 175px;
     color: #99a3ff;
-    /* Header/X-Small/Bold */
-
     font-family: Poppins;
-    font-style: normal;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 21px;
     line-height: 28px;
-    /* identical to box height, or 133% */
-
-    text-align: center;
-    letter-spacing: 1px;
-    margin-top: 26px;
-    margin-left: 40.5px;
   }
-
-  .anticon-menu-unfold {
+  .right-side {
     display: flex;
     align-items: center;
-    margin-left: 16px;
-    svg {
-      width: 20px;
-      height: 20px;
+    min-width: 305px;
+    margin-left: 80px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 100;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 1px;
+    br {
+      margin: 10px;
     }
-  }
-
-  ${media.md`
-    .admin-header-layout-side {
-      .left-side .admin-header-index-action {
-        display: none;
+    line-height: 0.8;
+    display: flex;
+    flex-wrap: nowrap;
+    .user-avatar {
+      margin-left: 20px;
+    }
+    .wallet-nfo {
+      padding-top: 4px;
+      margin-left: 8px;
+    }
+    .currency-ctn {
+      display: inline-block;
+      padding-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.75px;
+      .unit {
+        margin-left: 4px;
       }
     }
-    .anticon-menu-unfold {
-      display: none;
+    .dropdown-hoverable {
+      display: flex;
+      flex-wrap: nowrap;
     }
-  `}
+  }
+  .connect-to-wallet-btn {
+    height: 44px;
+    padding: 12px 16px;
+    min-width: 170px;
+    background: #5465ff;
+    border-radius: 100px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+  }
 `;
 
-const Header = ({ items, userName }) => {
+const hashShortener = (hashStr) => {
+  const len = hashStr.length;
+  if (len <= 10) {
+    return hashStr;
+  }
+
+  return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
+};
+
+const defaultWallet = {
+  id: 'demo',
+  name: 'Etherum Mainnet',
+  hash: '123afx123afa4aweasdfasdf',
+  amount: 10,
+  unit: 'ETH',
+};
+
+const defaultUser = {
+  id: 'test',
+  userName: '@dsng',
+  authorized: false,
+  avatar: defaultAvatar,
+};
+
+const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => {
+  const [authorized, setAuthorized] = useState(false);
+  const handleConnect = (e) => {
+    e.preventDefault();
+    setAuthorized((prev) => !prev);
+  };
+  window.testAuth = setAuthorized;
   return (
     <StyledHeader>
-      <div className="admin-header-layout-side">
-        <div className="left-side">
-          <span className="btp-dashboard">BTP Dashboard</span>
-          <Nav />
-        </div>
+      <div className="left-side">BTP Dashboard</div>
+      <Nav />
+      {userStatus.authorized || authorized ? (
         <div className="right-side">
-          <span className="admin-header-index-action">
+          {/* <span className="">
             <BellOutlined />
-          </span>
-          <Dropdown items={items} fullWidthOnMobile>
-            <span className="admin-header-index-action">
-              <Avatar className="admin-avatar" src={defaultAvatar} size={24} />
-              {userName}
-            </span>
+          </span> */}
+          <span className="wallet-name">{wallet.name}</span>
+          <Dropdown items={items} fullWidthOnMobile handleLogout={handleConnect}>
+            <div className="dropdown-hoverable">
+              <Avatar className="user-avatar" src={userStatus.avatar} size={48} />
+              <span className="wallet-nfo">
+                <span>{hashShortener(wallet.hash)}</span>
+                <br />
+                <span className="currency-ctn">
+                  <span>{wallet.amount}</span>
+                  <span className="unit">{wallet.unit}</span>
+                </span>
+              </span>
+            </div>
           </Dropdown>
-          <LanguageSwitcher />
+
+          {/* <LanguageSwitcher /> */}
         </div>
-      </div>
+      ) : (
+        <button className="connect-to-wallet-btn" onClick={handleConnect}>
+          Connect a Wallet
+        </button>
+      )}
     </StyledHeader>
   );
 };

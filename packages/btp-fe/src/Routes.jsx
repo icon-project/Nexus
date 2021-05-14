@@ -10,6 +10,12 @@ function Routes() {
       <Switch>
         <Route path="/" exact component={HomePage} />
         <Route path="/transfer" exact component={Transfer} />
+        <Route path="/overview" exact component={Transfer} />
+        <Route path="/network" exact component={Transfer} />
+        <Route path="/governance" exact component={Transfer} />
+        <Route path="/auction" exact component={Transfer} />
+        <Route path="/profile" exact component={Transfer} />
+        <Route path="/setting" exact component={Transfer} />
         <Route path="*" component={NotFoundPage} />
       </Switch>
     </BrowserRouter>
