@@ -7,6 +7,9 @@ const SelectStyled = styled.div`
     border: none;
     position: relative;
     width: 235px;
+    padding: 0 16px;
+    border-radius: 4px;
+    background: ${(props) => (props.isOpen ? '#28262F' : '')};
   }
   .custom-select {
   }
@@ -15,20 +18,17 @@ const SelectStyled = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 22px;
     font-size: 16px;
     color: #eff1ed;
     height: 44px;
-    background: ${(props) => (props.isOpen ? '#28262F' : '')};
-    border-radius: 4px;
     line-height: 24px;
-    letter-spacing: 1px;
+    letter-spacing: 0.75px;
     cursor: pointer;
   }
   .custom-options {
     position: absolute;
     display: block;
-    width: 194px;
+    width: 196px;
     top: 28px;
     right: 0;
     border: 1px solid #353242;
@@ -50,7 +50,7 @@ const SelectStyled = styled.div`
   .custom-option {
     position: relative;
     display: block;
-    padding: 10px 16px;
+    padding: 10px 15px;
     font-size: 14px;
     font-weight: 300;
     color: #eff1ed;
@@ -58,6 +58,7 @@ const SelectStyled = styled.div`
     transition: all 0.5s;
     background-color: #1d1b22;
     height: 40px;
+    letter-spacing: 0.75px;
   }
   .custom-option:hover {
     cursor: pointer;
