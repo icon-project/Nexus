@@ -20,6 +20,7 @@ const NavStyled = styled.ul`
       padding: 8px 16px;
       border-radius: 4px;
       margin-right: 4px;
+      letter-spacing: 1px;
       color: white;
       &:focus,
       :hover {

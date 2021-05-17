@@ -43,7 +43,8 @@ const CardStyled = styled(AntCard)`
   hr:after {
     content: '';
     background-image: url(${VectorIconSrc});
-    padding-top: 17px;
+    background-repeat: no-repeat;
+    padding-top: 22px;
     padding-right: 40px;
   }
   .button-section {
