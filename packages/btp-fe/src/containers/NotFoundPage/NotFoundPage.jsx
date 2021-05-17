@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 
 import { Result, Button } from 'antd';
-import { Footer } from 'components/Footer';
 
 const NotFoundPageWrapper = styled.div`
   min-height: 100vh;
@@ -35,7 +34,6 @@ const NotFoundPage = ({ history }) => {
           </Button>
         }
       />
-      <Footer className="footer" companyName={t('footer.company_name', '')} />
     </NotFoundPageWrapper>
   );
 };
