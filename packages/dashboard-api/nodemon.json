@@ -1,0 +1,8 @@
+{
+  "env": {
+    "DEBUG": "app,api:*"
+  },
+  "watch": [
+    "src"
+  ]
+}
