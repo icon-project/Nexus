@@ -9,7 +9,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 // import { media } from '../Styles/Media';
 import { Dropdown } from '../Dropdown';
-import defaultAvatar from '../../assets/images/profile-img.png';
+import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
 
@@ -24,6 +24,7 @@ const StyledHeader = styled(Layout.Header)`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  letter-spacing: 1px;
   .left-side {
     min-width: 175px;
     color: #99a3ff;
@@ -284,8 +285,6 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
               </span>
             </div>
           </Dropdown>
-
-          {/* <LanguageSwitcher /> */}
         </div>
       ) : (
         <button className="connect-to-wallet-btn" onClick={handleConnect}>

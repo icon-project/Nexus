@@ -1,11 +1,9 @@
-import { Card as AntCard } from 'antd';
+import { Card as AntCard, Row, Col } from 'antd';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
-import { Select } from 'antd';
+import { SelectNetwork, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
-import VectorIconSrc from 'assets/images/Ellipse.svg';
+import VectorIconSrc from 'assets/images/vector-icon.svg';
 
-const { Option } = Select;
 const CardStyled = styled(AntCard)`
   font-family: Poppins;
   font-style: normal;
@@ -27,7 +25,6 @@ const CardStyled = styled(AntCard)`
     text-align: center;
     color: #878491;
     margin-bottom: 37px;
-    padding: 0 22px;
   }
   .ant-card-body {
     background-color: #1d1b22;
@@ -38,14 +35,15 @@ const CardStyled = styled(AntCard)`
     justify-content: flex-end;
   }
   hr {
-    margin-top: 26px;
+    margin-top: 45px;
     border-top: 1px solid #353242;
     text-align: center;
-    margin-bottom: 26px;
+    margin-bottom: 45px;
   }
   hr:after {
     content: '';
     background-image: url(${VectorIconSrc});
+    background-repeat: no-repeat;
     padding-top: 22px;
     padding-right: 40px;
   }
@@ -54,7 +52,7 @@ const CardStyled = styled(AntCard)`
   }
 `;
 export const TransferCard = () => {
-  window.localStorage.setItem('wallet-status', 'connectedd');
+  window.localStorage.setItem('wallet-status', 'connected');
   const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
@@ -66,22 +64,14 @@ export const TransferCard = () => {
         <Row>
           <Col span={12}>Send</Col>
           <Col span={12} className="right-side">
-            <Select defaultValue="eth" style={{ width: 150 }}>
-              <Option value="btc">BTC</Option>
-              <Option value="bch">BCH</Option>
-              <Option value="eth">ETH</Option>
-            </Select>
+            <SelectAsset />
           </Col>
         </Row>
         <hr />
         <Row>
           <Col span={12}>To</Col>
           <Col span={12} className="right-side">
-            <Select defaultValue="bsc" style={{ width: 190 }}>
-              <Option value="bsc">Binance Smart Chain</Option>
-              <Option value="edgeware">Edgeware</Option>
-              <Option value="icx">ICON blockchain</Option>
-            </Select>
+            <SelectNetwork />
           </Col>
         </Row>
         <Row className="button-section">
