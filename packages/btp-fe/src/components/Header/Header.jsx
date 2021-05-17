@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import Nav from './Nav';
 // import { colors } from '../Styles/Colors';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, CopyOutlined } from '@ant-design/icons';
 // import { LanguageSwitcher } from '../LanguageSwitcher';
 
 // import { media } from '../Styles/Media';
@@ -12,6 +12,11 @@ import { Dropdown } from '../Dropdown';
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
+import Circle from '../../assets/images/loading-eclipse.svg';
+
+const SpinSpan = styled.span`
+  animation: spin 3s linear infinite;
+`;
 
 const StyledHeader = styled(Layout.Header)`
   font-family: Poppins;
@@ -25,6 +30,17 @@ const StyledHeader = styled(Layout.Header)`
   justify-content: space-between;
   align-items: center;
   letter-spacing: 1px;
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  svg {
+    pointer-events: none;
+  }
   .left-side {
     min-width: 175px;
     color: #99a3ff;
@@ -90,7 +106,6 @@ const StyledHeader = styled(Layout.Header)`
       font-style: normal;
       font-weight: 600;
       font-size: 25px;
-      /* line-height: 36px; */
       letter-spacing: 1px;
       color: #eff1ed;
       margin-top: 23px;
@@ -182,6 +197,162 @@ const StyledHeader = styled(Layout.Header)`
     text-align: center;
     letter-spacing: 1px;
   }
+  .loading-modal {
+    width: 352px;
+    height: 208px;
+    background: #1d1b22;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    > button {
+      font-size: 18px;
+      position: absolute;
+      top: 32px;
+      right: 35px;
+      height: auto;
+      width: auto;
+      background-color: transparent;
+      margin: 0;
+    }
+    span:last-of-type {
+      margin-bottom: 26px;
+    }
+  }
+  .connect-a-wallet-detail {
+    width: 480px;
+    height: 564px;
+    background: #1d1b22;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    button {
+      width: auto;
+      height: auto;
+      background-color: transparent;
+    }
+    h6 {
+      color: #eff1ed;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: center;
+      letter-spacing: 0.75px;
+      margin-bottom: 42px;
+    }
+    h4 {
+      display: grid;
+      grid-template-columns: 20% 60% 20%;
+      margin-bottom: 10px;
+      span {
+        grid-column: 2;
+        text-align: center;
+      }
+      button {
+        grid-column: 3;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 18px;
+        margin: 0;
+      }
+    }
+    .wallet-balance {
+      width: 100%;
+      height: 60px;
+      display: grid;
+      grid-template: 50% 50 / 50% 50%;
+      padding: 0 32px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      span:first-of-type {
+        justify-self: start;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0.75px;
+        color: #85838e;
+      }
+      span {
+        justify-self: end;
+        font-weight: 600;
+        font-size: 25px;
+        line-height: 36px;
+
+        text-align: right;
+        letter-spacing: 1px;
+      }
+      span:last-of-type {
+        grid-column: 2/3;
+        grid-row: 2/3;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0.75px;
+        color: #85838e;
+      }
+    }
+    .wallet-address {
+      width: 100%;
+      height: 60px;
+      display: grid;
+      grid-template: 50% 50 / 50% 50%;
+      padding: 0 32px;
+      margin-bottom: 20px;
+      span:first-of-type {
+        justify-self: start;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0.75px;
+        color: #85838e;
+      }
+      span {
+        justify-self: end;
+      }
+      button {
+        grid-column: 2/3;
+        grid-row: 2/3;
+        color: #7fdeff;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 16px;
+        text-align: center;
+        letter-spacing: 0.75px;
+        margin: 0;
+        justify-self: end;
+      }
+    }
+    .nav-button {
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      padding: 0 26px;
+      button:first-of-type {
+        color: #99a3ff;
+        width: 192px;
+        height: 64px;
+        border-radius: 4px;
+        border: solid 1px #99a3ff;
+        background-color: transparent;
+      }
+      button {
+        font-size: 16px;
+        line-height: 24px;
+        text-align: center;
+        letter-spacing: 1px;
+        width: 192px;
+        height: 64px;
+        border-radius: 4px;
+        background-color: #5465ff;
+      }
+    }
+  }
 `;
 
 const hashShortener = (hashStr) => {
@@ -207,64 +378,147 @@ const defaultUser = {
   authorized: false,
   avatar: defaultAvatar,
 };
-const wallets = {
+const mockWallets = {
   metamask: {
     id: 'metamask',
     title: 'MetaMask Wallet',
+    network: 'Etherum Mainnet',
+    hash: '123afx123afa4aweasdfasdf',
+    amount: 10,
+    unit: 'ETH',
     icon: MetaMask,
   },
   iconex: {
     id: 'iconex',
     title: 'ICONex Wallet',
+    network: 'Etherum Mainnet',
+    hash: '123afx123afa4aweasdfasdf',
+    amount: 10,
+    unit: 'ETH',
     icon: ICONex,
   },
 };
 
 const WalletSelector = ({ type, active, onClick }) => {
   return (
-    <button id={wallets[type].id} className="wallet-selector" autoFocus={active} onClick={onClick}>
-      <Avatar src={wallets[type].icon} size={30} />
-      <span className="wallet-title">{wallets[type].title}</span> {active && <CheckOutlined />}
+    <button
+      id={mockWallets[type].id}
+      className="wallet-selector"
+      autoFocus={active}
+      onClick={onClick}
+    >
+      <Avatar src={mockWallets[type].icon} size={30} />
+      <span className="wallet-title">{mockWallets[type].title}</span> {active && <CheckOutlined />}
     </button>
   );
 };
 
+const LoadingSpin = () => {
+  return (
+    <SpinSpan>
+      <img src={Circle} alt="loading spinner" />
+    </SpinSpan>
+  );
+};
+
 const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => {
-  const [authorized] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState('metamask');
+  const [loading, setLoading] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+
+  const toggleModal = (e) => {
+    e.preventDefault();
+    setShowModal((prev) => !prev);
+    setShowDetail(false);
+  };
   const handleConnect = (e) => {
     e.preventDefault();
-    setShowModal(true);
+    if (e.target.id == 'start-connect') {
+      return setLoading(true);
+    }
+    setAuthorized((prev) => !prev);
   };
   const handleSelectWallet = (e) => {
     e.preventDefault();
     setSelectedWallet(e.target.id);
   };
-
+  useEffect(() => {
+    let id;
+    if (loading) {
+      id = setTimeout(() => {
+        setLoading(false);
+        setShowDetail(true);
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(id);
+    };
+  }, [loading, setLoading]);
   return (
     <StyledHeader>
       {showModal && (
         <div className="connect-a-wallet-modal">
-          <div className="connect-a-wallet-card">
-            <h4>
-              <span className="card-title">Connect a wallet</span>
-              <button onClick={() => void setShowModal(false)}>
+          {loading ? (
+            <div className="loading-modal">
+              <button onClick={toggleModal}>
                 <CloseOutlined />
               </button>
-            </h4>
-            <WalletSelector
-              type="metamask"
-              active={selectedWallet == 'metamask'}
-              onClick={handleSelectWallet}
-            />
-            <WalletSelector
-              type="iconex"
-              active={selectedWallet == 'iconex'}
-              onClick={handleSelectWallet}
-            />
-            <button onClick={() => void console.log('wallet click')}>Connect a Wallet</button>
-          </div>
+              <LoadingSpin />
+              <br />
+              <span>Please wait a moment</span>
+            </div>
+          ) : showDetail ? (
+            <div className="connect-a-wallet-detail">
+              <h4>
+                <span>{mockWallets[selectedWallet].title}</span>
+                <button id="close-detail" onClick={toggleModal}>
+                  <CloseOutlined />
+                </button>
+              </h4>
+              <h6>{mockWallets[selectedWallet].network}</h6>
+              <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
+              <div className="wallet-balance">
+                <span>Balance</span>
+                <span>{`${mockWallets[selectedWallet].amount} ${mockWallets[selectedWallet].unit}`}</span>
+                <span> = $98.22 USD</span>
+              </div>
+              <div className="wallet-address">
+                <span>Wallet Address</span>
+                <span>{hashShortener(mockWallets[selectedWallet].hash)}</span>
+                <button>
+                  <CopyOutlined /> Copy address
+                </button>
+              </div>
+              <div className="nav-button">
+                <button>Disconnect wallet</button>
+                <button>Switch wallet</button>
+              </div>
+            </div>
+          ) : (
+            <div className="connect-a-wallet-card">
+              <h4>
+                <span className="card-title">Connect a wallet</span>
+                <button onClick={toggleModal}>
+                  <CloseOutlined />
+                </button>
+              </h4>
+              <WalletSelector
+                type="metamask"
+                active={selectedWallet == 'metamask'}
+                onClick={handleSelectWallet}
+              />
+              <WalletSelector
+                type="iconex"
+                active={selectedWallet == 'iconex'}
+                onClick={handleSelectWallet}
+              />
+              <button id="start-connect" onClick={handleConnect}>
+                Connect a Wallet
+              </button>
+            </div>
+          )}
         </div>
       )}
       <div className="left-side">BTP Dashboard</div>
@@ -287,7 +541,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
           </Dropdown>
         </div>
       ) : (
-        <button className="connect-to-wallet-btn" onClick={handleConnect}>
+        <button className="connect-to-wallet-btn" onClick={toggleModal}>
           Connect a Wallet
         </button>
       )}
