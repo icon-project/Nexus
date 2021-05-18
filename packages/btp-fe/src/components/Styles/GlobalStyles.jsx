@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components/macro';
-import { colors } from 'components/Styles/Colors';
+import { colors } from './Colors';
 
 export default createGlobalStyle`
   * {
@@ -27,6 +27,9 @@ export default createGlobalStyle`
   }
   button {
     cursor: pointer;
+  }
+  p {
+    margin: 0;
   }
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
