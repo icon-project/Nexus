@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
+import { colors } from '../Styles/Colors';
 
 const Wapper = styled.div`
   ${({ color, size, borderSize }) => `
@@ -31,7 +32,7 @@ export const Loader = memo((props) => {
 Loader.displayName = 'Loader';
 
 Loader.defaultProps = {
-  color: '#5465FF',
+  color: colors.primaryBrand,
   size: '83.83px',
   borderSize: '8.33px',
 };
