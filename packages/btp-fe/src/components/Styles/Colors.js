@@ -3,6 +3,9 @@ const globalColors = {
   black: '#000000',
   solitude: '#f0f2f5',
   primaryBlue: '#1890ff',
+  primaryBrand: '#5465FF',
+  grayBG: '#1D1B22',
+  grayText: '#EFF1ED',
 };
 
 export const colors = (() => {
