@@ -5,7 +5,6 @@ import styled from 'styled-components';
 const ButtonStyle = styled(AntButton)`
   border-radius: ${(props) => props.borderRadius};
   border: none;
-  font-family: Poppins;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
