@@ -47,7 +47,7 @@ const Transfer = () => {
     <TransferStyled>
       {isOpenHistory ? (
         <div className="history-container">
-          <TransferHistory />
+          <TransferHistory setIsOpenHistory={setIsOpenHistory} />
         </div>
       ) : (
         <>

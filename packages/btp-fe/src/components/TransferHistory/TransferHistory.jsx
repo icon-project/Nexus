@@ -4,6 +4,10 @@ import { Table, Row } from 'antd';
 import { Tag } from 'components/Tag';
 import { SelectAsset } from 'components/Select';
 import VectorSrc from 'assets/images/vector.svg';
+import BackIconSrc from 'assets/images/arrow-icon.svg';
+import UnionSrc from 'assets/images/union.svg';
+import PrevIconSrc from 'assets/images/prev-icon.svg';
+
 const TableStyled = styled(Table)`
   margin-top: 34px;
   .ant-table-content {
@@ -57,12 +61,30 @@ const TableStyled = styled(Table)`
     width: 36px;
     height: 36px;
   }
+  .ant-pagination-disabled {
+    a,
+    .anticon {
+      color: #99a3ff;
+    }
+  }
+  .ant-pagination-prev,
+  .ant-pagination-next {
+    margin-right: 0;
+  }
   .ant-pagination-item,
   .ant-pagination-item-link {
     border: 1px solid #99a3ff;
     background: transparent;
-    a {
+    a,
+    .anticon {
       color: #99a3ff;
+    }
+    :hover {
+      border: 1px solid #5465ff;
+      a,
+      .anticon {
+        color: #5465ff;
+      }
     }
   }
   .ant-pagination-item-active {
@@ -70,6 +92,11 @@ const TableStyled = styled(Table)`
     background: #5465ff;
     a {
       color: #ebedff;
+    }
+    :hover {
+      a {
+        color: #ebedff;
+      }
     }
   }
 `;
@@ -120,7 +147,8 @@ for (let i = 0; i < 30; i++) {
 
 const TransferHistoryStyled = styled.div`
   font-family: Poppins;
-  margin-top: 31px;
+  margin-top: 36px;
+  margin-bottom: 43px;
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.75px;
@@ -129,11 +157,74 @@ const TransferHistoryStyled = styled.div`
   .custom-select-wrapper {
     width: 204px;
   }
+  .back-button {
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .back-icon {
+    width: 14px;
+    height: 8px;
+    transform: rotateZ(90deg);
+  }
+  .transfer-history-text {
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 48px;
+
+    letter-spacing: 1px;
+  }
+  .back-to-tranfer {
+    margin-bottom: 31px;
+    display: inline-flex;
+  }
+  .pagination-inline {
+    display: inline-flex;
+  }
+  .next-btn {
+    transform: rotateY(180deg);
+  }
 `;
 
-export const TransferHistory = () => {
+export const TransferHistory = ({ setIsOpenHistory }) => {
+  function itemRender(current, type, originalElement) {
+    if (type === 'prev') {
+      return (
+        <div className="pagination-inline">
+          <a className="ant-pagination-item">
+            <img src={UnionSrc} />
+          </a>
+          <a className="ant-pagination-item">
+            <img src={PrevIconSrc} />
+          </a>
+        </div>
+      );
+    }
+    if (type === 'next') {
+      return (
+        <div className="pagination-inline">
+          <a className="ant-pagination-item">
+            <img className="next-btn" src={PrevIconSrc} />
+          </a>
+          <a className="ant-pagination-item">
+            <img className="next-btn" src={UnionSrc} />
+          </a>
+        </div>
+      );
+    }
+    return originalElement;
+  }
   return (
     <TransferHistoryStyled>
+      <Row>
+        <div className="back-to-tranfer">
+          <div className="back-button" onClick={() => setIsOpenHistory(false)}>
+            <img className="back-icon" src={BackIconSrc} />
+          </div>
+          <span className="transfer-history-text">Transfer history</span>
+        </div>
+      </Row>
       <Row>
         Viewing transfer history for
         <SelectAsset />
@@ -145,6 +236,7 @@ export const TransferHistory = () => {
         dataSource={dataSource}
         pagination={{
           position: ['bottomCenter'],
+          itemRender: itemRender,
         }}
       />
     </TransferHistoryStyled>
