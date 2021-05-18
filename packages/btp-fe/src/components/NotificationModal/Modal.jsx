@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Button } from '../Button';
 import { Loader } from '../Loader';
+import { colors } from '../Styles/Colors';
 
 import closeIcon from '../../assets/images/close-icon.svg';
 import checkIcon from '../../assets/images/green-checked-icon.svg';
@@ -31,7 +32,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
 
-  background-color: #1d1b22;
+  background-color: ${colors.grayBG};
   border-radius: 4px;
 
   .heading {
@@ -48,7 +49,7 @@ const Content = styled.div`
       font-weight: 600;
       font-size: 25px;
       line-height: 36px;
-      color: #eff1ed;
+      color: ${colors.grayText};
       letter-spacing: 1px;
     }
 
@@ -78,7 +79,7 @@ const Content = styled.div`
       max-width: 392px;
       margin: 22.17px auto 0;
 
-      color: #eff1ed;
+      color: ${colors.grayText};
       font-weight: 400;
       font-size: 16px;
       line-height: 24px;
