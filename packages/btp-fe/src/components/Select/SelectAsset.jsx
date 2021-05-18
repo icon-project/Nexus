@@ -5,6 +5,7 @@ import BTCIconSrc from 'assets/images/btc-icon.svg';
 import BCHIconSrc from 'assets/images/bch-icon.svg';
 import ETHIconSrc from 'assets/images/eth-icon.svg';
 import { Row } from 'antd';
+import { colors } from '../Styles/Colors';
 
 const SelectStyled = styled.div`
   .custom-select-wrapper {
@@ -22,7 +23,7 @@ const SelectStyled = styled.div`
     justify-content: space-between;
     padding: 0 22px;
     font-size: 16px;
-    color: #eff1ed;
+    color: ${colors.grayText};
     height: 24px;
     width: fit-content;
     border-radius: 4px;
@@ -60,18 +61,18 @@ const SelectStyled = styled.div`
     display: block;
     font-size: 14px;
     font-weight: 300;
-    color: #eff1ed;
+    color: ${colors.grayText};
     cursor: pointer;
     transition: all 0.5s;
-    background-color: #1d1b22;
+    background-color: ${colors.grayBG};
     height: 60px;
   }
   .custom-option:hover {
     cursor: pointer;
-    background-color: #312f39;
+    background-color: ${colors.grayscaleAccent};
   }
   .custom-option.selected {
-    background-color: #312f39;
+    background-color: ${colors.grayscaleAccent};
   }
   .arrow {
     position: relative;

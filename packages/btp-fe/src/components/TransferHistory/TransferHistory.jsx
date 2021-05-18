@@ -7,6 +7,7 @@ import VectorSrc from 'assets/images/vector.svg';
 import BackIconSrc from 'assets/images/arrow-icon.svg';
 import UnionSrc from 'assets/images/union.svg';
 import PrevIconSrc from 'assets/images/prev-icon.svg';
+import { colors } from '../Styles/Colors';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
@@ -14,24 +15,23 @@ const TableStyled = styled(Table)`
     font-family: Poppins;
   }
   .ant-table-tbody {
-    background-color: #131217;
-    color: #eff1ed;
+    color: ${colors.grayText};
     font-size: 16px;
   }
   .ant-table-tbody > tr > td {
     border-bottom: 1px solid #353242;
   }
   .ant-table-thead > tr > th {
-    background: #312f39;
+    background: ${colors.grayscaleAccent};
     font-size: 14px;
-    color: #eff1ed;
+    color: ${colors.grayText};
     border-bottom: none;
   }
   .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
   .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
   .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
   .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
-    background: #1d1b22;
+    background: ${colors.grayBG};
   }
   .select-asset-container {
     margin-bottom: 34px;
@@ -64,7 +64,7 @@ const TableStyled = styled(Table)`
   .ant-pagination-disabled {
     a,
     .anticon {
-      color: #99a3ff;
+      color: ${colors.primaryBrandLight};
     }
   }
   .ant-pagination-prev,
@@ -73,29 +73,29 @@ const TableStyled = styled(Table)`
   }
   .ant-pagination-item,
   .ant-pagination-item-link {
-    border: 1px solid #99a3ff;
+    border: 1px solid ${colors.primaryBrandLight};
     background: transparent;
     a,
     .anticon {
-      color: #99a3ff;
+      color: ${colors.primaryBrandLight};
     }
     :hover {
-      border: 1px solid #5465ff;
+      border: 1px solid ${colors.primaryBrandBase};
       a,
       .anticon {
-        color: #5465ff;
+        color: ${colors.primaryBrandBase};
       }
     }
   }
   .ant-pagination-item-active {
     border: none;
-    background: #5465ff;
+    background: ${colors.primaryBrandBase};
     a {
-      color: #ebedff;
+      color: ${colors.primaryBrandBG};
     }
     :hover {
       a {
-        color: #ebedff;
+        color: ${colors.primaryBrandBG};
       }
     }
   }
@@ -152,7 +152,7 @@ const TransferHistoryStyled = styled.div`
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.75px;
-  color: #eff1ed;
+  color: ${colors.grayText};
   width: 1120px;
   .custom-select-wrapper {
     width: 204px;

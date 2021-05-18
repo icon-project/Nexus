@@ -6,6 +6,12 @@ const globalColors = {
   primaryBrand: '#5465FF',
   grayBG: '#1D1B22',
   grayText: '#EFF1ED',
+  darkBG: '#131217',
+  primaryBrandLight: '#99A3FF',
+  primaryBrandBase: '#5465FF',
+  primaryBrandBG: '#EBEDFF',
+
+  grayscaleAccent: '#312F39',
 };
 
 export const colors = (() => {

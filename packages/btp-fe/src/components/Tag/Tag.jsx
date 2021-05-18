@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { colors } from '../Styles/Colors';
 const TagStyled = styled.div`
   .tag-container {
-    background-color: #312f39;
+    background-color: ${colors.grayscaleAccent};
     border-radius: 4px;
     width: fit-content;
     height: 32px;

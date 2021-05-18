@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import ArrowIconSrc from 'assets/images/arrow-icon.svg';
-
+import { colors } from '../Styles/Colors';
 const SelectStyled = styled.div`
   .custom-select-wrapper {
     border: none;
@@ -19,7 +19,7 @@ const SelectStyled = styled.div`
     align-items: center;
     justify-content: space-between;
     font-size: 16px;
-    color: #eff1ed;
+    color: ${colors.grayText};
     height: 44px;
     line-height: 24px;
     letter-spacing: 0.75px;
@@ -53,19 +53,19 @@ const SelectStyled = styled.div`
     padding: 10px 15px;
     font-size: 14px;
     font-weight: 300;
-    color: #eff1ed;
+    color: ${colors.grayText};
     cursor: pointer;
     transition: all 0.5s;
-    background-color: #1d1b22;
+    background-color: ${colors.grayBG};
     height: 40px;
     letter-spacing: 0.75px;
   }
   .custom-option:hover {
     cursor: pointer;
-    background-color: #312f39;
+    background-color: ${colors.grayscaleAccent};
   }
   .custom-option.selected {
-    background-color: #312f39;
+    background-color: ${colors.grayscaleAccent};
     height: 40px;
   }
   .arrow {
