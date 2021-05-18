@@ -2,7 +2,7 @@ import { memo } from 'react';
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
 
-import { Button } from '../Button';
+import { PrimaryButton } from '../Button';
 import { Loader } from '../Loader';
 import { colors } from '../Styles/Colors';
 
@@ -89,7 +89,7 @@ const Content = styled.div`
   }
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(PrimaryButton)`
   width: 100%;
   margin-top: 42px;
 `;
