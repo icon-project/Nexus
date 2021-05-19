@@ -15,6 +15,7 @@ const TableStyled = styled(Table)`
     font-family: Poppins;
   }
   .ant-table-tbody {
+    background-color: ${colors.darkBG};
     color: ${colors.grayText};
     font-size: 16px;
   }
@@ -22,10 +23,11 @@ const TableStyled = styled(Table)`
     border-bottom: 1px solid #353242;
   }
   .ant-table-thead > tr > th {
-    background: ${colors.grayscaleAccent};
+    background: ${colors.grayAccent};
     font-size: 14px;
     color: ${colors.grayText};
     border-bottom: none;
+    font-weight: 400;
   }
   .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
   .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
