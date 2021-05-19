@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from '../../hooks/useRematch';
 import { Layout, Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import Nav from './Nav';
@@ -444,6 +445,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
     e.preventDefault();
     setSelectedWallet(e.target.id);
   };
+
   useEffect(() => {
     let id;
     if (loading) {
@@ -456,6 +458,12 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
       clearTimeout(id);
     };
   }, [loading, setLoading]);
+
+  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
+    openModal,
+    setDisplay,
+  }));
+
   return (
     <StyledHeader>
       {showModal && (
@@ -521,7 +529,21 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
           )}
         </div>
       )}
-      <div className="left-side">BTP Dashboard</div>
+      <div
+        className="left-side"
+        onClick={() =>
+          openModal({
+            icon: 'checkIcon',
+            desc: 'Your transaction was submitted successfully.',
+            button: {
+              text: 'Continue transfer',
+              onClick: () => setDisplay(false),
+            },
+          })
+        }
+      >
+        BTP Dashboard
+      </div>
       <Nav />
       {userStatus.authorized || authorized ? (
         <div className="right-side">
