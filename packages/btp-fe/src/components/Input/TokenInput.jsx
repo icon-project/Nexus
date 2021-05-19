@@ -16,6 +16,8 @@ const Wrapper = styled.div`
 
   .token-label {
     ${mediumBoldHeader}
+    word-break: break-word;
+    margin: 0 32px;
   }
 `;
 

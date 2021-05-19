@@ -26,6 +26,11 @@ const SendToken = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .send-token {
+      max-width: 280px;
+      word-break: break-word;
+    }
   }
 `;
 
@@ -106,7 +111,7 @@ export const Approval = memo(({ setStep, tokenValue }) => (
     <SendToken>
       <Text className="small sub-heading">You will send</Text>
       <div className="content">
-        <Header className="medium bold">{tokenValue || 0} ETH</Header>
+        <Header className="medium bold send-token">{tokenValue || 0} ETH</Header>
         <Text className="medium">= $108,670.92</Text>
       </div>
     </SendToken>
