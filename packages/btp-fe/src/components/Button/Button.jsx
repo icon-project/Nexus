@@ -29,9 +29,9 @@ const Button = ({
     <ButtonStyle
       height={`${height}px`}
       width={`${width}px`}
-      borderRadius={`${borderRadius}px`}
-      backgroundColor={backgroundColor}
-      textColor={textColor}
+      $borderRadius={`${borderRadius}px`}
+      $backgroundColor={backgroundColor}
+      $textColor={textColor}
       className={className}
       {...rest}
     >

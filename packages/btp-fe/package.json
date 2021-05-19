@@ -103,6 +103,7 @@
     "i18next": "19.8.4",
     "i18next-browser-languagedetector": "6.0.1",
     "i18next-http-backend": "1.0.23",
+    "icon-sdk-js": "0.0.19",
     "identity-obj-proxy": "3.0.0",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
