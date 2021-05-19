@@ -1,36 +1,8 @@
 {
-  "dropdown": {
-    "logout": "",
-    "my_profile": "",
-    "setting": ""
-  },
-  "footer": {
-    "created_by": ""
-  },
-  "gender": {
-    "female": "",
-    "male": "",
-    "other": ""
-  },
-  "notification": {
-    "file_upload_failed": "",
-    "file_upload_success": ""
-  },
-  "status": {
-    "contains": "",
-    "contains_case_sensitive": "",
-    "equal": "",
-    "is_greater_than": "",
-    "is_greater_than_or_equal_to": "",
-    "is_less_than": "",
-    "is_less_than_or_equal_to": "",
-    "not_equal": ""
-  },
-  "table": {
-    "reset": "",
-    "search": ""
-  },
-  "validation": {
-    "maximum_image_size": ""
+  "not_found_page": {
+    "back_home": "",
+    "description": "",
+    "page_title": "",
+    "title": ""
   }
 }

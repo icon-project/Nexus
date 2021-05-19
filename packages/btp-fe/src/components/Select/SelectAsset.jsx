@@ -69,10 +69,10 @@ const SelectStyled = styled.div`
   }
   .custom-option:hover {
     cursor: pointer;
-    background-color: ${colors.grayscaleAccent};
+    background-color: ${colors.grayAccent};
   }
   .custom-option.selected {
-    background-color: ${colors.grayscaleAccent};
+    background-color: ${colors.grayAccent};
   }
   .arrow {
     position: relative;
