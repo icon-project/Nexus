@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Nav from './Nav';
 import { Modal } from '../NotificationModal';
 // import { colors } from '../Styles/Colors';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined } from '@ant-design/icons';
 // import { LanguageSwitcher } from '../LanguageSwitcher';
 
 // import { media } from '../Styles/Media';
@@ -14,6 +14,7 @@ import { Dropdown } from '../Dropdown';
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
+import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
 
 const StyledHeader = styled(Layout.Header)`
@@ -38,6 +39,14 @@ const StyledHeader = styled(Layout.Header)`
   }
   svg {
     pointer-events: none;
+  }
+  .close-btn {
+    background: url('${closeIcon}') !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-repeat: no-repeat !important;
+    justify-self: end;
+    align-self: center;
   }
   .left-side {
     min-width: 175px;
@@ -442,9 +451,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
             <div className="connect-a-wallet-detail">
               <h4>
                 <span>{mockWallets[selectedWallet].title}</span>
-                <button id="close-detail" onClick={toggleModal}>
-                  <CloseOutlined />
-                </button>
+                <button id="close-detail" className="close-btn" onClick={toggleModal} />
               </h4>
               <h6>{mockWallets[selectedWallet].network}</h6>
               <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
@@ -470,9 +477,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
             <div className="connect-a-wallet-card">
               <h4>
                 <span className="card-title">Connect a wallet</span>
-                <button onClick={toggleModal}>
-                  <CloseOutlined />
-                </button>
+                <button className="close-btn" onClick={toggleModal} />
               </h4>
               <WalletSelector
                 type="metamask"
