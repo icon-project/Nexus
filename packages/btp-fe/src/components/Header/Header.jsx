@@ -4,8 +4,9 @@ import { useDispatch } from '../../hooks/useRematch';
 import { Layout, Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import Nav from './Nav';
+import { Modal } from '../NotificationModal';
 // import { colors } from '../Styles/Colors';
-import { CheckOutlined, CloseOutlined, CopyOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 // import { LanguageSwitcher } from '../LanguageSwitcher';
 
 // import { media } from '../Styles/Media';
@@ -13,11 +14,7 @@ import { Dropdown } from '../Dropdown';
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
-import Circle from '../../assets/images/loading-eclipse.svg';
-
-const SpinSpan = styled.span`
-  animation: spin 3s linear infinite;
-`;
+import copyIcon from '../../assets/images/copy-icon.svg';
 
 const StyledHeader = styled(Layout.Header)`
   font-family: Poppins;
@@ -96,6 +93,9 @@ const StyledHeader = styled(Layout.Header)`
     line-height: 24px;
     text-align: center;
     letter-spacing: 1px;
+    min-height: 100vh;
+    width: 100%;
+    position: fixed;
     h4 {
       color: #eff1ed;
       position: relative;
@@ -175,14 +175,11 @@ const StyledHeader = styled(Layout.Header)`
         }
       }
     }
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
     background-color: rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(10px);
     z-index: 1;
@@ -197,30 +194,6 @@ const StyledHeader = styled(Layout.Header)`
     line-height: 20px;
     text-align: center;
     letter-spacing: 1px;
-  }
-  .loading-modal {
-    width: 352px;
-    height: 208px;
-    background: #1d1b22;
-    border-radius: 4px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    > button {
-      font-size: 18px;
-      position: absolute;
-      top: 32px;
-      right: 35px;
-      height: auto;
-      width: auto;
-      background-color: transparent;
-      margin: 0;
-    }
-    span:last-of-type {
-      margin-bottom: 26px;
-    }
   }
   .connect-a-wallet-detail {
     width: 480px;
@@ -314,7 +287,8 @@ const StyledHeader = styled(Layout.Header)`
       span {
         justify-self: end;
       }
-      button {
+      .copy-address {
+        cursor: pointer;
         grid-column: 2/3;
         grid-row: 2/3;
         color: #7fdeff;
@@ -325,6 +299,9 @@ const StyledHeader = styled(Layout.Header)`
         letter-spacing: 0.75px;
         margin: 0;
         justify-self: end;
+        img {
+          margin-right: 4.67px;
+        }
       }
     }
     .nav-button {
@@ -414,14 +391,6 @@ const WalletSelector = ({ type, active, onClick }) => {
   );
 };
 
-const LoadingSpin = () => {
-  return (
-    <SpinSpan>
-      <img src={Circle} alt="loading spinner" />
-    </SpinSpan>
-  );
-};
-
 const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => {
   const [authorized, setAuthorized] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -468,14 +437,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
       {showModal && (
         <div className="connect-a-wallet-modal">
           {loading ? (
-            <div className="loading-modal">
-              <button onClick={toggleModal}>
-                <CloseOutlined />
-              </button>
-              <LoadingSpin />
-              <br />
-              <span>Please wait a moment</span>
-            </div>
+            <Modal icon="loader" desc="Please wait a moment." width="352px" display />
           ) : showDetail ? (
             <div className="connect-a-wallet-detail">
               <h4>
@@ -494,9 +456,10 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
               <div className="wallet-address">
                 <span>Wallet Address</span>
                 <span>{hashShortener(mockWallets[selectedWallet].hash)}</span>
-                <button>
-                  <CopyOutlined /> Copy address
-                </button>
+                <span className="copy-address">
+                  <img src={copyIcon} />
+                  Copy address
+                </span>
               </div>
               <div className="nav-button">
                 <button>Disconnect wallet</button>
