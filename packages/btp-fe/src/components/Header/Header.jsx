@@ -311,6 +311,9 @@ const StyledHeader = styled(Layout.Header)`
         letter-spacing: 0.75px;
         margin: 0;
         justify-self: end;
+        &:active {
+          color: #4e8da2;
+        }
         img {
           margin-right: 4.67px;
         }
