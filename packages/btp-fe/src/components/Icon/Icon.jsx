@@ -6,7 +6,7 @@ import styled from 'styled-components/macro';
 import metaMaskIcon from '../../assets/images/metal-mask.svg';
 import iconexIcon from '../../assets/images/vector-icon.svg';
 import ethIcon from '../../assets/images/eth-icon.svg';
-import copyIcon from '../../assets/images/copy-icon.svg';
+import copyIcon from '../../assets/images/blue-copy-icon.svg';
 
 const sizes = {
   s: '20px',
