@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Nav from './Nav';
 import { Modal } from '../NotificationModal';
@@ -479,10 +480,12 @@ const Header = ({ userStatus = defaultUser }) => {
               <div className="wallet-address">
                 <span>Wallet Address</span>
                 <span title={address}>{hashShortener(address)}</span>
-                <span className="copy-address">
-                  <img src={copyIcon} />
-                  Copy address
-                </span>
+                <CopyToClipboard text={address}>
+                  <span className="copy-address">
+                    <img src={copyIcon} />
+                    Copy address
+                  </span>
+                </CopyToClipboard>
               </div>
               <div className="nav-button">
                 <button onClick={onDisconnectWallet}>Disconnect wallet</button>
