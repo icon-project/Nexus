@@ -405,7 +405,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const {
-    accountInfo: { address, balance, unit },
+    accountInfo: { address, balance, unit, wallet },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -470,7 +470,7 @@ const Header = ({ userStatus = defaultUser }) => {
           ) : showDetail ? (
             <div className="connect-a-wallet-detail">
               <h4>
-                <span>{mockWallets[selectedWallet].title}</span>
+                <span>{mockWallets[wallet].title}</span>
                 <button id="close-detail" className="close-btn" onClick={toggleModal} />
               </h4>
               <h6>{currentICONexNetwork.name}</h6>
