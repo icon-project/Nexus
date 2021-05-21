@@ -425,6 +425,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const handleConnect = async (e) => {
     e.preventDefault();
     setLoading(true);
+    resetAccountInfo();
     if (e.target.id == 'start-connect') {
       if (selectedWallet === wallets.iconex) {
         const hasAccount = await requestAddress();
