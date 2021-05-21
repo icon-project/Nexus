@@ -350,6 +350,7 @@ const StyledHeader = styled(Layout.Header)`
 `;
 
 const hashShortener = (hashStr) => {
+  if (!hashStr) return '';
   const len = hashStr.length;
   if (len <= 10) {
     return hashStr;
@@ -438,7 +439,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
     const getMetaMaskInfo = async () => {
       const metaMaskAccounts = await getEthereumAccounts();
       setWalletAccount(metaMaskAccounts[0]);
-      setAuthorized(true);
+      //setAuthorized(true);
       const b = await getBalance(metaMaskAccounts[0]);
       console.log('balance', b);
     };

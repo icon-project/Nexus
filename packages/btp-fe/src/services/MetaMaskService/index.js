@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+const provider = new ethers.providers.Web3Provider(window.ethereum);
 const { ethereum } = window;
 export const isMetaMaskInstalled = () => {
   //Have to check the ethereum binding on the window object to see if it's installed
@@ -15,10 +17,9 @@ export const disConnectMetaMask = () => {
 };
 
 export const getBalance = async (walletAddress) => {
-  return await ethereum.request({
-    method: 'eth_getBalance',
-    params: [walletAddress, 'latest'],
-  });
+  const balance = await provider.getBalance(walletAddress);
+  ethers.utils.formatEther(balance);
+  return ethers.utils.formatEther(balance);
 };
 // const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
 
