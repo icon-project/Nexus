@@ -5,6 +5,9 @@ import Routes from './Routes';
 import { ModalWrapper } from './components/NotificationModal';
 
 import './App.css';
+import { addICONexListener } from './connectors/ICONex';
+
+addICONexListener();
 
 function App() {
   return (

@@ -69,7 +69,6 @@ const Layout = ({ className, children, breadcrumbItems }) => {
 
 Layout.propTypes = {
   breadcrumbItems: PropTypes.array,
-  menuList: PropTypes.array.isRequired,
   className: PropTypes.string,
   menuOpenedKey: PropTypes.string,
   menuSelectedKey: PropTypes.string,

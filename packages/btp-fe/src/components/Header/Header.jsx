@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
+=======
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Layout, Avatar } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
 import { WalletDetails } from './WalletDetails';
 import { Modal } from '../NotificationModal';
+<<<<<<< HEAD
 import { PrimaryButton, HamburgerButton } from '../Button';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
@@ -26,6 +36,19 @@ import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
 
 const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
+=======
+
+import { useDispatch, useSelect } from '../../hooks/useRematch';
+import { requestAddress } from '../../connectors/ICONex/events';
+import { wallets } from '../../utils/constants';
+import { currentICONexNetwork } from '../../connectors/constants';
+
+import defaultAvatar from '../../assets/images/avatar.svg';
+import MetaMask from '../../assets/images/metal-mask.svg';
+import ICONex from '../../assets/images/icon-ex.svg';
+import closeIcon from '../../assets/images/close-icon.svg';
+import copyIcon from '../../assets/images/copy-icon.svg';
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
 
 const StyledHeader = styled(Layout.Header)`
   height: 80px;
@@ -55,6 +78,69 @@ const StyledHeader = styled(Layout.Header)`
     .user-avatar {
       margin-left: 20px;
       cursor: pointer;
+<<<<<<< HEAD
+=======
+    }
+    .wallet-nfo {
+      padding-top: 4px;
+      margin-left: 8px;
+    }
+    .currency-ctn {
+      display: inline-block;
+      padding-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.75px;
+      .unit {
+        margin-left: 4px;
+      }
+    }
+    .dropdown-hoverable {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+  }
+  .connect-a-wallet-modal {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: 1px;
+    min-height: 100vh;
+    width: 100%;
+    position: fixed;
+    h4 {
+      color: #eff1ed;
+      position: relative;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 20% 60% 20%;
+      justify-content: center;
+      padding: 0 32px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 25px;
+      letter-spacing: 1px;
+      color: #eff1ed;
+      margin-top: 23px;
+      margin-bottom: 31px;
+      .card-title {
+        grid-column: 2;
+        text-align: center;
+      }
+      > button {
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        grid-column: 3;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 18px;
+        margin: 0;
+      }
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
     }
 
     .account-info {
@@ -115,6 +201,7 @@ const StyledHeader = styled(Layout.Header)`
       .connect-to-wallet-btn {
         margin-top: 100px;
       }
+<<<<<<< HEAD
       .account-info {
         flex-direction: column;
         align-items: center;
@@ -123,6 +210,25 @@ const StyledHeader = styled(Layout.Header)`
         .user-avatar, .wallet-info {
           margin: 5px 0;
           text-align: center;
+=======
+      .copy-address {
+        cursor: pointer;
+        grid-column: 2/3;
+        grid-row: 2/3;
+        color: #7fdeff;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 16px;
+        text-align: center;
+        letter-spacing: 0.75px;
+        margin: 0;
+        justify-self: end;
+        &:active {
+          color: #4e8da2;
+        }
+        img {
+          margin-right: 4.67px;
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
         }
       }
     }
@@ -171,6 +277,23 @@ const mockWallets = {
   },
 };
 
+<<<<<<< HEAD
+=======
+const WalletSelector = ({ type, active, onClick }) => {
+  return (
+    <button
+      id={mockWallets[type].id}
+      className="wallet-selector"
+      autoFocus={active}
+      onClick={onClick}
+    >
+      <Avatar src={mockWallets[type].icon} size={30} />
+      <span className="wallet-title">{mockWallets[type].title}</span> {active && <CheckOutlined />}
+    </button>
+  );
+};
+
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
 const Header = ({ userStatus = defaultUser }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
@@ -179,6 +302,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
       EthereumInstance.getEthereumAccounts();
@@ -204,15 +328,29 @@ const Header = ({ userStatus = defaultUser }) => {
       cancelConfirmation,
       currentNetwork,
     },
+=======
+  const {
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation },
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
 
+<<<<<<< HEAD
   const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
     resetAccountInfo,
   }));
 
   const shortedAddress = hashShortener(address);
+=======
+  const { openModal, setDisplay, resetAccountInfo } = useDispatch(
+    ({ modal: { openModal, setDisplay }, account: { resetAccountInfo } }) => ({
+      openModal,
+      setDisplay,
+      resetAccountInfo,
+    }),
+  );
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
 
   const toggleModal = () => {
     setShowModal((prev) => !prev);
@@ -222,6 +360,7 @@ const Header = ({ userStatus = defaultUser }) => {
     e.preventDefault();
     setLoading(true);
     resetAccountInfo();
+<<<<<<< HEAD
     localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
     if (selectedWallet === wallets.iconex || selectedWallet === wallets.hana) {
       const hasAccount = requestAddress();
@@ -235,6 +374,16 @@ const Header = ({ userStatus = defaultUser }) => {
         await EthereumInstance.getEthereumAccounts();
       }
       setLoading(false);
+=======
+    if (e.target.id == 'start-connect') {
+      if (selectedWallet === wallets.iconex) {
+        const hasAccount = await requestAddress();
+
+        if (!hasAccount) {
+          setLoading(false);
+        }
+      }
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -242,7 +391,10 @@ const Header = ({ userStatus = defaultUser }) => {
   };
 
   const onDisconnectWallet = () => {
+<<<<<<< HEAD
     resetTransferStep();
+=======
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
     resetAccountInfo();
     toggleModal();
   };
@@ -266,6 +418,7 @@ const Header = ({ userStatus = defaultUser }) => {
   return (
     <StyledHeader $showMenu={showMenu}>
       {showModal && (
+<<<<<<< HEAD
         <>
           {loading && !cancelConfirmation ? (
             <Modal
@@ -287,6 +440,54 @@ const Header = ({ userStatus = defaultUser }) => {
                 shortedAddress={shortedAddress}
                 onDisconnectWallet={onDisconnectWallet}
                 onSwitchWallet={onSwitchWallet}
+=======
+        <div className="connect-a-wallet-modal">
+          {loading && !cancelConfirmation ? (
+            <Modal icon="loader" desc="Please wait a moment." width="352px" display />
+          ) : showDetail ? (
+            <div className="connect-a-wallet-detail">
+              <h4>
+                <span>{mockWallets[wallet].title}</span>
+                <button id="close-detail" className="close-btn" onClick={toggleModal} />
+              </h4>
+              <h6>{currentICONexNetwork.name}</h6>
+              <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
+              <div className="wallet-balance">
+                <span>Balance</span>
+                <span>{`${balance} ${unit}`}</span>
+                <span> = $98.22 USD</span>
+              </div>
+              <div className="wallet-address">
+                <span>Wallet Address</span>
+                <span title={address}>{hashShortener(address)}</span>
+                <CopyToClipboard text={address}>
+                  <span className="copy-address">
+                    <img src={copyIcon} />
+                    Copy address
+                  </span>
+                </CopyToClipboard>
+              </div>
+              <div className="nav-button">
+                <button onClick={onDisconnectWallet}>Disconnect wallet</button>
+                <button onClick={onSwitchWallet}>Switch wallet</button>
+              </div>
+            </div>
+          ) : (
+            <div className="connect-a-wallet-card">
+              <h4>
+                <span className="card-title">Connect a wallet</span>
+                <button className="close-btn" onClick={toggleModal} />
+              </h4>
+              <WalletSelector
+                type="metamask"
+                active={selectedWallet == 'metamask'}
+                onClick={handleSelectWallet}
+              />
+              <WalletSelector
+                type="iconex"
+                active={selectedWallet == 'iconex'}
+                onClick={handleSelectWallet}
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
               />
             </Modal>
           ) : (
@@ -358,6 +559,33 @@ const Header = ({ userStatus = defaultUser }) => {
           </PrimaryButton>
         )}
       </div>
+<<<<<<< HEAD
+=======
+      <Nav />
+      {address ? (
+        <div className="right-side">
+          <span className="wallet-name">{currentICONexNetwork.name}</span>
+          <Avatar
+            className="user-avatar"
+            src={userStatus.avatar}
+            size={48}
+            onClick={onAvatarClicked}
+          />
+          <span className="wallet-nfo">
+            <span>{hashShortener(address)}</span>
+            <br />
+            <span className="currency-ctn">
+              <span>{balance}</span>
+              <span className="unit">{unit}</span>
+            </span>
+          </span>
+        </div>
+      ) : (
+        <button className="connect-to-wallet-btn" onClick={toggleModal}>
+          Connect a Wallet
+        </button>
+      )}
+>>>>>>> 8630f5e (Feat/#21 connect to iconex wallet (#14))
     </StyledHeader>
   );
 };
