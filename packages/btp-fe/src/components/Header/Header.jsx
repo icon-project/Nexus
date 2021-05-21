@@ -16,6 +16,13 @@ import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
 import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
+import {
+  connectMetaMaskWallet,
+  getEthereumAccounts,
+  isMetaMaskConnected,
+  disConnectMetaMask,
+  getBalance,
+} from '../../services/MetaMaskService';
 
 const StyledHeader = styled(Layout.Header)`
   font-family: Poppins;
@@ -60,7 +67,7 @@ const StyledHeader = styled(Layout.Header)`
     display: flex;
     align-items: center;
     min-width: 305px;
-    margin-left: 80px;
+    margin-left: auto;
     font-family: Poppins;
     font-style: normal;
     font-weight: 100;
@@ -406,16 +413,20 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
   const [selectedWallet, setSelectedWallet] = useState('metamask');
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
-
+  const [walletAccount, setWalletAccount] = useState({});
   const toggleModal = (e) => {
     e.preventDefault();
     setShowModal((prev) => !prev);
     setShowDetail(false);
   };
-  const handleConnect = (e) => {
+
+  const handleConnect = async (e) => {
     e.preventDefault();
-    if (e.target.id == 'start-connect') {
-      return setLoading(true);
+    if (selectedWallet == 'metamask') {
+      setLoading(true);
+      await connectMetaMaskWallet();
+      const metaMaskAccounts = await getEthereumAccounts();
+      setWalletAccount(metaMaskAccounts[0]);
     }
     setAuthorized((prev) => !prev);
   };
@@ -423,6 +434,18 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
     e.preventDefault();
     setSelectedWallet(e.target.id);
   };
+  useEffect(() => {
+    const getMetaMaskInfo = async () => {
+      const metaMaskAccounts = await getEthereumAccounts();
+      setWalletAccount(metaMaskAccounts[0]);
+      setAuthorized(true);
+      const b = await getBalance(metaMaskAccounts[0]);
+      console.log('balance', b);
+    };
+    if (isMetaMaskConnected) {
+      getMetaMaskInfo();
+    }
+  }, []);
   useEffect(() => {
     let id;
     if (loading) {
@@ -462,7 +485,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
               </div>
               <div className="wallet-address">
                 <span>Wallet Address</span>
-                <span>{hashShortener(mockWallets[selectedWallet].hash)}</span>
+                <span>{hashShortener(walletAccount)}</span>
                 <span className="copy-address">
                   <img src={copyIcon} />
                   Copy address
@@ -490,7 +513,7 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
                 onClick={handleSelectWallet}
               />
               <button id="start-connect" onClick={handleConnect}>
-                Connect a Wallet
+                Next
               </button>
             </div>
           )}
@@ -515,11 +538,11 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
       {userStatus.authorized || authorized ? (
         <div className="right-side">
           <span className="wallet-name">{wallet.name}</span>
-          <Dropdown items={items} fullWidthOnMobile handleLogout={handleConnect}>
+          <Dropdown items={items} fullWidthOnMobile handleLogout={() => disConnectMetaMask()}>
             <div className="dropdown-hoverable">
               <Avatar className="user-avatar" src={userStatus.avatar} size={48} />
               <span className="wallet-nfo">
-                <span>{hashShortener(wallet.hash)}</span>
+                <span>{hashShortener(walletAccount)}</span>
                 <br />
                 <span className="currency-ctn">
                   <span>{wallet.amount}</span>
