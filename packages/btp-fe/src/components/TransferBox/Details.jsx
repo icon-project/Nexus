@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import styled from 'styled-components/macro';
 import { TokenInput, TextInput } from '../Input';
 import { Icon } from '../Icon/Icon';
@@ -80,11 +81,16 @@ const Addresses = styled.div`
   }
 `;
 
-export const Details = () => {
+export const Details = memo(({ setStep, tokenValue, setTokenValue, initalInputDisplay }) => {
   return (
     <Wrapper>
       <Header className="small bold heading">Transfer</Header>
-      <TokenInput placeholder="0 ETH" />
+      <TokenInput
+        placeholder="0 ETH"
+        value={tokenValue}
+        setTokenValue={setTokenValue}
+        initalInputDisplay={initalInputDisplay}
+      />
 
       <div className="content">
         <Text className="small label">Recipient</Text>
@@ -115,7 +121,9 @@ export const Details = () => {
           <Text className="medium">Binance Smart Chain</Text>
         </div>
       </Addresses>
-      <ControlButtons />
+      <ControlButtons onExecute={() => setStep(2)} />
     </Wrapper>
   );
-};
+});
+
+Details.displayName = 'Details';
