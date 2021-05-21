@@ -25,7 +25,7 @@ async function getAmountFeeAggregationSCORE() {
         }
         return result;
     } catch(e) {
-        logger.error(e, 'getAmountFeeAggregationSCORE() failed');
+        logger.error(e, 'getAmountFeeAggregationSCORE() failed when execute get list tokens');
         throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + e.message);
     }
 }
@@ -44,7 +44,7 @@ async function getAvailableBalance(nameToken) {
         logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
         return availableBalance;
      } catch (e) {
-        logger.error(e, 'getAvailableBalance() failed');
+        logger.error(e, 'getAvailableBalance() failed when execute get balance FAS');
         throw new Error('"getAvailableBalance" job failed: ' + e.message);
      }
  }

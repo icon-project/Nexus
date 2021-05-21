@@ -9,10 +9,10 @@ async function getNetworkInfo(request, response) {
   const assets = await model.getAmountFeeAggregationSCORE();
   response.status(HttpStatus.OK).json({
     content: {
-      volume: 1000,
+      volume: 1000, // TODO: total amount of tokens in FeeAggregationSCORE
       fee: {
-        cumulativeAmount: 100000,
-        currentAmount: 500,
+        cumulativeAmount: 100000, // TODO: total tokens ever had in FeeAggregationSCORE
+        currentAmount: 500, // TODO: total amount of tokens valid in FeeAggregationSCORE
         assets
       }
     }
