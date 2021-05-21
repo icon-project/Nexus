@@ -1,0 +1,10 @@
+{
+  "env": {
+    "NODE_ENV": "development",
+    "DEBUG": "app,indexer,icon,block",
+    "DEBUG_DEPTH": 5
+  },
+  "watch": [
+    "src"
+  ]
+}
