@@ -405,7 +405,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const {
-    accountInfo: { address, balance, unit, wallet },
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -465,7 +465,7 @@ const Header = ({ userStatus = defaultUser }) => {
     <StyledHeader>
       {showModal && (
         <div className="connect-a-wallet-modal">
-          {loading ? (
+          {loading && !cancelConfirmation ? (
             <Modal icon="loader" desc="Please wait a moment." width="352px" display />
           ) : showDetail ? (
             <div className="connect-a-wallet-detail">

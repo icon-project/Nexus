@@ -5,6 +5,7 @@ const initState = {
   wallet: '',
   address: '',
   balance: 0, // TODO: calculating based on BigInt
+  cancelConfirmation: false,
 };
 
 const account = {

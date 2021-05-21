@@ -28,6 +28,12 @@ const eventHandler = async (event) => {
     case TYPES.RESPONSE_HAS_ACCOUNT:
       window.hasICONexAccount = true;
       break;
+
+    case 'CANCEL':
+      store.dispatch.account.setAccountInfo({
+        cancelConfirmation: true,
+      });
+      break;
     default:
       break;
   }
