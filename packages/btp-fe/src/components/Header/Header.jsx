@@ -13,7 +13,8 @@ import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { currentICONexNetwork } from '../../connectors/constants';
 import { Header as Heading, SubTitle, Text } from '../Typography';
-import { smallBoldSubtitle } from '../Typography/SubTitle';
+import { smallBoldSubtitle, mediumBoldSubtitle } from '../Typography/SubTitle';
+import { mediumText, smallText } from '../Typography/Text';
 import { colors } from '../Styles/Colors';
 
 import defaultAvatar from '../../assets/images/avatar.svg';
@@ -30,6 +31,8 @@ const {
   // grayBG,
   successState,
   grayAccent,
+  tertiaryBase,
+  grayScaleSubText,
 } = colors;
 
 const StyledHeader = styled(Layout.Header)`
@@ -141,11 +144,10 @@ const StyledHeader = styled(Layout.Header)`
       margin-bottom: 20px;
 
       span:first-of-type {
+        ${mediumText};
+
         justify-self: start;
-        font-size: 16px;
-        line-height: 24px;
-        letter-spacing: 0.75px;
-        color: #85838e;
+        color: ${grayScaleSubText};
       }
 
       span {
@@ -159,14 +161,11 @@ const StyledHeader = styled(Layout.Header)`
       }
 
       span:last-of-type {
+        ${smallText}
+        color: ${grayScaleSubText};
+
         grid-column: 2/3;
         grid-row: 2/3;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 20px;
-        letter-spacing: 0.75px;
-        color: #85838e;
       }
     }
 
@@ -178,11 +177,9 @@ const StyledHeader = styled(Layout.Header)`
       margin-bottom: 20px;
 
       span:first-of-type {
+        ${mediumText};
         justify-self: start;
-        font-size: 16px;
-        line-height: 24px;
-        letter-spacing: 0.75px;
-        color: #85838e;
+        color: ${grayScaleSubText};
       }
       span {
         justify-self: end;
@@ -191,14 +188,11 @@ const StyledHeader = styled(Layout.Header)`
         cursor: pointer;
         grid-column: 2/3;
         grid-row: 2/3;
-        color: #7fdeff;
-        font-weight: 600;
-        font-size: 12px;
-        line-height: 16px;
+        color: ${tertiaryBase};
+
         text-align: center;
-        letter-spacing: 0.75px;
-        margin: 0;
         justify-self: end;
+
         &:active {
           color: #4e8da2;
         }
@@ -215,22 +209,20 @@ const StyledHeader = styled(Layout.Header)`
       justify-content: space-between;
 
       button:first-of-type {
-        color: #99a3ff;
+        color: ${primaryBrandLight};
         width: 192px;
         height: 64px;
         border-radius: 4px;
-        border: solid 1px #99a3ff;
+        border: solid 1px ${primaryBrandLight};
         background-color: transparent;
       }
       button {
-        font-size: 16px;
-        line-height: 24px;
+        ${mediumBoldSubtitle};
         text-align: center;
-        letter-spacing: 1px;
         width: 192px;
         height: 64px;
         border-radius: 4px;
-        background-color: #5465ff;
+        background-color: ${primaryBrandBase};
       }
     }
   }
@@ -403,10 +395,10 @@ const Header = ({ userStatus = defaultUser }) => {
                   <span>Wallet Address</span>
                   <span title={address}>{shortedAddress}</span>
                   <CopyToClipboard text={address}>
-                    <span className="copy-address">
+                    <Text className="x-small bold copy-address">
                       <img src={copyIcon} />
                       Copy address
-                    </span>
+                    </Text>
                   </CopyToClipboard>
                 </div>
                 <div className="nav-button">

@@ -19,6 +19,7 @@ const globalColors = {
   grayLine: '#353242',
   grayDark: '#131314',
   grayAccent: '#312F39',
+  grayScaleSubText: '#85838E',
 
   // states
   successState: '#5EF38C',
