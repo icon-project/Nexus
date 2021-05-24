@@ -1,30 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import { smallBoldSubtitle } from '../Typography/SubTitle';
+import { colors } from '../Styles/Colors';
 
 const NavStyled = styled.ul`
   display: flex;
   flex-flow: nowrap;
-  /* margin-left: 32.5px; */
   justify-content: flex-start;
   align-items: center;
   margin: 0 auto 0 32.5px;
+
   li {
+    a.active {
+      .nav-link {
+        background-color: ${colors.brandSecondaryBase};
+      }
+    }
+
     .nav-link {
+      ${smallBoldSubtitle}
+
       background-color: transparent;
-      font-family: Poppins;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
+
       padding: 8px 16px;
       border-radius: 4px;
       margin-right: 4px;
-      letter-spacing: 1px;
-      color: white;
+      color: ${colors.brandSecondaryBG};
+
       &:focus,
       :hover {
-        background-color: #28262f;
+        background-color: ${colors.brandSecondaryBase};
       }
     }
     &:last-child {
