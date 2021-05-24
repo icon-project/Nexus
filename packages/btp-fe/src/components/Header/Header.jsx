@@ -11,6 +11,7 @@ import { Modal } from '../NotificationModal';
 import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
+import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
 
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
@@ -458,6 +459,11 @@ const Header = ({ userStatus = defaultUser }) => {
       setShowDetail(true);
     }
   }, [address]);
+  useEffect(() => {
+    if (window.localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
+      getEthereumAccounts();
+    }
+  }, []);
 
   return (
     <StyledHeader>

@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import store from '../../store';
 import { wallets } from '../../utils/constants';
+import { METAMASK_LOCAL_ADDRESS } from '../constants';
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const { ethereum } = window;
 
@@ -12,25 +13,6 @@ export const isMetaMaskInstalled = () => {
 export const isMetaMaskConnected = () => {
   return ethereum.isConnected();
 };
-
-export const disConnectMetaMask = () => {
-  ethereum.on('disconnect', (error) => {
-    console.log('error', error);
-  });
-};
-
-export const getBalance = async (walletAddress) => {
-  const balance = await provider.getBalance(walletAddress);
-  ethers.utils.formatEther(balance);
-  return ethers.utils.formatEther(balance);
-};
-// const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
-
-// //This will start the onboarding proccess
-// const onClickInstall = () => {
-//   //On this object we have startOnboarding which will start the onboarding process for our end user
-//   onboarding.startOnboarding();
-// };
 
 export const connectMetaMaskWallet = async () => {
   try {
@@ -63,6 +45,7 @@ export const getEthereumAccounts = async () => {
   try {
     const accounts = await ethereum.request({ method: 'eth_accounts' });
     const address = accounts[0];
+    localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
     const balance = await provider.getBalance(address);
     const currentNetwork = getCurrentNetwork();
     store.dispatch.account.setAccountInfo({
