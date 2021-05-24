@@ -12,6 +12,9 @@ import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { currentICONexNetwork } from '../../connectors/constants';
+import { Header as Heading, Text } from '../Typography';
+import { smallBoldSubtitle } from '../Typography/SubTitle';
+import { colors } from '../Styles/Colors';
 
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
@@ -19,29 +22,24 @@ import ICONex from '../../assets/images/icon-ex.svg';
 import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
 
+const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
+
 const StyledHeader = styled(Layout.Header)`
-  font-family: Poppins;
   height: 80px;
   width: 100%;
   padding: 0 160px 0 40.5px;
-  color: #eff1ed;
-  background-color: #131217;
-  border-bottom: 1px solid #353242;
+  color: ${grayText};
+  background-color: ${darkBG};
+  border-bottom: 1px solid ${grayLine};
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  letter-spacing: 1px;
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
+
   svg {
     pointer-events: none;
   }
+
   .close-btn {
     background: url('${closeIcon}') !important;
     width: 18px !important;
@@ -50,39 +48,37 @@ const StyledHeader = styled(Layout.Header)`
     justify-self: end;
     align-self: center;
   }
+
   .left-side {
     min-width: 175px;
-    color: #99a3ff;
-    font-family: Poppins;
-    font-weight: 700;
-    font-size: 21px;
-    line-height: 28px;
+    color: ${primaryBrandLight};
   }
+
   .right-side {
+    ${smallBoldSubtitle};
+
     display: flex;
     align-items: center;
     min-width: 305px;
     margin-left: 80px;
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 100;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 1px;
+
     br {
       margin: 10px;
     }
-    line-height: 0.8;
+
     display: flex;
     flex-wrap: nowrap;
+
     .user-avatar {
       margin-left: 20px;
       cursor: pointer;
     }
+
     .wallet-nfo {
       padding-top: 4px;
       margin-left: 8px;
     }
+
     .currency-ctn {
       display: inline-block;
       padding-top: 10px;
@@ -94,20 +90,19 @@ const StyledHeader = styled(Layout.Header)`
         margin-left: 4px;
       }
     }
+
     .dropdown-hoverable {
       display: flex;
       flex-wrap: nowrap;
     }
   }
+
   .connect-a-wallet-modal {
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
     text-align: center;
-    letter-spacing: 1px;
     min-height: 100vh;
     width: 100%;
     position: fixed;
+
     h4 {
       color: #eff1ed;
       position: relative;
@@ -166,11 +161,10 @@ const StyledHeader = styled(Layout.Header)`
         padding: 0 28.5px;
         background: transparent;
         color: #eff1ed;
+
         .wallet-title {
           margin-right: auto;
           margin-left: 13.3px;
-          color: #eff1ed;
-          letter-spacing: 0.75px;
         }
         span {
           grid-column: 3;
@@ -393,7 +387,8 @@ const WalletSelector = ({ type, active, onClick }) => {
       onClick={onClick}
     >
       <Avatar src={mockWallets[type].icon} size={30} />
-      <span className="wallet-title">{mockWallets[type].title}</span> {active && <CheckOutlined />}
+      <Text className="medium wallet-title">{mockWallets[type].title}</Text>
+      {active && <CheckOutlined />}
     </button>
   );
 };
@@ -499,7 +494,7 @@ const Header = ({ userStatus = defaultUser }) => {
           ) : (
             <div className="connect-a-wallet-card">
               <h4>
-                <span className="card-title">Connect a wallet</span>
+                <Heading className="small bold card-title">Connect a wallet</Heading>
                 <button className="close-btn" onClick={toggleModal} />
               </h4>
               <WalletSelector
@@ -532,7 +527,7 @@ const Header = ({ userStatus = defaultUser }) => {
           })
         }
       >
-        BTP Dashboard
+        <Heading className="x-small bold">BTP Dashboard</Heading>
       </div>
       <Nav />
       {address ? (
