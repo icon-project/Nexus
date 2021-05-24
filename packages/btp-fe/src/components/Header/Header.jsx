@@ -22,7 +22,16 @@ import ICONex from '../../assets/images/icon-ex.svg';
 import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
 
-const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
+const {
+  darkBG,
+  grayText,
+  grayLine,
+  primaryBrandLight,
+  primaryBrandBase,
+  grayBG,
+  successState,
+  grayAccent,
+} = colors;
 
 const StyledHeader = styled(Layout.Header)`
   height: 80px;
@@ -104,34 +113,18 @@ const StyledHeader = styled(Layout.Header)`
     position: fixed;
 
     h4 {
-      color: #eff1ed;
       position: relative;
       width: 100%;
       display: grid;
       grid-template-columns: 20% 60% 20%;
       justify-content: center;
       padding: 0 32px;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 25px;
-      letter-spacing: 1px;
-      color: #eff1ed;
       margin-top: 23px;
       margin-bottom: 31px;
+
       .card-title {
         grid-column: 2;
         text-align: center;
-      }
-      > button {
-        width: auto;
-        height: auto;
-        background-color: transparent;
-        grid-column: 3;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        font-size: 18px;
-        margin: 0;
       }
     }
 
@@ -139,17 +132,19 @@ const StyledHeader = styled(Layout.Header)`
       margin: auto 0 32px;
       width: 416px;
       height: 64px;
-      background: #5465ff;
+      background: ${primaryBrandBase};
       border-radius: 4px;
     }
+
     .connect-a-wallet-card {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 480px;
       height: 370px;
-      background: #1d1b22;
+      background: ${grayBG};
       border-radius: 4px;
+
       .wallet-selector {
         margin: 0 0 8px;
         display: flex;
@@ -160,7 +155,7 @@ const StyledHeader = styled(Layout.Header)`
         height: 72px;
         padding: 0 28.5px;
         background: transparent;
-        color: #eff1ed;
+        color: ${grayText};
 
         .wallet-title {
           margin-right: auto;
@@ -172,11 +167,11 @@ const StyledHeader = styled(Layout.Header)`
           justify-content: flex-end;
           align-items: center;
           font-size: 18px;
-          color: #5ef38c;
+          color: ${successState};
         }
         &:hover,
         :focus {
-          background: #312f39;
+          background: ${grayAccent};
           border-radius: 4px;
         }
       }

@@ -19,6 +19,9 @@ const globalColors = {
   grayLine: '#353242',
   grayDark: '#131314',
   grayAccent: '#312F39',
+
+  // states
+  successState: '#5EF38C',
 };
 
 export const colors = (() => {
