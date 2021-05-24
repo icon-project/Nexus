@@ -23,6 +23,11 @@ export const SubTitle = styled.h3`
     line-height: 20px;
   }
 
+  &.medium {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
   &.large {
     font-size: 18px;
     line-height: 24px;

@@ -12,7 +12,7 @@ import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { currentICONexNetwork } from '../../connectors/constants';
-import { Header as Heading, Text } from '../Typography';
+import { Header as Heading, SubTitle, Text } from '../Typography';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 
@@ -46,7 +46,10 @@ const StyledHeader = styled(Layout.Header)`
 
   .left-side {
     min-width: 175px;
-    color: ${primaryBrandLight};
+
+    h3 {
+      color: ${primaryBrandLight};
+    }
   }
 
   .right-side {
@@ -69,20 +72,11 @@ const StyledHeader = styled(Layout.Header)`
       cursor: pointer;
     }
 
-    .wallet-nfo {
-      padding-top: 4px;
+    .wallet-info {
       margin-left: 8px;
-    }
 
-    .currency-ctn {
-      display: inline-block;
-      padding-top: 10px;
-      font-weight: bold;
-      font-size: 16px;
-      line-height: 24px;
-      letter-spacing: 0.75px;
-      .unit {
-        margin-left: 4px;
+      .address {
+        margin-bottom: 4px;
       }
     }
 
@@ -115,14 +109,7 @@ const StyledHeader = styled(Layout.Header)`
       height: auto;
       background-color: transparent;
     }
-    h6 {
-      color: #eff1ed;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 16px;
-      line-height: 24px;
-      text-align: center;
-      letter-spacing: 0.75px;
+    .network-name {
       margin-bottom: 42px;
     }
     h4 {
@@ -145,11 +132,14 @@ const StyledHeader = styled(Layout.Header)`
     .wallet-balance {
       width: 100%;
       height: 60px;
+
       display: grid;
-      grid-template: 50% 50 / 50% 50%;
-      padding: 0 32px;
+      grid-template: 50% 50% / 50% 50%;
+      place-items: center;
+
       margin-top: 20px;
       margin-bottom: 20px;
+
       span:first-of-type {
         justify-self: start;
         font-size: 16px;
@@ -157,6 +147,7 @@ const StyledHeader = styled(Layout.Header)`
         letter-spacing: 0.75px;
         color: #85838e;
       }
+
       span {
         justify-self: end;
         font-weight: 600;
@@ -166,6 +157,7 @@ const StyledHeader = styled(Layout.Header)`
         text-align: right;
         letter-spacing: 1px;
       }
+
       span:last-of-type {
         grid-column: 2/3;
         grid-row: 2/3;
@@ -177,13 +169,14 @@ const StyledHeader = styled(Layout.Header)`
         color: #85838e;
       }
     }
+
     .wallet-address {
       width: 100%;
-      height: 60px;
       display: grid;
-      grid-template: 50% 50 / 50% 50%;
-      padding: 0 32px;
+      grid-template: 50% 50% / 50% 50%;
+      place-items: center;
       margin-bottom: 20px;
+
       span:first-of-type {
         justify-self: start;
         font-size: 16px;
@@ -220,7 +213,7 @@ const StyledHeader = styled(Layout.Header)`
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
-      padding: 0 26px;
+
       button:first-of-type {
         color: #99a3ff;
         width: 192px;
@@ -345,6 +338,8 @@ const Header = ({ userStatus = defaultUser }) => {
     }),
   );
 
+  const shortedAddress = hashShortener(address);
+
   const toggleModal = () => {
     setShowModal((prev) => !prev);
     setShowDetail(false);
@@ -397,7 +392,7 @@ const Header = ({ userStatus = defaultUser }) => {
           ) : showDetail ? (
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
               <div className="connect-a-wallet-detail">
-                <h6>{currentICONexNetwork.name}</h6>
+                <Text className="medium network-name">{currentICONexNetwork.name}</Text>
                 <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
                 <div className="wallet-balance">
                   <span>Balance</span>
@@ -406,7 +401,7 @@ const Header = ({ userStatus = defaultUser }) => {
                 </div>
                 <div className="wallet-address">
                   <span>Wallet Address</span>
-                  <span title={address}>{hashShortener(address)}</span>
+                  <span title={address}>{shortedAddress}</span>
                   <CopyToClipboard text={address}>
                     <span className="copy-address">
                       <img src={copyIcon} />
@@ -449,20 +444,18 @@ const Header = ({ userStatus = defaultUser }) => {
       <Nav />
       {address ? (
         <div className="right-side">
-          <span className="wallet-name">{currentICONexNetwork.name}</span>
+          <SubTitle className="small">{currentICONexNetwork.name}</SubTitle>
           <Avatar
             className="user-avatar"
             src={userStatus.avatar}
             size={48}
             onClick={onAvatarClicked}
           />
-          <span className="wallet-nfo">
-            <span>{hashShortener(address)}</span>
-            <br />
-            <span className="currency-ctn">
-              <span>{balance}</span>
-              <span className="unit">{unit}</span>
-            </span>
+          <span className="wallet-info">
+            <Text className="x-small address">{shortedAddress}</Text>
+            <SubTitle className="medium bold">
+              {balance} {unit}
+            </SubTitle>
           </span>
         </div>
       ) : (
