@@ -28,7 +28,7 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
-  p {
+  p, h3 {
     margin: 0;
   }
   input:-webkit-autofill,

@@ -1,4 +1,9 @@
 {
+  "dropdown": {
+    "logout": "",
+    "my_profile": "",
+    "setting": ""
+  },
   "not_found_page": {
     "back_home": "",
     "description": "",

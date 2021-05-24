@@ -16,6 +16,8 @@ const Wrapper = styled.div`
 
   .token-label {
     ${mediumBoldHeader}
+    word-break: break-word;
+    margin: 0 32px;
   }
 `;
 
@@ -37,9 +39,8 @@ const StyledTokenInput = styled(Input)`
   }
 `;
 
-export const TokenInput = (props) => {
-  const [showInput, setShowInput] = useState(true);
-  const [tokenValue, setTokenValue] = useState('');
+export const TokenInput = ({ value, setTokenValue, initalInputDisplay, ...props }) => {
+  const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
 
   const toggleInput = () => {
     setShowInput(!showInput);
@@ -52,12 +53,12 @@ export const TokenInput = (props) => {
           type="number"
           onBlur={toggleInput}
           onChange={(evt) => setTokenValue(evt.target.value)}
-          value={tokenValue}
+          value={value}
           autoFocus
         />
       ) : (
         <div className="token-label" onClick={toggleInput}>
-          {tokenValue | 0} ETH
+          {value || 0} ETH
         </div>
       )}
 

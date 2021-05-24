@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useDispatch } from '../../hooks/useRematch';
-import { Layout, Avatar } from 'antd';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Layout, Avatar } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import Nav from './Nav';
 import { Modal } from '../NotificationModal';
-// import { colors } from '../Styles/Colors';
-import { CheckOutlined } from '@ant-design/icons';
-// import { LanguageSwitcher } from '../LanguageSwitcher';
 
-// import { media } from '../Styles/Media';
-import { Dropdown } from '../Dropdown';
+import { useDispatch, useSelect } from '../../hooks/useRematch';
+import { requestAddress } from '../../connectors/ICONex/events';
+import { wallets } from '../../utils/constants';
+
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
 import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
-import {
-  connectMetaMaskWallet,
-  getEthereumAccounts,
-  isMetaMaskConnected,
-  disConnectMetaMask,
-  getBalance,
-} from '../../services/MetaMaskService';
+import { connectMetaMaskWallet, getEthereumAccounts } from '../../connectors/MetaMask';
 
 const StyledHeader = styled(Layout.Header)`
   font-family: Poppins;
@@ -36,14 +31,6 @@ const StyledHeader = styled(Layout.Header)`
   justify-content: space-between;
   align-items: center;
   letter-spacing: 1px;
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
   svg {
     pointer-events: none;
   }
@@ -82,6 +69,7 @@ const StyledHeader = styled(Layout.Header)`
     flex-wrap: nowrap;
     .user-avatar {
       margin-left: 20px;
+      cursor: pointer;
     }
     .wallet-nfo {
       padding-top: 4px;
@@ -315,6 +303,9 @@ const StyledHeader = styled(Layout.Header)`
         letter-spacing: 0.75px;
         margin: 0;
         justify-self: end;
+        &:active {
+          color: #4e8da2;
+        }
         img {
           margin-right: 4.67px;
         }
@@ -359,14 +350,6 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-const defaultWallet = {
-  id: 'demo',
-  name: 'Etherum Mainnet',
-  hash: '123afx123afa4aweasdfasdf',
-  amount: 10,
-  unit: 'ETH',
-};
-
 const defaultUser = {
   id: 'test',
   userName: '@dsng',
@@ -408,93 +391,106 @@ const WalletSelector = ({ type, active, onClick }) => {
   );
 };
 
-const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => {
-  const [authorized, setAuthorized] = useState(false);
+const Header = ({ userStatus = defaultUser }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState('metamask');
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
-  const [walletAccount, setWalletAccount] = useState({});
-  const toggleModal = (e) => {
-    e.preventDefault();
+
+  const {
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork },
+  } = useSelect(({ account }) => ({
+    accountInfo: account.selectAccountInfo,
+  }));
+
+  const { openModal, setDisplay, resetAccountInfo } = useDispatch(
+    ({ modal: { openModal, setDisplay }, account: { resetAccountInfo } }) => ({
+      openModal,
+      setDisplay,
+      resetAccountInfo,
+    }),
+  );
+
+  const toggleModal = () => {
     setShowModal((prev) => !prev);
     setShowDetail(false);
   };
-
   const handleConnect = async (e) => {
     e.preventDefault();
-    if (selectedWallet == 'metamask') {
-      setLoading(true);
-      await connectMetaMaskWallet();
-      const metaMaskAccounts = await getEthereumAccounts();
-      setWalletAccount(metaMaskAccounts[0]);
+    setLoading(true);
+    resetAccountInfo();
+    if (e.target.id == 'start-connect') {
+      if (selectedWallet === wallets.iconex) {
+        const hasAccount = await requestAddress();
+
+        if (!hasAccount) {
+          setLoading(false);
+        }
+      } else if (selectedWallet === wallets.metamask) {
+        await connectMetaMaskWallet();
+        await getEthereumAccounts();
+        setLoading(false);
+      }
     }
-    setAuthorized((prev) => !prev);
   };
   const handleSelectWallet = (e) => {
     e.preventDefault();
     setSelectedWallet(e.target.id);
   };
-  useEffect(() => {
-    const getMetaMaskInfo = async () => {
-      const metaMaskAccounts = await getEthereumAccounts();
-      setWalletAccount(metaMaskAccounts[0]);
-      //setAuthorized(true);
-      const b = await getBalance(metaMaskAccounts[0]);
-      console.log('balance', b);
-    };
-    if (isMetaMaskConnected) {
-      getMetaMaskInfo();
-    }
-  }, []);
-  useEffect(() => {
-    let id;
-    if (loading) {
-      id = setTimeout(() => {
-        setLoading(false);
-        setShowDetail(true);
-      }, 1000);
-    }
-    return () => {
-      clearTimeout(id);
-    };
-  }, [loading, setLoading]);
 
-  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
-    openModal,
-    setDisplay,
-  }));
+  const onDisconnectWallet = () => {
+    resetAccountInfo();
+    toggleModal();
+  };
+
+  const onSwitchWallet = () => {
+    setShowDetail(false);
+  };
+
+  const onAvatarClicked = () => {
+    setShowDetail(true);
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (address) {
+      setLoading(false);
+      setShowDetail(true);
+    }
+  }, [address]);
 
   return (
     <StyledHeader>
       {showModal && (
         <div className="connect-a-wallet-modal">
-          {loading ? (
+          {loading && !cancelConfirmation ? (
             <Modal icon="loader" desc="Please wait a moment." width="352px" display />
           ) : showDetail ? (
             <div className="connect-a-wallet-detail">
               <h4>
-                <span>{mockWallets[selectedWallet].title}</span>
+                <span>{mockWallets[wallet].title}</span>
                 <button id="close-detail" className="close-btn" onClick={toggleModal} />
               </h4>
-              <h6>{mockWallets[selectedWallet].network}</h6>
+              <h6>{currentNetwork}</h6>
               <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
               <div className="wallet-balance">
                 <span>Balance</span>
-                <span>{`${mockWallets[selectedWallet].amount} ${mockWallets[selectedWallet].unit}`}</span>
+                <span>{`${balance} ${unit}`}</span>
                 <span> = $98.22 USD</span>
               </div>
               <div className="wallet-address">
                 <span>Wallet Address</span>
-                <span>{hashShortener(walletAccount)}</span>
-                <span className="copy-address">
-                  <img src={copyIcon} />
-                  Copy address
-                </span>
+                <span title={address}>{hashShortener(address)}</span>
+                <CopyToClipboard text={address}>
+                  <span className="copy-address">
+                    <img src={copyIcon} />
+                    Copy address
+                  </span>
+                </CopyToClipboard>
               </div>
               <div className="nav-button">
-                <button>Disconnect wallet</button>
-                <button>Switch wallet</button>
+                <button onClick={onDisconnectWallet}>Disconnect wallet</button>
+                <button onClick={onSwitchWallet}>Switch wallet</button>
               </div>
             </div>
           ) : (
@@ -536,22 +532,23 @@ const Header = ({ items, userStatus = defaultUser, wallet = defaultWallet }) => 
         BTP Dashboard
       </div>
       <Nav />
-      {userStatus.authorized || authorized ? (
+      {address ? (
         <div className="right-side">
-          <span className="wallet-name">{wallet.name}</span>
-          <Dropdown items={items} fullWidthOnMobile handleLogout={() => disConnectMetaMask()}>
-            <div className="dropdown-hoverable">
-              <Avatar className="user-avatar" src={userStatus.avatar} size={48} />
-              <span className="wallet-nfo">
-                <span>{hashShortener(walletAccount)}</span>
-                <br />
-                <span className="currency-ctn">
-                  <span>{wallet.amount}</span>
-                  <span className="unit">{wallet.unit}</span>
-                </span>
-              </span>
-            </div>
-          </Dropdown>
+          <span className="wallet-name">{currentNetwork}</span>
+          <Avatar
+            className="user-avatar"
+            src={userStatus.avatar}
+            size={48}
+            onClick={onAvatarClicked}
+          />
+          <span className="wallet-nfo">
+            <span>{hashShortener(address)}</span>
+            <br />
+            <span className="currency-ctn">
+              <span>{balance}</span>
+              <span className="unit">{unit}</span>
+            </span>
+          </span>
         </div>
       ) : (
         <button className="connect-to-wallet-btn" onClick={toggleModal}>
