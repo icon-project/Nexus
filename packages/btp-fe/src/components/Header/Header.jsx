@@ -19,7 +19,6 @@ import { colors } from '../Styles/Colors';
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
-import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
 
 const {
@@ -28,7 +27,7 @@ const {
   grayLine,
   primaryBrandLight,
   primaryBrandBase,
-  grayBG,
+  // grayBG,
   successState,
   grayAccent,
 } = colors;
@@ -44,19 +43,6 @@ const StyledHeader = styled(Layout.Header)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  svg {
-    pointer-events: none;
-  }
-
-  .close-btn {
-    background: url('${closeIcon}') !important;
-    width: 18px !important;
-    height: 18px !important;
-    background-repeat: no-repeat !important;
-    justify-self: end;
-    align-self: center;
-  }
 
   .left-side {
     min-width: 175px;
@@ -107,103 +93,23 @@ const StyledHeader = styled(Layout.Header)`
   }
 
   .connect-a-wallet-modal {
-    text-align: center;
-    min-height: 100vh;
-    width: 100%;
-    position: fixed;
-
-    h4 {
-      position: relative;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 20% 60% 20%;
-      justify-content: center;
-      padding: 0 32px;
-      margin-top: 23px;
-      margin-bottom: 31px;
-
-      .card-title {
-        grid-column: 2;
-        text-align: center;
-      }
-    }
-
-    button {
-      margin: auto 0 32px;
-      width: 416px;
-      height: 64px;
-      background: ${primaryBrandBase};
-      border-radius: 4px;
-    }
-
     .connect-a-wallet-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 480px;
-      height: 370px;
-      background: ${grayBG};
-      border-radius: 4px;
-
-      .wallet-selector {
-        margin: 0 0 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: nowrap;
-        width: 416px;
-        height: 72px;
-        padding: 0 28.5px;
-        background: transparent;
-        color: ${grayText};
-
-        .wallet-title {
-          margin-right: auto;
-          margin-left: 13.3px;
-        }
-        span {
-          grid-column: 3;
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          font-size: 18px;
-          color: ${successState};
-        }
-        &:hover,
-        :focus {
-          background: ${grayAccent};
-          border-radius: 4px;
-        }
-      }
+      margin-top: 21px;
     }
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
-    z-index: 1;
   }
+
   .connect-to-wallet-btn {
+    ${smallBoldSubtitle};
+
     height: 44px;
     padding: 12px 16px;
     min-width: 170px;
-    background: #5465ff;
+    background: ${primaryBrandBase};
     border-radius: 100px;
-    font-size: 14px;
-    line-height: 20px;
     text-align: center;
-    letter-spacing: 1px;
   }
+
   .connect-a-wallet-detail {
-    width: 480px;
-    height: 564px;
-    background: #1d1b22;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     button {
       width: auto;
       height: auto;
@@ -373,9 +279,40 @@ const mockWallets = {
   },
 };
 
+const StyledWalletItem = styled.button`
+  margin: 0 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 416px;
+  height: 72px;
+  padding: 0 28.5px;
+  background: transparent;
+  color: ${grayText};
+
+  .wallet-title {
+    margin-right: auto;
+    margin-left: 13.3px;
+  }
+  span {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 18px;
+    color: ${successState};
+  }
+  &:hover,
+  :focus {
+    background: ${grayAccent};
+    border-radius: 4px;
+  }
+`;
+
 const WalletSelector = ({ type, active, onClick }) => {
   return (
-    <button
+    <StyledWalletItem
       id={mockWallets[type].id}
       className="wallet-selector"
       autoFocus={active}
@@ -384,7 +321,7 @@ const WalletSelector = ({ type, active, onClick }) => {
       <Avatar src={mockWallets[type].icon} size={30} />
       <Text className="medium wallet-title">{mockWallets[type].title}</Text>
       {active && <CheckOutlined />}
-    </button>
+    </StyledWalletItem>
   );
 };
 
@@ -400,7 +337,7 @@ const Header = ({ userStatus = defaultUser }) => {
     accountInfo: account.selectAccountInfo,
   }));
 
-  const { openModal, setDisplay, resetAccountInfo } = useDispatch(
+  const { resetAccountInfo } = useDispatch(
     ({ modal: { openModal, setDisplay }, account: { resetAccountInfo } }) => ({
       openModal,
       setDisplay,
@@ -416,13 +353,12 @@ const Header = ({ userStatus = defaultUser }) => {
     e.preventDefault();
     setLoading(true);
     resetAccountInfo();
-    if (e.target.id == 'start-connect') {
-      if (selectedWallet === wallets.iconex) {
-        const hasAccount = await requestAddress();
 
-        if (!hasAccount) {
-          setLoading(false);
-        }
+    if (selectedWallet === wallets.iconex) {
+      const hasAccount = await requestAddress();
+
+      if (!hasAccount) {
+        setLoading(false);
       }
     }
   };
@@ -459,69 +395,55 @@ const Header = ({ userStatus = defaultUser }) => {
           {loading && !cancelConfirmation ? (
             <Modal icon="loader" desc="Please wait a moment." width="352px" display />
           ) : showDetail ? (
-            <div className="connect-a-wallet-detail">
-              <h4>
-                <span>{mockWallets[wallet].title}</span>
-                <button id="close-detail" className="close-btn" onClick={toggleModal} />
-              </h4>
-              <h6>{currentICONexNetwork.name}</h6>
-              <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
-              <div className="wallet-balance">
-                <span>Balance</span>
-                <span>{`${balance} ${unit}`}</span>
-                <span> = $98.22 USD</span>
+            <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
+              <div className="connect-a-wallet-detail">
+                <h6>{currentICONexNetwork.name}</h6>
+                <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
+                <div className="wallet-balance">
+                  <span>Balance</span>
+                  <span>{`${balance} ${unit}`}</span>
+                  <span> = $98.22 USD</span>
+                </div>
+                <div className="wallet-address">
+                  <span>Wallet Address</span>
+                  <span title={address}>{hashShortener(address)}</span>
+                  <CopyToClipboard text={address}>
+                    <span className="copy-address">
+                      <img src={copyIcon} />
+                      Copy address
+                    </span>
+                  </CopyToClipboard>
+                </div>
+                <div className="nav-button">
+                  <button onClick={onDisconnectWallet}>Disconnect wallet</button>
+                  <button onClick={onSwitchWallet}>Switch wallet</button>
+                </div>
               </div>
-              <div className="wallet-address">
-                <span>Wallet Address</span>
-                <span title={address}>{hashShortener(address)}</span>
-                <CopyToClipboard text={address}>
-                  <span className="copy-address">
-                    <img src={copyIcon} />
-                    Copy address
-                  </span>
-                </CopyToClipboard>
-              </div>
-              <div className="nav-button">
-                <button onClick={onDisconnectWallet}>Disconnect wallet</button>
-                <button onClick={onSwitchWallet}>Switch wallet</button>
-              </div>
-            </div>
+            </Modal>
           ) : (
-            <div className="connect-a-wallet-card">
-              <h4>
-                <Heading className="small bold card-title">Connect a wallet</Heading>
-                <button className="close-btn" onClick={toggleModal} />
-              </h4>
-              <WalletSelector
-                type="metamask"
-                active={selectedWallet == 'metamask'}
-                onClick={handleSelectWallet}
-              />
-              <WalletSelector
-                type="iconex"
-                active={selectedWallet == 'iconex'}
-                onClick={handleSelectWallet}
-              />
-              <button id="start-connect" onClick={handleConnect}>
-                Connect a Wallet
-              </button>
-            </div>
+            <Modal
+              title="Connect a wallet"
+              button={{ onClick: handleConnect, text: 'Connect a Wallet' }}
+              display
+              setDisplay={setShowModal}
+            >
+              <div className="connect-a-wallet-card">
+                <WalletSelector
+                  type="metamask"
+                  active={selectedWallet == 'metamask'}
+                  onClick={handleSelectWallet}
+                />
+                <WalletSelector
+                  type="iconex"
+                  active={selectedWallet == 'iconex'}
+                  onClick={handleSelectWallet}
+                />
+              </div>
+            </Modal>
           )}
         </div>
       )}
-      <div
-        className="left-side"
-        onClick={() =>
-          openModal({
-            icon: 'checkIcon',
-            desc: 'Your transaction was submitted successfully.',
-            button: {
-              text: 'Continue transfer',
-              onClick: () => setDisplay(false),
-            },
-          })
-        }
-      >
+      <div className="left-side">
         <Heading className="x-small bold">BTP Dashboard</Heading>
       </div>
       <Nav />
