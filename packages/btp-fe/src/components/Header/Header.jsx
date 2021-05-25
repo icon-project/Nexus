@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
-import { CheckOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Nav from './Nav';
+import { WalletSelector } from './WalletSelector';
 import { Modal } from '../NotificationModal';
 
 import { useDispatch, useSelect } from '../../hooks/useRematch';
@@ -29,8 +29,6 @@ const {
   primaryBrandLight,
   primaryBrandBase,
   // grayBG,
-  successState,
-  grayAccent,
   tertiaryBase,
   grayScaleSubText,
 } = colors;
@@ -264,52 +262,6 @@ const mockWallets = {
   },
 };
 
-const StyledWalletItem = styled.button`
-  margin: 0 0 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-  width: 416px;
-  height: 72px;
-  padding: 0 28.5px;
-  background: transparent;
-  color: ${grayText};
-
-  .wallet-title {
-    margin-right: auto;
-    margin-left: 13.3px;
-  }
-  span {
-    grid-column: 3;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    font-size: 18px;
-    color: ${successState};
-  }
-  &:hover,
-  :focus {
-    background: ${grayAccent};
-    border-radius: 4px;
-  }
-`;
-
-const WalletSelector = ({ type, active, onClick }) => {
-  return (
-    <StyledWalletItem
-      id={mockWallets[type].id}
-      className="wallet-selector"
-      autoFocus={active}
-      onClick={onClick}
-    >
-      <Avatar src={mockWallets[type].icon} size={30} />
-      <Text className="medium wallet-title">{mockWallets[type].title}</Text>
-      {active && <CheckOutlined />}
-    </StyledWalletItem>
-  );
-};
-
 const Header = ({ userStatus = defaultUser }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState('metamask');
@@ -417,11 +369,13 @@ const Header = ({ userStatus = defaultUser }) => {
               <div className="connect-a-wallet-card">
                 <WalletSelector
                   type="metamask"
+                  wallet={mockWallets}
                   active={selectedWallet == 'metamask'}
                   onClick={handleSelectWallet}
                 />
                 <WalletSelector
                   type="iconex"
+                  wallet={mockWallets}
                   active={selectedWallet == 'iconex'}
                   onClick={handleSelectWallet}
                 />

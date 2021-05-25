@@ -20,13 +20,12 @@ const NavStyled = styled.ul`
 
     .nav-link {
       ${smallBoldSubtitle}
-
+      color: ${colors.brandSecondaryBG};
       background-color: transparent;
 
       padding: 8px 16px;
       border-radius: 4px;
       margin-right: 4px;
-      color: ${colors.brandSecondaryBG};
 
       &:focus,
       :hover {
