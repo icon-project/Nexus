@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
+
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 const NavStyled = styled.ul`
   display: flex;
@@ -36,6 +38,11 @@ const NavStyled = styled.ul`
       margin-right: 0;
     }
   }
+
+  ${media.minWidthHeader`
+    flex-direction: column;
+    margin: auto;
+  `}
 `;
 
 const buttonContents = [

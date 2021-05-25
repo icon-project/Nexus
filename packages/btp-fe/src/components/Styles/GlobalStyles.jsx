@@ -29,7 +29,7 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
-  p, h3 {
+  p, h3, ul {
     margin: 0;
   }
   input:-webkit-autofill,

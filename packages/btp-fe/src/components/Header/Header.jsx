@@ -7,7 +7,7 @@ import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
 import { WalletDetails } from './WalletDetails';
 import { Modal } from '../NotificationModal';
-import { PrimaryButton } from '../Button';
+import { PrimaryButton, HamburgerButton } from '../Button';
 
 import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
@@ -16,6 +16,7 @@ import { currentICONexNetwork } from '../../connectors/constants';
 import { Header as Heading, SubTitle, Text } from '../Typography';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
@@ -46,22 +47,27 @@ const StyledHeader = styled(Layout.Header)`
   .right-side {
     ${smallBoldSubtitle};
 
+    flex: 1;
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
     min-width: 305px;
-    margin-left: 80px;
 
     .user-avatar {
       margin-left: 20px;
       cursor: pointer;
     }
 
-    .wallet-info {
-      margin-left: 8px;
+    .account-info {
+      display: flex;
+      align-items: center;
 
-      .address {
-        margin-bottom: 4px;
+      .wallet-info {
+        margin-left: 8px;
+
+        .address {
+          margin-bottom: 4px;
+        }
       }
     }
   }
@@ -77,6 +83,48 @@ const StyledHeader = styled(Layout.Header)`
     border-radius: 100px;
     text-align: center;
   }
+
+  .menu-icon {
+    display: none;
+  }
+
+  ${media.minWidthHeader`
+    padding: 0 20px;
+    height: 60px;
+    position: relative;
+
+    .menu-icon {
+      display: block;
+    }
+
+    .right-side {
+      display: ${({ showMenu }) => (showMenu ? 'flex' : 'none')};
+      position: absolute;
+      top: 60px;
+      left: 0;
+      z-index: 101;
+
+      min-height: 100vh;
+      width: 100%;
+      background-color: ${grayLine};
+      flex-direction: column-reverse;
+      justify-content: flex-end;
+
+      .connect-to-wallet-btn {
+        margin-top: 100px;
+      }
+      .account-info {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+
+        .user-avatar, .wallet-info {
+          margin: 5px 0;
+          text-align: center;
+        }
+      }
+    }
+  `}
 `;
 
 const hashShortener = (hashStr) => {
@@ -120,6 +168,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const {
     accountInfo: { address, balance, unit, wallet, cancelConfirmation },
@@ -180,7 +229,7 @@ const Header = ({ userStatus = defaultUser }) => {
   }, [address]);
 
   return (
-    <StyledHeader>
+    <StyledHeader showMenu={showMenu}>
       {showModal && (
         <>
           {loading && !cancelConfirmation ? (
@@ -226,28 +275,34 @@ const Header = ({ userStatus = defaultUser }) => {
       <div className="left-side">
         <Heading className="x-small bold">BTP Dashboard</Heading>
       </div>
-      <Nav />
-      {address ? (
-        <div className="right-side">
-          <SubTitle className="small">{currentICONexNetwork.name}</SubTitle>
-          <Avatar
-            className="user-avatar"
-            src={userStatus.avatar}
-            size={48}
-            onClick={onAvatarClicked}
-          />
-          <span className="wallet-info">
-            <Text className="x-small address">{shortedAddress}</Text>
-            <SubTitle className="medium bold">
-              {balance} {unit}
-            </SubTitle>
-          </span>
-        </div>
-      ) : (
-        <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
-          Connect a Wallet
-        </PrimaryButton>
-      )}
+      <HamburgerButton
+        className={`menu-icon ${showMenu && 'active'}`}
+        onClick={() => setShowMenu(!showMenu)}
+      />
+      <div className="right-side">
+        <Nav />
+        {address ? (
+          <div className="account-info">
+            <SubTitle className="small">{currentICONexNetwork.name}</SubTitle>
+            <Avatar
+              className="user-avatar"
+              src={userStatus.avatar}
+              size={48}
+              onClick={onAvatarClicked}
+            />
+            <span className="wallet-info">
+              <Text className="x-small address">{shortedAddress}</Text>
+              <SubTitle className="medium bold">
+                {balance} {unit}
+              </SubTitle>
+            </span>
+          </div>
+        ) : (
+          <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+            Connect a Wallet
+          </PrimaryButton>
+        )}
+      </div>
     </StyledHeader>
   );
 };
