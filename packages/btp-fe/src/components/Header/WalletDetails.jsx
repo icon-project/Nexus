@@ -2,131 +2,78 @@ import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
-import { Text } from '../Typography';
+import { Text, Header } from '../Typography';
 import { colors } from '../Styles/Colors';
 import { mediumBoldSubtitle } from '../Typography/SubTitle';
-import { mediumText, smallText } from '../Typography/Text';
 
 import copyIcon from '../../assets/images/copy-icon.svg';
 
 const { primaryBrandLight, primaryBrandBase, tertiaryBase, grayScaleSubText } = colors;
 
 const Wrapper = styled.div`
-  button {
-    width: auto;
-    height: auto;
-    background-color: transparent;
-  }
   .network-name {
     margin-bottom: 42px;
   }
-  h4 {
-    display: grid;
-    grid-template-columns: 20% 60% 20%;
-    margin-bottom: 10px;
-    span {
-      grid-column: 2;
-      text-align: center;
-    }
-    button {
-      grid-column: 3;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      font-size: 18px;
-      margin: 0;
-    }
+
+  .dark-text {
+    color: ${grayScaleSubText};
   }
+
+  .wallet-balance,
+  .wallet-address {
+    display: flex;
+    justify-content: space-between;
+    line-height: normal;
+  }
+
   .wallet-balance {
-    width: 100%;
-    height: 60px;
-
-    display: grid;
-    grid-template: 50% 50% / 50% 50%;
-    place-items: center;
-
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    span:first-of-type {
-      ${mediumText};
-
-      justify-self: start;
-      color: ${grayScaleSubText};
-    }
-
-    span {
-      justify-self: end;
-      font-weight: 600;
-      font-size: 25px;
-      line-height: 36px;
-
-      text-align: right;
-      letter-spacing: 1px;
-    }
-
-    span:last-of-type {
-      ${smallText}
-      color: ${grayScaleSubText};
-
-      grid-column: 2/3;
-      grid-row: 2/3;
-    }
+    margin: 32px 0 21px;
   }
 
   .wallet-address {
-    width: 100%;
-    display: grid;
-    grid-template: 50% 50% / 50% 50%;
-    place-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 48px;
 
-    span:first-of-type {
-      ${mediumText};
-      justify-self: start;
-      color: ${grayScaleSubText};
+    .address {
+      margin-bottom: 14px;
+      display: inline-block;
     }
-    span {
-      justify-self: end;
-    }
+
     .copy-address {
-      cursor: pointer;
-      grid-column: 2/3;
-      grid-row: 2/3;
       color: ${tertiaryBase};
-
-      text-align: center;
-      justify-self: end;
+      cursor: pointer;
 
       &:active {
-        color: #4e8da2;
-      }
-      img {
-        margin-right: 4.67px;
+        color: #5093ab;
       }
     }
+
+    img {
+      margin-right: 4.67px;
+    }
   }
-  .nav-button {
+
+  .control-buttons {
     margin-top: auto;
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
 
-    button:first-of-type {
-      color: ${primaryBrandLight};
+    .btn {
+      ${mediumBoldSubtitle};
       width: 192px;
       height: 64px;
       border-radius: 4px;
+      text-align: center;
+    }
+
+    .btn__disconnect {
+      color: ${primaryBrandLight};
       border: solid 1px ${primaryBrandLight};
       background-color: transparent;
     }
-    button {
-      ${mediumBoldSubtitle};
-      text-align: center;
-      width: 192px;
-      height: 64px;
-      border-radius: 4px;
+
+    .btn__switch-wallet {
       background-color: ${primaryBrandBase};
     }
   }
@@ -147,23 +94,33 @@ export const WalletDetails = ({
       <Text className="medium network-name">{networkName}</Text>
       <Avatar className="user-avatar" src={userAvatar} size={120} />
       <div className="wallet-balance">
-        <span>Balance</span>
-        <span>{`${balance} ${unit}`}</span>
-        <span> = $98.22 USD</span>
+        <Text className="medium dark-text">Balance</Text>
+        <div className="right">
+          <Header className="small bold">{`${balance} ${unit}`}</Header>
+          <Text className="small dark-text">= $98.22 USD</Text>
+        </div>
       </div>
       <div className="wallet-address">
-        <span>Wallet Address</span>
-        <span title={address}>{shortedAddress}</span>
-        <CopyToClipboard text={address}>
-          <Text className="x-small bold copy-address">
-            <img src={copyIcon} />
-            Copy address
+        <Text className="medium dark-text">Wallet Address</Text>
+        <div className="right">
+          <Text title={address} className="medium address">
+            {shortedAddress}
           </Text>
-        </CopyToClipboard>
+          <CopyToClipboard text={address}>
+            <Text className="x-small bold copy-address">
+              <img src={copyIcon} />
+              Copy address
+            </Text>
+          </CopyToClipboard>
+        </div>
       </div>
-      <div className="nav-button">
-        <button onClick={onDisconnectWallet}>Disconnect wallet</button>
-        <button onClick={onSwitchWallet}>Switch wallet</button>
+      <div className="control-buttons">
+        <button className="btn btn__disconnect" onClick={onDisconnectWallet}>
+          Disconnect wallet
+        </button>
+        <button className="btn btn__switch-wallet" onClick={onSwitchWallet}>
+          Switch wallet
+        </button>
       </div>
     </Wrapper>
   );
