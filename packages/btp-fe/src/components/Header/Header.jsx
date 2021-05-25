@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
+import { WalletDetails } from './WalletDetails';
 import { Modal } from '../NotificationModal';
 
 import { useDispatch, useSelect } from '../../hooks/useRematch';
@@ -13,25 +13,14 @@ import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { currentICONexNetwork } from '../../connectors/constants';
 import { Header as Heading, SubTitle, Text } from '../Typography';
-import { smallBoldSubtitle, mediumBoldSubtitle } from '../Typography/SubTitle';
-import { mediumText, smallText } from '../Typography/Text';
+import { smallBoldSubtitle } from '../Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
-import copyIcon from '../../assets/images/copy-icon.svg';
 
-const {
-  darkBG,
-  grayText,
-  grayLine,
-  primaryBrandLight,
-  primaryBrandBase,
-  // grayBG,
-  tertiaryBase,
-  grayScaleSubText,
-} = colors;
+const { darkBG, grayText, grayLine, primaryBrandLight, primaryBrandBase } = colors;
 
 const StyledHeader = styled(Layout.Header)`
   height: 80px;
@@ -58,15 +47,10 @@ const StyledHeader = styled(Layout.Header)`
 
     display: flex;
     align-items: center;
+    flex-wrap: nowrap;
+
     min-width: 305px;
     margin-left: 80px;
-
-    br {
-      margin: 10px;
-    }
-
-    display: flex;
-    flex-wrap: nowrap;
 
     .user-avatar {
       margin-left: 20px;
@@ -80,17 +64,10 @@ const StyledHeader = styled(Layout.Header)`
         margin-bottom: 4px;
       }
     }
-
-    .dropdown-hoverable {
-      display: flex;
-      flex-wrap: nowrap;
-    }
   }
 
-  .connect-a-wallet-modal {
-    .connect-a-wallet-card {
-      margin-top: 21px;
-    }
+  .connect-a-wallet-card {
+    margin-top: 21px;
   }
 
   .connect-to-wallet-btn {
@@ -102,127 +79,6 @@ const StyledHeader = styled(Layout.Header)`
     background: ${primaryBrandBase};
     border-radius: 100px;
     text-align: center;
-  }
-
-  .connect-a-wallet-detail {
-    button {
-      width: auto;
-      height: auto;
-      background-color: transparent;
-    }
-    .network-name {
-      margin-bottom: 42px;
-    }
-    h4 {
-      display: grid;
-      grid-template-columns: 20% 60% 20%;
-      margin-bottom: 10px;
-      span {
-        grid-column: 2;
-        text-align: center;
-      }
-      button {
-        grid-column: 3;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        font-size: 18px;
-        margin: 0;
-      }
-    }
-    .wallet-balance {
-      width: 100%;
-      height: 60px;
-
-      display: grid;
-      grid-template: 50% 50% / 50% 50%;
-      place-items: center;
-
-      margin-top: 20px;
-      margin-bottom: 20px;
-
-      span:first-of-type {
-        ${mediumText};
-
-        justify-self: start;
-        color: ${grayScaleSubText};
-      }
-
-      span {
-        justify-self: end;
-        font-weight: 600;
-        font-size: 25px;
-        line-height: 36px;
-
-        text-align: right;
-        letter-spacing: 1px;
-      }
-
-      span:last-of-type {
-        ${smallText}
-        color: ${grayScaleSubText};
-
-        grid-column: 2/3;
-        grid-row: 2/3;
-      }
-    }
-
-    .wallet-address {
-      width: 100%;
-      display: grid;
-      grid-template: 50% 50% / 50% 50%;
-      place-items: center;
-      margin-bottom: 20px;
-
-      span:first-of-type {
-        ${mediumText};
-        justify-self: start;
-        color: ${grayScaleSubText};
-      }
-      span {
-        justify-self: end;
-      }
-      .copy-address {
-        cursor: pointer;
-        grid-column: 2/3;
-        grid-row: 2/3;
-        color: ${tertiaryBase};
-
-        text-align: center;
-        justify-self: end;
-
-        &:active {
-          color: #4e8da2;
-        }
-        img {
-          margin-right: 4.67px;
-        }
-      }
-    }
-    .nav-button {
-      margin-top: auto;
-      width: 100%;
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: space-between;
-
-      button:first-of-type {
-        color: ${primaryBrandLight};
-        width: 192px;
-        height: 64px;
-        border-radius: 4px;
-        border: solid 1px ${primaryBrandLight};
-        background-color: transparent;
-      }
-      button {
-        ${mediumBoldSubtitle};
-        text-align: center;
-        width: 192px;
-        height: 64px;
-        border-radius: 4px;
-        background-color: ${primaryBrandBase};
-      }
-    }
   }
 `;
 
@@ -330,34 +186,21 @@ const Header = ({ userStatus = defaultUser }) => {
   return (
     <StyledHeader>
       {showModal && (
-        <div className="connect-a-wallet-modal">
+        <>
           {loading && !cancelConfirmation ? (
             <Modal icon="loader" desc="Please wait a moment." width="352px" display />
           ) : showDetail ? (
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
-              <div className="connect-a-wallet-detail">
-                <Text className="medium network-name">{currentICONexNetwork.name}</Text>
-                <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
-                <div className="wallet-balance">
-                  <span>Balance</span>
-                  <span>{`${balance} ${unit}`}</span>
-                  <span> = $98.22 USD</span>
-                </div>
-                <div className="wallet-address">
-                  <span>Wallet Address</span>
-                  <span title={address}>{shortedAddress}</span>
-                  <CopyToClipboard text={address}>
-                    <Text className="x-small bold copy-address">
-                      <img src={copyIcon} />
-                      Copy address
-                    </Text>
-                  </CopyToClipboard>
-                </div>
-                <div className="nav-button">
-                  <button onClick={onDisconnectWallet}>Disconnect wallet</button>
-                  <button onClick={onSwitchWallet}>Switch wallet</button>
-                </div>
-              </div>
+              <WalletDetails
+                networkName={currentICONexNetwork.name}
+                userAvatar={userStatus.avatar}
+                balance={balance}
+                unit={unit}
+                address={address}
+                shortedAddress={shortedAddress}
+                onDisconnectWallet={onDisconnectWallet}
+                onSwitchWallet={onSwitchWallet}
+              />
             </Modal>
           ) : (
             <Modal
@@ -382,7 +225,7 @@ const Header = ({ userStatus = defaultUser }) => {
               </div>
             </Modal>
           )}
-        </div>
+        </>
       )}
       <div className="left-side">
         <Heading className="x-small bold">BTP Dashboard</Heading>
