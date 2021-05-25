@@ -17,7 +17,8 @@ export default createGlobalStyle`
     height: 100%;
   }
   body {
-    font: 1.6rem 'Roboto', sans-serif;
+    font-family: 'Poppins', 'Roboto', sans-serif !important;
+    height: 100%;
   }
   a {
     text-decoration: none;
