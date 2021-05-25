@@ -23,6 +23,10 @@ export const connectMetaMaskWallet = async () => {
     console.error(error);
   }
 };
+ethereum.on('chainChanged', (chainId) => {
+  console.log('Change Network', chainId);
+  window.location.reload();
+});
 
 const getCurrentNetwork = () => {
   switch (ethereum.chainId) {
