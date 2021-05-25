@@ -7,6 +7,7 @@ import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
 import { WalletDetails } from './WalletDetails';
 import { Modal } from '../NotificationModal';
+import { PrimaryButton } from '../Button';
 
 import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
@@ -20,7 +21,7 @@ import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
 
-const { darkBG, grayText, grayLine, primaryBrandLight, primaryBrandBase } = colors;
+const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
 
 const StyledHeader = styled(Layout.Header)`
   height: 80px;
@@ -48,7 +49,6 @@ const StyledHeader = styled(Layout.Header)`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-
     min-width: 305px;
     margin-left: 80px;
 
@@ -72,11 +72,8 @@ const StyledHeader = styled(Layout.Header)`
 
   .connect-to-wallet-btn {
     ${smallBoldSubtitle};
-
     height: 44px;
-    padding: 12px 16px;
     min-width: 170px;
-    background: ${primaryBrandBase};
     border-radius: 100px;
     text-align: center;
   }
@@ -120,7 +117,7 @@ const mockWallets = {
 
 const Header = ({ userStatus = defaultUser }) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState('metamask');
+  const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
 
@@ -157,9 +154,8 @@ const Header = ({ userStatus = defaultUser }) => {
       }
     }
   };
-  const handleSelectWallet = (e) => {
-    e.preventDefault();
-    setSelectedWallet(e.target.id);
+  const handleSelectWallet = (wallet) => {
+    if (wallet) setSelectedWallet(wallet);
   };
 
   const onDisconnectWallet = () => {
@@ -211,16 +207,16 @@ const Header = ({ userStatus = defaultUser }) => {
             >
               <div className="connect-a-wallet-card">
                 <WalletSelector
-                  type="metamask"
+                  type={wallets.metamask}
                   wallet={mockWallets}
-                  active={selectedWallet == 'metamask'}
-                  onClick={handleSelectWallet}
+                  active={selectedWallet == wallets.metamask}
+                  onClick={() => handleSelectWallet(wallets.metamask)}
                 />
                 <WalletSelector
-                  type="iconex"
+                  type={wallets.iconex}
                   wallet={mockWallets}
-                  active={selectedWallet == 'iconex'}
-                  onClick={handleSelectWallet}
+                  active={selectedWallet == wallets.iconex}
+                  onClick={() => handleSelectWallet(wallets.iconex)}
                 />
               </div>
             </Modal>
@@ -248,9 +244,9 @@ const Header = ({ userStatus = defaultUser }) => {
           </span>
         </div>
       ) : (
-        <button className="connect-to-wallet-btn" onClick={toggleModal}>
+        <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
           Connect a Wallet
-        </button>
+        </PrimaryButton>
       )}
     </StyledHeader>
   );

@@ -41,12 +41,7 @@ const StyledWalletItem = styled.button`
 
 export const WalletSelector = ({ wallet, type, active, onClick }) => {
   return (
-    <StyledWalletItem
-      id={wallet[type].id}
-      className="wallet-selector"
-      autoFocus={active}
-      onClick={onClick}
-    >
+    <StyledWalletItem className="wallet-selector" autoFocus={active} onClick={onClick}>
       <Avatar src={wallet[type].icon} size={30} />
       <Text className="medium wallet-title">{wallet[type].title}</Text>
       {active && <CheckOutlined />}
