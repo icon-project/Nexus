@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Row } from 'antd';
 import { Tag } from 'components/Tag';
@@ -8,7 +9,7 @@ import BackIconSrc from 'assets/images/arrow-icon.svg';
 import UnionSrc from 'assets/images/union.svg';
 import PrevIconSrc from 'assets/images/prev-icon.svg';
 import { colors } from '../Styles/Colors';
-
+import { HistoryDetails } from './HistoryDetails';
 const TableStyled = styled(Table)`
   margin-top: 34px;
   .ant-table-content {
@@ -190,6 +191,12 @@ const TransferHistoryStyled = styled.div`
 `;
 
 export const TransferHistory = ({ setIsOpenHistory }) => {
+  const [showDetails, setShowDetails] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({});
+  const onClickDetail = (detail) => {
+    setSelectedRow(detail);
+    setShowDetails(true);
+  };
   function itemRender(current, type, originalElement) {
     if (type === 'prev') {
       return (
@@ -236,11 +243,20 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
       <TableStyled
         columns={columns}
         dataSource={dataSource}
+        onRow={(r) => ({
+          onClick: () => onClickDetail(r),
+        })}
         pagination={{
           position: ['bottomCenter'],
           itemRender: itemRender,
         }}
       />
+      {showDetails && (
+        <HistoryDetails
+          details={selectedRow}
+          onClose={() => setShowDetails(false)}
+        ></HistoryDetails>
+      )}
     </TransferHistoryStyled>
   );
 };
