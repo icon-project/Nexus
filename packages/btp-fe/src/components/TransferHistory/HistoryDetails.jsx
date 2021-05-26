@@ -109,6 +109,11 @@ const StyledHistoryDetails = styled.div`
     right: 0;
     bottom: 9px;
   }
+  ${media.md`
+    .hide-in-mobile {
+      display: none;
+    }
+  `};
 `;
 const columns = [
   {
@@ -196,14 +201,16 @@ export const HistoryDetails = ({ details, onClose }) => {
         </div>
         <div className="content">
           <Text className="medium">Time</Text>
-          <Text className="medium">55 seconds ago (May-11-2021 07:52:44 AM +UTC)</Text>
+          <Text className="medium">
+            55 seconds ago <span className="hide-in-mobile">(May-11-2021 07:52:44 AM +UTC)</span>
+          </Text>
         </div>
         <div className="content">
           <Text className="medium">From</Text>
           <Text className="medium">
             <CopyToClipboard text={'0x42A5...b3Df'}>
               <div>
-                (Binance Smart Chain){' '}
+                <span className="hide-in-mobile">(Binance Smart Chain) </span>
                 <span className="copy-address">
                   0x42A5...b3Df
                   <Icon icon="copy" size="s" />
@@ -217,7 +224,7 @@ export const HistoryDetails = ({ details, onClose }) => {
           <Text className="medium">
             <CopyToClipboard text={'0x3C53...5C5e'}>
               <div>
-                (Edgeware){' '}
+                <span className="hide-in-mobile">(Edgeware) </span>
                 <span className="copy-address">
                   0x3C53...5C5e
                   <Icon icon="copy" size="s" />
