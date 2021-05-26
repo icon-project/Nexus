@@ -1,11 +1,13 @@
-import { Card as AntCard, Row, Col } from 'antd';
 import styled from 'styled-components';
+
+import { Card as AntCard, Row, Col } from 'antd';
 import { SelectNetwork, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
+import { media } from '../Styles/Media';
+
 import VectorIconSrc from 'assets/images/vector-icon.svg';
 
 const CardStyled = styled(AntCard)`
-  font-family: Poppins;
   font-style: normal;
   letter-spacing: 1px;
   h1 {
@@ -50,6 +52,10 @@ const CardStyled = styled(AntCard)`
   .button-section {
     margin-top: 42px;
   }
+
+  ${media.md`
+    width: 90% !important;
+  `}
 `;
 export const TransferCard = () => {
   window.localStorage.setItem('wallet-status', 'connected');

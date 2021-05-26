@@ -20,7 +20,7 @@ const Wapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 105;
 
   background-color: rgba(10, 9, 11, 0.2);
   backdrop-filter: blur(20px);
