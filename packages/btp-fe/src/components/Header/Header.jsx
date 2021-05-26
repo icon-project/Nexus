@@ -12,7 +12,9 @@ import { PrimaryButton, HamburgerButton } from '../Button';
 import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
-import { currentICONexNetwork } from '../../connectors/constants';
+import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
+import { connectMetaMaskWallet, getEthereumAccounts } from '../../connectors/MetaMask';
+
 import { Header as Heading, SubTitle, Text } from '../Typography';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
 import { colors } from '../Styles/Colors';
@@ -127,6 +129,7 @@ const StyledHeader = styled(Layout.Header)`
 `;
 
 const hashShortener = (hashStr) => {
+  if (!hashStr) return '';
   const len = hashStr.length;
   if (len <= 10) {
     return hashStr;
@@ -169,8 +172,14 @@ const Header = ({ userStatus = defaultUser }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
+  useEffect(() => {
+    if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
+      getEthereumAccounts();
+    }
+  }, []);
+
   const {
-    accountInfo: { address, balance, unit, wallet, cancelConfirmation },
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -200,6 +209,10 @@ const Header = ({ userStatus = defaultUser }) => {
       if (!hasAccount) {
         setLoading(false);
       }
+    } else if (selectedWallet === wallets.metamask) {
+      await connectMetaMaskWallet();
+      await getEthereumAccounts();
+      setLoading(false);
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -236,7 +249,7 @@ const Header = ({ userStatus = defaultUser }) => {
           ) : showDetail ? (
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
               <WalletDetails
-                networkName={currentICONexNetwork.name}
+                networkName={currentNetwork}
                 userAvatar={userStatus.avatar}
                 balance={balance}
                 unit={unit}
@@ -249,7 +262,7 @@ const Header = ({ userStatus = defaultUser }) => {
           ) : (
             <Modal
               title="Connect a wallet"
-              button={{ onClick: handleConnect, text: 'Connect a Wallet' }}
+              button={{ onClick: handleConnect, text: 'Next' }}
               display
               setDisplay={setShowModal}
             >
@@ -282,7 +295,7 @@ const Header = ({ userStatus = defaultUser }) => {
         <Nav />
         {address ? (
           <div className="account-info">
-            <SubTitle className="small">{currentICONexNetwork.name}</SubTitle>
+            <SubTitle className="small">{currentNetwork}</SubTitle>
             <Avatar
               className="user-avatar"
               src={userStatus.avatar}
