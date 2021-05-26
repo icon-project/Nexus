@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import styled from 'styled-components';
+
 import { Layout } from 'components/Layout';
 import { TransferCard } from 'components/TransferCard';
 import { TransferHistory } from 'components/TransferHistory';
-
-import styled from 'styled-components';
 
 const TransferStyled = styled(Layout)`
   .transfer-card {

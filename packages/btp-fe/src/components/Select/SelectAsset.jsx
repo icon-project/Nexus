@@ -90,7 +90,7 @@ const SelectStyled = styled.div`
     line-height: 16px;
   }
 `;
-const SelectAsset = () => {
+const SelectAsset = (props) => {
   const listNetwork = [
     { value: 'BTC', label: 'Bitcoin', iconUrl: BTCIconSrc },
     { value: 'BCH', label: 'Bitcoin cash', iconUrl: BCHIconSrc },
@@ -105,7 +105,7 @@ const SelectAsset = () => {
     setSelectedValue(selectedValue);
   };
   return (
-    <SelectStyled>
+    <SelectStyled {...props}>
       <div className="custom-select-wrapper" onClick={() => onToggleSelect()}>
         <div className={isOpenSelect ? 'custom-select open' : 'custom-select'}>
           <div className="custom-select__trigger">

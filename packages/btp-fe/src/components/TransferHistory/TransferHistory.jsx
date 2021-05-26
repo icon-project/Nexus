@@ -2,6 +2,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Row } from 'antd';
+
+import { Header, Text } from '../Typography';
+
+// import { Table, Row } from 'antd';
 import { Tag } from 'components/Tag';
 import { SelectAsset } from 'components/Select';
 import VectorSrc from 'assets/images/vector.svg';
@@ -10,10 +14,12 @@ import UnionSrc from 'assets/images/union.svg';
 import PrevIconSrc from 'assets/images/prev-icon.svg';
 import { colors } from '../Styles/Colors';
 import { HistoryDetails } from './HistoryDetails';
+import { media } from '../Styles/Media';
+
 const TableStyled = styled(Table)`
   margin-top: 34px;
   .ant-table-content {
-    font-family: Poppins;
+    font-family: 'Poppins';
   }
   .ant-table-tbody {
     background-color: ${colors.darkBG};
@@ -102,7 +108,14 @@ const TableStyled = styled(Table)`
       }
     }
   }
+
+  ${media.md`
+    .ant-table-content {
+      overflow-x: auto;
+    }
+  `};
 `;
+
 const columns = [
   {
     title: 'Details',
@@ -149,14 +162,12 @@ for (let i = 0; i < 30; i++) {
 }
 
 const TransferHistoryStyled = styled.div`
-  font-family: Poppins;
   margin-top: 36px;
   margin-bottom: 43px;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.75px;
+
   color: ${colors.grayText};
   width: 1120px;
+
   .custom-select-wrapper {
     width: 204px;
   }
@@ -171,13 +182,7 @@ const TransferHistoryStyled = styled.div`
     height: 8px;
     transform: rotateZ(90deg);
   }
-  .transfer-history-text {
-    font-weight: 600;
-    font-size: 36px;
-    line-height: 48px;
 
-    letter-spacing: 1px;
-  }
   .back-to-tranfer {
     margin-bottom: 31px;
     display: inline-flex;
@@ -188,6 +193,34 @@ const TransferHistoryStyled = styled.div`
   .next-btn {
     transform: rotateY(180deg);
   }
+
+  .selector-group {
+    display: flex;
+  }
+
+  ${media.md`
+    width: 100%;
+
+    .control-group {
+      flex-direction: column;
+      align-items: center;
+    }
+    .selector-group {
+      margin-top: 20px;
+      flex-direction: column;
+      align-items: center;
+
+      .exchange-icon {
+        width: 15px;
+        transform: rotate(90deg);
+        margin: 20px 0;
+      }
+
+      div.select-asset {
+        height: 24px;
+      }
+    }
+  `};
 `;
 
 export const TransferHistory = ({ setIsOpenHistory }) => {
@@ -231,14 +264,16 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
           <div className="back-button" onClick={() => setIsOpenHistory(false)}>
             <img className="back-icon" src={BackIconSrc} />
           </div>
-          <span className="transfer-history-text">Transfer history</span>
+          <Header className="medium bold">Transfer history</Header>
         </div>
       </Row>
-      <Row>
-        Viewing transfer history for
-        <SelectAsset />
-        <img src={VectorSrc} />
-        <SelectAsset />
+      <Row className="control-group">
+        <Text className="medium">Viewing transfer history for</Text>
+        <div className="selector-group">
+          <SelectAsset className="select-asset" />
+          <img className="exchange-icon" src={VectorSrc} />
+          <SelectAsset className="select-asset" />
+        </div>
       </Row>
       <TableStyled
         columns={columns}

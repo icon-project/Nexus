@@ -8,7 +8,7 @@ export const TYPES = {
 };
 
 export const ADDRESS_LOCAL_STORAGE = 'address';
-
+export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   yeouido: {
