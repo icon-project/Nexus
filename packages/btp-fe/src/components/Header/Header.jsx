@@ -98,7 +98,7 @@ const StyledHeader = styled(Layout.Header)`
     }
 
     .right-side {
-      display: ${({ showMenu }) => (showMenu ? 'flex' : 'none')};
+      display: ${({ $showMenu }) => ($showMenu ? 'flex' : 'none')};
       position: absolute;
       top: 60px;
       left: 0;
@@ -229,7 +229,7 @@ const Header = ({ userStatus = defaultUser }) => {
   }, [address]);
 
   return (
-    <StyledHeader showMenu={showMenu}>
+    <StyledHeader $showMenu={showMenu}>
       {showModal && (
         <>
           {loading && !cancelConfirmation ? (
