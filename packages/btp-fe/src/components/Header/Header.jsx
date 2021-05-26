@@ -90,7 +90,6 @@ const StyledHeader = styled(Layout.Header)`
 
   ${media.minWidthHeader`
     padding: 0 20px;
-    height: 60px;
     position: relative;
 
     .menu-icon {
@@ -100,11 +99,11 @@ const StyledHeader = styled(Layout.Header)`
     .right-side {
       display: ${({ $showMenu }) => ($showMenu ? 'flex' : 'none')};
       position: absolute;
-      top: 60px;
+      top: 80px;
       left: 0;
       z-index: 101;
 
-      min-height: 100vh;
+      min-height: calc(100vh - 80px);
       width: 100%;
       background-color: ${grayLine};
       flex-direction: column-reverse;
