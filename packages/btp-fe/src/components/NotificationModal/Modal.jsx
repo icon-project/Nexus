@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { PrimaryButton } from '../Button';
 import { Loader } from '../Loader';
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 import closeIcon from '../../assets/images/close-icon.svg';
 import checkIcon from '../../assets/images/green-checked-icon.svg';
@@ -88,6 +89,11 @@ const Content = styled.div`
       text-align: center;
     }
   }
+
+  ${media.md`
+    width: 100%;
+    overflow: auto;
+  `}
 `;
 
 const StyledButton = styled(PrimaryButton)`

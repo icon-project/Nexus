@@ -5,6 +5,7 @@ import { Avatar } from 'antd';
 import { Text, Header } from '../Typography';
 import { colors } from '../Styles/Colors';
 import { mediumBoldSubtitle } from '../Typography/SubTitle';
+import { media } from '../Styles/Media';
 
 import copyIcon from '../../assets/images/copy-icon.svg';
 
@@ -77,6 +78,18 @@ const Wrapper = styled.div`
       background-color: ${primaryBrandBase};
     }
   }
+
+  ${media.md`
+    .control-buttons {
+      .btn {
+        font-size: 12px;
+        height: 50px;
+        width: 45%;
+      }
+    }
+    width: 100%;
+    overflow: auto;
+  `}
 `;
 
 export const WalletDetails = ({
