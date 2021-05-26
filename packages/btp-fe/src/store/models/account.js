@@ -1,4 +1,4 @@
-import { ADDRESS_LOCAL_STORAGE } from '../../connectors/constants';
+import { ADDRESS_LOCAL_STORAGE, METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
 
 const initState = {
   unit: '',
@@ -6,6 +6,7 @@ const initState = {
   address: '',
   balance: 0, // TODO: calculating based on BigInt
   cancelConfirmation: false,
+  currentNetwork: '',
 };
 
 const account = {
@@ -22,6 +23,7 @@ const account = {
     },
     resetAccountInfo() {
       localStorage.removeItem(ADDRESS_LOCAL_STORAGE);
+      localStorage.removeItem(METAMASK_LOCAL_ADDRESS);
       return initState;
     },
   },

@@ -3,7 +3,7 @@ import { requestHasAddress } from './events';
 
 import store from '../../store';
 import { wallets } from '../../utils/constants';
-import { TYPES, ADDRESS_LOCAL_STORAGE } from '../constants';
+import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork } from '../constants';
 
 const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
@@ -46,6 +46,7 @@ const getAccountInfo = async (address) => {
     balance,
     wallet: wallets.iconex,
     unit: 'ICX',
+    currentNetwork: currentICONexNetwork.name,
   });
 };
 
