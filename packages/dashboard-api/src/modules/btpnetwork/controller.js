@@ -7,13 +7,15 @@ const model = require('./model');
 
 async function getNetworkInfo(request, response) {
   const assets = await model.getAmountFeeAggregationSCORE();
+  const allTimeAmount = await model.getTotalCumulativeAmountFeeAggregationSCORE();
   response.status(HttpStatus.OK).json({
     content: {
       volume: 1000, // TODO: total amount of tokens in FeeAggregationSCORE
       fee: {
         cumulativeAmount: 100000, // TODO: total tokens ever had in FeeAggregationSCORE
         currentAmount: 500, // TODO: total amount of tokens valid in FeeAggregationSCORE
-        assets
+        assets,
+        allTimeAmount
       }
     }
   });
