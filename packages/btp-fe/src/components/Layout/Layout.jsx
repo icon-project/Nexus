@@ -11,16 +11,14 @@ import i18n from '../../i18n';
 
 const { Content } = AtndLayout;
 const StyledLayout = styled(AtndLayout)`
-  min-height: 100vh;
-  background-color: ${colors.contentBgColor};
   .ant-layout-content {
     .ant-breadcrumb {
       margin: 16px 24px;
     }
   }
   .main {
-    min-height: 100vh;
-    background-color: #131217;
+    background-color: ${colors.grayDark};
+    min-height: calc(100vh - 80px); // minus header height
   }
   .ant-menu {
     height: auto;
