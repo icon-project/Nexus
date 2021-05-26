@@ -11,13 +11,14 @@ import { Modal } from '../NotificationModal';
 import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
-import { currentICONexNetwork } from '../../connectors/constants';
+import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
 
 import defaultAvatar from '../../assets/images/avatar.svg';
 import MetaMask from '../../assets/images/metal-mask.svg';
 import ICONex from '../../assets/images/icon-ex.svg';
 import closeIcon from '../../assets/images/close-icon.svg';
 import copyIcon from '../../assets/images/copy-icon.svg';
+import { connectMetaMaskWallet, getEthereumAccounts } from '../../connectors/MetaMask';
 
 const StyledHeader = styled(Layout.Header)`
   font-family: Poppins;
@@ -31,14 +32,6 @@ const StyledHeader = styled(Layout.Header)`
   justify-content: space-between;
   align-items: center;
   letter-spacing: 1px;
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
   svg {
     pointer-events: none;
   }
@@ -62,7 +55,7 @@ const StyledHeader = styled(Layout.Header)`
     display: flex;
     align-items: center;
     min-width: 305px;
-    margin-left: 80px;
+    margin-left: auto;
     font-family: Poppins;
     font-style: normal;
     font-weight: 100;
@@ -349,6 +342,7 @@ const StyledHeader = styled(Layout.Header)`
 `;
 
 const hashShortener = (hashStr) => {
+  if (!hashStr) return '';
   const len = hashStr.length;
   if (len <= 10) {
     return hashStr;
@@ -405,7 +399,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const {
-    accountInfo: { address, balance, unit, wallet, cancelConfirmation },
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -433,6 +427,10 @@ const Header = ({ userStatus = defaultUser }) => {
         if (!hasAccount) {
           setLoading(false);
         }
+      } else if (selectedWallet === wallets.metamask) {
+        await connectMetaMaskWallet();
+        await getEthereumAccounts();
+        setLoading(false);
       }
     }
   };
@@ -461,6 +459,11 @@ const Header = ({ userStatus = defaultUser }) => {
       setShowDetail(true);
     }
   }, [address]);
+  useEffect(() => {
+    if (window.localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
+      getEthereumAccounts();
+    }
+  }, []);
 
   return (
     <StyledHeader>
@@ -474,7 +477,7 @@ const Header = ({ userStatus = defaultUser }) => {
                 <span>{mockWallets[wallet].title}</span>
                 <button id="close-detail" className="close-btn" onClick={toggleModal} />
               </h4>
-              <h6>{currentICONexNetwork.name}</h6>
+              <h6>{currentNetwork}</h6>
               <Avatar className="user-avatar" src={userStatus.avatar} size={120} />
               <div className="wallet-balance">
                 <span>Balance</span>
@@ -513,7 +516,7 @@ const Header = ({ userStatus = defaultUser }) => {
                 onClick={handleSelectWallet}
               />
               <button id="start-connect" onClick={handleConnect}>
-                Connect a Wallet
+                Next
               </button>
             </div>
           )}
@@ -537,7 +540,7 @@ const Header = ({ userStatus = defaultUser }) => {
       <Nav />
       {address ? (
         <div className="right-side">
-          <span className="wallet-name">{currentICONexNetwork.name}</span>
+          <span className="wallet-name">{currentNetwork}</span>
           <Avatar
             className="user-avatar"
             src={userStatus.avatar}
