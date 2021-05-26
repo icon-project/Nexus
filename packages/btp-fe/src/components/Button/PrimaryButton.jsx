@@ -2,7 +2,9 @@ import Button from './Button';
 import styled from 'styled-components';
 
 const PrimaryButtonStyled = styled(Button)`
-  :hover {
+  :hover,
+  :active,
+  :focus {
     background-color: #99a3ff;
     color: #ebedff;
   }
