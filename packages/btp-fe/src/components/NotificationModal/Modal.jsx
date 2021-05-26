@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { PrimaryButton } from '../Button';
 import { Loader } from '../Loader';
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 import closeIcon from '../../assets/images/close-icon.svg';
 import checkIcon from '../../assets/images/green-checked-icon.svg';
@@ -20,6 +21,7 @@ const Wapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 105;
 
   background-color: rgba(10, 9, 11, 0.2);
   backdrop-filter: blur(20px);
@@ -87,6 +89,11 @@ const Content = styled.div`
       text-align: center;
     }
   }
+
+  ${media.md`
+    width: 100%;
+    overflow: auto;
+  `}
 `;
 
 const StyledButton = styled(PrimaryButton)`

@@ -16,6 +16,11 @@ export const mediumBoldHeader = css`
 export const Header = styled.h3`
   ${normalHeader}
 
+  &.x-small {
+    font-size: 21px;
+    line-height: 28px;
+  }
+
   &.small {
     font-size: 25px;
     line-height: 36px;

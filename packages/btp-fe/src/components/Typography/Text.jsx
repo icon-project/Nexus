@@ -13,6 +13,12 @@ export const mediumText = css`
   line-height: 24px;
 `;
 
+export const smallText = css`
+  ${normalText}
+  font-size: 14px;
+  line-height: 20px;
+`;
+
 export const Text = styled.p`
   ${normalText}
 
@@ -30,4 +36,10 @@ export const Text = styled.p`
     font-size: 12px;
     line-height: 16px;
   }
+
+  &.bold {
+    font-weight: 600;
+  }
 `;
+
+/* Link/X-Small: Text/x-small/bold */
