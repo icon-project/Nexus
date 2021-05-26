@@ -25,6 +25,8 @@ const globalColors = {
 
   // states
   successState: '#5EF38C',
+  warningState: '#FFBA49',
+  errorState: '#F05365',
 };
 
 export const colors = (() => {

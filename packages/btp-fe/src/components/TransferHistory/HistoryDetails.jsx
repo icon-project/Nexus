@@ -8,25 +8,26 @@ import { colors } from '../Styles/Colors';
 import { Table } from 'antd';
 import closeIcon from '../../assets/images/close-icon.svg';
 import { hashShortener } from '../../utils/app';
+import { media } from '../Styles/Media';
 const TableStyled = styled(Table)`
   width: 100%;
   .ant-table-content {
     font-family: Poppins;
   }
   .ant-table-tbody {
-    background-color: #1d1b22;
+    background-color: ${colors.grayBG};
     color: ${colors.grayText};
     font-size: 14px;
     line-height: 20px;
   }
   .ant-table-tbody > tr > td {
-    border-bottom: 1px solid #353242;
+    border-bottom: 1px solid ${colors.grayLine};
   }
   .ant-table-thead > tr > th {
-    background: #1d1b22;
+    background: ${colors.grayBG};
     font-size: 14px;
     color: ${colors.grayText};
-    border-bottom: 1px solid #353242;
+    border-bottom: 1px solid ${colors.grayLine};
     font-weight: 400;
   }
   .ant-table-thead > tr > th,
@@ -39,6 +40,11 @@ const TableStyled = styled(Table)`
   .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: ${colors.grayBG};
   }
+  ${media.md`
+    .ant-table-content {
+      overflow-x: auto;
+    }
+  `};
 `;
 const StyledHistoryDetails = styled.div`
   min-height: 100vh;
@@ -54,7 +60,7 @@ const StyledHistoryDetails = styled.div`
   .history-details {
     width: 840px;
     height: fit-content;
-    background: #1d1b22;
+    background: ${colors.grayBG};
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -85,7 +91,7 @@ const StyledHistoryDetails = styled.div`
   }
   .copy-address {
     cursor: pointer;
-    color: #7fdeff;
+    color: ${colors.tertiaryBase};
     img {
       margin-left: 8.83px;
       width: 18.33px;
@@ -140,31 +146,19 @@ const columns = [
     title: 'Status',
     dataIndex: 'status',
     width: 160,
-    render: (text) => {
-      let color = '#5EF38C';
-      switch (text) {
-        case 'pending':
-          color = '#FFBA49';
-          break;
-        case 'failed':
-          color = '#F05365';
-          break;
-      }
-      return <Tag color={color}>{text}</Tag>;
-    },
+    render: (text) => <Tag color={getColor(text)}>{text}</Tag>,
   },
   {
     title: 'Block',
     dataIndex: 'block',
   },
 ];
-
+const getColor = (status) => {
+  if (status === 'pending') return colors.warningState;
+  if (status === 'success') return colors.successState;
+  if (status === 'failed') return colors.errorState;
+};
 export const HistoryDetails = ({ details, onClose }) => {
-  const getColor = (status) => {
-    if (status === 'pending') return '#FFBA49';
-    if (status === 'success') return '#5EF38C';
-    if (status === 'failed') return '#F05365';
-  };
   const dataSource = [];
   for (let i = 1; i < 4; i++) {
     dataSource.push({
