@@ -5,6 +5,7 @@ import { Avatar } from 'antd';
 import { Text } from '../Typography';
 
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 const { grayText, successState, grayAccent } = colors;
 
@@ -37,6 +38,10 @@ const StyledWalletItem = styled.button`
     background: ${grayAccent};
     border-radius: 4px;
   }
+
+  ${media.md`
+    width: 100%;
+  `};
 `;
 
 export const WalletSelector = ({ wallet, type, active, onClick }) => {
