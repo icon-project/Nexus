@@ -1,51 +1,19 @@
 /* eslint-disable react/display-name */
 import styled from 'styled-components';
-import { Header, Text } from '../Typography';
-import { Tag } from 'components/Tag';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+import { Tag } from '../Tag';
 import { Icon } from '../Icon/Icon';
-import { colors } from '../Styles/Colors';
-import { Table } from 'antd';
-import closeIcon from '../../assets/images/close-icon.svg';
+import { Table } from '../Table';
+
 import { hashShortener } from '../../utils/app';
+
+import { Header, Text } from '../Typography';
+import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
-const TableStyled = styled(Table)`
-  width: 100%;
-  .ant-table-content {
-    font-family: Poppins;
-  }
-  .ant-table-tbody {
-    background-color: ${colors.grayBG};
-    color: ${colors.grayText};
-    font-size: 14px;
-    line-height: 20px;
-  }
-  .ant-table-tbody > tr > td {
-    border-bottom: 1px solid ${colors.grayLine};
-  }
-  .ant-table-thead > tr > th {
-    background: ${colors.grayBG};
-    font-size: 14px;
-    color: ${colors.grayText};
-    border-bottom: 1px solid ${colors.grayLine};
-    font-weight: 400;
-  }
-  .ant-table-thead > tr > th,
-  .ant-table-tbody > tr > td {
-    padding: 13px 14px;
-  }
-  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
-  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
-  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
-  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
-    background: ${colors.grayBG};
-  }
-  ${media.md`
-    .ant-table-content {
-      overflow-x: auto;
-    }
-  `};
-`;
+
+import closeIcon from '../../assets/images/close-icon.svg';
+
 const StyledHistoryDetails = styled.div`
   min-height: 100vh;
   width: 100%;
@@ -69,7 +37,6 @@ const StyledHistoryDetails = styled.div`
     padding: 23px 32px 26px 32px;
     overflow-y: auto;
     max-height: 90vh;
-}
   }
   .heading {
     text-align: center;
@@ -124,27 +91,27 @@ const columns = [
     title: 'Transaction hash',
     dataIndex: 'hash',
     render: (text) => (
-      <div>
+      <Text>
         <span className="copy-address">{text}</span>(BVP)
-      </div>
+      </Text>
     ),
   },
   {
     title: 'From',
     dataIndex: 'from',
     render: (text) => (
-      <div>
+      <Text>
         <span className="copy-address">{text}</span>(BVP)
-      </div>
+      </Text>
     ),
   },
   {
     title: 'To',
     dataIndex: 'to',
     render: (text) => (
-      <div>
+      <Text>
         <span className="copy-address">{text}</span>(BVP)
-      </div>
+      </Text>
     ),
   },
   {
@@ -162,6 +129,16 @@ const getColor = (status) => {
   if (status === 'pending') return colors.warningState;
   if (status === 'success') return colors.successState;
   if (status === 'failed') return colors.errorState;
+};
+const CopyAddress = ({ text }) => {
+  return (
+    <CopyToClipboard text={text}>
+      <span className="copy-address">
+        {hashShortener(text)}
+        <Icon icon="copy" size="s" />
+      </span>
+    </CopyToClipboard>
+  );
 };
 export const HistoryDetails = ({ details, onClose }) => {
   const dataSource = [];
@@ -184,12 +161,9 @@ export const HistoryDetails = ({ details, onClose }) => {
         </Header>
         <div className="content">
           <Text className="medium">Transaction hash</Text>
-          <CopyToClipboard text={details.details}>
-            <span className="copy-address">
-              {hashShortener(details.details)}
-              <Icon icon="copy" size="s" />
-            </span>
-          </CopyToClipboard>
+          <Text className="medium">
+            <CopyAddress text={details.details} />
+          </Text>
         </div>
         <div className="content">
           <Text className="medium">Amount</Text>
@@ -208,36 +182,29 @@ export const HistoryDetails = ({ details, onClose }) => {
         <div className="content">
           <Text className="medium">From</Text>
           <Text className="medium">
-            <CopyToClipboard text={'0x42A5...b3Df'}>
-              <div>
-                <span className="hide-in-mobile">(Binance Smart Chain) </span>
-                <span className="copy-address">
-                  0x42A5...b3Df
-                  <Icon icon="copy" size="s" />
-                </span>
-              </div>
-            </CopyToClipboard>
+            <span className="hide-in-mobile">(Binance Smart Chain) </span>
+            <CopyAddress text={'0x42A5sabfSDFS4fsdfsdsdfsdf$b3Df'} />
           </Text>
         </div>
         <div className="content">
           <Text className="medium">To</Text>
           <Text className="medium">
-            <CopyToClipboard text={'0x3C53...5C5e'}>
-              <div>
-                <span className="hide-in-mobile">(Edgeware) </span>
-                <span className="copy-address">
-                  0x3C53...5C5e
-                  <Icon icon="copy" size="s" />
-                </span>
-              </div>
-            </CopyToClipboard>
+            <span className="hide-in-mobile">(Edgeware) </span>
+            <CopyAddress text={'0x3C53asCCSDDSasfsf432434323242323DSFDSF5C5e'} />
           </Text>
         </div>
         <div className="internal-trx">
           <Text className="medium">Internal transactions</Text>
         </div>
         <div className="content">
-          <TableStyled columns={columns} dataSource={dataSource} pagination={false} />
+          <Table
+            headerColor={colors.grayBG}
+            backgroundColor={colors.grayBG}
+            columns={columns}
+            dataSource={dataSource}
+            pagination={false}
+            hoverColor={colors.grayBG}
+          />
         </div>
         <div className="content">
           <Text className="medium">Network fee</Text>
