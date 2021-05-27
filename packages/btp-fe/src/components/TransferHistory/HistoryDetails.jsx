@@ -5,36 +5,29 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Tag } from '../Tag';
 import { Icon } from '../Icon/Icon';
 import { Table } from '../Table';
+import { Modal } from '../NotificationModal';
 
 import { hashShortener } from '../../utils/app';
 
-import { Header, Text } from '../Typography';
+import { Text } from '../Typography';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
-
-import closeIcon from '../../assets/images/close-icon.svg';
 
 const StyledHistoryDetails = styled.div`
   min-height: 100vh;
   width: 100%;
-  position: fixed;
   display: flex;
   justify-content: center;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(10px);
-  z-index: 1;
   .history-details {
-    width: 840px;
     height: fit-content;
     background: ${colors.grayBG};
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 123px;
-    padding: 23px 32px 26px 32px;
+    margin-top: 23px;
     overflow-y: auto;
     max-height: 90vh;
   }
@@ -64,17 +57,6 @@ const StyledHistoryDetails = styled.div`
       width: 18.33px;
       height: 18.33px;
     }
-  }
-  .close-btn {
-    background: url('${closeIcon}');
-    width: 18px;
-    height: 18px;
-    background-repeat: no-repeat;
-    justify-self: end;
-    align-self: center;
-    position: absolute;
-    right: 0;
-    bottom: 9px;
   }
   ${media.md`
     .hide-in-mobile {
@@ -153,68 +135,72 @@ export const HistoryDetails = ({ details, onClose }) => {
     });
   }
   return (
-    <StyledHistoryDetails>
-      <div className="history-details">
-        <Header className="small bold heading">
-          Transfer details
-          <button className="close-btn" onClick={() => onClose()} />
-        </Header>
-        <div className="content">
-          <Text className="medium">Transaction hash</Text>
-          <Text className="medium">
-            <CopyAddress text={details.details} />
-          </Text>
+    <Modal
+      display
+      title="Transfer details"
+      width="840px"
+      marginTop="123px"
+      setDisplay={() => onClose()}
+    >
+      <StyledHistoryDetails>
+        <div className="history-details">
+          <div className="content">
+            <Text className="medium">Transaction hash</Text>
+            <Text className="medium">
+              <CopyAddress text={details.details} />
+            </Text>
+          </div>
+          <div className="content">
+            <Text className="medium">Amount</Text>
+            <Text className="medium">{details.amount}</Text>
+          </div>
+          <div className="content">
+            <Text className="medium">Status</Text>
+            <Tag color={getColor(details.status)}>{details.status}</Tag>
+          </div>
+          <div className="content">
+            <Text className="medium">Time</Text>
+            <Text className="medium">
+              55 seconds ago <span className="hide-in-mobile">(May-11-2021 07:52:44 AM +UTC)</span>
+            </Text>
+          </div>
+          <div className="content">
+            <Text className="medium">From</Text>
+            <Text className="medium">
+              <span className="hide-in-mobile">(Binance Smart Chain) </span>
+              <CopyAddress text={'0x42A5sabfSDFS4fsdfsdsdfsdf$b3Df'} />
+            </Text>
+          </div>
+          <div className="content">
+            <Text className="medium">To</Text>
+            <Text className="medium">
+              <span className="hide-in-mobile">(Edgeware) </span>
+              <CopyAddress text={'0x3C53asCCSDDSasfsf432434323242323DSFDSF5C5e'} />
+            </Text>
+          </div>
+          <div className="internal-trx">
+            <Text className="medium">Internal transactions</Text>
+          </div>
+          <div className="content">
+            <Table
+              headerColor={colors.grayBG}
+              backgroundColor={colors.grayBG}
+              columns={columns}
+              dataSource={dataSource}
+              pagination={false}
+              hoverColor={colors.grayBG}
+            />
+          </div>
+          <div className="content">
+            <Text className="medium">Network fee</Text>
+            <Text className="medium">0.010094175 Ether ($39.78)</Text>
+          </div>
+          <div className="content">
+            <Text className="medium">BTP fee</Text>
+            <Text className="medium">0.000000480675 Ether</Text>
+          </div>
         </div>
-        <div className="content">
-          <Text className="medium">Amount</Text>
-          <Text className="medium">{details.amount}</Text>
-        </div>
-        <div className="content">
-          <Text className="medium">Status</Text>
-          <Tag color={getColor(details.status)}>{details.status}</Tag>
-        </div>
-        <div className="content">
-          <Text className="medium">Time</Text>
-          <Text className="medium">
-            55 seconds ago <span className="hide-in-mobile">(May-11-2021 07:52:44 AM +UTC)</span>
-          </Text>
-        </div>
-        <div className="content">
-          <Text className="medium">From</Text>
-          <Text className="medium">
-            <span className="hide-in-mobile">(Binance Smart Chain) </span>
-            <CopyAddress text={'0x42A5sabfSDFS4fsdfsdsdfsdf$b3Df'} />
-          </Text>
-        </div>
-        <div className="content">
-          <Text className="medium">To</Text>
-          <Text className="medium">
-            <span className="hide-in-mobile">(Edgeware) </span>
-            <CopyAddress text={'0x3C53asCCSDDSasfsf432434323242323DSFDSF5C5e'} />
-          </Text>
-        </div>
-        <div className="internal-trx">
-          <Text className="medium">Internal transactions</Text>
-        </div>
-        <div className="content">
-          <Table
-            headerColor={colors.grayBG}
-            backgroundColor={colors.grayBG}
-            columns={columns}
-            dataSource={dataSource}
-            pagination={false}
-            hoverColor={colors.grayBG}
-          />
-        </div>
-        <div className="content">
-          <Text className="medium">Network fee</Text>
-          <Text className="medium">0.010094175 Ether ($39.78)</Text>
-        </div>
-        <div className="content">
-          <Text className="medium">BTP fee</Text>
-          <Text className="medium">0.000000480675 Ether</Text>
-        </div>
-      </div>
-    </StyledHistoryDetails>
+      </StyledHistoryDetails>
+    </Modal>
   );
 };
