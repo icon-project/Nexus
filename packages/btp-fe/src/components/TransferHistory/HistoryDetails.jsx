@@ -14,7 +14,6 @@ import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
 const StyledHistoryDetails = styled.div`
-  min-height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -45,6 +44,9 @@ const StyledHistoryDetails = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 29px;
+  }
+  .btp-fee {
+    margin-bottom: 0;
   }
   .internal-trx {
     width: 100%;
@@ -198,7 +200,7 @@ export const HistoryDetails = ({ details, onClose }) => {
             <Text className="medium">Network fee</Text>
             <Text className="medium">0.010094175 Ether ($39.78)</Text>
           </div>
-          <div className="content">
+          <div className="content btp-fee">
             <Text className="medium">BTP fee</Text>
             <Text className="medium">0.000000480675 Ether</Text>
           </div>
