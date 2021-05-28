@@ -29,7 +29,10 @@ const StyledHistoryDetails = styled.div`
     align-items: center;
     margin-top: 23px;
     overflow-y: auto;
-    max-height: 65vh;
+    max-height: 90vh;
+    ${media.smallDesktop`
+      max-height: 65vh;
+  `};
   }
   .heading {
     text-align: center;
