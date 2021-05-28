@@ -1,45 +1,24 @@
 /* eslint-disable react/display-name */
+import { useState } from 'react';
 import styled from 'styled-components';
-import { Table, Row } from 'antd';
+import { Row } from 'antd';
 
+import { Table } from '../Table';
+import { Tag } from '../Tag';
+import { SelectAsset } from '../Select';
+import { HistoryDetails } from './HistoryDetails';
+
+import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 import { Header, Text } from '../Typography';
 
-// import { Table, Row } from 'antd';
-import { Tag } from 'components/Tag';
-import { SelectAsset } from 'components/Select';
 import VectorSrc from 'assets/images/vector.svg';
 import BackIconSrc from 'assets/images/arrow-icon.svg';
 import UnionSrc from 'assets/images/union.svg';
 import PrevIconSrc from 'assets/images/prev-icon.svg';
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
-  .ant-table-content {
-    font-family: 'Poppins';
-  }
-  .ant-table-tbody {
-    background-color: ${colors.darkBG};
-    color: ${colors.grayText};
-    font-size: 16px;
-  }
-  .ant-table-tbody > tr > td {
-    border-bottom: 1px solid #353242;
-  }
-  .ant-table-thead > tr > th {
-    background: ${colors.grayAccent};
-    font-size: 14px;
-    color: ${colors.grayText};
-    border-bottom: none;
-    font-weight: 400;
-  }
-  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
-  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
-  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
-  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
-    background: ${colors.grayBG};
-  }
   .select-asset-container {
     margin-bottom: 34px;
   }
@@ -52,61 +31,6 @@ const TableStyled = styled(Table)`
   .amount-column {
     width: 268;
   }
-  .ant-pagination-item-active,
-  .ant-pagination-item,
-  .ant-pagination-item-link {
-    font-family: Poppins;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 12px;
-    width: 36px;
-    height: 36px;
-  }
-  .ant-pagination-disabled {
-    a,
-    .anticon {
-      color: ${colors.primaryBrandLight};
-    }
-  }
-  .ant-pagination-prev,
-  .ant-pagination-next {
-    margin-right: 0;
-  }
-  .ant-pagination-item,
-  .ant-pagination-item-link {
-    border: 1px solid ${colors.primaryBrandLight};
-    background: transparent;
-    a,
-    .anticon {
-      color: ${colors.primaryBrandLight};
-    }
-    :hover {
-      border: 1px solid ${colors.primaryBrandBase};
-      a,
-      .anticon {
-        color: ${colors.primaryBrandBase};
-      }
-    }
-  }
-  .ant-pagination-item-active {
-    border: none;
-    background: ${colors.primaryBrandBase};
-    a {
-      color: ${colors.primaryBrandBG};
-    }
-    :hover {
-      a {
-        color: ${colors.primaryBrandBG};
-      }
-    }
-  }
-
   ${media.md`
     .ant-table-content {
       overflow-x: auto;
@@ -222,6 +146,12 @@ const TransferHistoryStyled = styled.div`
 `;
 
 export const TransferHistory = ({ setIsOpenHistory }) => {
+  const [showDetails, setShowDetails] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({});
+  const onClickDetail = (detail) => {
+    setSelectedRow(detail);
+    setShowDetails(true);
+  };
   function itemRender(current, type, originalElement) {
     if (type === 'prev') {
       return (
@@ -268,13 +198,25 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
         </div>
       </Row>
       <TableStyled
+        headerColor={colors.grayAccent}
+        backgroundColor={colors.darkBG}
+        bodyText={'md'}
         columns={columns}
         dataSource={dataSource}
+        onRow={(r) => ({
+          onClick: () => onClickDetail(r),
+        })}
         pagination={{
           position: ['bottomCenter'],
           itemRender: itemRender,
         }}
       />
+      {showDetails && (
+        <HistoryDetails
+          details={selectedRow}
+          onClose={() => setShowDetails(false)}
+        ></HistoryDetails>
+      )}
     </TransferHistoryStyled>
   );
 };

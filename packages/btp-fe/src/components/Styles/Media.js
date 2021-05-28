@@ -8,6 +8,7 @@ export const sizes = {
   lg: '992',
   minWidthHeader: '1050',
   xl: '1200',
+  smallDesktop: '1366',
   xxl: '1600',
 };
 

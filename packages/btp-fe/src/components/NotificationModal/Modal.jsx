@@ -29,6 +29,7 @@ const Wapper = styled.div`
 
 const Content = styled.div`
   width: ${({ width }) => width};
+  margin-top: ${({ marginTop }) => marginTop};
   padding: 23px 32px 32px;
 
   display: flex;
@@ -119,6 +120,7 @@ export const Modal = memo(
     width = '480px',
     children,
     display,
+    marginTop = '0px',
     setDisplay = () => {},
   }) => {
     const iconURL = icons[icon];
@@ -126,7 +128,7 @@ export const Modal = memo(
 
     return (
       <Wapper isShowed={display}>
-        <Content width={width}>
+        <Content width={width} marginTop={marginTop}>
           <div className="heading">
             {title && <h3 className="title">{title}</h3>}
             <button className="close-btn" onClick={() => setDisplay(false)}></button>
