@@ -44,10 +44,12 @@ export const ControlButtons = ({
 }) => {
   return (
     <Wrapper>
-      <button className="back-button" onClick={onBack}>
+      <button className="back-button" onClick={onBack} type="button">
         Back
       </button>
-      <StyledButton onClick={onExecute}>{executeLabel}</StyledButton>
+      <StyledButton onClick={onExecute} htmlType="submit">
+        {executeLabel}
+      </StyledButton>
     </Wrapper>
   );
 };

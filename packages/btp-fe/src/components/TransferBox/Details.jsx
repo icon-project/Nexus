@@ -1,5 +1,7 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
+import { Field } from 'react-final-form';
+
 import { TokenInput, TextInput } from '../Input';
 import { Icon } from '../Icon/Icon';
 import { Header, Text } from '../Typography';
@@ -81,20 +83,30 @@ const Addresses = styled.div`
   }
 `;
 
-export const Details = memo(({ setStep, tokenValue, setTokenValue, initalInputDisplay }) => {
+export const Details = memo(({ setStep, setTokenValue, initalInputDisplay }) => {
   return (
     <Wrapper>
       <Header className="small bold heading">Transfer</Header>
-      <TokenInput
-        placeholder="0 ETH"
-        value={tokenValue}
-        setTokenValue={setTokenValue}
-        initalInputDisplay={initalInputDisplay}
+      <Field
+        name="tokenAmount"
+        render={({ input }) => (
+          <TokenInput
+            placeholder="0 ETH"
+            setTokenValue={setTokenValue}
+            initalInputDisplay={initalInputDisplay}
+            {...input}
+          />
+        )}
       />
 
       <div className="content">
         <Text className="small label">Recipient</Text>
-        <TextInput placeholder="Enter a ETH address" />
+
+        <Field
+          name="recipient"
+          render={({ input }) => <TextInput placeholder="Enter a ETH address" {...input} />}
+        />
+
         <Text className="small label">Wallet balance</Text>
         <WalletBalance>
           <div className="left">
