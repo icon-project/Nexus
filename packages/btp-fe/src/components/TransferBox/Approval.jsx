@@ -108,7 +108,7 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, tokenValue }) => (
+export const Approval = memo(({ setStep, tokenValue, recipient }) => (
   <Wrapper>
     <Header className="small bold heading">Fee & Confirmation</Header>
     <SendToken>
@@ -133,7 +133,7 @@ export const Approval = memo(({ setStep, tokenValue }) => (
         <Text className="medium">To</Text>
         <div className="receiver">
           <Icon icon="copy" size="s" />
-          <Text className="medium receiver--address">0xCe3E...D2fd</Text>
+          <Text className="medium receiver--address">{recipient}</Text>
           <Text className="small receiver--name">Binance Smart Chain</Text>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styled from 'styled-components/macro';
 import { Input } from './Input';
 import { Text } from '../Typography';
@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
+  position: relative;
 
   .exchange {
     text-align: center;
@@ -16,8 +17,17 @@ const Wrapper = styled.div`
 
   .token-label {
     ${mediumBoldHeader}
+    background-color: #1D1B22;
     word-break: break-word;
     margin: 0 32px;
+    padding: 0 10px;
+    display: none;
+    position: absolute;
+    top: 0;
+
+    &.active {
+      display: block;
+    }
   }
 `;
 
@@ -25,6 +35,8 @@ const StyledTokenInput = styled(Input)`
   ${mediumBoldHeader}
   width: 105px;
   background-color: transparent;
+  width: 85%;
+  text-align: center;
 
   /* remove number arrows */
   /* Chrome, Safari, Edge, Opera */
@@ -39,28 +51,35 @@ const StyledTokenInput = styled(Input)`
   }
 `;
 
-export const TokenInput = ({ value, setTokenValue, initalInputDisplay, ...props }) => {
+export const TokenInput = ({ initalInputDisplay, value, onBlur, ...props }) => {
   const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
+  const tokenInputRef = useRef();
 
   const toggleInput = () => {
     setShowInput(!showInput);
   };
   return (
     <Wrapper>
-      {showInput ? (
-        <StyledTokenInput
-          {...props}
-          type="number"
-          onBlur={toggleInput}
-          onChange={(evt) => setTokenValue(evt.target.value)}
-          value={value}
-          autoFocus
-        />
-      ) : (
-        <div className="token-label" onClick={toggleInput}>
-          {value || 0} ETH
-        </div>
-      )}
+      <StyledTokenInput
+        {...props}
+        value={value}
+        type="number"
+        onBlur={(e) => {
+          onBlur(e);
+          toggleInput();
+        }}
+        ref={tokenInputRef}
+      />
+
+      <div
+        className={`token-label ${!showInput && 'active'}`}
+        onClick={() => {
+          toggleInput();
+          tokenInputRef.current.focus();
+        }}
+      >
+        {value || 0} ETH
+      </div>
 
       <Text className="medium exchange">= $0.00 USD</Text>
     </Wrapper>

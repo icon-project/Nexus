@@ -45,24 +45,31 @@ export const TransferBox = () => {
     <Wrapper>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <div className={`container ${isCurrentStep(0) && 'active'}`}>
-              <TransferCard setStep={memoizedSetStep} />
-            </div>
-            <div className={`container ${isCurrentStep(1) && 'active'}`}>
-              <Details
-                setStep={memoizedSetStep}
-                tokenValue={tokenValue}
-                setTokenValue={memoizedSetTokenValue}
-                initalInputDisplay={!wasBack}
-              />
-            </div>
-            <div className={`container ${isCurrentStep(2) && 'active'}`}>
-              <Approval setStep={memoizedSetStep} tokenValue={tokenValue} />
-            </div>
-          </form>
-        )}
+        render={({ handleSubmit, values }) => {
+          const { tokenAmount, recipient } = values;
+          return (
+            <form onSubmit={handleSubmit}>
+              <div className={`container ${isCurrentStep(0) && 'active'}`}>
+                <TransferCard setStep={memoizedSetStep} />
+              </div>
+              <div className={`container ${isCurrentStep(1) && 'active'}`}>
+                <Details
+                  setStep={memoizedSetStep}
+                  tokenValue={tokenValue}
+                  setTokenValue={memoizedSetTokenValue}
+                  initalInputDisplay={!wasBack}
+                />
+              </div>
+              <div className={`container ${isCurrentStep(2) && 'active'}`}>
+                <Approval
+                  setStep={memoizedSetStep}
+                  tokenValue={tokenAmount}
+                  recipient={recipient}
+                />
+              </div>
+            </form>
+          );
+        }}
       />
     </Wrapper>
   );
