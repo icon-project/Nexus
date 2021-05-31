@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+
 import ArrowIconSrc from 'assets/images/arrow-icon.svg';
+import CheckIconSrc from 'assets/images/white-check-icon.svg';
+
 import { colors } from '../Styles/Colors';
 const SelectStyled = styled.div`
   .custom-select-wrapper {
     border: none;
     position: relative;
-    width: 235px;
+    width: ${(props) => `${props.width}px` || 'fit-content'};
     padding: 0 16px;
     border-radius: 4px;
     background: ${(props) => (props.isOpen ? '#28262F' : '')};
@@ -28,7 +31,7 @@ const SelectStyled = styled.div`
   .custom-options {
     position: absolute;
     display: block;
-    width: 196px;
+    width: ${(props) => `${props.optionWidth || 196}px`};
     top: 28px;
     right: 0;
     border: 1px solid #353242;
@@ -50,15 +53,19 @@ const SelectStyled = styled.div`
   .custom-option {
     position: relative;
     display: block;
-    padding: 10px 15px;
+    padding: ${(props) => (props.showCheck ? '10px 16px' : '10px 15px')};
     font-size: 14px;
     font-weight: 300;
     color: ${colors.grayText};
     cursor: pointer;
     transition: all 0.5s;
     background-color: ${colors.grayBG};
-    height: 40px;
+    height: ${(props) => (props.showCheck ? '44px' : '40px')};
     letter-spacing: 0.75px;
+    img {
+      margin-right: 8px;
+      visibility: hidden;
+    }
   }
   .custom-option:hover {
     cursor: pointer;
@@ -66,43 +73,47 @@ const SelectStyled = styled.div`
   }
   .custom-option.selected {
     background-color: ${colors.grayAccent};
-    height: 40px;
+    img {
+      visibility: visible;
+    }
   }
   .arrow {
     position: relative;
+    margin-left: 8.33px;
   }
 `;
-const SelectNetWork = () => {
-  const listNetwork = [
-    { value: 'bsc', label: 'Binance Smart Chain' },
-    { value: 'ed', label: 'Edgeware' },
-    { value: 'ic', label: 'ICON blockchain' },
-  ];
+const Select = ({ options, width, optionWidth, arrowIcon, showCheck }) => {
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(listNetwork[0]);
+  const [selectedValue, setSelectedValue] = useState(options[0]);
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);
   };
-  const onSelectNetwork = (selectedValue) => {
+  const onSelectOption = (selectedValue) => {
     setSelectedValue(selectedValue);
   };
   return (
-    <SelectStyled isOpen={isOpenSelect}>
+    <SelectStyled
+      isOpen={isOpenSelect}
+      width={width}
+      optionWidth={optionWidth}
+      showCheck={showCheck}
+    >
       <div className="custom-select-wrapper" onClick={() => onToggleSelect()}>
         <div className={isOpenSelect ? 'custom-select open' : 'custom-select'}>
           <div className="custom-select__trigger">
             <span>{selectedValue.label}</span>
-            <img className="arrow" src={ArrowIconSrc}></img>
+            <img className="arrow" src={arrowIcon || ArrowIconSrc}></img>
           </div>
           <div className="custom-options">
-            {listNetwork.map((network, i) => (
+            {options.map((network, i) => (
               <span
                 className={`custom-option ${selectedValue.value === network.value && 'selected'}`}
                 onClick={() => {
-                  onSelectNetwork(network);
+                  onSelectOption(network);
                 }}
                 key={i}
               >
+                {showCheck && <img src={CheckIconSrc} />}
                 {network.label}
               </span>
             ))}
@@ -112,4 +123,4 @@ const SelectNetWork = () => {
     </SelectStyled>
   );
 };
-export default SelectNetWork;
+export default Select;
