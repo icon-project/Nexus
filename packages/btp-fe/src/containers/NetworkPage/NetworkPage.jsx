@@ -9,6 +9,7 @@ import { Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { smallText } from 'components/Typography/Text';
 import { SortSelect } from 'components/Select';
+import { media } from 'components/Styles/Media';
 
 import binanceIcon from 'assets/images/binance.svg';
 import edgewareIcon from 'assets/images/edgeware.svg';
@@ -96,9 +97,15 @@ const NetworkStyled = styled(Layout)`
   }
   .heading {
     padding: 48px 0 50px 0;
+    ${media.md`
+      padding: 20px 0 20px 20px;
+    `}
   }
   .content {
     width: 1120px;
+    ${media.md`
+      width: ${`${window.screen.width}px`};
+    `}
   }
   .network-icon {
     margin-right: 12px;
