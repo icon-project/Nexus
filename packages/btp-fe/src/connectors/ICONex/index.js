@@ -1,9 +1,12 @@
+import { IconUtil, HttpProvider } from 'icon-sdk-js';
+
 import { getBalance } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from '../../store';
 import { wallets } from '../../utils/constants';
 import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork } from '../constants';
+import Request from './utils';
 
 const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
@@ -27,6 +30,15 @@ const eventHandler = async (event) => {
 
     case TYPES.RESPONSE_HAS_ACCOUNT:
       window.hasICONexAccount = true;
+      break;
+
+    case TYPES.RESPONSE_SIGNING:
+      var requestId = IconUtil.getCurrentTime();
+      var request = new Request(requestId, 'icx_sendTransaction', {
+        ...window.rawTransaction,
+        signature: payload,
+      });
+      new HttpProvider(currentICONexNetwork.endpoint).request(request).execute();
       break;
 
     case 'CANCEL':

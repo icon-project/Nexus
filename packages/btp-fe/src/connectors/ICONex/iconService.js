@@ -14,3 +14,7 @@ export const getBalance = (address) => {
         .toString();
     });
 };
+
+export const sendTransaction = async (transaction) => {
+  return await iconService.sendTransaction(transaction).execute();
+};

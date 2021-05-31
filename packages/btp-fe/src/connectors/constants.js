@@ -5,12 +5,19 @@ export const TYPES = {
   RESPONSE_ADDRESS: 'RESPONSE_ADDRESS',
   REQUEST_HAS_ADDRESS: 'REQUEST_HAS_ADDRESS',
   RESPONSE_HAS_ADDRESS: 'RESPONSE_HAS_ADDRESS',
+  REQUEST_SIGNING: 'REQUEST_SIGNING',
+  RESPONSE_SIGNING: 'RESPONSE_SIGNING',
 };
 
 export const ADDRESS_LOCAL_STORAGE = 'address';
 export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
+
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
+  local: {
+    name: 'Local',
+    endpoint: 'http://localhost:9080/api/v3/src',
+  },
   yeouido: {
     name: 'Yeouido Testnet',
     endpoint: 'https://bicon.net.solidwallet.io/api/v3',
@@ -41,4 +48,4 @@ export const NETWORKS = {
   },
 };
 
-export const currentICONexNetwork = NETWORKS.sejong;
+export const currentICONexNetwork = NETWORKS.local;
