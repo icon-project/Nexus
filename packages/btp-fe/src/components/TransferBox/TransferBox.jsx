@@ -21,8 +21,6 @@ const Wrapper = styled.div`
   }
 `;
 
-/* eslint-disable */
-
 export const TransferBox = () => {
   const [step, setStep] = useState(0);
   const [wasBack, setWasBack] = useState(false);
