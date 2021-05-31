@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { Card as AntCard, Row, Col } from 'antd';
 
-import { signTx } from '../../connectors/ICONex/iconService';
-
 import { SelectNetwork, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { media } from '../Styles/Media';
@@ -59,13 +57,9 @@ const CardStyled = styled(AntCard)`
     width: 90% !important;
   `}
 `;
-export const TransferCard = () => {
+export const TransferCard = ({ setStep }) => {
   window.localStorage.setItem('wallet-status', 'connected');
   const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
-
-  const handleTransfer = () => {
-    signTx();
-  };
 
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
@@ -89,7 +83,7 @@ export const TransferCard = () => {
         </Row>
         <Row className="button-section">
           {isConnected ? (
-            <PrimaryButton width={416} height={64} onClick={handleTransfer}>
+            <PrimaryButton width={416} height={64} onClick={() => setStep(1)}>
               Next
             </PrimaryButton>
           ) : (

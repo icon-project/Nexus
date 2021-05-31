@@ -35,7 +35,7 @@ const eventHandler = async (event) => {
       setTimeout(async () => {
         var balance = await getBalance(address);
         setBalance(+balance);
-      }, 1000);
+      }, 2000);
       break;
 
     case 'CANCEL':

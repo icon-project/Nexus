@@ -121,7 +121,7 @@ export const Details = memo(({ setStep, tokenValue, setTokenValue, initalInputDi
           <Text className="medium">Binance Smart Chain</Text>
         </div>
       </Addresses>
-      <ControlButtons onExecute={() => setStep(2)} />
+      <ControlButtons onExecute={() => setStep(2)} onBack={() => setStep(0)} />
     </Wrapper>
   );
 });

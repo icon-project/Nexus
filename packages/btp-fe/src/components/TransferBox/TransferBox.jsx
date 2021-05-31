@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 
 import { Details } from './Details';
 import { Approval } from './Approval';
+import { TransferCard } from '../TransferCard';
 import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.div`
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
 `;
 
 export const TransferBox = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [wasBack, setWasBack] = useState(false);
   const [tokenValue, setTokenValue] = useState('');
 
@@ -25,6 +26,7 @@ export const TransferBox = () => {
   const memoizedSetTokenValue = useCallback((param) => setTokenValue(param), [setTokenValue]);
 
   const steps = {
+    0: <TransferCard setStep={memoizedSetStep} />,
     1: (
       <Details
         setStep={memoizedSetStep}

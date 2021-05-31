@@ -1,5 +1,8 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
+
+import { signTx } from '../../connectors/ICONex/iconService';
+
 import { Header, Text, SubTitle } from '../Typography';
 import { Icon } from '../Icon/Icon';
 import { ControlButtons } from './ControlButtons';
@@ -149,7 +152,7 @@ export const Approval = memo(({ setStep, tokenValue }) => (
       <SubTitle className="large bold">1.88 ETH</SubTitle>
     </Total>
 
-    <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} />
+    <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={signTx} />
   </Wrapper>
 ));
 

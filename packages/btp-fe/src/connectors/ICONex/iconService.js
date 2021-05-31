@@ -54,9 +54,9 @@ export const signTx = (transaction = {}) => {
     .timestamp(new Date().getTime() * 1000)
     .build();
 
-  const rawTransaction = IconConverter.toRawTransaction(testTransaction);
-  window[rawTransaction] = rawTransaction;
-  const transactionHash = serialize(rawTransaction);
+  const rawTx = IconConverter.toRawTransaction(testTransaction);
+  window[rawTransaction] = rawTx;
+  const transactionHash = serialize(rawTx);
 
   requestSigning({
     from: from || 'hx1441b48a18321354907f3e0821de66fe0dba9ee8',
