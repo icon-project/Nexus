@@ -15,6 +15,8 @@ import Request from './utils';
 const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
 
+const rawTransaction = 'rawTransaction';
+
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
   return iconService
@@ -31,7 +33,7 @@ export const sendTransaction = async (signature) => {
   if (!signature) throw new Error('invalid send transaction params');
   const requestId = IconUtil.getCurrentTime();
   const request = new Request(requestId, 'icx_sendTransaction', {
-    ...window.rawTransaction,
+    ...window[rawTransaction],
     signature,
   });
   await httpProvider.request(request).execute();
@@ -53,7 +55,7 @@ export const signTx = (transaction = {}) => {
     .build();
 
   const rawTransaction = IconConverter.toRawTransaction(testTransaction);
-  window.rawTransaction = rawTransaction;
+  window[rawTransaction] = rawTransaction;
   const transactionHash = serialize(rawTransaction);
 
   requestSigning({
