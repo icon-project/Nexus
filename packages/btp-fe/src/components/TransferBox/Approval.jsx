@@ -2,6 +2,7 @@ import { memo } from 'react';
 import styled from 'styled-components/macro';
 
 import { signTx } from '../../connectors/ICONex/iconService';
+import { hashShortener } from '../../utils/app';
 
 import { Header, Text, SubTitle } from '../Typography';
 import { Icon } from '../Icon/Icon';
@@ -133,7 +134,7 @@ export const Approval = memo(({ setStep, tokenValue, recipient }) => (
         <Text className="medium">To</Text>
         <div className="receiver">
           <Icon icon="copy" size="s" />
-          <Text className="medium receiver--address">{recipient}</Text>
+          <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
           <Text className="small receiver--name">Binance Smart Chain</Text>
         </div>
       </div>
