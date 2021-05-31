@@ -68,15 +68,15 @@ export const TransferCard = () => {
   window.localStorage.setItem('wallet-status', 'connected');
   const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
 
-  const handleTransfer = async () => {
+  const handleTransfer = () => {
     const from = 'hx1441b48a18321354907f3e0821de66fe0dba9ee8';
     const to = 'hx61ad540fa5ae0176e92bc2a1095b3d319a6589e8';
-    const value = IconConverter.toBigNumber(1);
+    const value = IconConverter.toBigNumber(1 + '000000000000000000');
     const stepLimit = IconConverter.toBigNumber(100000);
     const nid = IconConverter.toBigNumber('0xc7c937');
     const nonce = IconConverter.toBigNumber(1);
     const version = IconConverter.toBigNumber(3);
-    const timestamp = IconUtil.getCurrentTime() + 1000;
+    const timestamp = new Date().getTime() * 1000;
     const icxTransactionBuilder = new IcxTransactionBuilder();
     const testTransaction = icxTransactionBuilder
       .from(from)
