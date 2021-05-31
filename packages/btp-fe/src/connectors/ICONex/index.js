@@ -1,12 +1,9 @@
-import { IconUtil, HttpProvider } from 'icon-sdk-js';
-
-import { getBalance } from './iconService';
+import { getBalance, sendTransaction } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from '../../store';
 import { wallets } from '../../utils/constants';
 import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork } from '../constants';
-import Request from './utils';
 
 const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
@@ -33,12 +30,12 @@ const eventHandler = async (event) => {
       break;
 
     case TYPES.RESPONSE_SIGNING:
-      var requestId = IconUtil.getCurrentTime();
-      var request = new Request(requestId, 'icx_sendTransaction', {
-        ...window.rawTransaction,
-        signature: payload,
-      });
-      new HttpProvider(currentICONexNetwork.endpoint).request(request).execute();
+      await sendTransaction(payload);
+      // latency time fo fetching new balance
+      setTimeout(async () => {
+        var balance = await getBalance(address);
+        setBalance(+balance);
+      }, 1000);
       break;
 
     case 'CANCEL':
@@ -59,6 +56,12 @@ const getAccountInfo = async (address) => {
     wallet: wallets.iconex,
     unit: 'ICX',
     currentNetwork: currentICONexNetwork.name,
+  });
+};
+
+const setBalance = (balance) => {
+  store.dispatch.account.setAccountInfo({
+    balance,
   });
 };
 

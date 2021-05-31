@@ -1,12 +1,7 @@
 import styled from 'styled-components';
 import { Card as AntCard, Row, Col } from 'antd';
 
-import { requestSigning } from '../../connectors/ICONex/events';
-// import { sendTransaction } from '../../connectors/ICONex/iconService';
-import IconService, { IconConverter, IconUtil } from 'icon-sdk-js';
-const { IconBuilder } = IconService;
-const { serialize } = IconUtil;
-const { IcxTransactionBuilder } = IconBuilder;
+import { signTx } from '../../connectors/ICONex/iconService';
 
 import { SelectNetwork, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
@@ -69,42 +64,7 @@ export const TransferCard = () => {
   const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
 
   const handleTransfer = () => {
-    const from = 'hx1441b48a18321354907f3e0821de66fe0dba9ee8';
-    const to = 'hx61ad540fa5ae0176e92bc2a1095b3d319a6589e8';
-    const value = IconConverter.toBigNumber(1 + '000000000000000000');
-    const stepLimit = IconConverter.toBigNumber(100000);
-    const nid = IconConverter.toBigNumber('0xc7c937');
-    const nonce = IconConverter.toBigNumber(1);
-    const version = IconConverter.toBigNumber(3);
-    const timestamp = new Date().getTime() * 1000;
-    const icxTransactionBuilder = new IcxTransactionBuilder();
-    const testTransaction = icxTransactionBuilder
-      .from(from)
-      .to(to)
-      .value(value)
-      .stepLimit(stepLimit)
-      .nid(nid)
-      .nonce(nonce)
-      .version(version)
-      .timestamp(timestamp)
-      .build();
-
-    const rawTransaction = IconConverter.toRawTransaction(testTransaction);
-    console.log(
-      '🚀 ~ file: TransferCard.jsx ~ line 93 ~ handleTransfer ~ rawTransaction',
-      rawTransaction,
-    );
-    window.rawTransaction = rawTransaction;
-    const transactionHash = serialize(rawTransaction);
-    console.log(
-      '🚀 ~ file: TransferCard.jsx ~ line 98 ~ handleTransfer ~ transactionHash',
-      transactionHash,
-    );
-
-    requestSigning({
-      from: 'hx1441b48a18321354907f3e0821de66fe0dba9ee8',
-      hash: transactionHash,
-    });
+    signTx();
   };
 
   return (
