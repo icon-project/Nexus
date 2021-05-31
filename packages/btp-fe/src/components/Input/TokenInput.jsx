@@ -1,8 +1,11 @@
 import { useState, useRef } from 'react';
 import styled from 'styled-components/macro';
+
 import { Input } from './Input';
 import { Text } from '../Typography';
 import { mediumBoldHeader } from '../Typography/Header';
+
+import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,7 +20,7 @@ const Wrapper = styled.div`
 
   .token-label {
     ${mediumBoldHeader}
-    background-color: #1D1B22;
+    background-color: ${colors.grayBG};
     word-break: break-word;
     margin: 0 32px;
     padding: 0 10px;
