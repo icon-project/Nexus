@@ -5,5 +5,5 @@ const constants = require('./constants');
 module.exports = {
   logger,
   pgPool,
-  ...constants,
+  ...constants
 };

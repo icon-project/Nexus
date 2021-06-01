@@ -7,5 +7,5 @@ function createBtpNetworkRoute() {
 }
 
 module.exports = {
-  createBtpNetworkRoute
+  createBtpNetworkRoute,
 };

@@ -48,7 +48,6 @@ async function getAmountFeeAggregationSCORE() {
 async function getTotalCumulativeAmountFeeAggregationSCORE() {
     let result = [];
     const client = await pgPool.connect();
-
     const tokens = await getListToken();
     for (let data of tokens) {
         let { rows: [{ sum: totalValue }] } = await client.query('SELECT SUM(value) FROM transfer_fees WHERE name = $1', [data.name]);
@@ -59,25 +58,34 @@ async function getTotalCumulativeAmountFeeAggregationSCORE() {
 }
 
 async function getAvailableBalance(nameToken) {
+  const { CallBuilder } = IconBuilder;
+  const callBuilder = new CallBuilder();
+  const call = callBuilder
+    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .method('availableBalance')
+    .params({ _tokenName: nameToken })
+    .build();
+  try {
+    const availableBalance = await iconService.call(call).execute();
+    logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
+    return availableBalance;
+  } catch (e) {
+    logger.error(e, 'getAvailableBalance() failed when execute get balance FAS');
+    throw new Error('"getAvailableBalance" job failed: ' + e.message);
+  }
+}
 
-    const { CallBuilder } = IconBuilder;
-    const callBuilder = new CallBuilder();
-    const call = callBuilder
-        .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
-        .method('availableBalance')
-        .params({ _tokenName: nameToken })
-        .build();
-    try {
-        const availableBalance = await iconService.call(call).execute();
-        logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
-        return availableBalance;
-    } catch (e) {
-        logger.error(e, 'getAvailableBalance() failed when execute get balance FAS');
-        throw new Error('"getAvailableBalance" job failed: ' + e.message);
-    }
+async function getTotalNetworks() {
+  try {
+    return countNetWork();
+  } catch (err) {
+    logger.error(err, '"getTotalNetworks" failed while getting total networks');
+    throw new Error('"getTotalNetworks" job failed: ' + err.message);
+  }
 }
 
 module.exports = {
-    getAmountFeeAggregationSCORE,
-    getTotalCumulativeAmountFeeAggregationSCORE
+  getAmountFeeAggregationSCORE,
+  getTotalNetworks,
+  getTotalCumulativeAmountFeeAggregationSCORE,
 };
