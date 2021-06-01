@@ -3,7 +3,9 @@
 const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
-const { logger } = require('../../common');
+const { logger, pgPool } = require('../../common');
+const { TBL_NAME, ABP_FAS } = require('../../common/constants');
+
 const { saveBlock, saveTransaction } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
@@ -30,6 +32,12 @@ async function runBlockHandlers(block) {
 
     await saveTransaction(tx, result);
     await runTransactionHandlers(tx, result, block);
+    try {
+    await runFASHandler(tx);
+    } catch(e){
+      debug('Block errrorror====== %s', e);
+      return e;
+    }
   }
 
   // More block handlers go here.
@@ -67,6 +75,27 @@ async function getBlockData() {
       // Wait longer for new blocks created.
       setTimeout(async () => await getBlockData(), 5000);
     }
+  }
+}
+function propsAsString(object) {
+  return Object.keys(object).map(function (key) { return `"${object[key]}"`; }).join(', ');
+}
+function propsCountValueString(object) {
+  return Object.keys(object).map(function (key, index) { return `$${index + 1}`; }).join(', ');
+}
+
+async function runFASHandler(tx) { 
+  
+  try {
+    if (tx.data.method == 'transfer' && tx.dataType == 'call' &&
+    tx.data.params._to == process.env.FEE_AGGREGATION_SCORE_ADDRESS) {
+      const client = await pgPool.connect();
+      const insertDealer = `INSERT INTO public.transfer_fees(id, value, name, receive_at) VALUES ($1, $2, $3, $4})`;
+      await client.query(insertDealer,  [tx.from, tx.data.params._value, tx.to, tx.timestamp]);
+      debug('Param value: %O', tx.data.params)
+    }
+  } catch(e) {
+      throw e;
   }
 }
 

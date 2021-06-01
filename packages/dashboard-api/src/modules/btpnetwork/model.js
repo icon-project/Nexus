@@ -2,7 +2,7 @@
 
 const { logger, pgPool } = require('../../common');
 const IconService = require('icon-sdk-js');
-
+const {countNetWork} = require('./repository')
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
 
