@@ -47,6 +47,13 @@ const eventHandler = async (event) => {
       }, 2000);
       break;
 
+    case TYPES.CANCEL_SIGNING:
+      store.dispatch.modal.openModal({
+        icon: 'exclamationPointIcon',
+        desc: 'Rejected signing transaction.',
+      });
+      break;
+
     case 'CANCEL':
       store.dispatch.account.setAccountInfo({
         cancelConfirmation: true,
