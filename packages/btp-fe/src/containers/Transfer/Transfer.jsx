@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 import { Layout } from 'components/Layout';
-// import { TransferCard } from 'components/TransferCard';
 import { TransferHistory } from 'components/TransferHistory';
 import { TransferBox } from 'components/TransferBox';
 import { SubTitle } from 'components/Typography';

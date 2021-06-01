@@ -8,7 +8,7 @@ import IconService, {
 const { IcxTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { currentICONexNetwork } from '../constants';
+import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE } from '../constants';
 import { requestSigning } from './events';
 import Request from './utils';
 
@@ -40,12 +40,12 @@ export const sendTransaction = async (signature) => {
 };
 
 export const signTx = (transaction = {}) => {
-  const { from, to, value } = transaction;
+  const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
 
   const icxTransactionBuilder = new IcxTransactionBuilder();
   const testTransaction = icxTransactionBuilder
-    .from(from || 'hx1441b48a18321354907f3e0821de66fe0dba9ee8')
-    .to(to || 'hx61ad540fa5ae0176e92bc2a1095b3d319a6589e8')
+    .from(from)
+    .to(to)
     .value(IconConverter.toBigNumber((value || 1) + '000000000000000000'))
     .stepLimit(IconConverter.toBigNumber(100000))
     .nid(IconConverter.toBigNumber('0xc7c937'))
@@ -59,7 +59,7 @@ export const signTx = (transaction = {}) => {
   const transactionHash = serialize(rawTx);
 
   requestSigning({
-    from: from || 'hx1441b48a18321354907f3e0821de66fe0dba9ee8',
+    from,
     hash: transactionHash,
   });
 };
