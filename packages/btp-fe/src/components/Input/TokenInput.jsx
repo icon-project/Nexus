@@ -38,7 +38,8 @@ const StyledTokenInput = styled(Input)`
   ${mediumBoldHeader}
   width: 105px;
   background-color: transparent;
-  width: 85%;
+  width: 100%;
+  padding: 0 32px;
   text-align: center;
 
   /* remove number arrows */

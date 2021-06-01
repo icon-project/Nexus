@@ -54,7 +54,7 @@ const CardStyled = styled(AntCard)`
   }
 
   ${media.md`
-    width: 90% !important;
+    width: 100% !important;
   `}
 `;
 export const TransferCard = ({ setStep }) => {

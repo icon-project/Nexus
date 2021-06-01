@@ -5,7 +5,9 @@ import { Form } from 'react-final-form';
 import { Details } from './Details';
 import { Approval } from './Approval';
 import { TransferCard } from '../TransferCard';
+
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 const Wrapper = styled.div`
   width: 480px;
@@ -19,6 +21,10 @@ const Wrapper = styled.div`
       display: block;
     }
   }
+
+  ${media.md`
+    width: 100%;
+  `}
 `;
 
 export const TransferBox = () => {
