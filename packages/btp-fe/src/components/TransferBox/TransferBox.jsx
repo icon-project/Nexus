@@ -49,8 +49,7 @@ export const TransferBox = () => {
     <Wrapper>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, values }) => {
-          const { tokenAmount, recipient } = values;
+        render={({ handleSubmit, values, valid }) => {
           return (
             <form onSubmit={handleSubmit}>
               <div className={`container ${isCurrentStep(0) && 'active'}`}>
@@ -62,14 +61,11 @@ export const TransferBox = () => {
                   tokenValue={tokenValue}
                   setTokenValue={memoizedSetTokenValue}
                   initalInputDisplay={!wasBack}
+                  isValidForm={valid}
                 />
               </div>
               <div className={`container ${isCurrentStep(2) && 'active'}`}>
-                <Approval
-                  setStep={memoizedSetStep}
-                  tokenValue={tokenAmount}
-                  recipient={recipient}
-                />
+                <Approval setStep={memoizedSetStep} values={values} />
               </div>
             </form>
           );

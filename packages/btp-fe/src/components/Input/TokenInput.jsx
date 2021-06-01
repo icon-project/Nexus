@@ -32,6 +32,11 @@ const Wrapper = styled.div`
       display: block;
     }
   }
+
+  .err-msg {
+    color: ${colors.errorState};
+    margin-top: 7px;
+  }
 `;
 
 const StyledTokenInput = styled(Input)`
@@ -55,7 +60,7 @@ const StyledTokenInput = styled(Input)`
   }
 `;
 
-export const TokenInput = ({ initalInputDisplay, value, onBlur, ...props }) => {
+export const TokenInput = ({ initalInputDisplay, value, onBlur, meta = {}, ...props }) => {
   const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
   const tokenInputRef = useRef();
 
@@ -86,6 +91,7 @@ export const TokenInput = ({ initalInputDisplay, value, onBlur, ...props }) => {
       </div>
 
       <Text className="medium exchange">= $0.00 USD</Text>
+      {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
     </Wrapper>
   );
 };

@@ -104,18 +104,22 @@ const Addresses = styled.div`
   `}
 `;
 
-export const Details = memo(({ setStep, setTokenValue, initalInputDisplay }) => {
+const required = (value) => (value ? undefined : 'Required');
+
+export const Details = memo(({ setStep, setTokenValue, initalInputDisplay, isValidForm }) => {
   return (
     <Wrapper>
       <Header className="small bold heading">Transfer</Header>
       <Field
         name="tokenAmount"
-        render={({ input }) => (
+        validate={required}
+        render={({ input, meta }) => (
           <TokenInput
             placeholder="0 ETH"
             setTokenValue={setTokenValue}
             initalInputDisplay={initalInputDisplay}
             {...input}
+            meta={meta}
           />
         )}
       />
@@ -125,7 +129,10 @@ export const Details = memo(({ setStep, setTokenValue, initalInputDisplay }) => 
 
         <Field
           name="recipient"
-          render={({ input }) => <TextInput placeholder="Enter a ETH address" {...input} />}
+          validate={required}
+          render={({ input, meta }) => (
+            <TextInput placeholder="Enter a ETH address" {...input} meta={meta} />
+          )}
         />
 
         <Text className="small label">Wallet balance</Text>
@@ -154,7 +161,12 @@ export const Details = memo(({ setStep, setTokenValue, initalInputDisplay }) => 
           <Text className="medium">Binance Smart Chain</Text>
         </div>
       </Addresses>
-      <ControlButtons onExecute={() => setStep(2)} onBack={() => setStep(0)} />
+      <ControlButtons
+        onExecute={() => {
+          if (isValidForm) setStep(2);
+        }}
+        onBack={() => setStep(0)}
+      />
     </Wrapper>
   );
 });

@@ -31,6 +31,15 @@ const eventHandler = async (event) => {
 
     case TYPES.RESPONSE_SIGNING:
       await sendTransaction(payload);
+
+      store.dispatch.modal.openModal({
+        icon: 'checkIcon',
+        desc: 'Your transaction was submitted successfully.',
+        button: {
+          text: 'Continue transfer',
+        },
+      });
+
       // latency time fo fetching new balance
       setTimeout(async () => {
         var balance = await getBalance(address);

@@ -46,7 +46,7 @@ export const signTx = (transaction = {}) => {
   const testTransaction = icxTransactionBuilder
     .from(from || 'hx1441b48a18321354907f3e0821de66fe0dba9ee8')
     .to(to || 'hx61ad540fa5ae0176e92bc2a1095b3d319a6589e8')
-    .value(IconConverter.toBigNumber(value || 1 + '000000000000000000'))
+    .value(IconConverter.toBigNumber((value || 1) + '000000000000000000'))
     .stepLimit(IconConverter.toBigNumber(100000))
     .nid(IconConverter.toBigNumber('0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))

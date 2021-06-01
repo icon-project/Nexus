@@ -109,52 +109,59 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, tokenValue, recipient }) => (
-  <Wrapper>
-    <Header className="small bold heading">Fee & Confirmation</Header>
-    <SendToken>
-      <Text className="small sub-heading">You will send</Text>
-      <div className="content">
-        <Header className="medium bold send-token">{tokenValue || 0} ETH</Header>
-        <Text className="medium">= $108,670.92</Text>
-      </div>
-    </SendToken>
+export const Approval = memo(({ setStep, values }) => {
+  const { recipient, tokenAmount } = values;
+  const onApprove = () => {
+    signTx({ to: recipient, value: tokenAmount });
+  };
 
-    <Details>
-      <SubTitle className="large">Details</SubTitle>
-      <div className="send">
-        <Text className="medium">Send</Text>
-        <div className="sender">
-          <Icon icon="eth" size="s" />
-          <Text className="medium sender--alias">ETH</Text>
-          <Text className="small sender--name">Etherum Mainnet</Text>
+  return (
+    <Wrapper>
+      <Header className="small bold heading">Fee & Confirmation</Header>
+      <SendToken>
+        <Text className="small sub-heading">You will send</Text>
+        <div className="content">
+          <Header className="medium bold send-token">{tokenAmount || 0} ETH</Header>
+          <Text className="medium">= $108,670.92</Text>
         </div>
-      </div>
-      <div className="to">
-        <Text className="medium">To</Text>
-        <div className="receiver">
-          <Icon icon="copy" size="s" />
-          <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
-          <Text className="small receiver--name">Binance Smart Chain</Text>
+      </SendToken>
+
+      <Details>
+        <SubTitle className="large">Details</SubTitle>
+        <div className="send">
+          <Text className="medium">Send</Text>
+          <div className="sender">
+            <Icon icon="eth" size="s" />
+            <Text className="medium sender--alias">ETH</Text>
+            <Text className="small sender--name">Etherum Mainnet</Text>
+          </div>
         </div>
-      </div>
-      <div className="estimated-fee">
-        <Text className="medium">Estimated network fee</Text>
-        <Text className="medium bright">0.1</Text>
-      </div>
-      <div className="transfer-fee">
-        <Text className="medium">BTP transfer fee</Text>
-        <Text className="medium bright">0.02</Text>
-      </div>
-    </Details>
+        <div className="to">
+          <Text className="medium">To</Text>
+          <div className="receiver">
+            <Icon icon="copy" size="s" />
+            <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
+            <Text className="small receiver--name">Binance Smart Chain</Text>
+          </div>
+        </div>
+        <div className="estimated-fee">
+          <Text className="medium">Estimated network fee</Text>
+          <Text className="medium bright">0.1</Text>
+        </div>
+        <div className="transfer-fee">
+          <Text className="medium">BTP transfer fee</Text>
+          <Text className="medium bright">0.02</Text>
+        </div>
+      </Details>
 
-    <Total>
-      <SubTitle className="large bold">Total receive</SubTitle>
-      <SubTitle className="large bold">1.88 ETH</SubTitle>
-    </Total>
+      <Total>
+        <SubTitle className="large bold">Total receive</SubTitle>
+        <SubTitle className="large bold">1.88 ETH</SubTitle>
+      </Total>
 
-    <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={signTx} />
-  </Wrapper>
-));
+      <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />
+    </Wrapper>
+  );
+});
 
 Approval.displayName = 'Approval';
