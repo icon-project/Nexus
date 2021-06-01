@@ -6,6 +6,7 @@ import { TokenInput, TextInput } from '../Input';
 import { Icon } from '../Icon/Icon';
 import { Header, Text } from '../Typography';
 import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 import { ControlButtons } from './ControlButtons';
 
@@ -52,6 +53,18 @@ const WalletBalance = styled.div`
     align-items: flex-end;
     justify-content: center;
   }
+
+  ${media.md`
+    padding: 16px;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+
+    .right {
+      margin-top: 16px;
+      align-items: center
+    }
+  `}
 `;
 
 const Addresses = styled.div`
@@ -81,6 +94,14 @@ const Addresses = styled.div`
       }
     }
   }
+
+  ${media.md`
+    .send, .to {
+      .subtitle {
+        margin-right: 25px;
+      }
+    }
+  `}
 `;
 
 export const Details = memo(({ setStep, setTokenValue, initalInputDisplay }) => {
