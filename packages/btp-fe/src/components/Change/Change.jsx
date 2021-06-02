@@ -24,7 +24,11 @@ const Change = ({ status, value, percent }) => {
   return (
     <ChangeStyled status={status}>
       <Text className="large bold">{value}</Text>
-      {status === 'increase' ? <img src={IncreaseIcon} /> : <img src={DecreaseIcon} />}
+      {status === 'increase' ? (
+        <img src={IncreaseIcon} alt="increase" />
+      ) : (
+        <img src={DecreaseIcon} alt="decrease" />
+      )}
       <span className="percent">{percent}</span>
     </ChangeStyled>
   );

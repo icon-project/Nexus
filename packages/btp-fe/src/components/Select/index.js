@@ -1,3 +1,4 @@
-import SelectNetwork from './SelectNetwork';
+import Select from './Select';
 import SelectAsset from './SelectAsset';
-export { SelectNetwork, SelectAsset };
+import SortSelect from './SortSelect';
+export { Select, SelectAsset, SortSelect };

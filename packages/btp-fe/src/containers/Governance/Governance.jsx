@@ -60,6 +60,12 @@ const GovernanceStyled = styled(Layout)`
   .main {
     display: flex;
     justify-content: center;
+    .content {
+      width: 1120px;
+      ${media.md`
+      width: ${`${window.screen.width}px`};
+    `}
+    }
   }
   .heading {
     padding: 48px 0 50px 0;
@@ -67,12 +73,7 @@ const GovernanceStyled = styled(Layout)`
       padding: 20px 0 20px 20px;
     `}
   }
-  .content {
-    width: 1120px;
-    ${media.md`
-      width: ${`${window.screen.width}px`};
-    `}
-  }
+
   .iconex {
     width: 20px;
     margin-right: 12px;
