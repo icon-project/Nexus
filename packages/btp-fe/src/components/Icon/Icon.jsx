@@ -37,6 +37,6 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
 Icon.displayName = 'Icon';
 
 Icon.propTypes = {
-  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy']),
+  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy', 'binance', 'edgeware']),
   size: PropTypes.oneOf(['s', 'm']),
 };

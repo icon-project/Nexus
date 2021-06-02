@@ -102,7 +102,7 @@ export const StatisticArea = () => {
         <div className="network-list">
           {networks.map(({ icon, name }) => (
             <SubTitle className="small bold" key={name}>
-              <Icon icon={icon} size="24px" />
+              <Icon icon={icon} width="24px" />
               {name}
             </SubTitle>
           ))}
