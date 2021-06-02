@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components/macro';
 import { SubTitle, Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 import arrowIcon from '../../assets/images/blue-arrow-icon.svg';
 
@@ -61,6 +62,17 @@ const Wrapper = styled.div`
     color: white;
     font-size: 30px;
   }
+
+  ${media.xl`
+    .tab-control {
+      flex-direction: column;
+
+      .filter-control {
+        margin-top: 24px;
+        align-self: flex-end;
+      }
+    }
+  `}
 `;
 
 const tabs = {

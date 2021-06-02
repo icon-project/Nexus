@@ -7,6 +7,7 @@ import { Icon } from 'components/Icon';
 import { Feebox } from './FeeBox';
 
 import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
   display: flex;
@@ -67,6 +68,20 @@ const Wrapper = styled.div`
       }
     }
   }
+
+  ${media.xl`
+    flex-direction: column;
+
+    .transaction, .fee, .networks {
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .transaction {
+    }
+
+
+  `}
 `;
 
 const networks = [

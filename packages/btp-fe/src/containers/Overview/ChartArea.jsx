@@ -6,6 +6,7 @@ import { Header } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
 
 import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,6 +22,22 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
   }
+
+  ${media.xl`
+    flex-direction: column;
+
+    .chart {
+      width: 100%;
+
+      &:first-child{
+        margin-bottom: 24px;
+      }
+
+      h3 {
+        word-break: break-all;
+      }
+    }
+  `}
 `;
 
 export const ChartArea = () => {

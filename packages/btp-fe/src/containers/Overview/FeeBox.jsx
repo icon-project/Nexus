@@ -5,6 +5,8 @@ import { Text } from 'components/Typography';
 import { AssetFeeTable } from './AssetFeeTable';
 
 import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
+
 import infoIcon from '../../assets/images/info-icon.svg';
 
 const StyledText = styled(Text)`
@@ -44,11 +46,21 @@ const Wrapper = styled.div`
   .asset-fee {
     margin-bottom: 26px;
   }
+
+  ${media.xl`
+    .d-flex {
+      flex-direction: column;
+
+      span {
+        margin-top: 12px;
+      }
+    }
+  `}
 `;
 
 export const Feebox = () => {
   return (
-    <Wrapper className="box">
+    <Wrapper className="box fee">
       <Heading hasInfo={false}>FEE</Heading>
       <div className="cumulative-amount d-flex">
         <TextWithInfo>Total cumulative amount</TextWithInfo>
