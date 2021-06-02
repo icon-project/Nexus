@@ -39,6 +39,7 @@ const Wrapper = styled.div`
 
   .networks {
     width: 23.57%;
+    height: 324px;
     padding: 27px 0 32px;
     background-color: ${colors.brandSecondaryBase};
 

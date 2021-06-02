@@ -2,9 +2,9 @@ import styled from 'styled-components/macro';
 
 import { Heading } from './Heading';
 import { Text } from 'components/Typography';
+import { AssetFeeTable } from './AssetFeeTable';
 
 import { colors } from 'components/Styles/Colors';
-
 import infoIcon from '../../assets/images/info-icon.svg';
 
 const StyledText = styled(Text)`
@@ -59,6 +59,7 @@ export const Feebox = () => {
         <span>3,49584834.42</span>
       </div>
       <TextWithInfo className="asset-fee">Asset fee</TextWithInfo>
+      <AssetFeeTable />
     </Wrapper>
   );
 };
