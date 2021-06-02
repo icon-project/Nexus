@@ -1,11 +1,10 @@
 import styled from 'styled-components/macro';
 
-import { SubTitle, Header } from 'components/Typography';
+import { Heading } from './Heading';
+import { Header } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
 
 import { colors } from 'components/Styles/Colors';
-
-import infoIcon from '../../assets/images/info-icon.svg';
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,11 +17,6 @@ const Wrapper = styled.div`
     padding: 32px;
     background-color: ${colors.brandSecondaryBase};
     border-radius: 4px;
-
-    .heading {
-      color: ${colors.grayScaleSubText};
-      margin-bottom: 10px;
-    }
   }
 `;
 
@@ -30,9 +24,7 @@ export const ChartArea = () => {
   return (
     <Wrapper>
       <div className="chart">
-        <SubTitle className="small bold heading">
-          VOLUME <img src={infoIcon} alt="icon" />
-        </SubTitle>
+        <Heading>VOLUME</Heading>
         <Header className="medium bold inline">
           $9,672,047,464.01 <UpDownPercent up percent="9.55%" />
         </Header>
