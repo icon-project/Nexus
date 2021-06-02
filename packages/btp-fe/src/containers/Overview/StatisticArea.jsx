@@ -1,8 +1,9 @@
 import styled from 'styled-components/macro';
 
 import { Heading } from './Heading';
-import { Header } from 'components/Typography';
+import { Header, SubTitle, Link } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
+import { Icon } from 'components/Icon';
 
 import { colors } from 'components/Styles/Colors';
 
@@ -10,18 +11,21 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
 
+  .box {
+    padding: 27px 32px;
+    border-radius: 4px;
+    background-color: ${colors.brandSecondaryBase};
+  }
+
   .transaction {
     display: flex;
     flex-direction: column;
     width: 23.57%;
 
-    .box {
-      height: 150px;
+    .value-bonded,
+    .transaction {
       width: 100%;
-      padding: 27px 32px;
-      border-radius: 4px;
-      background-color: ${colors.brandSecondaryBase};
-
+      height: 150px;
       .value {
         margin-bottom: 7px;
       }
@@ -41,11 +45,40 @@ const Wrapper = styled.div`
 
   .networks {
     width: 23.57%;
+    padding: 27px 0 32px;
     background-color: ${colors.brandSecondaryBase};
 
-    height: 324px;
+    .amount-of-networks {
+      padding: 0 23.67px 0 32px;
+    }
+
+    .network-list {
+      margin: 23px 0;
+      padding: 0 15px;
+
+      h3 {
+        height: 40px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          background-color: #312f39;
+        }
+
+        img {
+          margin-right: 8px;
+        }
+      }
+    }
   }
 `;
+
+const networks = [
+  { icon: 'binance', name: 'Binance Smart Chain' },
+  { icon: 'edgeware', name: 'Edgeware' },
+  { icon: 'iconex', name: 'ICON blockchain' },
+];
 
 export const StatisticArea = () => {
   return (
@@ -62,8 +95,27 @@ export const StatisticArea = () => {
           <UpDownPercent up percent="12.22%" />
         </div>
       </div>
-      <div className="fee"></div>
-      <div className="networks"></div>
+
+      <div className="fee box"></div>
+
+      <div className="networks box">
+        <div className="amount-of-networks">
+          <Heading>NETWORKS CONNECTED</Heading>
+          <Header className="small bold value">3</Header>
+        </div>
+
+        <div className="network-list">
+          {networks.map(({ icon, name }) => (
+            <SubTitle className="small bold" key={name}>
+              <Icon icon={icon} size="24px" />
+              {name}
+            </SubTitle>
+          ))}
+        </div>
+        <Link className="x-small" to="#" center>
+          See all
+        </Link>
+      </div>
     </Wrapper>
   );
 };
