@@ -33,7 +33,13 @@ export const ChartArea = () => {
         </Header>
         <ChartBox />
       </div>
-      <div className="chart"></div>
+      <div className="chart">
+        <Heading>VALUE MINT</Heading>
+        <Header className="medium bold inline">
+          $892,797,895.53 <UpDownPercent up percent="9.55%" />
+        </Header>
+        <ChartBox />
+      </div>
     </Wrapper>
   );
 };
