@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 
 import { Heading } from './Heading';
+import { ChartBox } from './ChartBox';
 import { Header } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
 
@@ -17,6 +18,8 @@ const Wrapper = styled.div`
     padding: 32px;
     background-color: ${colors.brandSecondaryBase};
     border-radius: 4px;
+    display: flex;
+    flex-direction: column;
   }
 `;
 
@@ -28,6 +31,7 @@ export const ChartArea = () => {
         <Header className="medium bold inline">
           $9,672,047,464.01 <UpDownPercent up percent="9.55%" />
         </Header>
+        <ChartBox />
       </div>
       <div className="chart"></div>
     </Wrapper>
