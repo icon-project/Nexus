@@ -44,6 +44,7 @@ const SelectStyled = styled.div`
     pointer-events: none;
     z-index: 2;
     padding-top: 4px;
+    background: ${colors.grayBG};
   }
   .custom-select.open .custom-options {
     opacity: 1;
@@ -59,7 +60,6 @@ const SelectStyled = styled.div`
     color: ${colors.grayText};
     cursor: pointer;
     transition: all 0.5s;
-    background-color: ${colors.grayBG};
     height: ${(props) => (props.showCheck ? '44px' : '40px')};
     letter-spacing: 0.75px;
     img {
@@ -102,7 +102,7 @@ const Select = ({ options, width, optionWidth, arrowIcon, showCheck }) => {
         <div className={isOpenSelect ? 'custom-select open' : 'custom-select'}>
           <div className="custom-select__trigger">
             <span>{selectedValue.label}</span>
-            <img className="arrow" src={arrowIcon || ArrowIconSrc}></img>
+            <img className="arrow" src={arrowIcon || ArrowIconSrc} alt="arrow"></img>
           </div>
           <div className="custom-options">
             {options.map((network, i) => (
