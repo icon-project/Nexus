@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import { Layout } from 'components/Layout';
 import { TransferCard } from 'components/TransferCard';
 import { TransferHistory } from 'components/TransferHistory';
 
-const TransferStyled = styled(Layout)`
+const TransferStyled = styled.div`
   .transfer-card {
     display: flex;
     justify-content: center;
