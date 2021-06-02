@@ -4,6 +4,7 @@ import { Heading } from './Heading';
 import { Header, SubTitle, Link } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
 import { Icon } from 'components/Icon';
+import { Feebox } from './FeeBox';
 
 import { colors } from 'components/Styles/Colors';
 
@@ -34,13 +35,6 @@ const Wrapper = styled.div`
     .value-bonded {
       margin-bottom: 24px;
     }
-  }
-
-  .fee {
-    width: 48.57%;
-    background-color: ${colors.brandSecondaryBase};
-
-    height: 324px;
   }
 
   .networks {
@@ -96,7 +90,7 @@ export const StatisticArea = () => {
         </div>
       </div>
 
-      <div className="fee box"></div>
+      <Feebox />
 
       <div className="networks box">
         <div className="amount-of-networks">

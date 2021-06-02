@@ -10,10 +10,10 @@ const StyledHeading = styled(SubTitle)`
   margin-bottom: 10px;
 `;
 
-export const Heading = ({ children }) => {
+export const Heading = ({ children, hasInfo = true }) => {
   return (
     <StyledHeading className="small bold">
-      {children} <img src={infoIcon} alt="icon" />
+      {children} {hasInfo && <img src={infoIcon} alt="icon" />}
     </StyledHeading>
   );
 };
