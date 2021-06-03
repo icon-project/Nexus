@@ -2,6 +2,7 @@ const http = require('http');
 const { logger } = require('../common');
 const app = require('./app');
 const iconIndexer = require('../modules/icon-indexer');
+const edgewareIndexer = require('../modules/edgeware-indexer');
 
 function start() {
   // Separate Express 'app' and 'server'
@@ -14,6 +15,7 @@ function start() {
   });
 
   iconIndexer.start();
+  edgewareIndexer.start();
 }
 
 module.exports = {
