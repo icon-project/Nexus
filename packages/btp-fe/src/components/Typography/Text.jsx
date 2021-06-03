@@ -37,6 +37,11 @@ export const Text = styled.p`
     line-height: 16px;
   }
 
+  &.large {
+    font-size: 50px;
+    line-height: 68px;
+  }
+
   &.bold {
     font-weight: 600;
   }
