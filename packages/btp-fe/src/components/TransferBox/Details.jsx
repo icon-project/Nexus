@@ -106,69 +106,72 @@ const Addresses = styled.div`
 
 const required = (value) => (value ? undefined : 'Required');
 
-export const Details = memo(({ setStep, setTokenValue, initalInputDisplay, isValidForm }) => {
-  return (
-    <Wrapper>
-      <Header className="small bold heading">Transfer</Header>
-      <Field
-        name="tokenAmount"
-        validate={required}
-        render={({ input, meta }) => (
-          <TokenInput
-            placeholder="0 ETH"
-            setTokenValue={setTokenValue}
-            initalInputDisplay={initalInputDisplay}
-            {...input}
-            meta={meta}
-          />
-        )}
-      />
-
-      <div className="content">
-        <Text className="small label">Recipient</Text>
-
+export const Details = memo(
+  ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent }) => {
+    return (
+      <Wrapper>
+        <Header className="small bold heading">Transfer</Header>
         <Field
-          name="recipient"
+          name="tokenAmount"
           validate={required}
           render={({ input, meta }) => (
-            <TextInput placeholder="Enter a ETH address" {...input} meta={meta} />
+            <TokenInput
+              placeholder="0 ICX"
+              setTokenValue={setTokenValue}
+              initalInputDisplay={initalInputDisplay}
+              isCurrent={isCurrent}
+              {...input}
+              meta={meta}
+            />
           )}
         />
 
-        <Text className="small label">Wallet balance</Text>
-        <WalletBalance>
-          <div className="left">
-            <Icon />
-            <Text className="medium wallet-name">Metamask</Text>
-          </div>
-          <div className="right">
-            <Text className="medium">3,53869714 ETH</Text>
-            <Text className="x-small">= $956.74</Text>
-          </div>
-        </WalletBalance>
-      </div>
+        <div className="content">
+          <Text className="small label">Recipient</Text>
 
-      <Addresses>
-        <div className="send">
-          <Text className="medium subtitle">Send</Text>
-          <div className="sender">
-            <Icon icon="eth" size="s" />
-            <Text className="medium sender--name">ETH (Etherum mainnet)</Text>
+          <Field
+            name="recipient"
+            validate={required}
+            render={({ input, meta }) => (
+              <TextInput placeholder="Enter a ETH address" {...input} meta={meta} />
+            )}
+          />
+
+          <Text className="small label">Wallet balance</Text>
+          <WalletBalance>
+            <div className="left">
+              <Icon />
+              <Text className="medium wallet-name">Metamask</Text>
+            </div>
+            <div className="right">
+              <Text className="medium">3,53869714 ETH</Text>
+              <Text className="x-small">= $956.74</Text>
+            </div>
+          </WalletBalance>
+        </div>
+
+        <Addresses>
+          <div className="send">
+            <Text className="medium subtitle">Send</Text>
+            <div className="sender">
+              <Icon icon="eth" size="s" />
+              <Text className="medium sender--name">ETH (Etherum mainnet)</Text>
+            </div>
           </div>
-        </div>
-        <div className="to">
-          <Text className="medium subtitle">To</Text>
-          <Text className="medium">Binance Smart Chain</Text>
-        </div>
-      </Addresses>
-      <ControlButtons
-        onExecute={() => {
-          if (isValidForm) setStep(2);
-        }}
-        onBack={() => setStep(0)}
-      />
-    </Wrapper>
-  );
-});
+          <div className="to">
+            <Text className="medium subtitle">To</Text>
+            <Text className="medium">Binance Smart Chain</Text>
+          </div>
+        </Addresses>
+        <ControlButtons
+          onExecute={() => {
+            if (isValidForm) setStep(2);
+          }}
+          onBack={() => setStep(0)}
+        />
+      </Wrapper>
+    );
+  },
+);
 
 Details.displayName = 'Details';

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
 import { Input } from './Input';
@@ -32,11 +32,6 @@ const Wrapper = styled.div`
       display: block;
     }
   }
-
-  .err-msg {
-    color: ${colors.errorState};
-    margin-top: 7px;
-  }
 `;
 
 const StyledTokenInput = styled(Input)`
@@ -60,9 +55,20 @@ const StyledTokenInput = styled(Input)`
   }
 `;
 
-export const TokenInput = ({ initalInputDisplay, value, onBlur, meta = {}, ...props }) => {
+export const TokenInput = ({
+  initalInputDisplay,
+  isCurrent,
+  value,
+  onBlur,
+  meta = {},
+  ...props
+}) => {
   const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
   const tokenInputRef = useRef();
+
+  useEffect(() => {
+    if (isCurrent) tokenInputRef.current.focus();
+  }, [isCurrent]);
 
   const toggleInput = () => {
     setShowInput(!showInput);
@@ -87,7 +93,7 @@ export const TokenInput = ({ initalInputDisplay, value, onBlur, meta = {}, ...pr
           tokenInputRef.current.focus();
         }}
       >
-        {value || 0} ETH
+        {value || 0} ICX
       </div>
 
       <Text className="medium exchange">= $0.00 USD</Text>

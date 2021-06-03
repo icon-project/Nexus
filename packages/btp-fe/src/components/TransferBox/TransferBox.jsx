@@ -57,6 +57,7 @@ export const TransferBox = () => {
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>
                 <Details
+                  isCurrent={isCurrentStep(1)}
                   setStep={memoizedSetStep}
                   tokenValue={tokenValue}
                   setTokenValue={memoizedSetTokenValue}

@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 import { Input } from './Input';
 import { colors } from '../Styles/Colors';
-import { mediumText } from '../Typography/Text';
+import { mediumText, Text } from '../Typography/Text';
 
 export const StyledTextInput = styled(Input)`
   ${mediumText};
@@ -21,8 +21,11 @@ export const TextInput = ({ children, meta = {}, ...props }) => {
   const isError = meta.error && meta.touched;
 
   return (
-    <StyledTextInput {...props} isError={isError}>
-      {children}
-    </StyledTextInput>
+    <>
+      <StyledTextInput {...props} isError={isError}>
+        {children}
+      </StyledTextInput>
+      {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
+    </>
   );
 };

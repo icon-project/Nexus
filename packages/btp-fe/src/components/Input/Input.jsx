@@ -12,6 +12,11 @@ const StyledInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  & ~ p.err-msg {
+    color: ${colors.errorState};
+    margin-top: 7px;
+  }
 `;
 
 export const Input = React.forwardRef((props, ref) => {
