@@ -71,16 +71,10 @@ const Wrapper = styled.div`
 
   ${media.xl`
     flex-direction: column;
-
     .transaction, .fee, .networks {
       width: 100%;
       margin-bottom: 24px;
     }
-
-    .transaction {
-    }
-
-
   `}
 `;
 
