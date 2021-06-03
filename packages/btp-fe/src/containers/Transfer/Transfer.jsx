@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import { Layout } from 'components/Layout';
 import { TransferHistory } from 'components/TransferHistory';
 import { TransferBox } from 'components/TransferBox';
 import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 
-const TransferStyled = styled(Layout)`
+const TransferStyled = styled.div`
   .transfer-card {
     display: flex;
     justify-content: center;
@@ -44,7 +43,6 @@ const Transfer = () => {
             </SubTitle>
           </div>
           <div className="transfer-card">
-            {/* <TransferCard /> */}
             <TransferBox />
           </div>
         </>

@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
 import metaMaskIcon from '../../assets/images/metal-mask.svg';
-import iconexIcon from '../../assets/images/vector-icon.svg';
+import iconexIcon from '../../assets/images/icon-ex.svg';
 import ethIcon from '../../assets/images/eth-icon.svg';
 import copyIcon from '../../assets/images/blue-copy-icon.svg';
+import binanceIcon from '../../assets/images/binance-icon.svg';
+import edgewareIcon from '../../assets/images/edgeware-icon.png';
 
 const sizes = {
   s: '20px',
@@ -23,6 +25,8 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
     iconex: iconexIcon,
     eth: ethIcon,
     copy: copyIcon,
+    binance: binanceIcon,
+    edgeware: edgewareIcon,
   };
 
   return (
@@ -33,6 +37,6 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
 Icon.displayName = 'Icon';
 
 Icon.propTypes = {
-  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy']),
+  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy', 'binance', 'edgeware']),
   size: PropTypes.oneOf(['s', 'm']),
 };
