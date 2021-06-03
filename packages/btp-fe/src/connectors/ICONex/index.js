@@ -1,9 +1,11 @@
-import { getBalance } from './iconService';
+import { getBalance, sendTransaction } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from '../../store';
 import { wallets } from '../../utils/constants';
 import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork } from '../constants';
+
+const { modal, account } = store.dispatch;
 
 const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
@@ -29,8 +31,40 @@ const eventHandler = async (event) => {
       window.hasICONexAccount = true;
       break;
 
+    case TYPES.RESPONSE_SIGNING:
+      try {
+        await sendTransaction(payload);
+
+        modal.openModal({
+          icon: 'checkIcon',
+          desc: 'Your transaction was submitted successfully.',
+          button: {
+            text: 'Continue transfer',
+            onClick: () => modal.setDisplay(false),
+          },
+        });
+
+        // latency time fo fetching new balance
+        setTimeout(async () => {
+          var balance = await getBalance(address);
+          setBalance(+balance);
+        }, 2000);
+      } catch (err) {
+        modal.openModal({
+          icon: 'xIcon',
+          desc: 'Your transaction has failed. Please go back and try again.',
+        });
+      }
+      break;
+    case TYPES.CANCEL_SIGNING:
+      modal.openModal({
+        icon: 'exclamationPointIcon',
+        desc: 'Transaction rejected.',
+      });
+      break;
+
     case 'CANCEL':
-      store.dispatch.account.setAccountInfo({
+      account.setAccountInfo({
         cancelConfirmation: true,
       });
       break;
@@ -41,12 +75,18 @@ const eventHandler = async (event) => {
 
 const getAccountInfo = async (address) => {
   const balance = +(await getBalance(address));
-  store.dispatch.account.setAccountInfo({
+  account.setAccountInfo({
     address,
     balance,
     wallet: wallets.iconex,
     unit: 'ICX',
     currentNetwork: currentICONexNetwork.name,
+  });
+};
+
+const setBalance = (balance) => {
+  account.setAccountInfo({
+    balance,
   });
 };
 
