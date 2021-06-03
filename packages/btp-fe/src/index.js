@@ -5,7 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import WebFont from 'webfontloader';
 
 import App from './App';
-import 'i18n';
+// import 'i18n';
 import reportWebVitals from './reportWebVitals';
 import store, { history } from './store';
 
