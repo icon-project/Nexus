@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Card as AntCard, Row, Col } from 'antd';
 
-import { SelectNetwork, SelectAsset } from 'components/Select';
+import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { media } from '../Styles/Media';
 
@@ -61,6 +61,11 @@ export const TransferCard = ({ setStep }) => {
   window.localStorage.setItem('wallet-status', 'connected');
   const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
 
+  const listNetwork = [
+    { value: 'bsc', label: 'Binance Smart Chain' },
+    { value: 'ed', label: 'Edgeware' },
+    { value: 'ic', label: 'ICON blockchain' },
+  ];
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
       <h1>Transfer</h1>
@@ -78,7 +83,7 @@ export const TransferCard = ({ setStep }) => {
         <Row>
           <Col span={12}>To</Col>
           <Col span={12} className="right-side">
-            <SelectNetwork />
+            <Select options={listNetwork} width={235} />
           </Col>
         </Row>
         <Row className="button-section">
