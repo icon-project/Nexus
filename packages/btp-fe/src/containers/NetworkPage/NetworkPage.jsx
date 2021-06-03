@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Row } from 'antd';
 
@@ -29,6 +29,8 @@ const Network = ({ iconUrl, name, url }) => {
     </Row>
   );
 };
+
+/* eslint-disable react/display-name */
 const columns = [
   {
     title: '#',
@@ -130,6 +132,8 @@ const NetworkStyled = styled.div`
 `;
 
 function NetworkPage() {
+  const [isModalOpened, setModalOpen] = useState(false);
+
   return (
     <NetworkStyled>
       <div className="content">
@@ -144,11 +148,16 @@ function NetworkPage() {
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
           bodyText={'md'}
+          onRow={(r) => ({
+            onClick: () => setModalOpen(r),
+          })}
         />
       </div>
-      <Modal display width="736px" title="Curve">
-        <NetwotkDetails />
-      </Modal>
+      {isModalOpened && (
+        <Modal display={isModalOpened} width="736px" title="Curve" setDisplay={setModalOpen}>
+          <NetwotkDetails />
+        </Modal>
+      )}
     </NetworkStyled>
   );
 }
