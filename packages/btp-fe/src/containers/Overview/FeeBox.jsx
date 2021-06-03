@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   }
 
   .asset-fee {
-    margin-bottom: 26px;
+    margin-bottom: 12px;
   }
 
   ${media.xl`

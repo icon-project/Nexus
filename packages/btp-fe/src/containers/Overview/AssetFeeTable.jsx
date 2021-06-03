@@ -69,12 +69,14 @@ const TH = ({ children, icon }) => (
 );
 
 const values = [
-  { icon: 'binance', symbol: 'BTC', fee: 0.25 },
   { icon: 'eth', symbol: 'ETH', fee: 0.1 },
   { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'metaMask', symbol: 'Chainlink', fee: 0.1 },
-  { icon: 'edgeware', symbol: 'Chainlink', fee: 0.1 },
-  { icon: 'copy', symbol: 'Chainlink', fee: 0.1 },
+  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
+  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
+  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
+  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
+  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
+  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
 ];
 
 export const AssetFeeTable = () => {
@@ -113,8 +115,8 @@ export const AssetFeeTable = () => {
             <thead>
               <tr>
                 <th></th>
-                {values.map(({ icon, symbol }) => (
-                  <TH icon={icon} key={icon}>
+                {values.map(({ icon, symbol }, idx) => (
+                  <TH icon={icon} key={idx}>
                     {symbol}
                   </TH>
                 ))}
