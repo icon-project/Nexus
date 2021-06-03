@@ -5,6 +5,8 @@ import store from '../../store';
 import { wallets } from '../../utils/constants';
 import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork } from '../constants';
 
+const { modal, account } = store.dispatch;
+
 const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
   const address = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
@@ -33,11 +35,12 @@ const eventHandler = async (event) => {
       try {
         await sendTransaction(payload);
 
-        store.dispatch.modal.openModal({
+        modal.openModal({
           icon: 'checkIcon',
           desc: 'Your transaction was submitted successfully.',
           button: {
             text: 'Continue transfer',
+            onClick: () => modal.setDisplay(false),
           },
         });
 
@@ -47,21 +50,21 @@ const eventHandler = async (event) => {
           setBalance(+balance);
         }, 2000);
       } catch (err) {
-        store.dispatch.modal.openModal({
+        modal.openModal({
           icon: 'xIcon',
           desc: 'Your transaction has failed. Please go back and try again.',
         });
       }
       break;
     case TYPES.CANCEL_SIGNING:
-      store.dispatch.modal.openModal({
+      modal.openModal({
         icon: 'exclamationPointIcon',
         desc: 'Transaction rejected.',
       });
       break;
 
     case 'CANCEL':
-      store.dispatch.account.setAccountInfo({
+      account.setAccountInfo({
         cancelConfirmation: true,
       });
       break;
@@ -72,7 +75,7 @@ const eventHandler = async (event) => {
 
 const getAccountInfo = async (address) => {
   const balance = +(await getBalance(address));
-  store.dispatch.account.setAccountInfo({
+  account.setAccountInfo({
     address,
     balance,
     wallet: wallets.iconex,
@@ -82,7 +85,7 @@ const getAccountInfo = async (address) => {
 };
 
 const setBalance = (balance) => {
-  store.dispatch.account.setAccountInfo({
+  account.setAccountInfo({
     balance,
   });
 };

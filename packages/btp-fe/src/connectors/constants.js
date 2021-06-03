@@ -15,7 +15,7 @@ export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
 
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
-  local: {
+  dev: {
     name: 'Local',
     endpoint: 'http://localhost:9080/api/v3/src',
   },
@@ -49,4 +49,5 @@ export const NETWORKS = {
   },
 };
 
-export const currentICONexNetwork = NETWORKS.local;
+const testnet = localStorage.getItem('dev');
+export const currentICONexNetwork = testnet ? NETWORKS[testnet] : NETWORKS.sejong;
