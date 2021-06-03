@@ -30,27 +30,33 @@ const eventHandler = async (event) => {
       break;
 
     case TYPES.RESPONSE_SIGNING:
-      await sendTransaction(payload);
+      try {
+        await sendTransaction(payload);
 
-      store.dispatch.modal.openModal({
-        icon: 'checkIcon',
-        desc: 'Your transaction was submitted successfully.',
-        button: {
-          text: 'Continue transfer',
-        },
-      });
+        store.dispatch.modal.openModal({
+          icon: 'checkIcon',
+          desc: 'Your transaction was submitted successfully.',
+          button: {
+            text: 'Continue transfer',
+          },
+        });
 
-      // latency time fo fetching new balance
-      setTimeout(async () => {
-        var balance = await getBalance(address);
-        setBalance(+balance);
-      }, 2000);
+        // latency time fo fetching new balance
+        setTimeout(async () => {
+          var balance = await getBalance(address);
+          setBalance(+balance);
+        }, 2000);
+      } catch (err) {
+        store.dispatch.modal.openModal({
+          icon: 'xIcon',
+          desc: 'Your transaction has failed. Please go back and try again.',
+        });
+      }
       break;
-
     case TYPES.CANCEL_SIGNING:
       store.dispatch.modal.openModal({
         icon: 'exclamationPointIcon',
-        desc: 'Rejected signing transaction.',
+        desc: 'Transaction rejected.',
       });
       break;
 

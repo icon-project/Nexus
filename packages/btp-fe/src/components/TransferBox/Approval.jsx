@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
 
+import { useDispatch } from '../../hooks/useRematch';
 import { signTx } from '../../connectors/ICONex/iconService';
 import { hashShortener } from '../../utils/app';
 
@@ -111,7 +112,16 @@ const Total = styled.div`
 
 export const Approval = memo(({ setStep, values }) => {
   const { recipient, tokenAmount } = values;
+
+  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+    openModal,
+  }));
+
   const onApprove = () => {
+    openModal({
+      icon: 'loader',
+      desc: 'Waiting for confirmation in your wallet.',
+    });
     signTx({ to: recipient, value: tokenAmount });
   };
 

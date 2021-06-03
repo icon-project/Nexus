@@ -30,13 +30,17 @@ export const getBalance = (address) => {
 };
 
 export const sendTransaction = async (signature) => {
-  if (!signature) throw new Error('invalid send transaction params');
-  const requestId = IconUtil.getCurrentTime();
-  const request = new Request(requestId, 'icx_sendTransaction', {
-    ...window[rawTransaction],
-    signature,
-  });
-  await httpProvider.request(request).execute();
+  try {
+    if (!signature) throw new Error('invalid send transaction params');
+    const requestId = IconUtil.getCurrentTime();
+    const request = new Request(requestId, 'icx_sendTransaction', {
+      ...window[rawTransaction],
+      signature,
+    });
+    await httpProvider.request(request).execute();
+  } catch (err) {
+    throw new Error(err.message);
+  }
 };
 
 export const signTx = (transaction = {}) => {
