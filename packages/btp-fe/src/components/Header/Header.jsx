@@ -184,13 +184,9 @@ const Header = ({ userStatus = defaultUser }) => {
     accountInfo: account.selectAccountInfo,
   }));
 
-  const { resetAccountInfo } = useDispatch(
-    ({ modal: { openModal, setDisplay }, account: { resetAccountInfo } }) => ({
-      openModal,
-      setDisplay,
-      resetAccountInfo,
-    }),
-  );
+  const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
+    resetAccountInfo,
+  }));
 
   const shortedAddress = hashShortener(address);
 
