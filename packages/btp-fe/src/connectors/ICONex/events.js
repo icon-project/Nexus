@@ -33,3 +33,7 @@ export const requestAddress = () => {
 export const requestHasAddress = (address) => {
   createICONexEvent(TYPES.REQUEST_HAS_ADDRESS, address);
 };
+
+export const requestSigning = (transaction) => {
+  createICONexEvent(TYPES.REQUEST_SIGNING, transaction);
+};
