@@ -1,7 +1,6 @@
 /* eslint-disable react/display-name */
 import styled from 'styled-components';
 
-import { Layout } from 'components/Layout';
 import { Table } from 'components/Table';
 import { Header } from 'components/Typography';
 
@@ -56,12 +55,13 @@ for (let i = 1; i < 22; i++) {
   });
 }
 
-const GovernanceStyled = styled(Layout)`
+const GovernanceStyled = styled.div`
+  max-width: 1120px;
+  margin: auto;
   .main {
     display: flex;
     justify-content: center;
     .content {
-      width: 1120px;
       ${media.md`
       width: ${`${window.screen.width}px`};
     `}
