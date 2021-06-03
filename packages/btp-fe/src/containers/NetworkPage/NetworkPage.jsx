@@ -4,6 +4,8 @@ import { Row } from 'antd';
 
 import { Table } from 'components/Table';
 import { Header } from 'components/Typography';
+import { Modal } from 'components/NotificationModal';
+import { NetwotkDetails } from './NetwotkDetails';
 
 import { colors } from 'components/Styles/Colors';
 import { smallText } from 'components/Typography/Text';
@@ -144,6 +146,9 @@ function NetworkPage() {
           bodyText={'md'}
         />
       </div>
+      <Modal display width="736px" title="Curve">
+        <NetwotkDetails />
+      </Modal>
     </NetworkStyled>
   );
 }
