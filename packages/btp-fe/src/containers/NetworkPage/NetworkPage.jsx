@@ -2,7 +2,6 @@
 import styled from 'styled-components';
 import { Row } from 'antd';
 
-import { Layout } from 'components/Layout';
 import { Table } from 'components/Table';
 import { Header } from 'components/Typography';
 
@@ -90,7 +89,9 @@ const dataSource = [
   },
 ];
 
-const NetworkStyled = styled(Layout)`
+const NetworkStyled = styled.div`
+  max-width: 1120px;
+  margin: auto;
   .main {
     display: flex;
     justify-content: center;
