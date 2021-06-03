@@ -50,4 +50,5 @@ export const NETWORKS = {
 };
 
 const testnet = localStorage.getItem('dev');
-export const currentICONexNetwork = testnet ? NETWORKS[testnet] : NETWORKS.sejong;
+export const currentICONexNetwork =
+  (testnet ? NETWORKS[testnet] : NETWORKS.sejong) || NETWORKS.sejong;
