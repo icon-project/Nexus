@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import WebFont from 'webfontloader';
 
 import App from './App';
+/* When enable i18n again, remember to uncomment code in .babelrc.js */
 // import 'i18n';
 import reportWebVitals from './reportWebVitals';
 import store, { history } from './store';
