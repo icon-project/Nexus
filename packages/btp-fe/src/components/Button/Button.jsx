@@ -2,6 +2,8 @@ import { Button as AntButton } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import { colors } from '../Styles/Colors';
+
 const ButtonStyle = styled(AntButton)`
   border-radius: ${(props) => props.$borderRadius};
   border: none;
@@ -14,6 +16,11 @@ const ButtonStyle = styled(AntButton)`
   color: ${(props) => props.$textColor};
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+
+  &:disabled {
+    color: ${colors.grayScaleSubText};
+    background-color: ${colors.grayScaleDisabled};
+  }
 `;
 const Button = ({
   height,
