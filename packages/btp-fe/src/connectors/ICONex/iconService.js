@@ -48,7 +48,7 @@ export const signTx = (transaction = {}) => {
   const nid = localStorage.getItem('nid');
 
   const icxTransactionBuilder = new IcxTransactionBuilder();
-  const testTransaction = icxTransactionBuilder
+  const tx = icxTransactionBuilder
     .from(from)
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
@@ -59,7 +59,7 @@ export const signTx = (transaction = {}) => {
     .timestamp(new Date().getTime() * 1000)
     .build();
 
-  const rawTx = IconConverter.toRawTransaction(testTransaction);
+  const rawTx = IconConverter.toRawTransaction(tx);
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
