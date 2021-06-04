@@ -1,6 +1,6 @@
 {
   "env": {
-    "DEBUG": "app,api:*"
+    "DEBUG": "app,api:*,icon"
   },
   "watch": [
     "src"
