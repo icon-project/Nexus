@@ -4,7 +4,7 @@ import { mediumText } from 'components/Typography/Text';
 
 const Wrapper = styled.h4`
   ${mediumText};
-
+  margin-bottom: 0;
   & > img {
     margin-right: 8px;
   }
