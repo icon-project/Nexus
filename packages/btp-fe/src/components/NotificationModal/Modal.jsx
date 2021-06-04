@@ -42,6 +42,7 @@ const Content = styled.div`
     display: flex;
     position: relative;
     margin-bottom: 10px;
+    padding: 0 !important;
     height: 36px;
 
     h3.title {
