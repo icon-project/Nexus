@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 
@@ -13,16 +12,15 @@ const NotFoundPageWrapper = styled.div`
 `;
 
 const NotFoundPage = ({ history }) => {
-  const { t } = useTranslation();
   return (
     <NotFoundPageWrapper>
       <Helmet>
-        <title>{t('not_found_page.page_title', 'Page Not Found')}</title>
+        <title>Page Not Found</title>
       </Helmet>
       <Result
         status="404"
-        title={t('not_found_page.title', '404')}
-        subTitle={t('not_found_page.description', 'Sorry, the page you visited does not exist.')}
+        title="404"
+        subTitle="Sorry, the page you visited does not exist."
         extra={
           <Button
             onClick={() => {
@@ -30,7 +28,7 @@ const NotFoundPage = ({ history }) => {
             }}
             type="primary"
           >
-            {t('not_found_page.back_home', 'Back Home')}
+            Back Home
           </Button>
         }
       />

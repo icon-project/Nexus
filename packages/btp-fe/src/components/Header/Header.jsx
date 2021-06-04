@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Layout, Avatar } from 'antd';
 
@@ -313,12 +312,6 @@ const Header = ({ userStatus = defaultUser }) => {
       </div>
     </StyledHeader>
   );
-};
-
-Header.propTypes = {
-  toggleSidebar: PropTypes.func,
-  userName: PropTypes.string,
-  items: PropTypes.array.isRequired,
 };
 
 export default Header;
