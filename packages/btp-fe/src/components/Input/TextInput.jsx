@@ -15,6 +15,15 @@ export const StyledTextInput = styled(Input)`
     border-color: ${colors.primaryBrand};
     background-color: ${colors.grayAccent};
   }
+
+  // Removing input background colour for Chrome autocomplete
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: ${colors.grayText};
+    transition: background-color 5000s ease-in-out 0s;
+  }
 `;
 
 export const TextInput = ({ children, meta = {}, ...props }) => {
