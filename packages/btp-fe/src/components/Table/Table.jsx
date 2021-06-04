@@ -14,6 +14,7 @@ const TableStyled = styled(antdTable)`
   }
   .ant-table-tbody > tr > td {
     border-bottom: 1px solid ${colors.grayLine};
+    cursor: pointer;
   }
   .ant-table-thead > tr > th {
     background: ${(props) => props.headerColor};
