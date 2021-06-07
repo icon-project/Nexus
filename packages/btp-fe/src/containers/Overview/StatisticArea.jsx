@@ -1,9 +1,9 @@
 import styled from 'styled-components/macro';
 
-import { Heading } from './Heading';
 import { Header, SubTitle, Link } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
 import { Icon } from 'components/Icon';
+import { TextWithInfo } from 'components/TextWithInfo';
 import { Feebox } from './FeeBox';
 
 import { colors } from 'components/Styles/Colors';
@@ -89,12 +89,12 @@ export const StatisticArea = () => {
     <Wrapper>
       <div className="transaction">
         <div className="box value-bonded">
-          <Heading>VALUE BONDED</Heading>
+          <TextWithInfo>VALUE BONDED</TextWithInfo>
           <Header className="small bold value">1,115.42 M</Header>
           <UpDownPercent up percent="12.22%" />
         </div>
         <div className="box transaction">
-          <Heading>TRANSACTIONS</Heading>
+          <TextWithInfo hasInfo={false}>TRANSACTIONS</TextWithInfo>
           <Header className="small bold value">1,115.42 M</Header>
           <UpDownPercent up percent="12.22%" />
         </div>
@@ -104,7 +104,7 @@ export const StatisticArea = () => {
 
       <div className="networks box">
         <div className="amount-of-networks">
-          <Heading>NETWORKS CONNECTED</Heading>
+          <TextWithInfo>NETWORKS CONNECTED</TextWithInfo>
           <Header className="small bold value">3</Header>
         </div>
 

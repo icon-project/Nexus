@@ -4,6 +4,7 @@ import { PrimaryButton } from 'components/Button';
 
 const Wrapper = styled.form`
   display: flex;
+  margin-bottom: 43px;
 
   & > button {
     height: 100%;

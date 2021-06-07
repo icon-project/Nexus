@@ -31,6 +31,11 @@ export const Header = styled.h3`
     line-height: 48px;
   }
 
+  &.large {
+    font-size: 50px;
+    line-height: 68px;
+  }
+
   &.bold {
     font-weight: 600;
   }
