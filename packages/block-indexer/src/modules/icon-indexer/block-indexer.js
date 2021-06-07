@@ -4,7 +4,6 @@ const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger, pgPool } = require('../../common');
-const { TBL_NAME, ABP_FAS } = require('../../common/constants');
 
 const { saveBlock, saveTransaction, saveTransferFree } = require('./repository');
 
