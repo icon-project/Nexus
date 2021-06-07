@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import { Header } from 'components/Typography';
 import { SearchForm } from './SearchForm';
 import { TextWithInfo } from 'components/TextWithInfo';
+import { AmountOfBidTable } from './AmountOfBidTable';
 import { colors } from 'components/Styles/Colors';
 
 const Wrapper = styled.div`
@@ -17,14 +18,23 @@ const Wrapper = styled.div`
 
   .total-available {
     display: flex;
+    margin-bottom: 42px;
 
     .amount-of-bid {
-      border-right: solid 1px ${colors.grayLine};
-      padding-right: 60px;
+      margin-right: 60px;
     }
 
-    .table {
-      flex: 1;
+    .divider {
+      border-right: solid 1px ${colors.grayLine};
+      height: 60px;
+      align-self: center;
+    }
+
+    .table-container {
+      margin: 0 60px;
+      width: 58.5%;
+      display: flex;
+      align-items: center;
     }
   }
 `;
@@ -41,7 +51,12 @@ const FeeAuction = () => {
           <TextWithInfo>TOTAL AVAILABLE BID AMOUNT</TextWithInfo>
           <Header className="large bold">$ 1,049</Header>
         </div>
-        <div className="table"></div>
+
+        <div className="divider"></div>
+
+        <div className="table-container">
+          <AmountOfBidTable />
+        </div>
       </div>
     </Wrapper>
   );
