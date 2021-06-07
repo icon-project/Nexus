@@ -6,13 +6,19 @@ const { HttpProvider } = require('icon-sdk-js');
 const { logger, pgPool } = require('../../common');
 const { TBL_NAME, ABP_FAS } = require('../../common/constants');
 
-const { saveBlock, saveTransaction } = require('./repository');
+const { saveBlock, saveTransaction, saveTransferFree } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 let isWaitToStop = false;
+
+// Init call builder 
+const { IconBuilder } = IconService;
+const { CallBuilder } = IconBuilder;
+const callBuilder = new CallBuilder();
+
 
 async function runTransactionHandlers(transaction, txResult, block) {
   // More transaction handlers go here.
@@ -48,20 +54,8 @@ async function retryGetTransactionResult(tx, block) {
 
 async function runBlockHandlers(block) {
   for (const tx of block.confirmedTransactionList) {
-    // debug('Transaction: %O', tx);
-
-    // const result = await getTransactionResult(tx.txHash);
-    // debug('Transaction result: %O', result);
-
-    // await saveTransaction(tx, result);
-    // await runTransactionHandlers(tx, result, block);
-    // try {
-    // await runFASHandler(tx);
-    // } catch(e){
-    //   debug('Block errrorror====== %s', e);
-    //   return e;
-    // }
     await retryGetTransactionResult(tx, block);
+    await runFASHandler(tx, block);
   }
   // More block handlers go here.
 }
@@ -101,26 +95,23 @@ async function getBlockData() {
     }
   }
 }
-function propsAsString(object) {
-  return Object.keys(object).map(function (key) { return `"${object[key]}"`; }).join(', ');
-}
-function propsCountValueString(object) {
-  return Object.keys(object).map(function (key, index) { return `$${index + 1}`; }).join(', ');
-}
 
-async function runFASHandler(tx) { 
-  
-  try {
-    if (tx.data.method == 'transfer' && tx.dataType == 'call' &&
+async function runFASHandler(tx, block) { 
+    if ( (tx.data.method == 'transfer' || tx.data.method == 'transferFrom') && tx.dataType == 'call' &&
     tx.data.params._to == process.env.FEE_AGGREGATION_SCORE_ADDRESS) {
-      const client = await pgPool.connect();
-      const insertDealer = `INSERT INTO public.transfer_fees(id, value, name, receive_at) VALUES ($1, $2, $3, $4})`;
-      await client.query(insertDealer,  [tx.from, tx.data.params._value, tx.to, tx.timestamp]);
-      debug('Param value: %O', tx.data.params)
+      try {
+        const result = await iconService.getTransactionResult(tx.txHash).execute();
+        if(result.status == 1) {
+            debug(`========saveTransferFree=======`);
+            await saveTransferFree(block, result, tx.data.method);
+        } else {
+          logger.debug(`Transaction failure { code :${tx.code}, message: ${tx.message}`);
+        }
+      } catch(e) {
+        logger.error(`[runFASHandler] Failed to get transaction`, { e });
+        throw error;
+      }
     }
-  } catch(e) {
-      throw e;
-  }
 }
 
 async function start() {
