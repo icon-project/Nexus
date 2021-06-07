@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import { OvalTextInput } from 'components/Input/OvalTextInput';
 import { PrimaryButton } from 'components/Button';
+import { SubTitle } from 'components/Typography';
 
 const Wrapper = styled.form`
   display: flex;
@@ -16,7 +17,9 @@ export const SearchForm = () => {
   return (
     <Wrapper>
       <OvalTextInput />
-      <PrimaryButton type="submit">Search</PrimaryButton>
+      <PrimaryButton type="submit">
+        <SubTitle className="small bold">Search</SubTitle>
+      </PrimaryButton>
     </Wrapper>
   );
 };

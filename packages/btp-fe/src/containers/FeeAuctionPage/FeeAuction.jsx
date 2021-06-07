@@ -1,10 +1,13 @@
 import styled from 'styled-components/macro';
 
-import { Header } from 'components/Typography';
-import { SearchForm } from './SearchForm';
+import { Header, SubTitle } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
+import { SortSelect } from 'components/Select';
+
+import { SearchForm } from './SearchForm';
 import { AmountOfBidTable } from './AmountOfBidTable';
 import { colors } from 'components/Styles/Colors';
+import { Table } from 'components/Table';
 
 const Wrapper = styled.div`
   max-width: 1120px;
@@ -31,13 +34,134 @@ const Wrapper = styled.div`
     }
 
     .table-container {
-      margin: 0 60px;
+      margin: 0 65px;
       width: 58.5%;
       display: flex;
       align-items: center;
     }
   }
+
+  .filter-by {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  table {
+    th:nth-child(1) {
+      width: 12.5%;
+    }
+    th:nth-child(2) {
+      width: 15.18%;
+    }
+    th:nth-child(3) {
+      width: 15.18%;
+    }
+    th:nth-child(4) {
+      width: 20%;
+    }
+    th:nth-child(5) {
+      width: 20%;
+    }
+    th:nth-child(6) {
+      width: 17.72%;
+    }
+  }
 `;
+
+const columns = [
+  {
+    title: 'Auction ID',
+    dataIndex: 'key',
+  },
+  {
+    title: 'Auction name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'Bid amount',
+    dataIndex: 'amount',
+  },
+  {
+    title: 'Current highest bid (ICX)',
+    dataIndex: 'highest',
+  },
+  {
+    title: 'My bid',
+    dataIndex: 'mybid',
+  },
+  {
+    title: 'Expiration',
+    dataIndex: 'expiration',
+  },
+];
+const dataSource = [
+  {
+    key: 191,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 192,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 193,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 194,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 195,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 196,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 197,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+  {
+    key: 198,
+    name: 'DOT 100',
+    amount: '100',
+    highest: '510',
+    mybid: '410',
+    expiration: '12hr left',
+  },
+];
 
 const FeeAuction = () => {
   return (
@@ -58,6 +182,21 @@ const FeeAuction = () => {
           <AmountOfBidTable />
         </div>
       </div>
+      <div className="filter-by">
+        <SubTitle className="medium bold">Auction list</SubTitle>
+        <SortSelect />
+      </div>
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        headerColor={colors.grayAccent}
+        backgroundColor={colors.darkBG}
+        bodyText={'md'}
+        onRow={() => ({
+          onClick: () => {},
+        })}
+        pagination
+      />
     </Wrapper>
   );
 };
