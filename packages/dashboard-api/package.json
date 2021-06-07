@@ -1,0 +1,35 @@
+{
+  "name": "dashboard-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Tien Do",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint ./src",
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/joi": "^17.1.1",
+    "@tiendq/http-status": "^1.0.2",
+    "axios": "^0.19.2",
+    "date-fns": "^2.15.0",
+    "debug": "^4.1.1",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.17.1",
+    "icon-sdk-js": "0.0.19",
+    "ms": "^2.1.2",
+    "nanoid": "^3.1.10",
+    "pg": "^8.2.2",
+    "uuid": "^8.2.0",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.3.1",
+    "nock": "^13.0.0",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
+  }
+}

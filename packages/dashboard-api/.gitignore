@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.data
+.log
+.vscode
+.mongo
+coverage
+dist
+logs
+node_modules
+public
