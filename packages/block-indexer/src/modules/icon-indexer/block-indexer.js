@@ -19,27 +19,50 @@ async function runTransactionHandlers(transaction, txResult, block) {
 }
 
 async function getTransactionResult(txHash) {
-  const result = await iconService.getTransactionResult(txHash).execute();
-  return result;
+  try {
+    const result = await iconService.getTransactionResult(txHash).execute();
+    return result;
+  } catch (error) {
+    if ('[RPC ERROR] Executing' !== error) {
+      logger.error(`Failed to get transaction result ${txHash}`, { error });
+      throw error;
+    }
+
+    debug(`${txHash}: ${error}`);
+    return null;
+  }
+}
+
+async function retryGetTransactionResult(tx, block) {
+  const txResult = await getTransactionResult(tx.txHash);
+
+  if (txResult) {
+    debug('Transaction result: %O', txResult);
+
+    await saveTransaction(tx, txResult);
+    await runTransactionHandlers(tx, txResult, block);
+  } else {
+    setTimeout(async () => await retryGetTransactionResult(tx, block), 5000);
+  }
 }
 
 async function runBlockHandlers(block) {
   for (const tx of block.confirmedTransactionList) {
-    debug('Transaction: %O', tx);
+    // debug('Transaction: %O', tx);
 
-    const result = await getTransactionResult(tx.txHash);
-    debug('Transaction result: %O', result);
+    // const result = await getTransactionResult(tx.txHash);
+    // debug('Transaction result: %O', result);
 
-    await saveTransaction(tx, result);
-    await runTransactionHandlers(tx, result, block);
-    try {
-    await runFASHandler(tx);
-    } catch(e){
-      debug('Block errrorror====== %s', e);
-      return e;
-    }
+    // await saveTransaction(tx, result);
+    // await runTransactionHandlers(tx, result, block);
+    // try {
+    // await runFASHandler(tx);
+    // } catch(e){
+    //   debug('Block errrorror====== %s', e);
+    //   return e;
+    // }
+    await retryGetTransactionResult(tx, block);
   }
-
   // More block handlers go here.
 }
 
@@ -48,12 +71,13 @@ async function getBlockByHeight(height) {
     const block = await iconService.getBlockByHeight(height).execute();
     return block;
   } catch (error) {
-    debug('Block height %d: %s', height, error);
-
-    if ('[RPC ERROR] E1005:Not found' === error)
-      return null;
-    else
+    if ('[RPC ERROR] E1005:Not found' !== error) {
+      logger.error(`Failed to get block ${height}`, { error });
       throw error;
+    }
+
+    debug(`Block height ${height}: ${error}`);
+    return null;
   }
 }
 
@@ -73,7 +97,7 @@ async function getBlockData() {
       setTimeout(async () => await getBlockData(), 1000);
     } else {
       // Wait longer for new blocks created.
-      setTimeout(async () => await getBlockData(), 5000);
+      setTimeout(async () => await getBlockData(), 10000);
     }
   }
 }
@@ -106,6 +130,8 @@ async function start() {
     const block = await iconService.getLastBlock().execute();
     blockHeight = block.height;
   }
+
+  // TODO: get last block from database.
 
   await getBlockData();
 

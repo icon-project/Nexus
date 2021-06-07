@@ -15,7 +15,6 @@ const { CallBuilder } = IconBuilder;
 const callBuilder = new CallBuilder();
 
 async function getListToken() {
-    let result = [];
     const call = callBuilder
         .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
         .method('tokens')
@@ -50,7 +49,7 @@ async function getTotalCumulativeAmountFeeAggregationSCORE() {
     const client = await pgPool.connect();
     const tokens = await getListToken();
     for (let data of tokens) {
-        let { rows: [{ sum: totalValue }] } = await client.query('SELECT SUM(value) FROM transfer_fees WHERE name = $1', [data.name]);
+        let { rows: [{ sum: totalValue }] } = await client.query('SELECT SUM(value) FROM transfer_fees WHERE name_token = $1', [data.name]);
         logger.debug(`[getTotalCumulativeAmountFeeAggregationSCORE] token: ${data.name} total value: ${totalValue}`);
         result.push({ name: data.name, value: parseInt(totalValue, 10) })
     }
@@ -58,7 +57,6 @@ async function getTotalCumulativeAmountFeeAggregationSCORE() {
 }
 
 async function getAvailableBalance(nameToken) {
-  const { CallBuilder } = IconBuilder;
   const callBuilder = new CallBuilder();
   const call = callBuilder
     .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
@@ -86,6 +84,6 @@ async function getTotalNetworks() {
 
 module.exports = {
   getAmountFeeAggregationSCORE,
-  getTotalNetworks,
   getTotalCumulativeAmountFeeAggregationSCORE,
+  getTotalNetworks,
 };
