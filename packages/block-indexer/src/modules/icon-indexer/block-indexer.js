@@ -6,6 +6,7 @@ const { HttpProvider } = require('icon-sdk-js');
 const { logger, RESULT_CODE } = require('../../common');
 const { hexToDecimal } = require('../../common/util');
 const { saveBlock, saveTransaction, setTransactionConfirmed, getBySerialNumber } = require('./repository');
+const { handleAuctionEvents } = require('./auctions');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -27,7 +28,6 @@ async function confirmTransfEnd(event, txInfo) {
     await setTransactionConfirmed([transaction], txInfo)
   }
 }
-
 
 /**
  * Handle TransferStart and TransferEnd events
@@ -64,6 +64,8 @@ async function handleTransEvent(txResult) {
 
 async function runTransactionHandlers(transaction, txResult, block) {
   await handleTransEvent(txResult);
+  await handleAuctionEvents(txResult);
+
   // More transaction handlers go here.
 }
 

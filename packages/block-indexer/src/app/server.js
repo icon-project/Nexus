@@ -14,8 +14,13 @@ function start() {
     logger.info('Listening at %o', server.address());
   });
 
-  iconIndexer.start();
-  edgewareIndexer.start();
+  if ('true' === process.env.ICON_INDEXER_ENABLED) {
+    iconIndexer.start();
+  }
+
+  if ('true' === process.env.EDGEWARE_INDEXER_ENABLED) {
+    edgewareIndexer.start();
+  }
 }
 
 module.exports = {
