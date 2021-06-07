@@ -8,6 +8,7 @@ import { SearchForm } from './SearchForm';
 import { AmountOfBidTable } from './AmountOfBidTable';
 import { colors } from 'components/Styles/Colors';
 import { Table } from 'components/Table';
+import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
   max-width: 1120px;
@@ -47,6 +48,27 @@ const Wrapper = styled.div`
     align-items: center;
     margin-bottom: 4px;
   }
+
+  ${media.md`
+    padding: 52px 16px 31px;
+
+    .search-group {
+      flex-direction: column;
+    }
+
+    .total-available {
+      flex-direction: column;
+
+      .divider {
+        display: none;
+      }
+
+      .table-container {
+        width: 90%;
+        margin: 24px auto;
+      }
+    }
+  `};
 `;
 
 const columns = [
