@@ -14,8 +14,20 @@ const StyledInput = styled.input`
   }
 
   & ~ p.err-msg {
-    color: ${colors.errorState};
+    color: ${colors.errorState} !important;
     margin-top: 7px;
+  }
+
+  /* remove number arrows */
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Firefox */
+  &[type='number'] {
+    -moz-appearance: textfield;
   }
 `;
 

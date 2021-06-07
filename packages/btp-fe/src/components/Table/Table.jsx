@@ -3,6 +3,10 @@ import { Table as antdTable } from 'antd';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 import { smallText, mediumText } from '../Typography/Text';
+
+import UnionSrc from 'assets/images/union.svg';
+import PrevIconSrc from 'assets/images/prev-icon.svg';
+
 const TableStyled = styled(antdTable)`
   width: 100%;
   .ant-table-content {
@@ -84,6 +88,28 @@ const TableStyled = styled(antdTable)`
       }
     }
   }
+
+  .ant-pagination {
+    margin: 24px 0 0;
+  }
+
+  .pagination-inline {
+    display: inline-flex;
+
+    .next-btn {
+      transform: rotateY(180deg);
+    }
+  }
+
+  table {
+    tr {
+      ${({ columns }) =>
+        columns[0].width
+          ? columns.map((col, idx) => `td:nth-child(${idx + 1}){width:${col.width};}`).join()
+          : ''}
+    }
+  }
+
   ${media.md`
     .ant-table-content {
       overflow-x: auto;
@@ -97,8 +123,37 @@ export const Table = ({
   bodyText,
   children,
   hoverColor,
+  pagination,
+  columns,
   ...rest
 }) => {
+  function itemRender(current, type, originalElement) {
+    if (type === 'prev') {
+      return (
+        <div className="pagination-inline">
+          <a className="ant-pagination-item">
+            <img src={UnionSrc} />
+          </a>
+          <a className="ant-pagination-item">
+            <img src={PrevIconSrc} />
+          </a>
+        </div>
+      );
+    }
+    if (type === 'next') {
+      return (
+        <div className="pagination-inline">
+          <a className="ant-pagination-item">
+            <img className="next-btn" src={PrevIconSrc} />
+          </a>
+          <a className="ant-pagination-item">
+            <img className="next-btn" src={UnionSrc} />
+          </a>
+        </div>
+      );
+    }
+    return originalElement;
+  }
   return (
     <TableStyled
       headerColor={headerColor}
@@ -106,6 +161,8 @@ export const Table = ({
       backgroundColor={backgroundColor}
       bodyText={bodyText}
       hoverColor={hoverColor}
+      columns={columns}
+      pagination={pagination ? { ...pagination, position: ['bottomCenter'], itemRender } : false}
       {...rest}
     >
       {children}
