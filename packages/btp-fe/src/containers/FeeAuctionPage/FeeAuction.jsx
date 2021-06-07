@@ -47,53 +47,38 @@ const Wrapper = styled.div`
     align-items: center;
     margin-bottom: 4px;
   }
-
-  table {
-    th:nth-child(1) {
-      width: 12.5%;
-    }
-    th:nth-child(2) {
-      width: 15.18%;
-    }
-    th:nth-child(3) {
-      width: 15.18%;
-    }
-    th:nth-child(4) {
-      width: 20%;
-    }
-    th:nth-child(5) {
-      width: 20%;
-    }
-    th:nth-child(6) {
-      width: 17.72%;
-    }
-  }
 `;
 
 const columns = [
   {
     title: 'Auction ID',
     dataIndex: 'key',
+    width: '12.5%',
   },
   {
     title: 'Auction name',
     dataIndex: 'name',
+    width: '15.18%',
   },
   {
     title: 'Bid amount',
     dataIndex: 'amount',
+    width: '15.18%',
   },
   {
     title: 'Current highest bid (ICX)',
     dataIndex: 'highest',
+    width: '20%',
   },
   {
     title: 'My bid',
     dataIndex: 'mybid',
+    width: '20%',
   },
   {
     title: 'Expiration',
     dataIndex: 'expiration',
+    width: '17.14%',
   },
 ];
 const dataSource = [

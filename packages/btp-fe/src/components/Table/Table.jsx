@@ -101,6 +101,15 @@ const TableStyled = styled(antdTable)`
     }
   }
 
+  table {
+    tr {
+      ${({ columns }) =>
+        columns[0].width
+          ? columns.map((col, idx) => `td:nth-child(${idx + 1}){width:${col.width};}`).join()
+          : ''}
+    }
+  }
+
   ${media.md`
     .ant-table-content {
       overflow-x: auto;
@@ -115,6 +124,7 @@ export const Table = ({
   children,
   hoverColor,
   pagination,
+  columns,
   ...rest
 }) => {
   function itemRender(current, type, originalElement) {
@@ -151,6 +161,7 @@ export const Table = ({
       backgroundColor={backgroundColor}
       bodyText={bodyText}
       hoverColor={hoverColor}
+      columns={columns}
       pagination={pagination ? { ...pagination, position: ['bottomCenter'], itemRender } : false}
       {...rest}
     >
