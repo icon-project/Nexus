@@ -2,7 +2,7 @@
 
 const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
-const { countNetWork } = require('./repository');
+const { countNetwork, sumTransactionAmount } = require('./repository');
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.NODE_URL);
@@ -12,8 +12,8 @@ async function getAmountFeeAggregationSCORE() {
   const { CallBuilder } = IconBuilder;
   const callBuilder = new CallBuilder();
   let result = [];
-  const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
   try {
+    const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
     const tokens = await iconService.call(call).execute();
     for (let data of tokens) {
       logger.debug(`[getAmountFeeAggregationSCORE] token: ${data.name}, address: ${data.address}`);
@@ -48,14 +48,24 @@ async function getAvailableBalance(nameToken) {
 
 async function getTotalNetworks() {
   try {
-    return countNetWork();
+    return countNetwork();
   } catch (err) {
     logger.error(err, '"getTotalNetworks" failed while getting total networks');
     throw new Error('"getTotalNetworks" job failed: ' + err.message);
   }
 }
 
+async function getTotalTransactionAmount() {
+  try {
+    return sumTransactionAmount();
+  } catch (err) {
+    logger.error(err, '"getTotalTransactionAmount" failed while getting total transaction amount');
+    throw new Error('"getTotalTransactionAmount" job failed: ' + err.message);
+  }
+}
+
 module.exports = {
   getAmountFeeAggregationSCORE,
   getTotalNetworks,
+  getTotalTransactionAmount,
 };
