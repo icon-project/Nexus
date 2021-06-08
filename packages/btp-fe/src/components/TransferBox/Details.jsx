@@ -5,10 +5,13 @@ import { Field } from 'react-final-form';
 import { TokenInput, TextInput } from '../Input';
 import { Icon } from '../Icon/Icon';
 import { Header, Text } from '../Typography';
+import { ControlButtons } from './ControlButtons';
+
+import { useSelect } from '../../hooks/useRematch';
+import { composeValidators, maxValue } from '../../utils/inputValidation';
+
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
-
-import { ControlButtons } from './ControlButtons';
 
 const Wrapper = styled.div`
   .heading {
@@ -108,12 +111,20 @@ const required = (value) => (value ? undefined : 'Required');
 
 export const Details = memo(
   ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent }) => {
+    const {
+      account: { balance },
+    } = useSelect(({ account }) => ({
+      account: account.selectAccountInfo,
+    }));
+
+    const max = maxValue(balance, 'Insufficient balance');
+
     return (
       <Wrapper>
         <Header className="small bold heading">Transfer</Header>
         <Field
           name="tokenAmount"
-          validate={required}
+          validate={composeValidators(required, max)}
           render={({ input, meta }) => (
             <TokenInput
               placeholder="0 ICX"
