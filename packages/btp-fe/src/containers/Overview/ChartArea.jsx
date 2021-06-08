@@ -21,6 +21,9 @@ const Wrapper = styled.div`
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    ${media.sm`
+      height: 595px;
+    `}
   }
 
   ${media.xl`
