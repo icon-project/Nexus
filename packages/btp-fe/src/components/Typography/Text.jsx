@@ -19,6 +19,13 @@ export const smallText = css`
   line-height: 20px;
 `;
 
+export const smallBoldText = css`
+  ${normalText}
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+`;
+
 export const Text = styled.p`
   ${normalText}
 

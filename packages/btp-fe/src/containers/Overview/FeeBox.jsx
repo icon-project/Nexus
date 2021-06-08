@@ -1,29 +1,12 @@
 import styled from 'styled-components/macro';
 
-import { Heading } from './Heading';
-import { Text } from 'components/Typography';
 import { AssetFeeTable } from './AssetFeeTable';
+import { TextWithInfo } from 'components/TextWithInfo';
+import { mediumText } from 'components/Typography/Text';
+import { SubTitle } from 'components/Typography';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
-
-import infoIcon from '../../assets/images/info-icon.svg';
-
-const StyledText = styled(Text)`
-  display: flex;
-  align-items: center;
-
-  img {
-    margin-left: 8.67px;
-  }
-`;
-
-const TextWithInfo = ({ children, className }) => (
-  <StyledText className={`medium ${className}`}>
-    {children}
-    <img src={infoIcon} alt="icon" />
-  </StyledText>
-);
 
 const Wrapper = styled.div`
   width: 48.57%;
@@ -33,6 +16,11 @@ const Wrapper = styled.div`
   .d-flex {
     display: flex;
     justify-content: space-between;
+  }
+
+  .medium-text {
+    color: ${colors.grayText};
+    ${mediumText};
   }
 
   .cumulative-amount {
@@ -61,14 +49,14 @@ const Wrapper = styled.div`
 export const Feebox = () => {
   return (
     <Wrapper className="box fee">
-      <Heading hasInfo={false}>FEE</Heading>
+      <TextWithInfo hasInfo={false}>FEE</TextWithInfo>
       <div className="cumulative-amount d-flex">
-        <TextWithInfo>Total cumulative amount</TextWithInfo>
-        <span>1,3948535.42</span>
+        <TextWithInfo className="medium-text">Total cumulative amount</TextWithInfo>
+        <SubTitle className="medium bold">1,3948535.42</SubTitle>
       </div>
       <div className="current-amount d-flex">
-        <TextWithInfo>Total current amount of fee</TextWithInfo>
-        <span>3,49584834.42</span>
+        <TextWithInfo className="medium-text">Total current amount of fee</TextWithInfo>
+        <SubTitle className="medium bold">3,49584834.42</SubTitle>
       </div>
       <TextWithInfo className="asset-fee">Asset fee</TextWithInfo>
       <AssetFeeTable />
