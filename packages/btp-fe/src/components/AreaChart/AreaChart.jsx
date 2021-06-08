@@ -200,6 +200,8 @@ const Wrapper = styled.div`
     align-items: center;
     padding: 4px 12px;
     font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
     color: '#878491';
     background-color: transparent;
     margin-right: 8px;
