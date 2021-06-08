@@ -45,7 +45,6 @@ export const sendTransaction = async (signature) => {
 
 export const signTx = (transaction = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
-  const nid = localStorage.getItem('nid');
 
   const icxTransactionBuilder = new IcxTransactionBuilder();
   const testTransaction = icxTransactionBuilder
@@ -53,7 +52,7 @@ export const signTx = (transaction = {}) => {
     .to(to)
     .value(IconConverter.toBigNumber((value || 1) + '000000000000000000'))
     .stepLimit(IconConverter.toBigNumber(100000))
-    .nid(IconConverter.toBigNumber(nid || '0xc7c937'))
+    .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000)

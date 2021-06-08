@@ -5,6 +5,8 @@ import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { media } from '../Styles/Media';
 
+import { useSelect } from '../../hooks/useRematch';
+
 import VectorIconSrc from 'assets/images/vector-icon.svg';
 
 const CardStyled = styled(AntCard)`
@@ -57,8 +59,9 @@ const CardStyled = styled(AntCard)`
   `}
 `;
 export const TransferCard = ({ setStep }) => {
-  window.localStorage.setItem('wallet-status', 'connected');
-  const isConnected = window.localStorage.getItem('wallet-status') === 'connected';
+  const { isConnected } = useSelect(({ account }) => ({
+    isConnected: account.selectIsConnected,
+  }));
 
   const listNetwork = [
     { value: 'bsc', label: 'Binance Smart Chain' },

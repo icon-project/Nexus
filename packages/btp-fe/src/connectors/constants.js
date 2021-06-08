@@ -18,34 +18,42 @@ export const NETWORKS = {
   dev: {
     name: 'Local',
     endpoint: 'http://localhost:9080/api/v3/src',
+    nid: localStorage.getItem('nid') || '0xc7c937',
   },
   yeouido: {
     name: 'Yeouido Testnet',
     endpoint: 'https://bicon.net.solidwallet.io/api/v3',
+    nid: '3',
   },
   hannam: {
     name: 'Hannam Testnet',
     endpoint: 'https://hannam.net.solidwallet.io/api/v3',
+    nid: '3',
   },
   euljiro: {
     name: 'Euljiro Testnet',
     endpoint: 'https://test-ctz.solidwallet.io/api/v3',
+    nid: '2',
   },
   pagoda: {
     name: 'Pagoda Testnet',
     endpoint: 'https://zicon.net.solidwallet.io/api/v3',
+    nid: '80',
   },
   gangnam: {
     name: 'Gangnam Testnet',
     endpoint: 'https://gicon.net.solidwallet.io/api/v3',
+    nid: '0x7',
   },
   sejong: {
     name: 'Sejong Testnet',
     endpoint: 'https://sejong.net.solidwallet.io/api/v3',
+    nid: '0x53',
   },
   ICONMainnet: {
     name: 'ICON Mainnet',
     endpoint: 'https://ctz.solidwallet.io/api/v3',
+    nid: '1',
   },
 };
 
