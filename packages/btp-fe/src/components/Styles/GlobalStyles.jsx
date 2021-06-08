@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components/macro';
-import { colors } from './Colors';
 
 export default createGlobalStyle`
   * {
@@ -31,11 +30,5 @@ export default createGlobalStyle`
   }
   p, h3, ul {
     margin: 0;
-  }
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    box-shadow: 0 0 0 50px ${colors.white} inset !important;
   }
 `;

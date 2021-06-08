@@ -131,7 +131,7 @@ export const Approval = memo(({ setStep, values }) => {
       <SendToken>
         <Text className="small sub-heading">You will send</Text>
         <div className="content">
-          <Header className="medium bold send-token">{tokenAmount || 0} ETH</Header>
+          <Header className="medium bold send-token">{tokenAmount || 0} ICX</Header>
           <Text className="medium">= $108,670.92</Text>
         </div>
       </SendToken>
