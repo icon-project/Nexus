@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Row } from 'antd';
@@ -14,8 +13,6 @@ import { Header, Text } from '../Typography';
 
 import VectorSrc from 'assets/images/vector.svg';
 import BackIconSrc from 'assets/images/arrow-icon.svg';
-import UnionSrc from 'assets/images/union.svg';
-import PrevIconSrc from 'assets/images/prev-icon.svg';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
@@ -38,6 +35,7 @@ const TableStyled = styled(Table)`
   `};
 `;
 
+/* eslint-disable react/display-name */
 const columns = [
   {
     title: 'Details',
@@ -109,12 +107,6 @@ const TransferHistoryStyled = styled.div`
     margin-bottom: 31px;
     display: inline-flex;
   }
-  .pagination-inline {
-    display: inline-flex;
-  }
-  .next-btn {
-    transform: rotateY(180deg);
-  }
 
   .selector-group {
     display: flex;
@@ -152,33 +144,7 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
     setSelectedRow(detail);
     setShowDetails(true);
   };
-  function itemRender(current, type, originalElement) {
-    if (type === 'prev') {
-      return (
-        <div className="pagination-inline">
-          <a className="ant-pagination-item">
-            <img src={UnionSrc} />
-          </a>
-          <a className="ant-pagination-item">
-            <img src={PrevIconSrc} />
-          </a>
-        </div>
-      );
-    }
-    if (type === 'next') {
-      return (
-        <div className="pagination-inline">
-          <a className="ant-pagination-item">
-            <img className="next-btn" src={PrevIconSrc} />
-          </a>
-          <a className="ant-pagination-item">
-            <img className="next-btn" src={UnionSrc} />
-          </a>
-        </div>
-      );
-    }
-    return originalElement;
-  }
+
   return (
     <TransferHistoryStyled>
       <Row>
@@ -206,10 +172,7 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
         onRow={(r) => ({
           onClick: () => onClickDetail(r),
         })}
-        pagination={{
-          position: ['bottomCenter'],
-          itemRender: itemRender,
-        }}
+        pagination
       />
       {showDetails && (
         <HistoryDetails

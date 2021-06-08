@@ -1,7 +1,8 @@
 import styled from 'styled-components/macro';
 
-import { Heading } from './Heading';
 import { ChartBox } from './ChartBox';
+
+import { TextWithInfo } from 'components/TextWithInfo';
 import { Header } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
 
@@ -44,14 +45,14 @@ export const ChartArea = () => {
   return (
     <Wrapper>
       <div className="chart">
-        <Heading>VOLUME</Heading>
+        <TextWithInfo>VOLUME</TextWithInfo>
         <Header className="medium bold inline">
           $9,672,047,464.01 <UpDownPercent up percent="9.55%" />
         </Header>
         <ChartBox />
       </div>
       <div className="chart">
-        <Heading>VALUE MINT</Heading>
+        <TextWithInfo>VALUE MINT</TextWithInfo>
         <Header className="medium bold inline">
           $892,797,895.53 <UpDownPercent up percent="9.55%" />
         </Header>
