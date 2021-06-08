@@ -6,3 +6,6 @@ CREATE TABLE Networks (
    Update_At TIMESTAMP,
    Delete_At TIMESTAMP
 );
+
+
+SELECT SUM(value) FROM Transactions WHERE Confirmed = true
