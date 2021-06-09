@@ -55,6 +55,12 @@ const CardStyled = styled(AntCard)`
     margin-top: 42px;
   }
 
+  .to {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   ${media.md`
     width: 100% !important;
   `}
@@ -83,12 +89,11 @@ export const TransferCard = ({ setStep }) => {
           </Col>
         </Row>
         <hr />
-        <Row>
-          <Col span={12}>To</Col>
-          <Col span={12} className="right-side">
-            <Select options={listNetwork} width={235} />
-          </Col>
-        </Row>
+
+        <div className="to">
+          To <Select options={listNetwork} />
+        </div>
+
         <Row className="button-section">
           {isConnected ? (
             <PrimaryButton width={416} height={64} onClick={() => setStep(1)}>
