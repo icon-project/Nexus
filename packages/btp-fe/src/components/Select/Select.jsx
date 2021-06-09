@@ -8,6 +8,8 @@ import arrowIcon from 'assets/images/arrow-icon.svg';
 
 import { colors } from '../Styles/Colors';
 
+const { brandSecondaryBase, grayLine, grayBG } = colors;
+
 const Wrapper = styled.button`
   display: flex;
   align-items: center;
@@ -17,7 +19,7 @@ const Wrapper = styled.button`
   cursor: pointer;
   padding: 10px 16px;
   border-radius: 4px;
-  background-color: transparent;
+  background-color: ${({ isOpenSelect }) => (isOpenSelect ? brandSecondaryBase : 'transparent')};
 
   &:after {
     content: '';
@@ -29,7 +31,7 @@ const Wrapper = styled.button`
   }
 
   &:hover {
-    background-color: ${colors.brandSecondaryBase};
+    background-color: ${brandSecondaryBase};
   }
 
   ul {
@@ -38,11 +40,11 @@ const Wrapper = styled.button`
     right: 0;
     top: calc(100% - 10px);
 
-    border: 1px solid ${colors.grayLine};
+    border: 1px solid ${grayLine};
     border-radius: 4px;
     box-shadow: 0px 4px 8px rgba(40, 38, 47, 0.8);
 
-    background-color: ${colors.grayBG};
+    background-color: ${grayBG};
     padding: 4px 0;
 
     li {
@@ -50,7 +52,11 @@ const Wrapper = styled.button`
       text-align: left;
 
       &:hover {
-        background-color: ${colors.brandSecondaryBase};
+        background-color: ${brandSecondaryBase};
+      }
+
+      &.active {
+        background-color: ${brandSecondaryBase};
       }
     }
   }
@@ -66,7 +72,7 @@ const Select = ({ options = [] }) => {
 
   useOnClickOutside(ref, () => setIsOpenSelect(false));
   return (
-    <Wrapper ref={ref} onClick={onToggleSelect} type="button">
+    <Wrapper ref={ref} onClick={onToggleSelect} type="button" isOpenSelect={isOpenSelect}>
       <Text className="medium">{selectedValue.label}</Text>
       {isOpenSelect && (
         <ul>
@@ -76,6 +82,7 @@ const Select = ({ options = [] }) => {
               onClick={() => {
                 setSelectedValue(opt);
               }}
+              className={`${selectedValue.value === opt.value ? 'active' : ''}`}
             >
               <Text className="small">{opt.label}</Text>
             </li>
