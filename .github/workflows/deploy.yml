@@ -25,6 +25,7 @@ jobs:
           mkdir btp-be
           cd ./btp-be
           git pull
+          cat ../.env-indexer >> ./btp-dashboard/packages/block-indexer/.env
           cd ./btp-dashboard/packages/block-indexer
           echo "checkout be-dev branch"
           git checkout be-dev
@@ -35,5 +36,6 @@ jobs:
           cd ../dashboard-api
           yarn
           echo "start dashboard-api"
+          cat ../.env-dashboard >> ./btp-dashboard/packages/dashboard-api/.env
           pm2 start yarn --interpreter bash --name dashboard-api -- start
           echo "dashboard-api is starting"
