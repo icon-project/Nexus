@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import { SubTitle, Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { AreaChart } from 'components/AreaChart';
 
 import arrowIcon from '../../assets/images/blue-arrow-icon.svg';
 
@@ -80,11 +81,6 @@ const tabs = {
   asset: 'asset',
 };
 
-const contents = {
-  [tabs.history]: 'Area Chart',
-  [tabs.asset]: 'Pie Chart',
-};
-
 export const ChartBox = () => {
   const [currentTab, setCurrentTab] = useState(tabs.history);
 
@@ -110,7 +106,9 @@ export const ChartBox = () => {
         <Text className="x-small filter-control">Binanace Smart Chain</Text>
       </div>
 
-      <div className="tab-content">{contents[currentTab]}</div>
+      <div className="tab-content">
+        <AreaChart />
+      </div>
     </Wrapper>
   );
 };
