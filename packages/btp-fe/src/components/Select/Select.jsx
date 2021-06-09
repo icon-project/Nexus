@@ -24,11 +24,19 @@ const Wrapper = styled.button`
   &:after {
     content: '';
     display: inline-block;
-    width: 10px;
+    width: 12px;
     height: 10px;
-    background: transparent center / contain no-repeat
-      url('${({ customeArrow }) => customeArrow || arrowIcon}');
+    background: transparent center / 100% no-repeat url('${arrowIcon}');
     margin-left: 7.67px;
+
+    ${({ customeArrow }) =>
+      customeArrow
+        ? `
+            background-image: url('${customeArrow}');
+            width: 17px;
+            height: 15px;
+          `
+        : ''}
   }
 
   &:hover {
@@ -61,7 +69,7 @@ const Wrapper = styled.button`
         background-color: ${brandSecondaryBase};
         display: flex;
         align-items: center;
-        padding-left: 10px;
+        padding-left: ${({ showCheck }) => (showCheck ? '10px' : '16px')};
 
         &:before {
           content: '';
