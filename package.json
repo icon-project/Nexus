@@ -6,7 +6,9 @@
     "doctoc": "doctoc --gitlab --title '**Contents**'",
     "build": "lerna run build",
     "lint": "eslint --ext .jsx,.js --ignore-path .gitignore",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "deploy-fe": "cd ./packages/btp-fe && git checkout fe-dev && yarn && yarn start",
+    "deploy-be-indexer": "cd ./packages/ && git checkout fe-dev && yarn && yarn start"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "4.5.0",
@@ -46,5 +48,8 @@
     "['**/*.md', '!.gitlab/**/*.md']": [
       "yarn doctoc"
     ]
+  },
+  "dependencies": {
+    "pm2": "5.0.4"
   }
 }
