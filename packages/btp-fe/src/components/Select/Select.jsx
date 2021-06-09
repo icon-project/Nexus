@@ -14,7 +14,7 @@ const Wrapper = styled.button`
   display: flex;
   align-items: center;
   position: relative;
-  z-index: 100;
+  z-index: ${({ isOpenSelect }) => (isOpenSelect ? 100 : 1)};
 
   cursor: pointer;
   padding: 10px 16px;
@@ -66,27 +66,35 @@ const Select = ({ options = [] }) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [selectedValue, setSelectedValue] = useState(options[0]);
+
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);
   };
-
   useOnClickOutside(ref, () => setIsOpenSelect(false));
+
   return (
     <Wrapper ref={ref} onClick={onToggleSelect} type="button" isOpenSelect={isOpenSelect}>
-      <Text className="medium">{selectedValue.label}</Text>
+      {selectedValue.renderLabel ? (
+        selectedValue.renderLabel()
+      ) : (
+        <Text className="medium">{selectedValue.label}</Text>
+      )}
       {isOpenSelect && (
         <ul>
-          {options.map((opt) => (
-            <li
-              key={opt.value}
-              onClick={() => {
-                setSelectedValue(opt);
-              }}
-              className={`${selectedValue.value === opt.value ? 'active' : ''}`}
-            >
-              <Text className="small">{opt.label}</Text>
-            </li>
-          ))}
+          {options.map((opt) => {
+            const { label, value, renderItem } = opt;
+            return (
+              <li
+                key={value}
+                onClick={() => {
+                  setSelectedValue(opt);
+                }}
+                className={`${selectedValue.value === value ? 'active' : ''}`}
+              >
+                {renderItem ? renderItem() : <Text className="small">{label}</Text>}
+              </li>
+            );
+          })}
         </ul>
       )}
     </Wrapper>
