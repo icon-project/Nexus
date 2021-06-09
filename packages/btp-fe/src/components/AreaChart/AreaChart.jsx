@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { createChart } from 'lightweight-charts';
 
@@ -235,6 +235,7 @@ const Wrapper = styled.div`
   }
 `;
 const AreaChart = () => {
+  const [isRendered, setIsRendered] = useState(false);
   const parentRef = useRef();
   const chartElement = document.createElement('div');
 
@@ -334,11 +335,12 @@ const AreaChart = () => {
 
   syncToInterval(intervals[0]);
   useEffect(() => {
-    if (parentRef && chartElement) {
+    if (parentRef && chartElement && !isRendered) {
       parentRef.current.appendChild(chartElement);
       parentRef.current.appendChild(switcherElement);
+      setIsRendered(true);
     }
-  }, [chartElement, switcherElement]);
+  }, [chartElement, switcherElement, isRendered]);
   return (
     <Wrapper>
       <div ref={parentRef}></div>
