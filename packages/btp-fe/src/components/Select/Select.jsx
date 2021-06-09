@@ -4,7 +4,7 @@ import { Text } from 'components/Typography';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 
 import arrowIcon from 'assets/images/arrow-icon.svg';
-// import CheckIconSrc from 'assets/images/white-check-icon.svg';
+import checkedIcon from 'assets/images/white-check-icon.svg';
 
 import { colors } from '../Styles/Colors';
 
@@ -26,7 +26,8 @@ const Wrapper = styled.button`
     display: inline-block;
     width: 10px;
     height: 10px;
-    background: transparent center / contain no-repeat url('${arrowIcon}');
+    background: transparent center / contain no-repeat
+      url('${({ customeArrow }) => customeArrow || arrowIcon}');
     margin-left: 7.67px;
   }
 
@@ -50,6 +51,7 @@ const Wrapper = styled.button`
     li {
       padding: 10px 16px;
       text-align: left;
+      ${({ showCheck }) => (showCheck ? 'padding-left: 40.5px' : '')};
 
       &:hover {
         background-color: ${brandSecondaryBase};
@@ -57,12 +59,24 @@ const Wrapper = styled.button`
 
       &.active {
         background-color: ${brandSecondaryBase};
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+
+        &:before {
+          content: '';
+          background: transparent center / contain no-repeat url('${checkedIcon}');
+          display: ${({ showCheck }) => (showCheck ? 'inline-block' : 'none')};
+          width: 21px;
+          height: 15px;
+          margin-right: 9.5px;
+        }
       }
     }
   }
 `;
 
-const Select = ({ options = [] }) => {
+const Select = ({ options = [], customeArrow, showCheck }) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [selectedValue, setSelectedValue] = useState(options[0]);
@@ -73,7 +87,14 @@ const Select = ({ options = [] }) => {
   useOnClickOutside(ref, () => setIsOpenSelect(false));
 
   return (
-    <Wrapper ref={ref} onClick={onToggleSelect} type="button" isOpenSelect={isOpenSelect}>
+    <Wrapper
+      ref={ref}
+      onClick={onToggleSelect}
+      type="button"
+      isOpenSelect={isOpenSelect}
+      customeArrow={customeArrow}
+      showCheck={showCheck}
+    >
       {selectedValue.renderLabel ? (
         selectedValue.renderLabel()
       ) : (
