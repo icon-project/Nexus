@@ -1,10 +1,12 @@
 import styled from 'styled-components/macro';
+import { Form as FinalForm, Field } from 'react-final-form';
+
 import { OvalTextInput } from 'components/Input/OvalTextInput';
 import { PrimaryButton } from 'components/Button';
 import { SubTitle } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-const Wrapper = styled.form`
+const Form = styled.form`
   display: flex;
   margin-bottom: 43px;
 
@@ -27,13 +29,23 @@ const Wrapper = styled.form`
   `};
 `;
 
-export const SearchForm = () => {
+export const SearchForm = ({ setKeySearch }) => {
+  const onSubmit = (values) => {
+    setKeySearch(values.keySearch);
+  };
   return (
-    <Wrapper>
-      <OvalTextInput />
-      <PrimaryButton type="submit">
-        <SubTitle className="small bold">Search</SubTitle>
-      </PrimaryButton>
-    </Wrapper>
+    <FinalForm
+      onSubmit={onSubmit}
+      render={({ handleSubmit }) => {
+        return (
+          <Form onSubmit={handleSubmit}>
+            <Field name="keySearch" render={({ input }) => <OvalTextInput {...input} />} />
+            <PrimaryButton htmlType="submit">
+              <SubTitle className="small bold">Search</SubTitle>
+            </PrimaryButton>
+          </Form>
+        );
+      }}
+    />
   );
 };
