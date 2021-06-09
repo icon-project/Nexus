@@ -31,6 +31,9 @@ const account = {
     selectAccountInfo() {
       return slice((state) => state);
     },
+    selectIsConnected() {
+      return slice((state) => !!state.address);
+    },
   }),
 };
 
