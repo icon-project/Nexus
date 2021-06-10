@@ -10,6 +10,7 @@ import copyIcon from '../../assets/images/blue-copy-icon.svg';
 import binanceIcon from '../../assets/images/binance-icon.svg';
 import edgewareIcon from '../../assets/images/edgeware-icon.png';
 import btcIcon from '../../assets/images/btc-icon.svg';
+import bchIcon from 'assets/images/bch-icon.svg';
 
 const sizes = {
   s: '20px',
@@ -29,6 +30,7 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
     binance: binanceIcon,
     edgeware: edgewareIcon,
     btc: btcIcon,
+    bch: bchIcon,
   };
 
   return (
@@ -39,6 +41,6 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
 Icon.displayName = 'Icon';
 
 Icon.propTypes = {
-  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy', 'binance', 'edgeware', 'btc']),
+  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy', 'binance', 'edgeware', 'btc', 'bch']),
   size: PropTypes.oneOf(['s', 'm']),
 };

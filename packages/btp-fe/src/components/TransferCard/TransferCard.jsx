@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Card as AntCard, Row, Col } from 'antd';
+import { Card as AntCard, Row } from 'antd';
 
 import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
@@ -55,6 +55,13 @@ const CardStyled = styled(AntCard)`
     margin-top: 42px;
   }
 
+  .to,
+  .send {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   ${media.md`
     width: 100% !important;
   `}
@@ -76,19 +83,17 @@ export const TransferCard = ({ setStep }) => {
         <p className="desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
         </p>
-        <Row>
-          <Col span={12}>Send</Col>
-          <Col span={12} className="right-side">
-            <SelectAsset />
-          </Col>
-        </Row>
+
+        <div className="send">
+          Send <SelectAsset />
+        </div>
+
         <hr />
-        <Row>
-          <Col span={12}>To</Col>
-          <Col span={12} className="right-side">
-            <Select options={listNetwork} width={235} />
-          </Col>
-        </Row>
+
+        <div className="to">
+          To <Select options={listNetwork} />
+        </div>
+
         <Row className="button-section">
           {isConnected ? (
             <PrimaryButton width={416} height={64} onClick={() => setStep(1)}>

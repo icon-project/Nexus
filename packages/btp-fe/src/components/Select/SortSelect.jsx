@@ -8,6 +8,6 @@ const SortSelect = () => {
     { value: 'highest', label: 'Search by highest amount' },
     { value: 'lowest', label: 'Search by lowest amount' },
   ];
-  return <Select options={sortOptions} optionWidth={300} arrowIcon={FilterIcon} showCheck></Select>;
+  return <Select options={sortOptions} customeArrow={FilterIcon} showCheck />;
 };
 export default SortSelect;
