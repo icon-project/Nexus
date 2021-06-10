@@ -9,7 +9,11 @@ import { Modal } from '../NotificationModal';
 import { PrimaryButton, HamburgerButton } from '../Button';
 
 import { useDispatch, useSelect } from '../../hooks/useRematch';
-import { requestAddress } from '../../connectors/ICONex/events';
+import {
+  requestAddress,
+  isICONexInstalled,
+  checkICONexInstalled,
+} from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
 import { EthereumInstance } from '../../connectors/MetaMask';
@@ -170,11 +174,21 @@ const Header = ({ userStatus = defaultUser }) => {
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
     if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
       EthereumInstance.getEthereumAccounts();
     }
+  }, []);
+
+  useEffect(() => {
+    // wait after 2s for initial addICONexListener
+    setTimeout(() => {
+      checkICONexInstalled(() => {
+        setCheckingICONexInstalled(false);
+      });
+    }, 2001);
   }, []);
 
   const {
@@ -276,6 +290,8 @@ const Header = ({ userStatus = defaultUser }) => {
                   wallet={mockWallets}
                   active={selectedWallet == wallets.iconex}
                   onClick={() => handleSelectWallet(wallets.iconex)}
+                  isCheckingInstalled={checkingICONexInstalled}
+                  isInstalled={isICONexInstalled()}
                 />
               </div>
             </Modal>
