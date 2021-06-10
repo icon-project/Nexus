@@ -183,6 +183,7 @@
     "prettier": "2.2.1",
     "prompts": "2.4.0",
     "qs": "6.9.6",
+    "react-minimal-pie-chart": "8.2.0",
     "resolve-url-loader": "3.1.2",
     "sass-loader": "8.0.2",
     "semver": "7.3.2",
