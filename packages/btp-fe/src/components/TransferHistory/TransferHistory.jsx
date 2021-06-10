@@ -88,12 +88,20 @@ const TransferHistoryStyled = styled.div`
   color: ${colors.grayText};
   width: 1120px;
 
-  .selector-group {
-    display: flex;
-  }
-
   .control-group {
+    align-items: center;
     margin-top: 31px;
+
+    p.medium {
+      margin-right: 8px;
+    }
+    .selector-group {
+      display: flex;
+
+      .exchange-icon {
+        margin: 0 32.83px 0 35.83px;
+      }
+    }
   }
 
   ${media.md`
@@ -112,10 +120,6 @@ const TransferHistoryStyled = styled.div`
         width: 15px;
         transform: rotate(90deg);
         margin: 20px 0;
-      }
-
-      div.select-asset {
-        height: 24px;
       }
     }
   `};
