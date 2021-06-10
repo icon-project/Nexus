@@ -107,7 +107,9 @@ export const ChartBox = () => {
         <Text className="x-small filter-control">Binanace Smart Chain</Text>
       </div>
 
-      <div className="tab-content">{currentTab === 'history' ? <AreaChart /> : <DonutChart />}</div>
+      <div className="tab-content">
+        {currentTab === tabs.history ? <AreaChart /> : <DonutChart />}
+      </div>
     </Wrapper>
   );
 };

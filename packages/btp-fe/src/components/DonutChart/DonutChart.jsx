@@ -46,19 +46,21 @@ const DonutChart = () => {
     <Wrapper>
       <PieChart className="pie-chart" data={dataMock} lineWidth={50} animate />
       <table className="desc">
-        {dataMock.map(({ title, color, value }) => {
-          return (
-            <tr key={title} className="desc-element">
-              <td className="fist-col">
-                <Circle color={color} />
-                <span>{title}</span>
-              </td>
-              <td>
-                <span>${value.toLocaleString()}</span>
-              </td>
-            </tr>
-          );
-        })}
+        <tbody>
+          {dataMock.map(({ title, color, value }) => {
+            return (
+              <tr key={title} className="desc-element">
+                <td className="fist-col">
+                  <Circle color={color} />
+                  <span>{title}</span>
+                </td>
+                <td>
+                  <span>${value.toLocaleString()}</span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </Wrapper>
   );
