@@ -4,6 +4,7 @@ import { SubTitle, Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { AreaChart } from 'components/AreaChart';
+import { DonutChart } from 'components/DonutChart';
 
 import arrowIcon from '../../assets/images/blue-arrow-icon.svg';
 
@@ -107,7 +108,7 @@ export const ChartBox = () => {
       </div>
 
       <div className="tab-content">
-        <AreaChart />
+        {currentTab === tabs.history ? <AreaChart /> : <DonutChart />}
       </div>
     </Wrapper>
   );
