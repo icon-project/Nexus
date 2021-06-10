@@ -18,6 +18,7 @@ const Wrapper = styled.div`
 
   .dark-text {
     color: ${grayScaleSubText};
+    text-align: right;
   }
 
   .wallet-balance,
