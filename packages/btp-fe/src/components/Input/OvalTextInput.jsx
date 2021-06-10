@@ -25,10 +25,10 @@ const Wrapper = styled.div`
   }
 `;
 
-export const OvalTextInput = () => {
+export const OvalTextInput = (props) => {
   return (
     <Wrapper>
-      <TextInput placeholder="Search auction by name" />
+      <TextInput placeholder="Search auction by name" {...props} />
     </Wrapper>
   );
 };
