@@ -110,15 +110,15 @@ export const Details = () => {
           <Text className="medium">07/03/2021</Text>
         </div>
         <div>
-          <Text className="x-small">Current highest bid</Text>
+          <Text className="x-small">Available bid amount</Text>
           <Text className="medium">200 ICX</Text>
         </div>
         <div>
-          <Text className="x-small">Next accepted bid</Text>
+          <Text className="x-small">Current highest bid</Text>
           <Text className="medium">210 ICX</Text>
         </div>
         <div>
-          <Text className="x-small">Expiration date</Text>
+          <Text className="x-small">Next accepted bid</Text>
           <Text className="medium">07/03/2021</Text>
         </div>
         <div>
