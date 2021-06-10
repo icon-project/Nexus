@@ -102,6 +102,7 @@ const TransferHistoryStyled = styled.div`
         margin: 0 32.83px 0 35.83px;
       }
     }
+  }
 
   ${media.md`
     width: 100%;
