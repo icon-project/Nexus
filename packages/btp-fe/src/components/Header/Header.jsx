@@ -12,7 +12,7 @@ import { useDispatch, useSelect } from '../../hooks/useRematch';
 import { requestAddress } from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
-import { connectMetaMaskWallet, getEthereumAccounts } from '../../connectors/MetaMask';
+import { EthereumInstance } from '../../connectors/MetaMask';
 
 import { Header as Heading, SubTitle, Text } from '../Typography';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
@@ -173,7 +173,7 @@ const Header = ({ userStatus = defaultUser }) => {
 
   useEffect(() => {
     if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
-      getEthereumAccounts();
+      EthereumInstance.getEthereumAccounts();
     }
   }, []);
 
@@ -205,8 +205,10 @@ const Header = ({ userStatus = defaultUser }) => {
         setLoading(false);
       }
     } else if (selectedWallet === wallets.metamask) {
-      await connectMetaMaskWallet();
-      await getEthereumAccounts();
+      const isConnected = await EthereumInstance.connectMetaMaskWallet();
+      if (isConnected) {
+        await EthereumInstance.getEthereumAccounts();
+      }
       setLoading(false);
     }
   };
