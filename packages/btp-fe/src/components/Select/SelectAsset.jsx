@@ -12,6 +12,7 @@ import ETHIconSrc from 'assets/images/eth-icon.svg';
 const StyledItem = styled.div`
   display: flex;
   align-items: center;
+  min-width: 160px;
 
   & > img {
     width: 24px;
