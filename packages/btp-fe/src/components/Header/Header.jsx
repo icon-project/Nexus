@@ -269,6 +269,7 @@ const Header = ({ userStatus = defaultUser }) => {
                   wallet={mockWallets}
                   active={selectedWallet == wallets.metamask}
                   onClick={() => handleSelectWallet(wallets.metamask)}
+                  isInstalled={EthereumInstance.isMetaMaskInstalled()}
                 />
                 <WalletSelector
                   type={wallets.iconex}

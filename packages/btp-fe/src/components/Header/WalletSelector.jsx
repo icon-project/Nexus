@@ -44,11 +44,14 @@ const StyledWalletItem = styled.button`
   `};
 `;
 
-export const WalletSelector = ({ wallet, type, active, onClick }) => {
+export const WalletSelector = ({ wallet, type, active, onClick, isInstalled }) => {
   return (
     <StyledWalletItem className="wallet-selector" autoFocus={active} onClick={onClick}>
       <Avatar src={wallet[type].icon} size={30} />
-      <Text className="medium wallet-title">{wallet[type].title}</Text>
+      <Text className="medium wallet-title">
+        {!isInstalled && 'Install '}
+        {wallet[type].title}
+      </Text>
       {active && <CheckOutlined />}
     </StyledWalletItem>
   );

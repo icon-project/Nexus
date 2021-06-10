@@ -14,7 +14,7 @@ class Ethereum {
   get getEthereum() {
     if (!this.isMetaMaskInstalled()) {
       window.open(metamaskURL);
-      throw new Error('no ethereum object');
+      throw new Error('MetaMask has not been installed');
     }
     return this.ethereum;
   }
@@ -26,7 +26,7 @@ class Ethereum {
   get getProvider() {
     if (!this.isMetaMaskInstalled()) {
       window.open(metamaskURL);
-      throw new Error('no provider object');
+      throw new Error('MetaMask has not been installed');
     }
     return this.provider;
   }
