@@ -1,11 +1,15 @@
 'use strict';
 
+const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const fs = require('fs');
 const IconService = require('icon-sdk-js');
 const { IconAmount, IconConverter, HttpProvider, IconWallet, IconBuilder, SignedTransaction } = require('icon-sdk-js');
 
 const httpProvider = new HttpProvider('http://localhost:9082/api/v3');
 const iconService = new IconService(httpProvider);
+
+// FAS 1.0.2
+const fasAddress = 'cxd426e4a2d8f9571466ceedc376fdad7d0a368ee0';
 
 //     000000000000000000
 //   15000000000000000000 =   15 ICX
@@ -42,7 +46,7 @@ async function transfer() {
 /*
 - Token deployed cx18fbe903abdbb4b1e484e3135782ba2b8ba8dd4c
 - CPS deployed cx031b8ac09dac6acc9719442ed80bd514fa914db2
-- FAS deployed cx8ca6ca89fdf3ce6e77b9531b66da51a455be7367
+- FAS deployed cxd426e4a2d8f9571466ceedc376fdad7d0a368ee0
 - hx774ca45c762872ac6dd4780784e279ceb389dec9 has 600 ICX
 - FAS ABCDE balance: 200
 - Registered ABCDE
@@ -51,16 +55,17 @@ async function transfer() {
 - bid
 */
 
-async function bid() {
-  const keystore = JSON.parse(fs.readFileSync('./wallet1.json'));
+async function bid(walletFile, amount) {
+  console.log(`${walletFile} bid ${amount}`);
+
+  const keystore = JSON.parse(fs.readFileSync(walletFile));
   const wallet = IconWallet.loadKeystore(keystore, 'tien12345');
   const { CallTransactionBuilder } = IconBuilder;
 
   const txObj = new CallTransactionBuilder()
     .from(wallet.getAddress())
-    .to('cx8ca6ca89fdf3ce6e77b9531b66da51a455be7367') // FAS address
-    .value(IconConverter.toHex(IconAmount.of(100, IconAmount.Unit.ICX).toLoop())) // minimum bid 100 ICX
-    // .value(IconConverter.toHex(IconAmount.of(115, IconAmount.Unit.ICX).toLoop())) // next bid at least 10% higher
+    .to(fasAddress) // FAS address
+    .value(IconConverter.toHex(IconAmount.of(amount, IconAmount.Unit.ICX).toLoop())) // minimum bid 100 ICX
     .stepLimit(IconConverter.toBigNumber(10000000000))
     .nid(IconConverter.toBigNumber(3))
     .version(IconConverter.toBigNumber(3))
@@ -71,17 +76,32 @@ async function bid() {
     })
     .build();
 
-  const signedTransaction = new SignedTransaction(txObj, wallet)
+  const signedTransaction = new SignedTransaction(txObj, wallet);
   const txHash = await iconService.sendTransaction(signedTransaction).execute();
 
-  // ./goloop rpc txresult 0x0da152b1fcd274096eab4b69c8f6b86134a15f95e432f818292b5fb8f4b70f41 --uri http://localhost:9082/api/v3
-  // ./goloop rpc txresult 0x0e61a59542bd4ac8b8bbf099a7ad102be2f3855c6623363bef2e940592bc97c0 --uri http://localhost:9082/api/v3
+  // ./goloop rpc txresult 0x90f1b01427eb2ea440ea952f13015ebeb644d97765d135f6b7e79452fbb01393 --uri http://localhost:9082/api/v3
   console.log(txHash);
 }
 
-// transfer();
-bid();
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
+async function testBid() {
+  bid('./wallet1.json', 100);
+  await sleep(30 * 1000);
+  bid('./wallet2.json', 110);
+  await sleep(30 * 1000);
+  bid('./wallet3.json', 130);
+  await sleep(30 * 1000);
+  bid('./wallet1.json', 150);
+  await sleep(30 * 1000);
+  bid('./wallet2.json', 170);
+}
+
+// transfer();
+// testBid();
+// bid('./wallet1.json', 100); // end current auction
 
 /*
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method setDurationTime --to cx7dd016d0694830cbac5c1eeaec4313a9edc38d34 --param _duration=60000000 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000
