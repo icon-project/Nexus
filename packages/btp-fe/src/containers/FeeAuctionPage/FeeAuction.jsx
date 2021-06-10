@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 import { Header, SubTitle, Text } from 'components/Typography';
@@ -194,6 +195,7 @@ const dataSource = [
 ];
 
 const FeeAuction = () => {
+  const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
   const [filteredData, setFilteredData] = useState(dataSource);
 
@@ -248,8 +250,10 @@ const FeeAuction = () => {
             headerColor={colors.grayAccent}
             backgroundColor={colors.darkBG}
             bodyText={'md'}
-            onRow={() => ({
-              onClick: () => {},
+            onRow={(r) => ({
+              onClick: () => {
+                push(`/auction/${r.key}`);
+              },
             })}
             pagination
           />
