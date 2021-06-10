@@ -1,28 +1,9 @@
 import styled from 'styled-components/macro';
-import { useHistory } from 'react-router-dom';
 
 import { Table } from 'components/Table';
-import { Header, Text, SubTitle } from 'components/Typography';
+import { Text, SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
-
-import backIcon from 'assets/images/arrow-icon.svg';
-
-const BackButton = styled.button`
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-
-  &:before {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 8px;
-    background: transparent center / contain no-repeat url('${backIcon}');
-    transform: rotate(90deg);
-    margin-right: 25.5px;
-  }
-`;
 
 const Info = styled.div`
   margin: 33px 0 36px;
@@ -94,12 +75,8 @@ const dataSource = [
 ];
 
 export const Details = () => {
-  const { goBack } = useHistory();
   return (
     <>
-      <BackButton type="button" onClick={goBack}>
-        <Header className="medium bold">DOT 100</Header>
-      </BackButton>
       <Info>
         <div>
           <Text className="x-small">Created date</Text>
@@ -119,7 +96,7 @@ export const Details = () => {
         </div>
         <div>
           <Text className="x-small">Next accepted bid</Text>
-          <Text className="medium">07/03/2021</Text>
+          <Text className="medium">210 ICX</Text>
         </div>
         <div>
           <Text className="x-small">Top bidder</Text>

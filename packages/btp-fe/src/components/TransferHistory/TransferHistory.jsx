@@ -6,13 +6,13 @@ import { Table } from '../Table';
 import { Tag } from '../Tag';
 import { SelectAsset } from '../Select';
 import { HistoryDetails } from './HistoryDetails';
+import { BackButton } from '../Button/BackButton';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
-import { Header, Text } from '../Typography';
+import { Text } from '../Typography';
 
 import VectorSrc from 'assets/images/vector.svg';
-import BackIconSrc from 'assets/images/arrow-icon.svg';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
@@ -88,28 +88,12 @@ const TransferHistoryStyled = styled.div`
   color: ${colors.grayText};
   width: 1120px;
 
-  .custom-select-wrapper {
-    width: 204px;
-  }
-  .back-button {
-    width: 44px;
-    height: 44px;
-    padding: 10px;
-    cursor: pointer;
-  }
-  .back-icon {
-    width: 14px;
-    height: 8px;
-    transform: rotateZ(90deg);
-  }
-
-  .back-to-tranfer {
-    margin-bottom: 31px;
-    display: inline-flex;
-  }
-
   .selector-group {
     display: flex;
+  }
+
+  .control-group {
+    margin-top: 31px;
   }
 
   ${media.md`
@@ -148,12 +132,7 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
   return (
     <TransferHistoryStyled>
       <Row>
-        <div className="back-to-tranfer">
-          <div className="back-button" onClick={() => setIsOpenHistory(false)}>
-            <img className="back-icon" src={BackIconSrc} />
-          </div>
-          <Header className="medium bold">Transfer history</Header>
-        </div>
+        <BackButton onClick={() => setIsOpenHistory(false)}>Transfer history</BackButton>
       </Row>
       <Row className="control-group">
         <Text className="medium">Viewing transfer history for</Text>

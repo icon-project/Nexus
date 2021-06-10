@@ -1,4 +1,6 @@
 import styled from 'styled-components/macro';
+
+import { BackButton } from 'components/Button/BackButton';
 import { Details } from './Details';
 import { PlaceBidForm } from './PlaceBidForm';
 
@@ -8,39 +10,49 @@ const Wrapper = styled.div`
   max-width: 1120px;
   padding: 36px 0;
   margin: auto;
-  display: flex;
-  justify-content: space-between;
 
-  .details {
-    width: 57.14%;
-  }
+  .content {
+    display: flex;
+    justify-content: space-between;
 
-  .place-bid-form {
-    width: 31.42%;
-    position: relative;
-    top: 24px;
+    .details {
+      width: 57.14%;
+    }
+
+    .place-bid-form {
+      width: 31.42%;
+      position: relative;
+      top: -24px;
+    }
   }
 
   ${media.md`
-    flex-direction: column-reverse;
     padding: 36px 16px;
 
-    .details, .place-bid-form {
-      width: 100%;
-      margin-bottom: 24px;
-      top: 0;
-    }
+    .content {
+      flex-direction: column-reverse;
+
+      .details, .place-bid-form {
+        width: 100%;
+        margin: 24px 0;
+        top: 0;
+      }
+    } 
   `};
 `;
 
 const FeeAuctionDetails = () => {
   return (
     <Wrapper>
-      <div className="details">
-        <Details />
-      </div>
-      <div className="place-bid-form">
-        <PlaceBidForm />
+      <BackButton>DOT 100</BackButton>
+
+      <div className="content">
+        <div className="details">
+          <Details />
+        </div>
+        <div className="place-bid-form">
+          <PlaceBidForm />
+        </div>
       </div>
     </Wrapper>
   );
