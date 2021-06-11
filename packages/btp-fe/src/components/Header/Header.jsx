@@ -9,10 +9,14 @@ import { Modal } from '../NotificationModal';
 import { PrimaryButton, HamburgerButton } from '../Button';
 
 import { useDispatch, useSelect } from '../../hooks/useRematch';
-import { requestAddress } from '../../connectors/ICONex/events';
+import {
+  requestAddress,
+  isICONexInstalled,
+  checkICONexInstalled,
+} from '../../connectors/ICONex/events';
 import { wallets } from '../../utils/constants';
 import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
-import { connectMetaMaskWallet, getEthereumAccounts } from '../../connectors/MetaMask';
+import { EthereumInstance } from '../../connectors/MetaMask';
 
 import { Header as Heading, SubTitle, Text } from '../Typography';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
@@ -170,11 +174,21 @@ const Header = ({ userStatus = defaultUser }) => {
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
     if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
-      getEthereumAccounts();
+      EthereumInstance.getEthereumAccounts();
     }
+  }, []);
+
+  useEffect(() => {
+    // wait after 2s for initial addICONexListener
+    setTimeout(() => {
+      checkICONexInstalled(() => {
+        setCheckingICONexInstalled(false);
+      });
+    }, 2001);
   }, []);
 
   const {
@@ -205,8 +219,10 @@ const Header = ({ userStatus = defaultUser }) => {
         setLoading(false);
       }
     } else if (selectedWallet === wallets.metamask) {
-      await connectMetaMaskWallet();
-      await getEthereumAccounts();
+      const isConnected = await EthereumInstance.connectMetaMaskWallet();
+      if (isConnected) {
+        await EthereumInstance.getEthereumAccounts();
+      }
       setLoading(false);
     }
   };
@@ -267,12 +283,15 @@ const Header = ({ userStatus = defaultUser }) => {
                   wallet={mockWallets}
                   active={selectedWallet == wallets.metamask}
                   onClick={() => handleSelectWallet(wallets.metamask)}
+                  isInstalled={EthereumInstance.isMetaMaskInstalled()}
                 />
                 <WalletSelector
                   type={wallets.iconex}
                   wallet={mockWallets}
                   active={selectedWallet == wallets.iconex}
                   onClick={() => handleSelectWallet(wallets.iconex)}
+                  isCheckingInstalled={checkingICONexInstalled}
+                  isInstalled={isICONexInstalled()}
                 />
               </div>
             </Modal>
