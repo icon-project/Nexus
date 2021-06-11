@@ -11,9 +11,7 @@ const dayData = [
   { time: '2020-10-22', value: 2 },
   { time: '2020-10-23', value: 2.5 },
   { time: '2020-10-24', value: 3 },
-  { time: '2020-11-25', value: 9 },
-  { time: '2020-11-26', value: 10 },
-  { time: '2020-11-29', value: 9.6 },
+  { time: '2020-11-25', value: 10 },
   { time: '2020-12-30', value: 8 },
   { time: '2020-12-31', value: 6 },
   { time: '2021-01-01', value: 1 },
@@ -306,9 +304,9 @@ const AreaChart = () => {
     },
     crosshair: {
       vertLine: {
-        width: 3,
-        color: 'rgba(224, 227, 235, 0.1)',
-        style: 0,
+        width: 1,
+        color: colors.warningState,
+        style: 3,
       },
       horzLine: {
         visible: false,
