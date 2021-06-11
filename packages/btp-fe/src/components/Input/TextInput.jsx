@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 import { Input } from './Input';
 import { colors } from '../Styles/Colors';
-import { mediumText, Text } from '../Typography/Text';
+import { mediumText, Text } from 'components/Typography/Text';
 
 export const StyledTextInput = styled(Input)`
   ${mediumText};
