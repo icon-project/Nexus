@@ -5,7 +5,7 @@ const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger, RESULT_CODE } = require('../../common');
 const { hexToDecimal } = require('../../common/util');
-const { saveBlock, saveTransaction, setTransactionConfirmed, getBySerialNumber } = require('./repository');
+const { saveBlock, saveTransaction, setTransactionConfirmed, getBySerialNumber, getLastBlock } = require('./repository');
 const { handleAuctionEvents } = require('./auctions');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
@@ -143,14 +143,21 @@ async function getBlockData() {
 }
 
 async function start() {
-  logger.info('Starting ICON block indexer at block %d...', blockHeight);
+  if (-1 === blockHeight) {
+    const block = await getLastBlock();
 
-  if (blockHeight < 0) {
+    if (block)
+      blockHeight = block.height + 1;
+    else
+      blockHeight = 0;
+  }
+
+  if (0 === blockHeight) {
     const block = await iconService.getLastBlock().execute();
     blockHeight = block.height;
   }
 
-  // TODO: get last block from database.
+  logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
   await getBlockData();
 
