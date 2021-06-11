@@ -45,3 +45,18 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.bids
     OWNER to postgres;
+
+-- Table: public.relays
+
+-- DROP TABLE public.relays;
+
+CREATE TABLE IF NOT EXISTS public.relays
+(
+    id bigint NOT NULL,
+    CONSTRAINT relays_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.relays
+    OWNER to postgres;
