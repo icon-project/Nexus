@@ -9,25 +9,35 @@ const requestHasAccount = () => {
   createICONexEvent(TYPES.REQUEST_HAS_ACCOUNT);
 };
 
-export const requestAddress = () => {
+export const checkICONexInstalled = (callback) => {
   requestHasAccount();
 
   return new Promise(function (resolve) {
     setTimeout(() => {
       if (window.hasICONexAccount) {
-        createICONexEvent(TYPES.REQUEST_ADDRESS);
         resolve(true);
       } else {
-        // handle if the ICONex extension is not installed
-        // https://github.com/icon-project/icon-sdk-js/issues/12#issuecomment-781446159
-        window.open(
-          'https://chrome.google.com/webstore/detail/iconex/flpiciilemghbmfalicajoolhkkenfel',
-        );
-
         resolve(false);
       }
+
+      if (callback) callback();
     }, 2000);
   });
+};
+
+export const isICONexInstalled = () => window.hasICONexAccount;
+
+// connect to the wallet
+export const requestAddress = () => {
+  if (!isICONexInstalled()) {
+    // handle if the ICONex extension is not installed
+    // https://github.com/icon-project/icon-sdk-js/issues/12#issuecomment-781446159
+    window.open(
+      'https://chrome.google.com/webstore/detail/iconex/flpiciilemghbmfalicajoolhkkenfel',
+    );
+    return;
+  }
+  createICONexEvent(TYPES.REQUEST_ADDRESS);
 };
 
 export const requestHasAddress = (address) => {

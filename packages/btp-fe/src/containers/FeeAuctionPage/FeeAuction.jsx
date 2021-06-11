@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   margin: auto;
   padding: 52px 0 31px;
 
-  p.medium {
+  & > p.medium {
     margin-bottom: 36px;
   }
 
