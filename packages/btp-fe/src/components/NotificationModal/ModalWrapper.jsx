@@ -13,6 +13,11 @@ export const ModalWrapper = () => {
   }));
 
   const memoizedSetDisplay = useCallback((param) => setDisplay(param), [setDisplay]);
+  const { children, ...others } = options;
 
-  return <Modal {...options} display={display} setDisplay={memoizedSetDisplay} />;
+  return (
+    <Modal {...others} display={display} setDisplay={memoizedSetDisplay}>
+      {children || ''}
+    </Modal>
+  );
 };

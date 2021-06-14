@@ -1,3 +1,4 @@
+import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { getBalance, sendTransaction } from './iconService';
 import { requestHasAddress } from './events';
 
@@ -71,6 +72,7 @@ const eventHandler = async (event) => {
           case signingActions.bid:
             modal.openModal({
               icon: 'xIcon',
+              children: <FailedBidContent />,
               button: {
                 text: 'Try again',
                 onClick: () => modal.setDisplay(false),
