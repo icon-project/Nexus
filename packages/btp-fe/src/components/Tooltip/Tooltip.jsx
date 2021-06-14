@@ -9,7 +9,8 @@ const Wrapper = styled.div`
   border-radius: 4px;
   border: 1px solid #312f39;
   width: ${({ width }) => `${width}px`};
-  p {
+  z-index: 101;
+  div {
     ${smallText}
     word-break: break-word;
     color: ${colors.grayText};
@@ -67,12 +68,10 @@ const Wrapper = styled.div`
   }
 `;
 
-export const Tooltip = (props) => {
-  const { children, arrowPosition, direction, width } = props;
-
+export const Tooltip = ({ arrowPosition, direction, width, children }) => {
   return (
     <Wrapper className={direction} arrowPosition={arrowPosition} width={width}>
-      <p>{children}</p>
+      <div>{children}</div>
     </Wrapper>
   );
 };

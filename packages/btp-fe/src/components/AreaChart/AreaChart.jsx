@@ -4,6 +4,7 @@ import { createChart } from 'lightweight-charts';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { Tooltip } from 'components/Tooltip';
 
 const intervals = ['D', 'W', 'M'];
 const dayData = [
@@ -178,6 +179,7 @@ const seriesesData = new Map([
 ]);
 
 const Wrapper = styled.div`
+  z-index: 0;
   .switcher {
     display: flex;
     align-items: center;
@@ -230,6 +232,21 @@ const Wrapper = styled.div`
     ${media.sm`
         width: 320px !important;
     `}
+    td {
+      div {
+        z-index: 0;
+      }
+    }
+  }
+  .area-tooltip {
+    display: block;
+    position: fixed;
+    .floating-tooltip-time {
+      font-size: 10px;
+      line-height: 16px;
+      letter-spacing: 0.75px;
+      color: ${colors.graySubText};
+    }
   }
 `;
 const AreaChart = () => {
@@ -313,10 +330,39 @@ const AreaChart = () => {
       },
     },
   });
-
+  function businessDayToString(businessDay) {
+    return businessDay.day + '/' + businessDay.month + '/' + businessDay.year;
+  }
   chart.timeScale().fitContent();
   let areaSeries = null;
-
+  chart.subscribeCrosshairMove(function (param) {
+    const toolTip = document.getElementById(`area-tooltip`);
+    const toolTipValue = document.getElementById(`floating-tooltip-value`);
+    const toolTipTime = document.getElementById(`floating-tooltip-time`);
+    if (
+      param.point === undefined ||
+      !param.time ||
+      param.point.x < 0 ||
+      param.point.x > chartElement.clientWidth ||
+      param.point.y < 0 ||
+      param.point.y > chartElement.clientHeight
+    ) {
+      if (toolTip) toolTip.style.visibility = 'hidden';
+    } else {
+      console.log(param);
+      toolTip.style.visibility = 'visible';
+      const dateStr = businessDayToString(param.time);
+      var price = param.seriesPrices.get(areaSeries);
+      toolTipValue.innerHTML = '$ ' + Math.round(100 * price) / 100;
+      toolTipTime.innerHTML = dateStr + ' 1:29:50 PM';
+      let coordinate = areaSeries.priceToCoordinate(price);
+      if (coordinate === null) {
+        return;
+      }
+      toolTip.style.left = param.point.x + 180 + 'px';
+      toolTip.style.top = param.point.y + 180 + 'px';
+    }
+  });
   function syncToInterval(interval) {
     if (areaSeries) {
       chart.removeSeries(areaSeries);
@@ -342,6 +388,12 @@ const AreaChart = () => {
   return (
     <Wrapper>
       <div ref={parentRef}></div>
+      <div id={`area-tooltip`} className="area-tooltip">
+        <Tooltip width={147} direction="left">
+          <div id="floating-tooltip-value" className="floating-tooltip-value" />
+          <div id="floating-tooltip-time" className="floating-tooltip-time"></div>
+        </Tooltip>
+      </div>
     </Wrapper>
   );
 };
