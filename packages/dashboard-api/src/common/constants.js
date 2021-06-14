@@ -23,9 +23,23 @@ const TRANSACTION_TBL = {
   deleteAt: 'delete_at',
 };
 
+const NETWORKS_CONNECTED_ICON_TBL_NAME = 'networks_connected_icon';
+const NETWORKS_CONNECTED_ICON_TBL = {
+  id: 'id',
+  nid: 'nid',
+  networkName: 'network_name',
+  logo: 'logo',
+  volume24h: 'volume_24h',
+  volumeAllTime: 'volume_all_time',
+  createAt: 'create_at',
+  updateAt: 'update_at',
+  deleteAt: 'delete_at',
+}
 module.exports = {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
   RESULT_CODE,
   NETWORK_TBL_NAME,
+  NETWORKS_CONNECTED_ICON_TBL,
+  NETWORKS_CONNECTED_ICON_TBL_NAME
 };

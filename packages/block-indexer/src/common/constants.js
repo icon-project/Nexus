@@ -20,7 +20,7 @@ const TRANSACTION_TBL = {
   createAt: 'create_at',
   updateAt: 'update_at',
   deleteAt: 'delete_at',
-
+  
 };
 
 module.exports = {

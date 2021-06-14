@@ -1,6 +1,6 @@
 'use strict';
 const { TRANSACTION_TBL_NAME } = require('../../../../block-indexer/src/common');
-const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL, NETWORKS_CONNECTED_ICON_TBL_NAME } = require('../../common');
 
 async function countNetwork() {
   const {
@@ -27,8 +27,18 @@ async function countTransaction() {
   return result.count || 0;
 }
 
+
+async function getNetworkConnectedIcon() {
+  const {rows} = await pgPool.query(
+    `SELECT * FROM ${NETWORKS_CONNECTED_ICON_TBL_NAME}`,
+  );
+  return rows;
+}
+
+
 module.exports = {
   countNetwork,
   sumTransactionAmount,
   countTransaction,
+  getNetworkConnectedIcon
 };

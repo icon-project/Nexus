@@ -10,6 +10,7 @@ async function getNetworkInfo(request, response) {
   const totalNetworks = await model.getTotalNetworks();
   const totalTransactionAmount = await model.getTotalTransactionAmount();
   const totalTransaction = await model.getTotalTransaction();
+  const networkConnectedIcon = await model.getListNetworkConnectedIcon();
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
@@ -20,6 +21,7 @@ async function getNetworkInfo(request, response) {
       },
       totalNetworks,
       totalTransaction,
+      networkConnectedIcon
     },
   });
 }
