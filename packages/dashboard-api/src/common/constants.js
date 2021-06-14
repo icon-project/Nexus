@@ -31,6 +31,8 @@ const NETWORKS_CONNECTED_ICON_TBL = {
   logo: 'logo',
   volume24h: 'volume_24h',
   volumeAllTime: 'volume_all_time',
+  mint_fee: 'mint_fee',
+  burn_fee: 'burn_fee',
   createAt: 'create_at',
   updateAt: 'update_at',
   deleteAt: 'delete_at',

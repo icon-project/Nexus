@@ -14,6 +14,8 @@ CREATE TABLE public.networks_connected_icon (
     network_name character varying(64),
     volume_24h bigint,
     volume_all_time bigint,
+    mint_fee bigint,
+    burn_fee bigint,
     create_at bigint,
     update_at bigint,
     delete_at bigint
