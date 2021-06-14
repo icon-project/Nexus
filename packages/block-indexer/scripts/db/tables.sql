@@ -60,3 +60,39 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.relays
     OWNER to postgres;
+
+-- Table: public.icon_blocks
+
+-- DROP TABLE public.icon_blocks;
+
+CREATE TABLE IF NOT EXISTS public.icon_blocks
+(
+    block_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    block_height bigint NOT NULL,
+    block_data text COLLATE pg_catalog."default" NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    CONSTRAINT icon_blocks_pkey PRIMARY KEY (block_hash)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.icon_blocks
+    OWNER to postgres;
+
+-- Table: public.edgeware_blocks
+
+-- DROP TABLE public.edgeware_blocks;
+
+CREATE TABLE IF NOT EXISTS public.edgeware_blocks
+(
+    block_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    block_height bigint NOT NULL,
+    block_data text COLLATE pg_catalog."default" NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    CONSTRAINT edgeware_blocks_pkey PRIMARY KEY (block_hash)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.edgeware_blocks
+    OWNER to postgres;

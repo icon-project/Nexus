@@ -1,11 +1,34 @@
 'use strict';
+
+const debug = require('debug')('db');
 const { v4: uuidv4 } = require('uuid');
 const { TRANSACTION_TBL_NAME, TRANSACTION_TBL, pgPool, logger } = require("../../common");
-const { debug } = require('../../common/logger');
 const { sortValuesWithPropsOrdered, propsAsString, propsCountValueString, getCurrentTimestamp } = require("../../common/util");
 
+async function saveBlock(block) {
+  try {
+    const query = 'INSERT INTO icon_blocks (block_hash, block_height, block_data, created_time) VALUES ($1, $2, $3, NOW())';
+    const values = [block.blockHash, block.height, JSON.stringify(block)];
 
-async function saveBlock(block) { }
+    await pgPool.query(query, values);
+  } catch (error) {
+    logger.error(`saveBlock fails with block ${block.height}`, { error });
+  }
+}
+
+async function getLastBlock() {
+  try {
+    const query = 'SELECT * FROM icon_blocks ORDER BY block_height DESC LIMIT 1';
+    const { rows } = await pgPool.query(query);
+
+    if (rows[0]) {
+      return JSON.parse(rows[0].block_data);
+    }
+  } catch (error) {
+    logger.error('getLastBlock fails', { error });
+  }
+}
+
 /**
  * Pre-save transaction
  * @param {*} transfer
@@ -32,7 +55,7 @@ async function saveTransaction(transactions) {
       const insertDealer = `INSERT INTO ${TRANSACTION_TBL_NAME} (${propsAsString(TRANSACTION_TBL)}) VALUES (${propsCountValueString(TRANSACTION_TBL)})`;
       const insertDealerValues = sortValuesWithPropsOrdered(trans, TRANSACTION_TBL);
       await client.query(insertDealer, insertDealerValues);
-      debug('SQL statement insert Transaction %0:', insertDealer, insertDealerValues);
+      logger.info('SQL statement insert Transaction %0:', insertDealer, insertDealerValues);
     }
     await client.query('COMMIT');
   } catch (error) {
@@ -77,11 +100,10 @@ async function getBySerialNumber(serialNumber) {
   return rows[0];
 }
 
-
-
 module.exports = {
   saveBlock,
   saveTransaction,
   getBySerialNumber,
-  setTransactionConfirmed
+  setTransactionConfirmed,
+  getLastBlock
 };
