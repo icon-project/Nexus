@@ -62,6 +62,11 @@ export const placeBid = (value, fas) => {
   signTx(transaction, options);
 };
 
+export const transfer = (tx) => {
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(tx);
+};
+
 export const signTx = (transaction = {}, options = {}) => {
   const { from = loggedInAddress, to, value } = transaction;
   const { method, params, builder } = options;
@@ -85,7 +90,6 @@ export const signTx = (transaction = {}, options = {}) => {
   tx = tx.build();
 
   const rawTx = IconConverter.toRawTransaction(tx);
-
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
