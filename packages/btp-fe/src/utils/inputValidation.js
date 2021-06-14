@@ -5,4 +5,4 @@ export const maxValue = (max, msg) => (value) =>
   isNaN(value) || +value <= +max ? undefined : msg || `Should be less than ${max}`;
 
 export const minValue = (min, msg) => (value) =>
-  !isNaN(value) || +value >= +min ? undefined : msg || `Should be greater than ${min}`;
+  !isNaN(value) && +value >= +min ? undefined : msg || `Should be greater than ${min}`;
