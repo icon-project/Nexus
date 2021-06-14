@@ -6,6 +6,9 @@ import { colors } from 'components/Styles/Colors';
 import { TextInput } from 'components/Input';
 import { PrimaryButton } from 'components/Button';
 
+import { minValue } from 'utils/inputValidation';
+import { placeBid } from '../../connectors/ICONex/iconService';
+
 const Form = styled.form`
   background-color: ${colors.grayBG};
   padding: 23px 31px 32px;
@@ -40,12 +43,11 @@ const Form = styled.form`
   }
 `;
 
-export const minValue = (min, msg) => (value) =>
-  isNaN(value) || +value >= +min ? undefined : msg || `Should be greater than ${min}`;
-
 export const PlaceBidForm = () => {
   const onSubmit = (values) => {
     console.log('🚀 ~ file: PlaceBidForm.jsx ~ line 45 ~ onSubmit ~ values', values);
+    const { bidAmount } = values;
+    if (bidAmount) placeBid(bidAmount);
   };
   return (
     <FinalForm

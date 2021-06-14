@@ -20,6 +20,11 @@ export const NETWORKS = {
     endpoint: 'http://localhost:9080/api/v3/src',
     nid: localStorage.getItem('nid') || '0xc7c937',
   },
+  cloud: {
+    name: 'Cloud',
+    endpoint: 'http://54.251.114.18:9082/api/v3',
+    nid: 3,
+  },
   yeouido: {
     name: 'Yeouido Testnet',
     endpoint: 'https://bicon.net.solidwallet.io/api/v3',
