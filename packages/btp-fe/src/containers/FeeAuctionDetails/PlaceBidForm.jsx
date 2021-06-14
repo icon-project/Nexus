@@ -58,13 +58,20 @@ export const PlaceBidForm = () => {
       });
       placeBid(bidAmount);
     }
+
+    return Promise.resolve(true);
   };
   return (
     <FinalForm
       onSubmit={onSubmit}
-      render={({ handleSubmit, valid }) => {
+      render={({ handleSubmit, valid, form }) => {
         return (
-          <Form onSubmit={handleSubmit}>
+          <Form
+            onSubmit={async (event) => {
+              await handleSubmit(event);
+              form.restart();
+            }}
+          >
             <Header className="x-small bold">Place a new bid</Header>
             <Text className="x-small">
               Minimium bid: <span>100 ICX</span>
