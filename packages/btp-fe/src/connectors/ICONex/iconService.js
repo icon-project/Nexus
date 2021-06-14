@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import IconService, {
   HttpProvider,
   IconAmount,
@@ -46,48 +48,45 @@ export const sendTransaction = async (signature) => {
 
 export const placeBid = (value, fas) => {
   const transaction = {
-    value,
     to: fas || 'cx77e574ce4b9020e6676ad6dbdb63a1ba7ca38d6d',
+    value,
   };
 
-  const icxTransactionBuilder = new CallTransactionBuilder();
-  const tx = icxTransactionBuilder
-    .from(loggedInAddress)
-    .to(fas || 'cx77e574ce4b9020e6676ad6dbdb63a1ba7ca38d6d')
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'bid',
+    params: {
+      _tokenName: 'Shark',
+    },
+  };
+
+  signTx(transaction, options);
+};
+
+export const signTx = (transaction = {}, options = {}) => {
+  const { from = loggedInAddress, to, value } = transaction;
+  const { method, params, builder } = options;
+
+  const txBuilder = builder || new IcxTransactionBuilder();
+
+  let tx = txBuilder
+    .from(from)
+    .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
     .stepLimit(IconConverter.toBigNumber(100000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
-    .timestamp(new Date().getTime() * 1000)
-    .method('bid')
-    .params({
-      _tokenName: 'Shark',
-    })
-    .build();
+    .timestamp(new Date().getTime() * 1000);
 
-  signTx(transaction, tx);
-};
-
-export const signTx = (transaction = {}, builtTx) => {
-  const { from = loggedInAddress, to, value } = transaction;
-
-  let tx = builtTx;
-
-  if (!tx) {
-    tx = new IcxTransactionBuilder()
-      .from(from)
-      .to(to)
-      .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
-      .stepLimit(IconConverter.toBigNumber(100000))
-      .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
-      .nonce(IconConverter.toBigNumber(1))
-      .version(IconConverter.toBigNumber(3))
-      .timestamp(new Date().getTime() * 1000)
-      .build();
+  if (method) {
+    tx = tx.method(method).params(params);
   }
 
+  tx = tx.build();
+
   const rawTx = IconConverter.toRawTransaction(tx);
+
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
