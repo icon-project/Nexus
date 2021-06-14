@@ -13,6 +13,12 @@ export const TYPES = {
 export const ADDRESS_LOCAL_STORAGE = 'address';
 export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
 
+export const signingActions = {
+  globalName: 'signingActions',
+  transfer: 'transfer',
+  bid: 'bid',
+};
+
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   dev: {

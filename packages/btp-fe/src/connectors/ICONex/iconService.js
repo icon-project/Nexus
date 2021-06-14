@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import IconService, {
   HttpProvider,
   IconAmount,
@@ -10,7 +8,7 @@ import IconService, {
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE } from '../constants';
+import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE, signingActions } from '../constants';
 import { requestSigning } from './events';
 import Request from './utils';
 
@@ -60,6 +58,7 @@ export const placeBid = (value, fas) => {
     },
   };
 
+  window[signingActions.globalName] = signingActions.bid;
   signTx(transaction, options);
 };
 

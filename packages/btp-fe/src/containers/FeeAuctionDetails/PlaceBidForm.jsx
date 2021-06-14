@@ -6,6 +6,7 @@ import { colors } from 'components/Styles/Colors';
 import { TextInput } from 'components/Input';
 import { PrimaryButton } from 'components/Button';
 
+import { useDispatch } from '../../hooks/useRematch';
 import { minValue } from 'utils/inputValidation';
 import { placeBid } from '../../connectors/ICONex/iconService';
 
@@ -44,10 +45,19 @@ const Form = styled.form`
 `;
 
 export const PlaceBidForm = () => {
+  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+    openModal,
+  }));
+
   const onSubmit = (values) => {
-    console.log('🚀 ~ file: PlaceBidForm.jsx ~ line 45 ~ onSubmit ~ values', values);
     const { bidAmount } = values;
-    if (bidAmount) placeBid(bidAmount);
+    if (bidAmount) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      placeBid(bidAmount);
+    }
   };
   return (
     <FinalForm
