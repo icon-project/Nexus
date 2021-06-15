@@ -67,6 +67,15 @@ export const transfer = (tx) => {
   signTx(tx);
 };
 
+export const getTransactionResult = () => {
+  return iconService
+    .getTransactionResult('0x2b0f03bc69f1f6bfbda48c624e50dcf6c31ff656f0877eebcaa5caa3c23ff28d')
+    .execute()
+    .then((rs) => {
+      console.log('🚀 ~ file: iconService.js ~ line 75 ~ .then ~ rs', rs);
+    });
+};
+
 export const signTx = (transaction = {}, options = {}) => {
   const { from = loggedInAddress, to, value } = transaction;
   const { method, params, builder } = options;
@@ -77,7 +86,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
-    .stepLimit(IconConverter.toBigNumber(100000))
+    .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
@@ -92,6 +101,7 @@ export const signTx = (transaction = {}, options = {}) => {
   const rawTx = IconConverter.toRawTransaction(tx);
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
+  console.log('🚀 ~ file: iconService.js ~ line 104 ~ signTx ~ transactionHash', transactionHash);
 
   requestSigning({
     from,
