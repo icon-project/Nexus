@@ -11,12 +11,13 @@ async function getAuctionById(auctionId) {
 
     if (rows.length > 0) {
       const auction = {
-        id: Number(rows[0].id),
+        id: rows[0].id,
         tokenName: rows[0].token_name,
-        tokenAmount: rows[0].token_amount ? Number(rows[0].token_amount) : null,
+        tokenAmount: Number(rows[0].token_amount),
         bidder: rows[0].bidder_address,
         winner: rows[0].winner_address,
         bidAmount: Number(rows[0].bid_amount),
+        winAmount: rows[0].winner_bid_amount ? Number(rows[0].winner_bid_amount) : null,
         txHash: rows[0].tx_hash,
         txHashEnded: rows[0].tx_hash_ended,
         endTime: rows[0].end_time,
@@ -45,7 +46,7 @@ async function getBidByAuctionId(auctionId) {
       for (const row of rows) {
         bids.push({
           id: row.id,
-          auctionId: Number(row.auction_id),
+          auctionId: row.auction_id,
           tokenName: row.token_name,
           currentBidder: row.current_bidder_address,
           currentBidAmount: Number(row.current_bid_amount),

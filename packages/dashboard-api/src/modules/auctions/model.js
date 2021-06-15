@@ -10,6 +10,11 @@ const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 const ICX_NUMBER = 10 ** 18;
 
+// Ref: block-indexer/src/modules/icon-indexer/auctions.js
+function createAuctionId(id) {
+  return process.env.FEE_AGGREGATION_SCORE_ADDRESS + '_' + id;
+}
+
 async function getAuctionByName(name) {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
@@ -47,7 +52,7 @@ async function getCurrentAuctions() {
 
       if (auction) {
         auctions.push({
-          id: IconConverter.toNumber(auction._id),
+          id: createAuctionId(IconConverter.toNumber(auction._id)),
           name: token.name,
           currentBidAmount: Math.floor(IconConverter.toNumber(auction._bidAmount) / ICX_NUMBER),
           availableBidAmount: Math.floor(IconConverter.toNumber(auction._tokenAmount) / ICX_NUMBER),
