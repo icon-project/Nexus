@@ -13,6 +13,7 @@
     "@hapi/joi": "^17.1.1",
     "@tiendq/http-status": "^1.0.2",
     "axios": "^0.19.2",
+    "cors": "2.8.5",
     "date-fns": "^2.15.0",
     "debug": "^4.1.1",
     "dotenv-safe": "^8.2.0",
