@@ -46,17 +46,18 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const Feebox = () => {
+export const Feebox = ({ fee }) => {
+  const { cumulativeAmount, currentAmount } = fee;
   return (
     <Wrapper className="box fee">
       <TextWithInfo hasInfo={false}>FEE</TextWithInfo>
       <div className="cumulative-amount d-flex">
         <TextWithInfo className="medium-text">Total cumulative amount</TextWithInfo>
-        <SubTitle className="medium bold">1,3948535.42</SubTitle>
+        <SubTitle className="medium bold">{cumulativeAmount.toLocaleString()}</SubTitle>
       </div>
       <div className="current-amount d-flex">
         <TextWithInfo className="medium-text">Total current amount of fee</TextWithInfo>
-        <SubTitle className="medium bold">3,49584834.42</SubTitle>
+        <SubTitle className="medium bold">{currentAmount.toLocaleString()}</SubTitle>
       </div>
       <TextWithInfo className="asset-fee">Asset fee</TextWithInfo>
       <AssetFeeTable />
