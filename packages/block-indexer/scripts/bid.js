@@ -8,8 +8,9 @@ const { IconAmount, IconConverter, HttpProvider, IconWallet, IconBuilder, Signed
 const httpProvider = new HttpProvider('http://localhost:9082/api/v3');
 const iconService = new IconService(httpProvider);
 
-// FAS 1.0.2
-const fasAddress = 'cxd426e4a2d8f9571466ceedc376fdad7d0a368ee0';
+// FAS 1.0.3
+const fasAddress = 'cx7d2d1d3b8cc5dd211fe5963e4d09b1d9672d4553';
+const tokenName = 'SampleToken1406';
 
 //     000000000000000000
 //   15000000000000000000 =   15 ICX
@@ -56,7 +57,7 @@ async function transfer() {
 */
 
 async function bid(walletFile, amount) {
-  console.log(`${walletFile} bid ${amount}`);
+  console.log(`${walletFile} bid ${amount} for ${tokenName}`);
 
   const keystore = JSON.parse(fs.readFileSync(walletFile));
   const wallet = IconWallet.loadKeystore(keystore, 'tien12345');
@@ -66,20 +67,20 @@ async function bid(walletFile, amount) {
     .from(wallet.getAddress())
     .to(fasAddress) // FAS address
     .value(IconConverter.toHex(IconAmount.of(amount, IconAmount.Unit.ICX).toLoop())) // minimum bid 100 ICX
-    .stepLimit(IconConverter.toBigNumber(10000000000))
+    .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(3))
     .version(IconConverter.toBigNumber(3))
     .timestamp((new Date()).getTime() * 1000)
     .method('bid')
     .params({
-      _tokenName: 'SampleToken020'
+      _tokenName: tokenName
     })
     .build();
 
   const signedTransaction = new SignedTransaction(txObj, wallet);
   const txHash = await iconService.sendTransaction(signedTransaction).execute();
 
-  // ./goloop rpc txresult 0x90f1b01427eb2ea440ea952f13015ebeb644d97765d135f6b7e79452fbb01393 --uri http://localhost:9082/api/v3
+  // ./goloop rpc txresult 0x21c5da8d60bc7b0f806552f7095daad5ac40f47106e96821825e861ae6ed7515 --uri http://localhost:9082/api/v3
   console.log(txHash);
 }
 
@@ -99,11 +100,38 @@ async function testBid() {
   bid('./wallet2.json', 170);
 }
 
+async function getDefaultStepCost() {
+  const { CallBuilder } = IconBuilder;
+  const callBuilder = new CallBuilder();
+
+  const call = callBuilder
+    .to('cx0000000000000000000000000000000000000000')
+    .method('getStepCosts')
+    .build();
+
+  const stepCosts = await iconService.call(call).execute();
+
+  // For sending token, it is about twice the default value.
+  return IconConverter.toBigNumber(stepCosts.default).times(2);
+}
+
 // transfer();
 // testBid();
-// bid('./wallet1.json', 100); // end current auction
+// bid('./wallet2.json', 100); // end current auction
+
+(async () => {
+  // const defaultStep = await getDefaultStepCost();
+  // console.log(defaultStep);
+
+  bid('./wallet2.json', 100); // end current auction
+})();
 
 /*
+./goloop rpc txresult 0x21c5da8d60bc7b0f806552f7095daad5ac40f47106e96821825e861ae6ed7515 --uri http://localhost:9082/api/v3
+
+
+
+
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method setDurationTime --to cx7dd016d0694830cbac5c1eeaec4313a9edc38d34 --param _duration=60000000 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000
 
 ./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cxb49c78f34202c21b4e3798b091d9a830db3a573c

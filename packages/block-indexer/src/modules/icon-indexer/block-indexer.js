@@ -137,7 +137,7 @@ async function getBlockData() {
       setTimeout(async () => await getBlockData(), 1000);
     } else {
       // Wait longer for new blocks created.
-      setTimeout(async () => await getBlockData(), 10000);
+      setTimeout(async () => await getBlockData(), 15000);
     }
   }
 }
