@@ -5,7 +5,7 @@ const { customAlphabet } = require('nanoid/async');
 const { IconConverter } = require('icon-sdk-js');
 const { logger, pgPool } = require('../../common');
 
-const AUCTION_START_PROTOTYPE = 'AuctionStart(int,str,Address,int,int)';
+const AUCTION_START_PROTOTYPE = 'AuctionStart(int,str,int,Address,int,int)';
 const AUCTION_ENDED_PROTOTYPE = 'AuctionEnded(int,str,Address,int,int,int)';
 const BID_INFO_PROTOTYPE = 'BidInfo(int,str,Address,int,Address,int)';
 const ICX_NUMBER = 10 ** 18;
@@ -14,16 +14,17 @@ const nanoid = customAlphabet('1234567890abcdef', 10);
 
 // Ref: https://stackoverflow.com/questions/42876071/how-to-save-js-date-now-in-postgresql
 async function createAuction(auction) {
-  const query = 'INSERT INTO auctions (id, tx_hash, token_name, bidder_address, bid_amount, end_time, created_time) VALUES ($1, $2, $3, $4, $5, $6, NOW())';
+  const query = 'INSERT INTO auctions (id, tx_hash, token_name, token_amount, bidder_address, bid_amount, end_time, created_time) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())';
   const endTime = new Date(auction.endTime);
-  const values = [auction.id, auction.txHash, auction.tokenName, auction.bidderAddress, auction.bidAmount, endTime.toISOString()];
+  const values = [auction.id, auction.txHash, auction.tokenName, auction.tokenAmount, auction.bidderAddress, auction.bidAmount, endTime.toISOString()];
 
   await pgPool.query(query, values);
 }
 
+// TODO: add winnerBidAmount
 async function updateEndedAuction(auction) {
-  const query = 'UPDATE auctions SET tx_hash_ended=$2, winner_address=$3, token_amount=$4, updated_time=NOW() WHERE id=$1';
-  const values = [auction.id, auction.txHash, auction.winnerAddress, auction.tokenAmount];
+  const query = 'UPDATE auctions SET tx_hash_ended=$2, winner_address=$3, winner_bid_amount=$4, updated_time=NOW() WHERE id=$1';
+  const values = [auction.id, auction.txHash, auction.winnerAddress, auction.winnerBidAmount];
 
   await pgPool.query(query, values);
 }
@@ -37,7 +38,7 @@ async function createBid(bid) {
 
 /*
 @EventLog(indexed = 3)
-protected void AuctionStart(BigInteger auctionID, String tokenName, Address firstBidder, BigInteger bidAmount, long deadline) {}
+protected void AuctionStart(BigInteger auctionID, String tokenName, BigInteger tokenAmount, Address firstBidder,  BigInteger bidAmount, long deadline).
 */
 function getAuctionStartEvent(eventLogs) {
   try {
@@ -46,9 +47,10 @@ function getAuctionStartEvent(eventLogs) {
         const auctionStart = {
           id: IconConverter.toNumber(event.indexed[1]),
           tokenName: event.indexed[2],
-          bidderAddress: event.indexed[3],
-          bidAmount: Math.floor(IconConverter.toNumber(event.data[0]) / ICX_NUMBER),
-          endTime: Math.floor(IconConverter.toNumber(event.data[1]) / 1000) // in microsecond
+          tokenAmount: Math.floor(IconConverter.toNumber(event.indexed[3]) / ICX_NUMBER),
+          bidderAddress: event.data[0],
+          bidAmount: Math.floor(IconConverter.toNumber(event.data[1]) / ICX_NUMBER),
+          endTime: Math.floor(IconConverter.toNumber(event.data[2]) / 1000) // in microsecond
         };
 
         debug('Get a AuctionStart %O', auctionStart);
@@ -72,8 +74,8 @@ function getAuctionEndedEvent(eventLogs) {
           id: IconConverter.toNumber(event.indexed[1]),
           tokenName: event.indexed[2],
           winnerAddress: event.indexed[3],
+          winnerBidAmount: Math.floor(IconConverter.toNumber(event.data[1]) / ICX_NUMBER), // bidAmount
           tokenAmount: Math.floor(IconConverter.toNumber(event.data[0]) / ICX_NUMBER),
-          bidAmount: Math.floor(IconConverter.toNumber(event.data[1]) / ICX_NUMBER),
           endTime: Math.floor(IconConverter.toNumber(event.data[2]) / 1000) // in microsecond
         };
 
