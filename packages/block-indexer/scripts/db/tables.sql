@@ -53,7 +53,15 @@ ALTER TABLE public.bids
 
 CREATE TABLE IF NOT EXISTS public.relays
 (
-    id bigint NOT NULL,
+    id character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    rank numeric NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    bonded_icx numeric NOT NULL,
+    server_status numeric NOT NULL,
+    total_transferred_tx numeric NOT NULL,
+    total_failed_tx numeric NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    updated_time timestamp without time zone NOT NULL,
     CONSTRAINT relays_pkey PRIMARY KEY (id)
 )
 

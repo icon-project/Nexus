@@ -19,7 +19,7 @@ async function getRelayList(request, response) {
       return response.sendStatus(HttpStatus.NotImplemented);
 
     case 'list':
-      return response.sendStatus(HttpStatus.NotImplemented);
+      return await getRelayDetailList(request, response);
 
     default:
       return response.sendStatus(HttpStatus.BadRequest);
@@ -34,6 +34,17 @@ async function getTotalRelay(request, response) {
     content: {
       count
     }
+  });
+}
+
+// GET /relays
+async function getRelayDetailList(request, response) {
+  const relays = await model.getRelayList();
+
+  return response.status(HttpStatus.OK).json({
+    content: [
+      ...relays
+    ]
   });
 }
 
