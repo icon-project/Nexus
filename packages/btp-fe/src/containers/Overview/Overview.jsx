@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 const Overview = () => {
   const [loading, setLoading] = useState(false);
   const {
-    app: { content },
+    app: { content = {} },
   } = useSelect(({ app }) => ({
     app: app.selectAppInfo,
   }));
@@ -27,8 +27,7 @@ const Overview = () => {
   const { getAppInfo } = useDispatch(({ app: { getAppInfo } }) => ({
     getAppInfo,
   }));
-
-  const { fee, totalNetworks, totalTransaction, volume } = content;
+  const { fee = {}, totalNetworks = 0, totalTransaction = 0, volume = 0 } = content;
 
   useEffect(() => {
     const handleGetAppInfo = async () => {

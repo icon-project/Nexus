@@ -53,11 +53,15 @@ export const Feebox = ({ fee }) => {
       <TextWithInfo hasInfo={false}>FEE</TextWithInfo>
       <div className="cumulative-amount d-flex">
         <TextWithInfo className="medium-text">Total cumulative amount</TextWithInfo>
-        <SubTitle className="medium bold">{cumulativeAmount.toLocaleString()}</SubTitle>
+        <SubTitle className="medium bold">
+          {cumulativeAmount && cumulativeAmount.toLocaleString()}
+        </SubTitle>
       </div>
       <div className="current-amount d-flex">
         <TextWithInfo className="medium-text">Total current amount of fee</TextWithInfo>
-        <SubTitle className="medium bold">{currentAmount.toLocaleString()}</SubTitle>
+        <SubTitle className="medium bold">
+          {currentAmount && currentAmount.toLocaleString()}
+        </SubTitle>
       </div>
       <TextWithInfo className="asset-fee">Asset fee</TextWithInfo>
       <AssetFeeTable />

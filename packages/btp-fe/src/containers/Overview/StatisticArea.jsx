@@ -84,7 +84,7 @@ const networks = [
   { icon: 'iconex', name: 'ICON blockchain' },
 ];
 
-export const StatisticArea = ({ fee, totalNetworks, totalTransaction }) => {
+export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 0 }) => {
   return (
     <Wrapper>
       <div className="transaction">

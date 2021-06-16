@@ -14,7 +14,7 @@ const app = {
   effects: () => ({
     async getAppInfo() {
       try {
-        const appInfo = await fetchAPI('http://54.251.114.18:8000/v1/btpnetwork/');
+        const appInfo = await fetchAPI(process.env.REACT_APP_BTP_ENDPOINT);
         this.setAppInfo(appInfo || {});
         return appInfo;
       } catch (error) {
