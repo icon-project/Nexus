@@ -12,6 +12,13 @@ const ICX_NUMBER = 10 ** 18;
 
 const nanoid = customAlphabet('1234567890abcdef', 10);
 
+// Create auction ID based on its address to make an unique ID for persistent.
+// Reason: FAS reset auction ID to 1 with new deployment.
+// https://git.baikal.io/btp-dashboard/pm/-/issues/41#note_198166
+function createAuctionId(id) {
+  return process.env.FEE_AGGREGATION_SCORE_ADDRESS + '_' + id;
+}
+
 // Ref: https://stackoverflow.com/questions/42876071/how-to-save-js-date-now-in-postgresql
 async function createAuction(auction) {
   const query = 'INSERT INTO auctions (id, tx_hash, token_name, token_amount, bidder_address, bid_amount, end_time, created_time) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())';
@@ -124,10 +131,11 @@ async function handleAuctionEvents(txResult) {
     if (auctionStart) {
       const auction = {
         ...auctionStart,
+        id: createAuctionId(auctionStart.id),
         txHash: txResult.txHash
       };
 
-      debug('Create auction %d', auction.id);
+      debug('Create auction %s', auction.id);
       await createAuction(auction);
     }
   } catch (error) {
@@ -140,10 +148,11 @@ async function handleAuctionEvents(txResult) {
     if (auctionEnded) {
       const auction = {
         ...auctionEnded,
+        id: createAuctionId(auctionEnded.id),
         txHash: txResult.txHash
       };
 
-      debug('Update ended auction %d', auction.id);
+      debug('Update ended auction %s', auction.id);
       await updateEndedAuction(auction);
     }
   } catch (error) {
@@ -157,6 +166,7 @@ async function handleAuctionEvents(txResult) {
       const bid = {
         ...bidInfo,
         id: await nanoid(),
+        auctionId: createAuctionId(bidInfo.auctionId),
         txHash: txResult.txHash
       };
 

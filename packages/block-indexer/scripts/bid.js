@@ -8,8 +8,8 @@ const { IconAmount, IconConverter, HttpProvider, IconWallet, IconBuilder, Signed
 const httpProvider = new HttpProvider('http://localhost:9082/api/v3');
 const iconService = new IconService(httpProvider);
 
-// FAS 1.0.3
-const fasAddress = 'cx7d2d1d3b8cc5dd211fe5963e4d09b1d9672d4553';
+// FAS 1.0.4
+const fasAddress = 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e';
 const tokenName = 'SampleToken1406';
 
 //     000000000000000000
@@ -116,18 +116,16 @@ async function getDefaultStepCost() {
 }
 
 // transfer();
-// testBid();
-// bid('./wallet2.json', 100); // end current auction
 
 (async () => {
   // const defaultStep = await getDefaultStepCost();
   // console.log(defaultStep);
-
+  // testBid();
   bid('./wallet2.json', 100); // end current auction
 })();
 
 /*
-./goloop rpc txresult 0x21c5da8d60bc7b0f806552f7095daad5ac40f47106e96821825e861ae6ed7515 --uri http://localhost:9082/api/v3
+./goloop rpc txresult 0x182c3c3d1b4e9b62400a2ab790570af5227ff64ce8c103a24adbdde5b50835a0 --uri http://localhost:9082/api/v3
 
 
 
@@ -141,4 +139,8 @@ async function getDefaultStepCost() {
 ./goloop rpc call --uri http://localhost:9082/api/v3 --method availableBalance --to cxb49c78f34202c21b4e3798b091d9a830db3a573c --param _tokenName=ABCDE
 
 ./goloop rpc call --uri http://localhost:9082/api/v3 --method getCurrentAuction --to cxb49c78f34202c21b4e3798b091d9a830db3a573c --param _tokenName=ABCDE
+
+errors
+
+failure: { code: '0x63', message: 'Reverted(67)' }: auction ended
 */
