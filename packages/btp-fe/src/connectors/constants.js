@@ -13,12 +13,23 @@ export const TYPES = {
 export const ADDRESS_LOCAL_STORAGE = 'address';
 export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
 
+export const signingActions = {
+  globalName: 'signingActions',
+  transfer: 'transfer',
+  bid: 'bid',
+};
+
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   dev: {
     name: 'Local',
     endpoint: 'http://localhost:9080/api/v3/src',
     nid: localStorage.getItem('nid') || '0xc7c937',
+  },
+  cloud: {
+    name: 'Cloud',
+    endpoint: 'http://54.251.114.18:9082/api/v3',
+    nid: 3,
   },
   yeouido: {
     name: 'Yeouido Testnet',

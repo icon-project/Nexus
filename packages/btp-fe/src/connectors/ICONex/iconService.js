@@ -5,10 +5,10 @@ import IconService, {
   IconConverter,
   IconBuilder,
 } from 'icon-sdk-js';
-const { IcxTransactionBuilder } = IconBuilder;
+const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE } from '../constants';
+import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE, signingActions } from '../constants';
 import { requestSigning } from './events';
 import Request from './utils';
 
@@ -16,6 +16,7 @@ const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
 
 const rawTransaction = 'rawTransaction';
+const loggedInAddress = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
@@ -43,20 +44,50 @@ export const sendTransaction = async (signature) => {
   }
 };
 
-export const signTx = (transaction = {}) => {
-  const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
+export const placeBid = (value, fas) => {
+  const transaction = {
+    to: fas || 'cx97dd9c3e40982bf23ac67b110741323a909a1495', // default FAS addess to our server
+    value,
+  };
 
-  const icxTransactionBuilder = new IcxTransactionBuilder();
-  const tx = icxTransactionBuilder
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'bid',
+    params: {
+      _tokenName: 'SangDepChai',
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.bid;
+  signTx(transaction, options);
+};
+
+export const transfer = (tx) => {
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(tx);
+};
+
+export const signTx = (transaction = {}, options = {}) => {
+  const { from = loggedInAddress, to, value } = transaction;
+  const { method, params, builder } = options;
+
+  const txBuilder = builder || new IcxTransactionBuilder();
+
+  let tx = txBuilder
     .from(from)
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
-    .stepLimit(IconConverter.toBigNumber(100000))
+    .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
-    .timestamp(new Date().getTime() * 1000)
-    .build();
+    .timestamp(new Date().getTime() * 1000);
+
+  if (method) {
+    tx = tx.method(method).params(params);
+  }
+
+  tx = tx.build();
 
   const rawTx = IconConverter.toRawTransaction(tx);
   window[rawTransaction] = rawTx;
