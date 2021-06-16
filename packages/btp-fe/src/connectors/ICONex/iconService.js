@@ -46,7 +46,7 @@ export const sendTransaction = async (signature) => {
 
 export const placeBid = (value, fas) => {
   const transaction = {
-    to: fas || 'cx77e574ce4b9020e6676ad6dbdb63a1ba7ca38d6d',
+    to: fas || 'cx97dd9c3e40982bf23ac67b110741323a909a1495', // default FAS addess to our server
     value,
   };
 
@@ -54,7 +54,7 @@ export const placeBid = (value, fas) => {
     builder: new CallTransactionBuilder(),
     method: 'bid',
     params: {
-      _tokenName: 'Shark',
+      _tokenName: 'SangDepChai',
     },
   };
 
@@ -65,15 +65,6 @@ export const placeBid = (value, fas) => {
 export const transfer = (tx) => {
   window[signingActions.globalName] = signingActions.transfer;
   signTx(tx);
-};
-
-export const getTransactionResult = () => {
-  return iconService
-    .getTransactionResult('0x2b0f03bc69f1f6bfbda48c624e50dcf6c31ff656f0877eebcaa5caa3c23ff28d')
-    .execute()
-    .then((rs) => {
-      console.log('🚀 ~ file: iconService.js ~ line 75 ~ .then ~ rs', rs);
-    });
 };
 
 export const signTx = (transaction = {}, options = {}) => {
@@ -101,7 +92,6 @@ export const signTx = (transaction = {}, options = {}) => {
   const rawTx = IconConverter.toRawTransaction(tx);
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
-  console.log('🚀 ~ file: iconService.js ~ line 104 ~ signTx ~ transactionHash', transactionHash);
 
   requestSigning({
     from,

@@ -14,7 +14,6 @@ import {
   isICONexInstalled,
   checkICONexInstalled,
 } from '../../connectors/ICONex/events';
-import { getTransactionResult } from '../../connectors/ICONex/iconService';
 import { wallets } from '../../utils/constants';
 import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
 import { EthereumInstance } from '../../connectors/MetaMask';
@@ -178,7 +177,6 @@ const Header = ({ userStatus = defaultUser }) => {
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
-    getTransactionResult();
     if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
       EthereumInstance.getEthereumAccounts();
     }
