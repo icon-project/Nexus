@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const Overview = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const {
     app: { content = {} },
   } = useSelect(({ app }) => ({
@@ -31,7 +31,6 @@ const Overview = () => {
 
   useEffect(() => {
     const handleGetAppInfo = async () => {
-      setLoading(true);
       await getAppInfo();
       setLoading(false);
     };
