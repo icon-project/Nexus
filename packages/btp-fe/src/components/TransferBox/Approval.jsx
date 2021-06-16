@@ -2,7 +2,7 @@ import { memo } from 'react';
 import styled from 'styled-components/macro';
 
 import { useDispatch } from '../../hooks/useRematch';
-import { signTx } from '../../connectors/ICONex/iconService';
+import { transfer } from '../../connectors/ICONex/iconService';
 import { hashShortener } from '../../utils/app';
 
 import { Header, Text, SubTitle } from '../Typography';
@@ -122,7 +122,7 @@ export const Approval = memo(({ setStep, values }) => {
       icon: 'loader',
       desc: 'Waiting for confirmation in your wallet.',
     });
-    signTx({ to: recipient, value: tokenAmount });
+    transfer({ to: recipient, value: tokenAmount });
   };
 
   return (

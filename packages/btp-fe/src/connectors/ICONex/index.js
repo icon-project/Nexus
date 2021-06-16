@@ -1,9 +1,10 @@
+import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { getBalance, sendTransaction } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from '../../store';
 import { wallets } from '../../utils/constants';
-import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork } from '../constants';
+import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork, signingActions } from '../constants';
 
 const { modal, account } = store.dispatch;
 
@@ -35,31 +36,73 @@ const eventHandler = async (event) => {
       try {
         await sendTransaction(payload);
 
-        modal.openModal({
-          icon: 'checkIcon',
-          desc: 'Your transaction was submitted successfully.',
-          button: {
-            text: 'Continue transfer',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
+        switch (window[signingActions.globalName]) {
+          case signingActions.bid:
+            modal.openModal({
+              icon: 'checkIcon',
+              desc: 'Congratulation! Your bid successfully placed.',
+              button: {
+                text: 'Continue bidding',
+                onClick: () => modal.setDisplay(false),
+              },
+            });
+            break;
 
-        // latency time fo fetching new balance
-        setTimeout(async () => {
-          var balance = await getBalance(address);
-          setBalance(+balance);
-        }, 2000);
+          case signingActions.transfer:
+            modal.openModal({
+              icon: 'checkIcon',
+              desc: 'Your transaction was submitted successfully.',
+              button: {
+                text: 'Continue transfer',
+                onClick: () => modal.setDisplay(false),
+              },
+            });
+
+            // latency time fo fetching new balance
+            setTimeout(async () => {
+              var balance = await getBalance(address);
+              setBalance(+balance);
+            }, 2000);
+            break;
+          default:
+            break;
+        }
       } catch (err) {
-        modal.openModal({
-          icon: 'xIcon',
-          desc: 'Your transaction has failed. Please go back and try again.',
-        });
+        switch (window[signingActions.globalName]) {
+          case signingActions.bid:
+            modal.openModal({
+              icon: 'xIcon',
+              children: <FailedBidContent />,
+              button: {
+                text: 'Try again',
+                onClick: () => modal.setDisplay(false),
+              },
+            });
+            break;
+          case signingActions.transfer:
+            modal.openModal({
+              icon: 'xIcon',
+              desc: 'Your transaction has failed. Please go back and try again.',
+              button: {
+                text: 'Back to transfer',
+                onClick: () => modal.setDisplay(false),
+              },
+            });
+            break;
+
+          default:
+            break;
+        }
       }
       break;
     case TYPES.CANCEL_SIGNING:
       modal.openModal({
         icon: 'exclamationPointIcon',
         desc: 'Transaction rejected.',
+        button: {
+          text: 'Dissmiss',
+          onClick: () => modal.setDisplay(false),
+        },
       });
       break;
 
