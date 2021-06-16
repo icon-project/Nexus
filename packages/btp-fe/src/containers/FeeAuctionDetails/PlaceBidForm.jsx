@@ -6,6 +6,10 @@ import { colors } from 'components/Styles/Colors';
 import { TextInput } from 'components/Input';
 import { PrimaryButton } from 'components/Button';
 
+import { useDispatch } from '../../hooks/useRematch';
+import { minValue } from 'utils/inputValidation';
+import { placeBid } from '../../connectors/ICONex/iconService';
+
 const Form = styled.form`
   background-color: ${colors.grayBG};
   padding: 23px 31px 32px;
@@ -40,19 +44,34 @@ const Form = styled.form`
   }
 `;
 
-export const minValue = (min, msg) => (value) =>
-  isNaN(value) || +value >= +min ? undefined : msg || `Should be greater than ${min}`;
-
 export const PlaceBidForm = () => {
+  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+    openModal,
+  }));
+
   const onSubmit = (values) => {
-    console.log('🚀 ~ file: PlaceBidForm.jsx ~ line 45 ~ onSubmit ~ values', values);
+    const { bidAmount } = values;
+    if (bidAmount) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      placeBid(bidAmount);
+    }
+
+    return Promise.resolve(true);
   };
   return (
     <FinalForm
       onSubmit={onSubmit}
-      render={({ handleSubmit, valid }) => {
+      render={({ handleSubmit, valid, form }) => {
         return (
-          <Form onSubmit={handleSubmit}>
+          <Form
+            onSubmit={async (event) => {
+              await handleSubmit(event);
+              form.restart();
+            }}
+          >
             <Header className="x-small bold">Place a new bid</Header>
             <Text className="x-small">
               Minimium bid: <span>100 ICX</span>
