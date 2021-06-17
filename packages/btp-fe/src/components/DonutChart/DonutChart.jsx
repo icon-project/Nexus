@@ -1,10 +1,26 @@
+import { useState } from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
 import styled from 'styled-components/macro';
+
+import { Tooltip } from 'components/Tooltip';
+
+import { colors } from 'components/Styles/Colors';
 import { smallText } from 'components/Typography/Text';
+
 const Wrapper = styled.div`
   ${smallText}
   width: 100%;
   display: inline-flex;
+  text {
+    position: absolute;
+    padding: 4px 8px;
+    background-color: #1d1b22;
+    border-radius: 4px;
+    border: 1px solid #312f39;
+    color: ${colors.grayText};
+    fill: ${colors.grayText};
+    font-size: 5px;
+  }
   .pie-chart {
     margin-right: 58px;
     width: 220px;
@@ -20,6 +36,15 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     width: 80px;
+  }
+  .donut-tooltip {
+    position: fixed;
+    .value {
+      font-size: 10px;
+      line-height: 16px;
+      letter-spacing: 0.75px;
+      color: ${colors.graySubText};
+    }
   }
 `;
 
@@ -41,10 +66,41 @@ const dataMock = [
   { title: 'OTHER', value: 1323154.84, color: '#5EF38C' },
 ];
 
+const setTooltipPosition = (x, y) => {
+  const tooltipStyle = document.getElementById('donut-tooltip').style;
+  x = x - 50;
+  y = y - 60;
+  tooltipStyle.left = `${x}px`;
+  tooltipStyle.top = `${y}px`;
+};
+
 const DonutChart = () => {
+  const [hovered, setHovered] = useState(null);
   return (
     <Wrapper>
-      <PieChart className="pie-chart" data={dataMock} lineWidth={50} animate />
+      <PieChart
+        className="pie-chart"
+        data={dataMock}
+        lineWidth={50}
+        animate
+        onMouseOver={(e, index) => {
+          if (index !== hovered) {
+            setTooltipPosition(e.clientX, e.clientY);
+            setHovered(index);
+          }
+        }}
+        onMouseOut={() => {
+          setHovered(null);
+        }}
+      />
+      <div id="donut-tooltip" className="donut-tooltip">
+        {typeof hovered === 'number' && (
+          <Tooltip width={100} direction="bottom">
+            <div>{dataMock[hovered].title}</div>
+            <div className="value">${dataMock[hovered].value}</div>
+          </Tooltip>
+        )}
+      </div>
       <table className="desc">
         <tbody>
           {dataMock.map(({ title, color, value }) => {

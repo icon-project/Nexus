@@ -104,7 +104,7 @@ export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 
 
       <div className="networks box">
         <div className="amount-of-networks">
-          <TextWithInfo>NETWORKS CONNECTED</TextWithInfo>
+          <TextWithInfo direction="right">NETWORKS CONNECTED</TextWithInfo>
           <Header className="small bold value">{totalNetworks}</Header>
         </div>
 
