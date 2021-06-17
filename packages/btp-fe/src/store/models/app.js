@@ -1,9 +1,10 @@
 import { fetchAPI } from 'utils/fetch';
-import { getAuctions } from 'services/btpServices';
+import { getAuctions, getAuctionDetails } from 'services/btpServices';
 const app = {
   state: {
     appInfo: {},
     auctions: [],
+    currentAuction: {},
   },
   reducers: {
     setAppInfo(state, payload) {
@@ -16,6 +17,12 @@ const app = {
       return {
         ...state,
         auctions,
+      };
+    },
+    setAuction(state, auction = {}) {
+      return {
+        ...state,
+        currentAuction: auction,
       };
     },
   },
@@ -50,6 +57,15 @@ const app = {
         console.log(error);
       }
     },
+    async getAuctionDetails(auctionId) {
+      try {
+        const auction = await getAuctionDetails(auctionId);
+        this.setAuction(auction.content);
+        return auction;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   }),
   selectors: (slice) => ({
     selectAppInfo() {
@@ -57,6 +73,9 @@ const app = {
     },
     selectAuctions() {
       return slice((state) => state.auctions);
+    },
+    selectCurrentAuction() {
+      return slice((state) => state.currentAuction);
     },
   }),
 };

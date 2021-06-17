@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
 import styled from 'styled-components/macro';
+import { useLocation } from 'react-router-dom';
+
+import { useDispatch, useSelect } from 'hooks/useRematch';
 
 import { BackButton } from 'components/Button/BackButton';
 import { Details } from './Details';
@@ -42,13 +46,28 @@ const Wrapper = styled.div`
 `;
 
 const FeeAuctionDetails = () => {
+  const location = useLocation();
+  const { id } = location.state;
+
+  const { auction } = useSelect(({ app }) => ({
+    auction: app.selectCurrentAuction,
+  }));
+
+  const { getAuctionDetails } = useDispatch(({ app: { getAuctionDetails } }) => ({
+    getAuctionDetails,
+  }));
+
+  useEffect(() => {
+    if (id) getAuctionDetails(id);
+  }, [getAuctionDetails, id]);
+
   return (
     <Wrapper>
-      <BackButton>DOT 100</BackButton>
+      <BackButton>{auction.name}</BackButton>
 
       <div className="content">
         <div className="details">
-          <Details />
+          <Details auction={auction} />
         </div>
         <div className="place-bid-form">
           <PlaceBidForm />

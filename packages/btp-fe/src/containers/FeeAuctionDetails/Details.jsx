@@ -32,7 +32,7 @@ const StyledTable = styled(Table)`
 const columns = [
   {
     title: 'Bidder',
-    dataIndex: 'key',
+    dataIndex: 'bidder',
     width: '36.88%',
   },
   {
@@ -42,76 +42,50 @@ const columns = [
   },
   {
     title: 'Time',
-    dataIndex: 'time',
+    dataIndex: 'createdTime',
     width: '38.74%',
   },
 ];
-const dataSource = [
-  {
-    key: '0x003F...C6cf',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf1',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf2',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf3',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf4',
-    amount: '200',
-    time: '50min ago',
-  },
-];
 
-export const Details = () => {
+export const Details = ({ auction }) => {
+  const { bids, createdTime, endTime, availableBidAmount, currentBidAmount, topBidder } = auction;
   return (
     <>
       <Info>
         <div>
           <Text className="x-small">Created date</Text>
-          <Text className="medium">07/03/2021</Text>
+          <Text className="medium">{createdTime}</Text>
         </div>
         <div>
           <Text className="x-small">Expiration date</Text>
-          <Text className="medium">07/03/2021</Text>
+          <Text className="medium">{endTime}</Text>
         </div>
         <div>
           <Text className="x-small">Available bid amount</Text>
-          <Text className="medium">200 ICX</Text>
+          <Text className="medium">{availableBidAmount} ICX</Text>
         </div>
         <div>
           <Text className="x-small">Current highest bid</Text>
-          <Text className="medium">210 ICX</Text>
+          <Text className="medium">{currentBidAmount} ICX</Text>
         </div>
         <div>
           <Text className="x-small">Next accepted bid</Text>
-          <Text className="medium">210 ICX</Text>
+          <Text className="medium">{currentBidAmount + currentBidAmount * 0.1} ICX</Text>
         </div>
         <div>
           <Text className="x-small">Top bidder</Text>
-          <Text className="medium">0x003F...C6cf</Text>
+          <Text className="medium">{topBidder}</Text>
         </div>
       </Info>
 
       <SubTitle className="medium bold">Bid history</SubTitle>
       <StyledTable
+        rowKey="id"
         columns={columns}
-        dataSource={dataSource}
+        dataSource={bids}
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
         bodyText={'md'}
-        pagination
       />
     </>
   );

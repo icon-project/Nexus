@@ -188,7 +188,7 @@ const FeeAuction = () => {
             bodyText={'md'}
             onRow={(r) => ({
               onClick: () => {
-                push(`/auction/${r.key}`);
+                push({ pathname: `/auction/${r.id}`, state: { id: r.id } });
               },
             })}
           />
