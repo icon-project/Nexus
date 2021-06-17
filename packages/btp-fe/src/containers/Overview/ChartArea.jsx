@@ -48,14 +48,16 @@ export const ChartArea = () => {
   return (
     <Wrapper>
       <div className="chart">
-        <TextWithInfo>VOLUME</TextWithInfo>
+        <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
         <Header className="medium bold inline">
           $9,672,047,464.01 <UpDownPercent up percent="9.55%" />
         </Header>
         <ChartBox />
       </div>
       <div className="chart">
-        <TextWithInfo>VALUE MINT</TextWithInfo>
+        <TextWithInfo tooltip="Total amount of mint transacted via BTP in $" width={300}>
+          VALUE MINT
+        </TextWithInfo>
         <Header className="medium bold inline">
           $892,797,895.53 <UpDownPercent up percent="9.55%" />
         </Header>
