@@ -11,6 +11,16 @@ const Wrapper = styled.div`
   ${smallText}
   width: 100%;
   display: inline-flex;
+  text {
+    position: absolute;
+    padding: 4px 8px;
+    background-color: #1d1b22;
+    border-radius: 4px;
+    border: 1px solid #312f39;
+    color: ${colors.grayText};
+    fill: ${colors.grayText};
+    font-size: 5px;
+  }
   .pie-chart {
     margin-right: 58px;
     width: 220px;
@@ -74,8 +84,10 @@ const DonutChart = () => {
         lineWidth={50}
         animate
         onMouseOver={(e, index) => {
-          setTooltipPosition(e.clientX, e.clientY);
-          setHovered(index);
+          if (index !== hovered) {
+            setTooltipPosition(e.clientX, e.clientY);
+            setHovered(index);
+          }
         }}
         onMouseOut={() => {
           setHovered(null);
