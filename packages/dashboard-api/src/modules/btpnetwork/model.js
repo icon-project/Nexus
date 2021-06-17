@@ -1,12 +1,14 @@
 'use strict';
 
 const { logger } = require('../../common');
+const { updateVolume24hVolumeAllTime } =  require('./network')
 const IconService = require('icon-sdk-js');
-const { countNetwork, sumTransactionAmount, countTransaction, getNetworkConnectedIcon } = require('./repository');
+const { countNetwork, sumTransactionAmount, countTransaction, getNetworkInfo, getTokensVolume24h, getTokenVolumeAllTime} = require('./repository');
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.NODE_URL);
 const iconService = new IconService(provider);
+
 
 async function getAmountFeeAggregationSCORE() {
   const { CallBuilder } = IconBuilder;
@@ -75,7 +77,11 @@ async function getTotalTransaction() {
 
 async function getListNetworkConnectedIcon() {
   try {
-    return getNetworkConnectedIcon();
+    const networks = await getNetworkInfo();
+    const tokensVolume24h = await getTokensVolume24h();
+    const tokensVolumeAllTime = await getTokenVolumeAllTime();
+
+    return updateVolume24hVolumeAllTime(networks, tokensVolume24h, tokensVolumeAllTime);
   } catch (err) {
     logger.error(err, '"getListNetworkConnectedIcon" failed while getting total transaction');
     throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
@@ -87,5 +93,5 @@ module.exports = {
   getTotalNetworks,
   getTotalTransactionAmount,
   getTotalTransaction,
-  getListNetworkConnectedIcon
+  getListNetworkConnectedIcon,
 };

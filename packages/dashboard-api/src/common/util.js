@@ -1,3 +1,5 @@
+const { func } = require("@hapi/joi");
+
 function propsAsString(object) {
   return Object.keys(object)
     .map(function (key) {
@@ -28,10 +30,16 @@ function hexToDecimal(hex) {
   return parseInt(hex.toString(16), 16);
 }
 
+function coinToUSD(token_name, number_token) {
+  // TODO: using api in coinmarketcap
+  return Math.floor(Math.random() * 1000) + number_token;
+}
+
 module.exports = {
   propsAsString,
   propsCountValueString,
   sortValuesWithPropsOrdered,
   getCurrentTimestamp,
   hexToDecimal,
+  coinToUSD,
 };

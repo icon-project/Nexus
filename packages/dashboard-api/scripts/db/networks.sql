@@ -1,24 +1,9 @@
-CREATE TABLE Networks (
-   Id char varying(30) PRIMARY KEY,
-   name char varying(200) UNIQUE NOT NULL,
-   Logo char varying(300),
-   Create_At TIMESTAMP,
-   Update_At TIMESTAMP,
-   Delete_At TIMESTAMP
+CREATE TABLE public.networks (
+    name character varying(4000) NOT NULL,
+    id character varying NOT NULL,
+    path character varying(100),
+    url character varying(100)
 );
 
-CREATE TABLE public.networks_connected_icon (
-    id bigint NOT NULL,
-    nid bigint,
-    logo character varying(300),
-    network_name character varying(64),
-    volume_24h bigint,
-    volume_all_time bigint,
-    mint_fee bigint,
-    burn_fee bigint,
-    create_at bigint,
-    update_at bigint,
-    delete_at bigint
-);
 
 SELECT SUM(value) FROM Transactions WHERE Confirmed = true
