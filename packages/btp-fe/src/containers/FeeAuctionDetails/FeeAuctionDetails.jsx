@@ -69,7 +69,7 @@ const FeeAuctionDetails = () => {
           <Details auction={auction} />
         </div>
         <div className="place-bid-form">
-          <PlaceBidForm />
+          <PlaceBidForm currentBidAmount={auction.currentBidAmount} />
         </div>
       </div>
     </Wrapper>
