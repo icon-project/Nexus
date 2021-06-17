@@ -7,8 +7,8 @@ import { PlaceBidForm } from './PlaceBidForm';
 import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
-  max-width: 1120px;
-  padding: 36px 0;
+  max-width: 1152px;
+  padding: 36px 16px;
   margin: auto;
 
   .content {
