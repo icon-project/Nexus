@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
+import { hashShortener } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
@@ -100,7 +104,7 @@ const EmptySearch = styled.div`
 const columns = [
   {
     title: 'Auction ID',
-    dataIndex: 'id',
+    dataIndex: 'shortedId',
   },
   {
     title: 'Auction name',
@@ -119,6 +123,19 @@ const columns = [
     dataIndex: 'endTime',
   },
 ];
+
+const formatData = (data = []) => {
+  return data.map((d) => {
+    const { id, endTime, ...ots } = d;
+
+    return {
+      ...ots,
+      id,
+      shortedId: hashShortener(id),
+      endTime: dayjs(endTime).fromNow(true) + ' left',
+    };
+  });
+};
 
 const FeeAuction = () => {
   const { push } = useHistory();
@@ -158,8 +175,8 @@ const FeeAuction = () => {
         <>
           {keySearch ? (
             <Text className="medium">
-              There’{isPlural ? 're' : 's'} {filteredData.length} result{isPlural ? 's' : ''} for
-              DOT 100
+              There’{isPlural ? 're' : 's'} {filteredData.length} result{isPlural ? 's' : ''} for{' '}
+              {keySearch}
             </Text>
           ) : (
             <div className="total-available">
@@ -182,7 +199,7 @@ const FeeAuction = () => {
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={filteredData}
+            dataSource={formatData(filteredData)}
             headerColor={colors.grayAccent}
             backgroundColor={colors.darkBG}
             bodyText={'md'}

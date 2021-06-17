@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import { Table } from 'components/Table';
 import { Text, SubTitle } from 'components/Typography';
@@ -59,7 +60,6 @@ const formatData = (data = {}) => {
     endTime: dayjs(endTime).format('DD/MM/YYYY'),
     topBidder: hashShortener(topBidder),
     bids: bids.map((bid) => {
-      dayjs.extend(relativeTime);
       return {
         ...bid,
         bidder: hashShortener(bid.bidder),
