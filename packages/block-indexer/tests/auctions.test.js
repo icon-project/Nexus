@@ -55,12 +55,16 @@ const txResult = {
     {
       scoreAddress: 'cx8ca6ca89fdf3ce6e77b9531b66da51a455be7367', // FAS
       indexed: [
-        'AuctionStart(int,str,Address,int,int)',
-        '0x2',
+        'AuctionStart(int,str,int,Address,int,int)',
+        '0x1',
         'SampleToken020',
-        'hx774ca45c762872ac6dd4780784e279ceb389dec9'
+        '0x56bc75e2d63100000'
       ],
-      data: [ '0x56bc75e2d63100000', '0x5c3e8d639980d' ]
+      data: [
+        'hx774ca45c762872ac6dd4780784e279ceb389dec9',
+        '0x56bc75e2d63100000',
+        '0x5c4b6f8674b0e'
+      ]
     },
     {
       scoreAddress: 'cx8ca6ca89fdf3ce6e77b9531b66da51a455be7367',
@@ -85,11 +89,12 @@ test('should return AuctionStart event from tx result', async () => {
 
   // console.log(auctionStart);
   expect(auctionStart).toMatchObject({
-    id: 2,
+    id: 1,
     tokenName: 'SampleToken020',
+    tokenAmount: 100,
     bidderAddress: 'hx774ca45c762872ac6dd4780784e279ceb389dec9',
     bidAmount: 100,
-    endTime: 1622779677480
+    endTime: 1623665014164
   });
 });
 
@@ -101,8 +106,8 @@ test('should return AuctionEnded event from tx result', async () => {
     id: 1,
     tokenName: 'SampleToken020',
     winnerAddress: 'hx774ca45c762872ac6dd4780784e279ceb389dec9',
+    winnerBidAmount: 115,
     tokenAmount: 100,
-    bidAmount: 115,
     endTime: 1622779377480
   });
 });
