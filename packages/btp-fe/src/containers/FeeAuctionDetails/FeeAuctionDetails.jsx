@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from 'styled-components/macro';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 
@@ -46,8 +46,7 @@ const Wrapper = styled.div`
 `;
 
 const FeeAuctionDetails = () => {
-  const location = useLocation();
-  const { id } = location.state;
+  const { id } = useParams();
 
   const { auction } = useSelect(({ app }) => ({
     auction: app.selectCurrentAuction,
