@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
+import { useDispatch, useSelect } from 'hooks/useRematch';
+
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { SortSelect } from 'components/Select';
@@ -98,118 +100,51 @@ const EmptySearch = styled.div`
 const columns = [
   {
     title: 'Auction ID',
-    dataIndex: 'key',
-    width: '12.5%',
+    dataIndex: 'id',
   },
   {
     title: 'Auction name',
     dataIndex: 'name',
-    width: '15.18%',
   },
   {
     title: 'Bid amount',
-    dataIndex: 'amount',
-    width: '15.18%',
+    dataIndex: 'availableBidAmount',
   },
   {
     title: 'Current highest bid (ICX)',
-    dataIndex: 'highest',
-    width: '20%',
-  },
-  {
-    title: 'My bid',
-    dataIndex: 'mybid',
-    width: '20%',
+    dataIndex: 'currentBidAmount',
   },
   {
     title: 'Expiration',
-    dataIndex: 'expiration',
-    width: '17.14%',
-  },
-];
-const dataSource = [
-  {
-    key: 191,
-    name: 'DOT 100',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 192,
-    name: 'DOT 100',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 193,
-    name: 'DOT 101',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 194,
-    name: 'DOT 102',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 195,
-    name: 'DOT 103',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 196,
-    name: 'DOT 104',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 197,
-    name: 'DOT 105',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 198,
-    name: 'DOT 100',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
+    dataIndex: 'endTime',
   },
 ];
 
 const FeeAuction = () => {
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const [filteredData, setFilteredData] = useState(dataSource);
+  const { auctions } = useSelect(({ app }) => ({
+    auctions: app.selectAuctions,
+  }));
+  const [filteredData, setFilteredData] = useState(auctions);
+
+  const { getAuctions } = useDispatch(({ app: { getAuctions } }) => ({
+    getAuctions,
+  }));
+
+  useEffect(() => {
+    getAuctions();
+  }, [getAuctions]);
 
   useEffect(() => {
     if (keySearch) {
       setFilteredData(
-        dataSource.filter((data) =>
-          data.name.toLowerCase().includes(keySearch.trim().toLowerCase()),
-        ),
+        auctions.filter((data) => data.name.toLowerCase().includes(keySearch.trim().toLowerCase())),
       );
     } else {
-      setFilteredData(dataSource);
+      setFilteredData(auctions);
     }
-  }, [keySearch]);
+  }, [keySearch, auctions]);
 
   const isPlural = filteredData.length > 1;
 
@@ -245,6 +180,7 @@ const FeeAuction = () => {
             <SortSelect />
           </div>
           <Table
+            rowKey="id"
             columns={columns}
             dataSource={filteredData}
             headerColor={colors.grayAccent}
@@ -255,7 +191,6 @@ const FeeAuction = () => {
                 push(`/auction/${r.key}`);
               },
             })}
-            pagination
           />
         </>
       ) : (
