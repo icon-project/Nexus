@@ -59,13 +59,15 @@ const formatData = (data = {}) => {
     createdTime: dayjs(createdTime).format('DD/MM/YYYY'),
     endTime: dayjs(endTime).format('DD/MM/YYYY'),
     topBidder: hashShortener(topBidder),
-    bids: bids.map((bid) => {
-      return {
-        ...bid,
-        bidder: hashShortener(bid.bidder),
-        createdTime: dayjs(bid.createdTime).fromNow(),
-      };
-    }),
+    bids: bids
+      .map((bid) => {
+        return {
+          ...bid,
+          bidder: hashShortener(bid.bidder),
+          createdTime: dayjs(bid.createdTime).fromNow(),
+        };
+      })
+      .reverse(),
   };
 };
 

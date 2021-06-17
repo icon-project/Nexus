@@ -138,6 +138,7 @@ const formatData = (data = []) => {
 };
 
 const FeeAuction = () => {
+  const [loading, setLoading] = useState(true);
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
   const { auctions } = useSelect(({ app }) => ({
@@ -150,7 +151,9 @@ const FeeAuction = () => {
   }));
 
   useEffect(() => {
-    getAuctions();
+    getAuctions().then(() => {
+      setLoading(false);
+    });
   }, [getAuctions]);
 
   useEffect(() => {
@@ -171,7 +174,7 @@ const FeeAuction = () => {
         <Header className="medium bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
-      {filteredData.length > 0 ? (
+      {filteredData.length > 0 || loading ? (
         <>
           {keySearch ? (
             <Text className="medium">
