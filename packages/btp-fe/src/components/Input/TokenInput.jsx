@@ -47,7 +47,7 @@ export const TokenInput = ({
   initalInputDisplay,
   isCurrent,
   value,
-  onBlur,
+  onBlur = () => {},
   meta = {},
   ...props
 }) => {

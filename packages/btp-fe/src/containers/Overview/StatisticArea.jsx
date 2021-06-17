@@ -84,7 +84,7 @@ const networks = [
   { icon: 'iconex', name: 'ICON blockchain' },
 ];
 
-export const StatisticArea = () => {
+export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 0 }) => {
   return (
     <Wrapper>
       <div className="transaction">
@@ -95,17 +95,17 @@ export const StatisticArea = () => {
         </div>
         <div className="box transaction">
           <TextWithInfo hasInfo={false}>TRANSACTIONS</TextWithInfo>
-          <Header className="small bold value">1,115.42 M</Header>
+          <Header className="small bold value">{totalTransaction}</Header>
           <UpDownPercent up percent="12.22%" />
         </div>
       </div>
 
-      <Feebox />
+      <Feebox fee={fee} />
 
       <div className="networks box">
         <div className="amount-of-networks">
           <TextWithInfo direction="right">NETWORKS CONNECTED</TextWithInfo>
-          <Header className="small bold value">3</Header>
+          <Header className="small bold value">{totalNetworks}</Header>
         </div>
 
         <div className="network-list">

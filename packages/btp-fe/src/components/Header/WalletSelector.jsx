@@ -3,6 +3,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
 import { Text } from '../Typography';
+import { Loader } from '../Loader';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -44,11 +45,26 @@ const StyledWalletItem = styled.button`
   `};
 `;
 
-export const WalletSelector = ({ wallet, type, active, onClick }) => {
+export const WalletSelector = ({
+  wallet,
+  type,
+  active,
+  onClick,
+  isInstalled,
+  isCheckingInstalled,
+}) => {
   return (
-    <StyledWalletItem className="wallet-selector" autoFocus={active} onClick={onClick}>
+    <StyledWalletItem
+      className="wallet-selector"
+      autoFocus={active}
+      onClick={isCheckingInstalled ? () => {} : onClick}
+    >
       <Avatar src={wallet[type].icon} size={30} />
-      <Text className="medium wallet-title">{wallet[type].title}</Text>
+      <Text className="medium wallet-title">
+        {!isInstalled && !isCheckingInstalled && 'Install '}
+        {wallet[type].title}
+      </Text>
+      {isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
       {active && <CheckOutlined />}
     </StyledWalletItem>
   );

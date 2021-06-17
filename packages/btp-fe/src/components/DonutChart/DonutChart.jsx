@@ -69,7 +69,7 @@ const dataMock = [
 const setTooltipPosition = (x, y) => {
   const tooltipStyle = document.getElementById('donut-tooltip').style;
   x = x - 50;
-  y = y - 55;
+  y = y - 60;
   tooltipStyle.left = `${x}px`;
   tooltipStyle.top = `${y}px`;
 };

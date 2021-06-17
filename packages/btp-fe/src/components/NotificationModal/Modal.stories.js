@@ -1,4 +1,6 @@
 import { Modal } from './Modal';
+import { FailedBidContent } from './FailedBidContent';
+
 export default {
   title: 'Components/Notification Modal',
   component: Modal,
@@ -24,10 +26,17 @@ const FailureTemplate = (args) => (
   />
 );
 
+const FailedBidTemplate = (args) => (
+  <Modal icon="xIcon" button={{ text: 'Try again' }} display {...args}>
+    <FailedBidContent />
+  </Modal>
+);
+
 const WaitingTemplate = () => (
   <Modal icon="loader" desc="Waiting for confirmation in your wallet." width="325px" display />
 );
 
 export const Success = SuccessTemplate.bind({});
 export const Failure = FailureTemplate.bind({});
+export const FailureBid = FailedBidTemplate.bind({});
 export const Waiting = WaitingTemplate.bind({});

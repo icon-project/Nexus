@@ -1,22 +1,30 @@
-import { push } from 'connected-react-router';
+import { fetchAPI } from 'utils/fetch';
 const app = {
   state: {
-    isFirstLoad: false,
+    appInfo: {},
   },
   reducers: {
-    setFirstLoad(state, payload) {
+    setAppInfo(state, payload) {
       return {
         ...state,
-        isFirstLoad: payload,
+        appInfo: payload,
       };
     },
   },
-  effects: (dispatch) => ({
-    async navigateExample() {
-      dispatch(push('/login'));
+  effects: () => ({
+    async getAppInfo() {
+      try {
+        const appInfo = await fetchAPI(process.env.REACT_APP_BTP_ENDPOINT);
+        this.setAppInfo(appInfo || {});
+        return appInfo;
+      } catch (error) {
+        console.log(error);
+      }
     },
-    async getLocation(payload, rootState) {
-      return rootState.router.location;
+  }),
+  selectors: (slice) => ({
+    selectAppInfo() {
+      return slice((state) => state.appInfo);
     },
   }),
 };
