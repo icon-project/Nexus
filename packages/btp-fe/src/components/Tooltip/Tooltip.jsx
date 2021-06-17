@@ -71,7 +71,7 @@ const Wrapper = styled.div`
 export const Tooltip = ({ arrowPosition, direction, width, children }) => {
   return (
     <Wrapper className={direction} arrowPosition={arrowPosition} width={width}>
-      <div>{children}</div>
+      <div>{children || 'Default tooltip message'}</div>
     </Wrapper>
   );
 };

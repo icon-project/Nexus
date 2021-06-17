@@ -349,7 +349,6 @@ const AreaChart = () => {
     ) {
       if (toolTip) toolTip.style.visibility = 'hidden';
     } else {
-      console.log(param);
       toolTip.style.visibility = 'visible';
       const dateStr = businessDayToString(param.time);
       var price = param.seriesPrices.get(areaSeries);

@@ -16,22 +16,32 @@ const StyledHeading = styled(SubTitle)`
     align-items: center;
   }
   .icon-with-tooltip:hover .left {
-    visibility: visible;
+    display: initial;
   }
   .left {
-    visibility: hidden;
+    display: none;
     margin-left: 38.42px;
+  }
+  .right {
+    display: none;
   }
 `;
 
-export const TextWithInfo = ({ children, hasInfo = true, className, tooltip, width }) => {
+export const TextWithInfo = ({
+  children,
+  hasInfo = true,
+  className,
+  tooltip,
+  width,
+  direction = 'left',
+}) => {
   return (
     <StyledHeading className={`small bold ${className}`}>
       {children}
       {hasInfo && (
         <div className="icon-with-tooltip">
           <img src={infoIcon} alt="icon" />
-          <Tooltip width={width} direction="left">
+          <Tooltip width={width} direction={direction}>
             {tooltip}
           </Tooltip>
         </div>
