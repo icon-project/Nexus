@@ -37,41 +37,12 @@ const TRANSACTION_TBL = {
   deleteAt: 'delete_at',
 };
 
-const NETWORKS_CONNECTED_ICON_TBL_NAME = 'networks_connected_icon';
-const NETWORKS_CONNECTED_ICON_TBL = {
-  id: 'id',
-  nid: 'nid',
-  networkName: 'network_name',
-  logo: 'logo',
-  volume24h: 'volume_24h',
-  volumeAllTime: 'volume_all_time',
-  mint_fee: 'mint_fee',
-  burn_fee: 'burn_fee',
-  createAt: 'create_at',
-  updateAt: 'update_at',
-  deleteAt: 'delete_at',
-}
-
-
-const NETWORKS_TBL = {
-  id: 'id',
-  name: 'name',
-  path: 'path',
-  url: 'url'
-}
-const NUMBER_NETWORK = 4
-
 module.exports = {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
   RESULT_CODE,
   NETWORK_TBL_NAME,
-  NETWORKS_TBL,
-  NETWORKS_CONNECTED_ICON_TBL,
-  NETWORKS_CONNECTED_ICON_TBL_NAME,
   CURRENCY_IDs,
   CURRENCIES,
   COINs,
 };
-
-
