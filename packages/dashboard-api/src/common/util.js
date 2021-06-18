@@ -1,8 +1,12 @@
 'use strict';
 
-const rp = require('request-promise');
 const { logger } = require('./index');
+const axios = require('axios');
 
+const COIN_MARKET_CAP_URL =
+  process.env.PRO_COIN_MARKETCAP_API_URL || process.env.SANDBOX_COIN_MARKETCAP_API_URL;
+const COIN_MARKET_CAP_KEY =
+  process.env.PRO_COIN_MARKETCAP_API_KEY || process.env.SANDBOX_COIN_MARKETCAP_API_KEY;
 function propsAsString(object) {
   return Object.keys(object)
     .map(function (key) {
@@ -42,19 +46,20 @@ async function getCoinInfo(coins) {
   if (Array.isArray(coins)) {
     coinNames = coins.join(',');
   }
-  const requestOptions = {
-    method: 'GET',
-    uri: `${process.env.COIN_MARKETCAP_API_URL}/cryptocurrency/info?symbol=${coinNames}`,
-    headers: {
-      'X-CMC_PRO_API_KEY': process.env.COIN_MARKETCAP_KEY,
-    },
-  };
+
   try {
-    let response = JSON.parse(await rp(requestOptions));
-    if (response.status.error_code != 0) {
-      logger.error('API call error:', response.status.error_message);
+    let { data } = await axios.get(
+      `${COIN_MARKET_CAP_URL}/cryptocurrency/info?symbol=${coinNames}`,
+      {
+        headers: {
+          'X-CMC_PRO_API_KEY': COIN_MARKET_CAP_KEY,
+        },
+      },
+    );
+    if (data.status.error_code != 0) {
+      logger.error('API call error:', data.status.error_message);
     }
-    return response.data || {};
+    return data.data || {};
   } catch (error) {
     logger.error('API call error:', error.message);
     return {};
@@ -82,22 +87,21 @@ async function exchangeToFiat(coinName, fiatNames, amount) {
   coinName = coinName.toUpperCase();
   const coinInfo = (await getCoinInfo([coinName]))[coinName];
 
-  const requestOptions = {
-    method: 'GET',
-    uri: `${process.env.COIN_MARKETCAP_API_URL}/tools/price-conversion?amount=${amount}&convert=${fiatString}&id=${coinInfo.id}`,
-    headers: {
-      'X-CMC_PRO_API_KEY': process.env.COIN_MARKETCAP_KEY,
-    },
-  };
-
   try {
-    let response = JSON.parse(await rp(requestOptions));
-    if (response.status.error_code != 0) {
-      logger.error('API call error:', response.status.error_message);
+    let { data } = await axios.get(
+      `${COIN_MARKET_CAP_URL}/tools/price-conversion?amount=${amount}&convert=${fiatString}&id=${coinInfo.id}`,
+      {
+        headers: {
+          'X-CMC_PRO_API_KEY': COIN_MARKET_CAP_KEY,
+        },
+      },
+    );
+    if (data.status.error_code != 0) {
+      logger.error('API call error:', data.status.error_message);
     }
 
-    if (response.data && response.data[coinInfo.id]) {
-      let pricingInfos = response.data[coinInfo.id].quote;
+    if (data.data) {
+      let pricingInfos = data.data[coinInfo.id] ? data.data[coinInfo.id].quote : data.data.quote;
       for (const key in pricingInfos) {
         prices[key] = pricingInfos[key].price;
       }
