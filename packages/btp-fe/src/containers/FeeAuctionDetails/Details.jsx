@@ -53,6 +53,7 @@ const columns = [
 ];
 
 const formatData = (data = {}) => {
+  if (Object.keys(data).length === 0) return data;
   const { createdTime, endTime, topBidder, bids = [], ...ots } = data;
   return {
     ...ots,
@@ -101,7 +102,9 @@ export const Details = ({ auction }) => {
         </div>
         <div>
           <Text className="x-small">Next accepted bid</Text>
-          <Text className="medium">{currentBidAmount + currentBidAmount * 0.1} ICX</Text>
+          <Text className="medium">
+            {currentBidAmount && currentBidAmount + currentBidAmount * 0.1} ICX
+          </Text>
         </div>
         <div>
           <Text className="x-small">Top bidder</Text>
