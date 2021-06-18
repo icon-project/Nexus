@@ -141,12 +141,12 @@ const FeeAuction = () => {
   const [loading, setLoading] = useState(true);
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const { auctions } = useSelect(({ app }) => ({
-    auctions: app.selectAuctions,
+  const { auctions } = useSelect(({ auction }) => ({
+    auctions: auction.selectAuctions,
   }));
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions } = useDispatch(({ app: { getAuctions } }) => ({
+  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
     getAuctions,
   }));
 

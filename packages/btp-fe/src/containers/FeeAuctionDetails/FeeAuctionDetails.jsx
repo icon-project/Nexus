@@ -48,11 +48,11 @@ const Wrapper = styled.div`
 const FeeAuctionDetails = () => {
   const { id } = useParams();
 
-  const { auction } = useSelect(({ app }) => ({
-    auction: app.selectCurrentAuction,
+  const { auction } = useSelect(({ auction }) => ({
+    auction: auction.selectCurrentAuction,
   }));
 
-  const { getAuctionDetails } = useDispatch(({ app: { getAuctionDetails } }) => ({
+  const { getAuctionDetails } = useDispatch(({ auction: { getAuctionDetails } }) => ({
     getAuctionDetails,
   }));
 
