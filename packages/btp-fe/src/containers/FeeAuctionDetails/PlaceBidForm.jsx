@@ -88,10 +88,10 @@ export const PlaceBidForm = memo(({ currentBidAmount }) => {
               <Field
                 name="bidAmount"
                 validate={composeValidators(
-                  minValue(100, 'Minimium bid is 100 ICX. Please input again'),
+                  minValue(100, 'Minimum bid is 100 ICX. Please input again'),
                   minValue(
                     minimumIncrementalBid,
-                    'Minimium incremental bid is ' + minimumIncrementalBid + ' ICX.',
+                    'Minimum incremental bid is ' + minimumIncrementalBid + ' ICX.',
                   ),
                 )}
                 render={({ input, meta }) => (
