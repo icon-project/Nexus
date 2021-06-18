@@ -1,4 +1,5 @@
 import { fetchAPI } from 'utils/fetch';
+
 const app = {
   state: {
     appInfo: {},
@@ -14,7 +15,7 @@ const app = {
   effects: () => ({
     async getAppInfo() {
       try {
-        const appInfo = await fetchAPI(process.env.REACT_APP_BTP_ENDPOINT);
+        const appInfo = await fetchAPI('/btpnetwork');
         this.setAppInfo(appInfo || {});
         return appInfo;
       } catch (error) {

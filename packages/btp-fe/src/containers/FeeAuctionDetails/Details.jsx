@@ -1,9 +1,14 @@
 import styled from 'styled-components/macro';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import { Table } from 'components/Table';
 import { Text, SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+
+import { hashShortener } from 'utils/app';
 
 const Info = styled.div`
   margin: 33px 0 36px;
@@ -32,7 +37,7 @@ const StyledTable = styled(Table)`
 const columns = [
   {
     title: 'Bidder',
-    dataIndex: 'key',
+    dataIndex: 'bidder',
     width: '36.88%',
   },
   {
@@ -42,76 +47,79 @@ const columns = [
   },
   {
     title: 'Time',
-    dataIndex: 'time',
+    dataIndex: 'createdTime',
     width: '38.74%',
   },
 ];
-const dataSource = [
-  {
-    key: '0x003F...C6cf',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf1',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf2',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf3',
-    amount: '200',
-    time: '50min ago',
-  },
-  {
-    key: '0x003F...C6cf4',
-    amount: '200',
-    time: '50min ago',
-  },
-];
 
-export const Details = () => {
+const formatData = (data = {}) => {
+  if (Object.keys(data).length === 0) return data;
+  const { createdTime, endTime, topBidder, bids = [], ...ots } = data;
+  return {
+    ...ots,
+    createdTime: dayjs(createdTime).format('DD/MM/YYYY'),
+    endTime: dayjs(endTime).format('DD/MM/YYYY'),
+    topBidder: hashShortener(topBidder),
+    bids: bids
+      .map((bid) => {
+        return {
+          ...bid,
+          bidder: hashShortener(bid.bidder),
+          createdTime: dayjs(bid.createdTime).fromNow(),
+        };
+      })
+      .reverse(),
+  };
+};
+
+export const Details = ({ auction }) => {
+  const {
+    bids,
+    createdTime,
+    endTime,
+    availableBidAmount,
+    currentBidAmount,
+    topBidder,
+  } = formatData(auction);
   return (
     <>
       <Info>
         <div>
           <Text className="x-small">Created date</Text>
-          <Text className="medium">07/03/2021</Text>
+          <Text className="medium">{createdTime}</Text>
         </div>
         <div>
           <Text className="x-small">Expiration date</Text>
-          <Text className="medium">07/03/2021</Text>
+          <Text className="medium">{endTime}</Text>
         </div>
         <div>
           <Text className="x-small">Available bid amount</Text>
-          <Text className="medium">200 ICX</Text>
+          <Text className="medium">{availableBidAmount} ICX</Text>
         </div>
         <div>
           <Text className="x-small">Current highest bid</Text>
-          <Text className="medium">210 ICX</Text>
+          <Text className="medium">{currentBidAmount} ICX</Text>
         </div>
         <div>
           <Text className="x-small">Next accepted bid</Text>
-          <Text className="medium">210 ICX</Text>
+          <Text className="medium">
+            {currentBidAmount && currentBidAmount + currentBidAmount * 0.1} ICX
+          </Text>
         </div>
         <div>
           <Text className="x-small">Top bidder</Text>
-          <Text className="medium">0x003F...C6cf</Text>
+          <Text className="medium">{topBidder}</Text>
         </div>
       </Info>
 
       <SubTitle className="medium bold">Bid history</SubTitle>
       <StyledTable
+        rowKey="id"
         columns={columns}
-        dataSource={dataSource}
+        dataSource={bids}
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
         bodyText={'md'}
-        pagination
       />
     </>
   );
