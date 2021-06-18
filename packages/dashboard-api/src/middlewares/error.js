@@ -11,7 +11,7 @@ function errorHandlerMiddleware(logger) {
     if (error.name && 'UnauthorizedError' === error.name) {
       return response.status(401).json({
         error: {
-          code: UserError.AccessDenied,
+          code: 401,
           message: error.message
         }
       });
@@ -22,14 +22,14 @@ function errorHandlerMiddleware(logger) {
 
       response.status(payload.statusCode).json({
         error: {
-          code: UserError.UnknownError,
+          code: payload.statusCode,
           message: payload.message
         }
       });
     } else {
       response.status(500).json({
         error: {
-          code: UserError.UnknownError,
+          code: 500,
           message: error.message
         }
       });

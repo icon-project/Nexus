@@ -1,7 +1,7 @@
 {
   "env": {
     "NODE_ENV": "development",
-    "DEBUG": "app,indexer,icon,block,edgeware",
+    "DEBUG": "app,indexer,icon,block,edgeware,db",
     "DEBUG_DEPTH": 5
   },
   "watch": [

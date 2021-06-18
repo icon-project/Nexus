@@ -4,10 +4,16 @@ const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider, IconBuilder, IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
+const { getAuctionById, getBidByAuctionId } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 const ICX_NUMBER = 10 ** 18;
+
+// Ref: block-indexer/src/modules/icon-indexer/auctions.js
+function createAuctionId(id) {
+  return process.env.FEE_AGGREGATION_SCORE_ADDRESS + '_' + id;
+}
 
 async function getAuctionByName(name) {
   const callBuilder = new IconBuilder.CallBuilder();
@@ -46,11 +52,11 @@ async function getCurrentAuctions() {
 
       if (auction) {
         auctions.push({
-          id: IconConverter.toNumber(auction._id),
+          id: createAuctionId(IconConverter.toNumber(auction._id)),
           name: token.name,
-          currentBid: Math.floor(IconConverter.toNumber(auction._bidAmount) / ICX_NUMBER),
-          availableBid: Math.floor(IconConverter.toNumber(auction._tokenAmount) / ICX_NUMBER),
-          expiration: Math.floor(IconConverter.toNumber(auction._endTime) / 1000) // _endTime in microsecond
+          currentBidAmount: Math.floor(IconConverter.toNumber(auction._bidAmount) / ICX_NUMBER),
+          availableBidAmount: Math.floor(IconConverter.toNumber(auction._tokenAmount) / ICX_NUMBER),
+          endTime: Math.floor(IconConverter.toNumber(auction._endTime) / 1000) // _endTime in microsecond
         });
       }
     }
@@ -62,6 +68,31 @@ async function getCurrentAuctions() {
   }
 }
 
+async function getAuctionDetail(auctionId) {
+  const auction = await getAuctionById(auctionId);
+
+  if (!auction)
+    return null;
+
+  const bids = await getBidByAuctionId(auctionId);
+
+  return {
+    name: auction.tokenName,
+    topBidder: bids.length > 0 ? bids[bids.length - 1].newBidder : auction.bidder,
+    currentBidAmount: bids.length > 0 ? bids[bids.length - 1].newBidAmount : auction.bidAmount,
+    availableBidAmount: auction.tokenAmount,
+    createdTime: auction.createdTime,
+    endTime: auction.endTime,
+    bids: bids.map(b => ({
+      id: b.id,
+      bidder: b.newBidder,
+      amount: b.newBidAmount,
+      createdTime: b.createdTime
+    }))
+  };
+}
+
 module.exports = {
-  getCurrentAuctions
+  getCurrentAuctions,
+  getAuctionDetail
 };

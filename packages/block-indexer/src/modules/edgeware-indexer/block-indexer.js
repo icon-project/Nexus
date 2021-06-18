@@ -3,7 +3,7 @@
 const debug = require('debug')('edgeware');
 const axios = require('axios');
 const { logger } = require('../../common');
-const { saveBlock, saveTransaction } = require('./repository');
+const { saveBlock, saveTransaction, getLastBlock } = require('./repository');
 
 let blockHeight = Number(process.env.EDGEWARE_BLOCK_HEIGHT);
 let isWaitToStop = false;
@@ -14,10 +14,13 @@ async function runTransactionHandlers(transaction, block) {
 
 async function runBlockHandlers(block) {
   for (const tx of block.extrinsics) {
-    debug('Transaction: %O', tx);
+    // Ignore timestamp transactions.
+    if ('timestamp' !== tx.method.pallet) {
+      debug('Transaction: %O', tx);
 
-    await saveTransaction(tx);
-    await runTransactionHandlers(tx, block);
+      await saveTransaction(tx);
+      await runTransactionHandlers(tx, block);
+    }
   }
 
   // More block handlers go here.
@@ -75,7 +78,7 @@ async function getBlockData() {
   }
 }
 
-async function getLastBlock() {
+async function getHeadBlock() {
   const result = await axios.get(process.env.SIDECAR_API_URL + '/blocks/head', {
     headers: {
       'Content-Type': 'application/json'
@@ -87,20 +90,27 @@ async function getLastBlock() {
   if (200 === result.status) {
     return result.data;
   } else {
-    throw Error(`getLastBlock failed with status code ${result.status}`);
+    throw Error(`getHeadBlock failed with status code ${result.status}`);
   }
 }
 
 async function start() {
-  logger.info('Starting Edgeware block indexer at block %d...', blockHeight);
-
-  if (blockHeight < 0) {
+  if (-1 === blockHeight) {
     const block = await getLastBlock();
+
+    if (block)
+      blockHeight = Number(block.number) + 1;
+    else
+      blockHeight = 0;
+  }
+
+  if (0 === blockHeight) {
+    const block = await getHeadBlock();
     blockHeight = Number(block.number);
   }
 
+  logger.info('Starting Edgeware block indexer at block %d...', blockHeight);
   await getBlockData();
-
   logger.info('Started Edgeware block indexer');
 }
 

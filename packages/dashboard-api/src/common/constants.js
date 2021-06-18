@@ -3,6 +3,20 @@ const RESULT_CODE = {
   RC_OK: 0,
   RC_ERR_UNREGISTERED_TOKEN: -1,
 };
+// Refer https://coinmarketcap.com/api/documentation/v1/#section/Standards-and-Conventions
+const CURRENCY_IDs = {
+  USD: 2781,
+  VND: 2823,
+};
+const CURRENCIES = {
+  USD: 'USD',
+  VND: 'VND',
+};
+const COINs = {
+  BITCOIN: 'BTC',
+  ICON: 'ICX',
+  BINANCE: 'BNB',
+};
 
 const TRANSACTION_TBL_NAME = 'transactions';
 const NETWORK_TBL_NAME = 'networks';
@@ -55,6 +69,9 @@ module.exports = {
   NETWORKS_TBL,
   NETWORKS_CONNECTED_ICON_TBL,
   NETWORKS_CONNECTED_ICON_TBL_NAME,
+  CURRENCY_IDs,
+  CURRENCIES,
+  COINs,
 };
 
 
