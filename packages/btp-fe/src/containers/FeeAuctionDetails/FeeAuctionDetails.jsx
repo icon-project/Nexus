@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
 import styled from 'styled-components/macro';
+import { useParams } from 'react-router-dom';
+
+import { useDispatch, useSelect } from 'hooks/useRematch';
 
 import { BackButton } from 'components/Button/BackButton';
 import { Details } from './Details';
@@ -42,16 +46,30 @@ const Wrapper = styled.div`
 `;
 
 const FeeAuctionDetails = () => {
+  const { id } = useParams();
+
+  const { auction } = useSelect(({ auction }) => ({
+    auction: auction.selectCurrentAuction,
+  }));
+
+  const { getAuctionDetails } = useDispatch(({ auction: { getAuctionDetails } }) => ({
+    getAuctionDetails,
+  }));
+
+  useEffect(() => {
+    if (id) getAuctionDetails(id);
+  }, [getAuctionDetails, id]);
+
   return (
     <Wrapper>
-      <BackButton>DOT 100</BackButton>
+      <BackButton>{auction.name}</BackButton>
 
       <div className="content">
         <div className="details">
-          <Details />
+          <Details auction={auction} />
         </div>
         <div className="place-bid-form">
-          <PlaceBidForm />
+          <PlaceBidForm currentBidAmount={auction.currentBidAmount} />
         </div>
       </div>
     </Wrapper>

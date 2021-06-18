@@ -9,6 +9,10 @@ import PrevIconSrc from 'assets/images/prev-icon.svg';
 
 const TableStyled = styled(antdTable)`
   width: 100%;
+  /* hide empty row */
+  .ant-table-placeholder {
+    display: none;
+  }
   .ant-table-content {
     font-family: Poppins;
   }

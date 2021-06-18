@@ -93,6 +93,10 @@ const StyledHeader = styled(Layout.Header)`
     display: none;
   }
 
+  ${media.smallDesktop`
+    padding: 0 40.5px;
+  `};
+
   ${media.minWidthHeader`
     padding: 0 20px;
     position: relative;

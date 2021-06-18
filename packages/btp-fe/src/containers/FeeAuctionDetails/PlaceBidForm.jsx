@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import styled from 'styled-components/macro';
 import { Form as FinalForm, Field } from 'react-final-form';
 
@@ -7,7 +8,7 @@ import { TextInput } from 'components/Input';
 import { PrimaryButton } from 'components/Button';
 
 import { useDispatch } from '../../hooks/useRematch';
-import { minValue } from 'utils/inputValidation';
+import { minValue, composeValidators } from 'utils/inputValidation';
 import { placeBid } from '../../connectors/ICONex/iconService';
 
 const Form = styled.form`
@@ -44,7 +45,9 @@ const Form = styled.form`
   }
 `;
 
-export const PlaceBidForm = () => {
+export const PlaceBidForm = memo(({ currentBidAmount }) => {
+  const minimumIncrementalBid = currentBidAmount + currentBidAmount * 0.1;
+
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
     openModal,
   }));
@@ -74,24 +77,30 @@ export const PlaceBidForm = () => {
           >
             <Header className="x-small bold">Place a new bid</Header>
             <Text className="x-small">
-              Minimium bid: <span>100 ICX</span>
+              Minimum bid: <span>100 ICX</span>
             </Text>
             <Text className="x-small">
-              Minimium incremental bid: <span>10%</span> higher than the current bid
+              Minimum incremental bid: <span>10%</span> higher than the current bid
             </Text>
 
             <div className="input-group">
               <Text className="small">New bid</Text>
               <Field
                 name="bidAmount"
-                validate={minValue(100, 'Minimium bid is 100 ICX. Please input again')}
+                validate={composeValidators(
+                  minValue(100, 'Minimum bid is 100 ICX. Please input again'),
+                  minValue(
+                    minimumIncrementalBid,
+                    'Minimum incremental bid is ' + minimumIncrementalBid + ' ICX.',
+                  ),
+                )}
                 render={({ input, meta }) => (
                   <TextInput placeholder="Input amount" type="number" {...input} meta={meta} />
                 )}
               />
             </div>
 
-            <PrimaryButton htmlType="submit" disabled={!valid}>
+            <PrimaryButton htmlType="submit" disabled={!valid || !currentBidAmount}>
               <SubTitle className="small bold">Place bid</SubTitle>
             </PrimaryButton>
           </Form>
@@ -99,4 +108,6 @@ export const PlaceBidForm = () => {
       }}
     />
   );
-};
+});
+
+PlaceBidForm.displayName = 'PlaceBidForm';
