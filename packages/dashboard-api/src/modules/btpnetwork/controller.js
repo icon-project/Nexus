@@ -10,7 +10,7 @@ async function getNetworkInfo(request, response) {
   const assets = await model.getAmountFeeAggregationSCORE();
   const totalNetworks = await model.getTotalNetworks();
   const totalTransactionAmount = await model.getTotalTransactionAmount();
-  const totalTransaction = await model.getTotalTransaction();
+  const totalTransactions = await model.getTotalTransaction();
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
@@ -20,7 +20,7 @@ async function getNetworkInfo(request, response) {
         assets,
       },
       totalNetworks,
-      totalTransaction,
+      totalTransactions,
     },
   });
 }
