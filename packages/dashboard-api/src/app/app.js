@@ -6,7 +6,6 @@ const { logger } = require('../common');
 const { errorHandlerMiddleware } = require('../middlewares');
 const { createBtpNetworkRoute } = require('../modules/btpnetwork');
 const { createAuctionRoute } = require('../modules/auctions');
-
 const { createRelayRoute } = require('../modules/relays');
 const { createTransRoute } = require('../modules/transactions');
 

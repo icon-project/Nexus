@@ -1,9 +1,7 @@
-
 'use strict';
-const { func } = require("@hapi/joi");
+
 const rp = require('request-promise');
 const { logger } = require('./index');
-
 
 function propsAsString(object) {
   return Object.keys(object)
@@ -111,18 +109,12 @@ async function exchangeToFiat(coinName, fiatNames, amount) {
   }
 }
 
-function coinToUSD(token_name, number_token) {
-  // TODO: using api in coinmarketcap
-  return Math.floor(Math.random() * 1000) + number_token;
-}
-
 module.exports = {
   propsAsString,
   propsCountValueString,
   sortValuesWithPropsOrdered,
   getCurrentTimestamp,
   hexToDecimal,
-  coinToUSD,
   getCoinInfo,
   exchangeToFiat,
 };

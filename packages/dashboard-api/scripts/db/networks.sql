@@ -1,8 +1,10 @@
-CREATE TABLE public.networks (
-    name character varying(4000) NOT NULL,
-    id character varying NOT NULL,
-    path character varying(100),
-    url character varying(100)
+CREATE TABLE Networks (
+   Id char varying(30) PRIMARY KEY,
+   name char varying(200) UNIQUE NOT NULL,
+   Logo char varying(300),
+   Create_At TIMESTAMP,
+   Update_At TIMESTAMP,
+   Delete_At TIMESTAMP
 );
 
 
