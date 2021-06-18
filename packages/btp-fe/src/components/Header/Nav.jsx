@@ -52,24 +52,29 @@ const buttonContents = [
   { text: 'Governance', effect: null },
   { text: 'Auction', effect: null },
 ];
-const Button = ({ text }) => {
+const Button = ({ text, ...ots }) => {
   return (
     <li>
       <NavLink to={`/${text.toLowerCase()}`}>
-        <button className="nav-link">{text}</button>
+        <button className="nav-link" {...ots}>
+          {text}
+        </button>
       </NavLink>
     </li>
   );
 };
 
-const Nav = () => {
-  const handleClick = (e) => {
-    e.preventDefault();
-  };
+const Nav = ({ setShowMenu }) => {
   return (
     <NavStyled>
       {buttonContents.map((e) => (
-        <Button key={e.text} text={e.text} onClick={e.effect || handleClick} />
+        <Button
+          key={e.text}
+          text={e.text}
+          onClick={() => {
+            setShowMenu(false);
+          }}
+        />
       ))}
     </NavStyled>
   );
