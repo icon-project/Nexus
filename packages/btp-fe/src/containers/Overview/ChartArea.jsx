@@ -44,13 +44,13 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const ChartArea = () => {
+export const ChartArea = ({ volume = 0 }) => {
   return (
     <Wrapper>
       <div className="chart">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
         <Header className="medium bold inline">
-          $9,672,047,464.01 <UpDownPercent up percent="9.55%" />
+          ${volume.toLocaleString()} <UpDownPercent up percent="9.55%" />
         </Header>
         <ChartBox />
       </div>
