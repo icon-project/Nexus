@@ -17,6 +17,7 @@ const filterObjectByKeyArr = (objItem, keyArr) => {
 };
 
 const hashShortener = (hashStr) => {
+  if (!hashStr) return '';
   const len = hashStr.length;
   if (len <= 10) {
     return hashStr;

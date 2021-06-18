@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+
+import { useDispatch, useSelect } from 'hooks/useRematch';
+import { hashShortener } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
@@ -98,118 +104,67 @@ const EmptySearch = styled.div`
 const columns = [
   {
     title: 'Auction ID',
-    dataIndex: 'key',
-    width: '12.5%',
+    dataIndex: 'shortedId',
   },
   {
     title: 'Auction name',
     dataIndex: 'name',
-    width: '15.18%',
   },
   {
     title: 'Bid amount',
-    dataIndex: 'amount',
-    width: '15.18%',
+    dataIndex: 'availableBidAmount',
   },
   {
     title: 'Current highest bid (ICX)',
-    dataIndex: 'highest',
-    width: '20%',
-  },
-  {
-    title: 'My bid',
-    dataIndex: 'mybid',
-    width: '20%',
+    dataIndex: 'currentBidAmount',
   },
   {
     title: 'Expiration',
-    dataIndex: 'expiration',
-    width: '17.14%',
-  },
-];
-const dataSource = [
-  {
-    key: 191,
-    name: 'DOT 100',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 192,
-    name: 'DOT 100',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 193,
-    name: 'DOT 101',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 194,
-    name: 'DOT 102',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 195,
-    name: 'DOT 103',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 196,
-    name: 'DOT 104',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 197,
-    name: 'DOT 105',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
-  },
-  {
-    key: 198,
-    name: 'DOT 100',
-    amount: '100',
-    highest: '510',
-    mybid: '410',
-    expiration: '12hr left',
+    dataIndex: 'endTime',
   },
 ];
 
+const formatData = (data = []) => {
+  return data.map((d) => {
+    const { id, endTime, ...ots } = d;
+
+    return {
+      ...ots,
+      id,
+      shortedId: hashShortener(id),
+      endTime: dayjs(endTime).fromNow(true) + ' left',
+    };
+  });
+};
+
 const FeeAuction = () => {
+  const [loading, setLoading] = useState(true);
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const [filteredData, setFilteredData] = useState(dataSource);
+  const { auctions } = useSelect(({ auction }) => ({
+    auctions: auction.selectAuctions,
+  }));
+  const [filteredData, setFilteredData] = useState(auctions);
+
+  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
+    getAuctions,
+  }));
+
+  useEffect(() => {
+    getAuctions().then(() => {
+      setLoading(false);
+    });
+  }, [getAuctions]);
 
   useEffect(() => {
     if (keySearch) {
       setFilteredData(
-        dataSource.filter((data) =>
-          data.name.toLowerCase().includes(keySearch.trim().toLowerCase()),
-        ),
+        auctions.filter((data) => data.name.toLowerCase().includes(keySearch.trim().toLowerCase())),
       );
     } else {
-      setFilteredData(dataSource);
+      setFilteredData(auctions);
     }
-  }, [keySearch]);
+  }, [keySearch, auctions]);
 
   const isPlural = filteredData.length > 1;
 
@@ -219,12 +174,12 @@ const FeeAuction = () => {
         <Header className="medium bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
-      {filteredData.length > 0 ? (
+      {filteredData.length > 0 || loading ? (
         <>
           {keySearch ? (
             <Text className="medium">
-              There’{isPlural ? 're' : 's'} {filteredData.length} result{isPlural ? 's' : ''} for
-              DOT 100
+              There’{isPlural ? 're' : 's'} {filteredData.length} result{isPlural ? 's' : ''} for{' '}
+              {keySearch}
             </Text>
           ) : (
             <div className="total-available">
@@ -245,17 +200,17 @@ const FeeAuction = () => {
             <SortSelect />
           </div>
           <Table
+            rowKey="id"
             columns={columns}
-            dataSource={filteredData}
+            dataSource={formatData(filteredData)}
             headerColor={colors.grayAccent}
             backgroundColor={colors.darkBG}
             bodyText={'md'}
             onRow={(r) => ({
               onClick: () => {
-                push(`/auction/${r.key}`);
+                push({ pathname: `/auction/${r.id}`, state: { id: r.id } });
               },
             })}
-            pagination
           />
         </>
       ) : (
