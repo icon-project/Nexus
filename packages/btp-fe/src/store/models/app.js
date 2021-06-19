@@ -15,7 +15,7 @@ const app = {
   effects: (dispatch) => ({
     async getAppInfo() {
       try {
-        const appInfo = await fetchAPI('/btpnetworkz');
+        const appInfo = await fetchAPI('/btpnetwork');
         this.setAppInfo(appInfo || {});
         return appInfo;
       } catch (error) {
