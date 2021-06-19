@@ -45,7 +45,7 @@ const Form = styled.form`
   }
 `;
 
-export const PlaceBidForm = memo(({ currentBidAmount }) => {
+export const PlaceBidForm = memo(({ currentBidAmount, auctionName }) => {
   const minimumIncrementalBid = currentBidAmount + currentBidAmount * 0.1;
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
@@ -59,7 +59,7 @@ export const PlaceBidForm = memo(({ currentBidAmount }) => {
         icon: 'loader',
         desc: 'Waiting for confirmation in your wallet.',
       });
-      placeBid(bidAmount);
+      placeBid(auctionName, bidAmount);
     }
 
     return Promise.resolve(true);
