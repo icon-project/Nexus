@@ -19,14 +19,14 @@ const auction = {
       };
     },
   },
-  effects: () => ({
+  effects: (dispatch) => ({
     async getAuctions() {
       try {
         const auctions = await getAuctions();
         this.setAuctions(auctions.content || []);
         return auctions;
       } catch (error) {
-        console.log(error);
+        dispatch.modal.handleError();
       }
     },
     async getAuctionDetails(auctionId) {
@@ -35,7 +35,7 @@ const auction = {
         this.setAuction(auction.content);
         return auction;
       } catch (error) {
-        console.log(error);
+        dispatch.modal.handleError();
       }
     },
   }),
