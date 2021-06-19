@@ -23,19 +23,7 @@ const auction = {
     async getAuctions() {
       try {
         const auctions = await getAuctions();
-        this.setAuctions(
-          auctions.content && auctions.content.length > 0
-            ? auctions.content
-            : [
-                {
-                  id: 'cx97dd9c3e40982bf23ac67b110741323a909a1495_1',
-                  name: 'SangDepChai',
-                  currentBidAmount: 100,
-                  availableBidAmount: 150,
-                  endTime: 1623825002306,
-                },
-              ],
-        );
+        this.setAuctions(auctions.content || []);
         return auctions;
       } catch (error) {
         console.log(error);

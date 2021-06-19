@@ -174,7 +174,7 @@ const FeeAuction = () => {
         <Header className="medium bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
-      {filteredData.length > 0 || loading ? (
+      {!keySearch || loading ? (
         <>
           {keySearch ? (
             <Text className="medium">
