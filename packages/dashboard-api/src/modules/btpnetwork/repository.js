@@ -41,32 +41,10 @@ async function getNetworkInfo() {
   return rows;
 }
 
-async function getTokensVolume24h() {
-  const _24hours_ago = (new Date().getTime()*1000) - 86400000000;
-  const {rows} = await pgPool.query(
-    `SELECT nid, token_name, sum(value) as total_token
-     FROM ${TRANSACTION_TBL_NAME}
-     WHERE timestamp >= ${_24hours_ago}
-     GROUP BY(token_name, nid)`,
-  );
-  return rows;
-}
-
-async function getTokenVolumeAllTime() {
-  const {rows} = await pgPool.query(
-    `SELECT nid, token_name, sum(value) as total_token
-     FROM ${TRANSACTION_TBL_NAME}
-     GROUP BY(token_name, nid)`,
-  );
-  return rows;
-}
-
 module.exports = {
   countNetwork,
   sumTransactionAmount,
   countTransaction,
   getNetworkConnectedIcon,
   getNetworkInfo,
-  getTokensVolume24h,
-  getTokenVolumeAllTime,
 };

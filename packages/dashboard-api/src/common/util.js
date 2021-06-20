@@ -111,18 +111,12 @@ async function exchangeToFiat(coinName, fiatNames, amount) {
   }
 }
 
-function coinToUSD(token_name, number_token) {
-  // TODO: using api in coinmarketcap
-  return Math.floor(Math.random() * 1000) + number_token;
-}
-
 module.exports = {
   propsAsString,
   propsCountValueString,
   sortValuesWithPropsOrdered,
   getCurrentTimestamp,
   hexToDecimal,
-  coinToUSD,
   getCoinInfo,
   exchangeToFiat,
 };

@@ -1,7 +1,6 @@
 'use strict';
 
 const { logger } = require('../../common');
-const { updateVolume24hVolumeAllTime } =  require('./network')
 const IconService = require('icon-sdk-js');
 const { countNetwork, sumTransactionAmount, countTransaction, getNetworkInfo, getTokensVolume24h, getTokenVolumeAllTime} = require('./repository');
 const { HttpProvider } = IconService;

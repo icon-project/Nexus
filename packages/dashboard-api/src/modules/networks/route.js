@@ -1,10 +1,10 @@
 const express = require('express');
 const debug = require('debug')('api:btpnetwork');
 const { asyncMiddleware, debugLogMiddleware } = require('../../middlewares');
-const { getNetworkInfo } = require('./controller');
+const { getNetworksInfo } = require('./controller');
 
 let router = express.Router();
 
 router.use(debugLogMiddleware(debug));
-router.get('/', asyncMiddleware(getNetworkInfo));
+router.get('/', asyncMiddleware(getNetworksInfo));
 module.exports = router;
