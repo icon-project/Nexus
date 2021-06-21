@@ -1,5 +1,5 @@
 'use strict';
-const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL, NETWORKS_CONNECTED_ICON_TBL_NAME, TRANSACTION_TBL_NAME} = require('../../common');
+const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL, TRANSACTION_TBL_NAME} = require('../../common');
 
 async function countNetwork() {
   const {
@@ -26,14 +26,6 @@ async function countTransaction() {
   return Number(result.count) || 0;
 }
 
-
-async function getNetworkConnectedIcon() {
-  const {rows} = await pgPool.query(
-    `SELECT * FROM ${NETWORKS_CONNECTED_ICON_TBL_NAME}`,
-  );
-  return rows;
-}
-
 async function getNetworkInfo() {
   const {rows} = await pgPool.query(
     `SELECT * FROM ${NETWORK_TBL_NAME}`,
@@ -45,6 +37,5 @@ module.exports = {
   countNetwork,
   sumTransactionAmount,
   countTransaction,
-  getNetworkConnectedIcon,
   getNetworkInfo,
 };

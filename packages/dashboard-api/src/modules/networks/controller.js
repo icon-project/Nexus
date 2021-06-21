@@ -9,8 +9,10 @@ const model = require('./model');
 async function getNetworksInfo(request, response) {
     const networkConnectedIcon = await model.getListNetworkConnectedIcon();
     response.status(HttpStatus.OK).json({
-          networkConnectedIcon,
-      });
+        content:{
+            networks: networkConnectedIcon,
+        }
+    });
 }
 
 module.exports = {
