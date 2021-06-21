@@ -19,33 +19,33 @@ async function getListNetworkConnectedIcon() {
 }
 
 async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) {
-  let mTokens24h = new Map();
-  let mTokensAllTime = new Map();
+  let mapTokens24h = new Map();
+  let mapTokensAllTime = new Map();
   const numberNetworks = await countNetwork();
   for( var i = 0; i < numberNetworks; i++ ){
     let USD24h = 0;
     let USDAllTime = 0;
     for(let data of tokensVolume24h) {
        if(data.nid == i) {
-          let fiat = await exchangeToFiat(data.token_name, ['USD'], parseInt(data.token_volume));
+          let fiat = await exchangeToFiat(data.tokenName, ['USD'], parseInt(data.tokenVolume));
           USD24h += fiat.USD;
         }
     }
 
     for(let data of tokensVolumeAllTime) {
       if(data.nid == i) {
-          let fiat =  await exchangeToFiat(data.token_name, ['USD'], parseInt(data.token_volume));
+          let fiat =  await exchangeToFiat(data.tokenName, ['USD'], parseInt(data.tokenVolume));
           USDAllTime += fiat.USD;
         }
     }
-    mTokens24h.set(i, USD24h);
-    mTokensAllTime.set(i, USDAllTime);
+    mapTokens24h.set(i, USD24h);
+    mapTokensAllTime.set(i, USDAllTime);
   }
 
-  for (let data of networks) {
-    data.usd_24h = mTokens24h.get(parseInt(data.id));
-    data.usd_all_time = mTokensAllTime.get(parseInt(data.id));
-  }
+    for (let data of networks) {
+      data.usd24h = mapTokens24h.get(parseInt(data.id));
+      data.usdAllTime = mapTokensAllTime.get(parseInt(data.id));
+    }
 
   return networks;
 }
