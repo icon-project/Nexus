@@ -3,6 +3,7 @@
 const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
 const { countNetwork, sumTransactionAmount, countTransaction } = require('./repository');
+const { getTotalBondedRelays } = require('../relays/repository');
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.NODE_URL);
@@ -73,9 +74,19 @@ async function getTotalTransaction() {
   }
 }
 
+async function getBondedVolumeByRelays() {
+  try {
+    return getTotalBondedRelays();
+  } catch (err) {
+    logger.error(err, '"getBondedVolumeByRelays" failed while getting total volume by Relays');
+    throw new Error('"getBondedVolumeByRelays" job failed: ' + err.message);
+  }
+}
+
 module.exports = {
   getAmountFeeAggregationSCORE,
   getTotalNetworks,
   getTotalTransactionAmount,
   getTotalTransaction,
+  getBondedVolumeByRelays,
 };
