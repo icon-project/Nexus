@@ -127,7 +127,7 @@ const NetworkStyled = styled.div`
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 18px;
+    margin-bottom: 8px;
   }
 `;
 
