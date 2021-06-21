@@ -38,7 +38,20 @@ export const sendTransaction = async (signature) => {
       ...window[rawTransaction],
       signature,
     });
-    await httpProvider.request(request).execute();
+    return await httpProvider.request(request).execute();
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+export const getTxResult = (txHash) => {
+  try {
+    return iconService
+      .getTransactionResult(txHash)
+      .execute()
+      .then((rs) => {
+        return rs;
+      });
   } catch (err) {
     throw new Error(err.message);
   }

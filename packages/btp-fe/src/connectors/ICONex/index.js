@@ -1,5 +1,5 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
-import { getBalance, sendTransaction } from './iconService';
+import { getBalance, sendTransaction, getTxResult } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from '../../store';
@@ -34,7 +34,7 @@ const eventHandler = async (event) => {
 
     case TYPES.RESPONSE_SIGNING:
       try {
-        await sendTransaction(payload);
+        const txHash = await sendTransaction(payload);
 
         switch (window[signingActions.globalName]) {
           case signingActions.bid:
@@ -67,12 +67,24 @@ const eventHandler = async (event) => {
           default:
             break;
         }
+
+        setTimeout(async () => {
+          await getTxResult(txHash);
+          modal.openModal({
+            icon: 'checkIcon',
+            desc: 'Your transaction was confirmed successfully.',
+            button: {
+              text: 'OK',
+              onClick: () => modal.setDisplay(false),
+            },
+          });
+        }, 5000);
       } catch (err) {
         switch (window[signingActions.globalName]) {
           case signingActions.bid:
             modal.openModal({
               icon: 'xIcon',
-              children: <FailedBidContent />,
+              children: <FailedBidContent message={err.message || err} />,
               button: {
                 text: 'Try again',
                 onClick: () => modal.setDisplay(false),

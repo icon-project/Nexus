@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export const FailedBidContent = () => {
+export const FailedBidContent = ({ message }) => {
   return (
     <Wrapper>
       <Text className="medium">Bid failure. Please input proper amount.</Text>
@@ -29,6 +29,7 @@ export const FailedBidContent = () => {
       <Text className="x-small">
         Minimium incremental bid: <span>10%</span> higher than the current bid
       </Text>
+      {message && <Text className="x-small subtext">{message}</Text>}
     </Wrapper>
   );
 };
