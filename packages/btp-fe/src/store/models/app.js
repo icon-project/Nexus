@@ -12,14 +12,14 @@ const app = {
       };
     },
   },
-  effects: () => ({
+  effects: (dispatch) => ({
     async getAppInfo() {
       try {
         const appInfo = await fetchAPI('/btpnetwork');
         this.setAppInfo(appInfo || {});
         return appInfo;
       } catch (error) {
-        console.log(error);
+        dispatch.modal.handleError();
       }
     },
   }),
