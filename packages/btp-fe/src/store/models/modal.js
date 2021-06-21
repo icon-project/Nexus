@@ -21,6 +21,15 @@ const modal = {
       };
     },
   },
+  effects: () => ({
+    handleError(error) {
+      this.openModal({
+        icon: 'xIcon',
+        desc: (error && error.message) || error || 'Something went wrong!',
+      });
+    },
+  }),
+
   selectors: (slice) => ({
     selectDisplay() {
       return slice((state) => state.display);
