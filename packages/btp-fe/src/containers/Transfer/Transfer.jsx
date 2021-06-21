@@ -15,7 +15,7 @@ const TransferStyled = styled.div`
     text-align: right;
     color: ${colors.tertiaryBase};
     width: 480px;
-    padding: 43px 10px 19px 0;
+    margin: 43px 0 19px;
     cursor: pointer;
   }
   .history-container {
