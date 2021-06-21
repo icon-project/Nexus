@@ -3,8 +3,8 @@
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
 
-// Show the list of registered relays.
-// GET /relays
+// Show the list of transactions.
+// GET /transactions
 async function getTransHistory(request, response) {
   let page = Number(request.query.page) || 0;
   let limit = Number(request.query.limit) || 20;
@@ -15,7 +15,7 @@ async function getTransHistory(request, response) {
 
   response.status(HttpStatus.OK).json({
     content: {
-      ...transHistory,
+      transHistory,
     },
   });
 }

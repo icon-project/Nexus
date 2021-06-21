@@ -3,25 +3,29 @@ const { exchangeToFiat } = require('../../common/util')
 
 const NUMBER_NETWORK = 4
 
-function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) {
+async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) {
     let mTokens24h = new Map();
     let mTokensAllTime = new Map();
     for( var i = 0; i < NUMBER_NETWORK; i++ ){
-      let fiat24h = 0;
-      let fiatAllTime = 0;
+      let USD24h = 0;
+      let USDAllTime = 0;
       for(let data of tokensVolume24h) {
          if(data.nid == i) {
-            fiat24h += exchangeToFiat(data.token_name, ['USD'], parseInt(data.token_volume));
-         }
+            let value = parseInt(data.token_volume);
+            let fiat = await exchangeToFiat(data.token_name, ['USD'], value);
+            USD24h += fiat.USD;
+          }
       }
 
       for(let data of tokensVolumeAllTime) {
         if(data.nid == i) {
-            fiatAllTime += exchangeToFiat(data.token_name, ['USD'], parseInt(data.token_volume));
-        }
+            let value = parseInt(data.token_volume); 
+            let fiat =  await exchangeToFiat(data.token_name, ['USD'], value);
+            USDAllTime += fiat.USD;
+          }
       }
-      mTokens24h.set(i, fiat24h);
-      mTokensAllTime.set(i, fiatAllTime);
+      mTokens24h.set(i, USD24h);
+      mTokensAllTime.set(i, USDAllTime);
     }
 
     for (let data of networks) {

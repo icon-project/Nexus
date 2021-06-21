@@ -10,7 +10,7 @@ async function getListNetworkConnectedIcon() {
       const tokensVolume24h = await getTokensVolume24h();
       const tokensVolumeAllTime = await getTokenVolumeAllTime();
   
-      return updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime);
+      return await updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime);
     } catch (err) {
       logger.error(err, '"getListNetworkConnectedIcon" failed while getting total transaction');
       throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
