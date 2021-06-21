@@ -13,6 +13,16 @@ async function getNetworksInfo(request, response) {
       });
 }
 
+
+async function getNetworksById(request, response) {
+    const id = request.params.id;
+    const networkInfo = await model.getNetworkById(id);
+    response.status(HttpStatus.OK).json({
+        networkInfo,
+      });
+}
+
 module.exports = {
     getNetworksInfo,
+    getNetworksById
 }
