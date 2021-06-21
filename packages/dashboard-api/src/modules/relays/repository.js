@@ -67,9 +67,34 @@ async function getTotalBondedRelays() {
     throw err;
   }
 }
+async function getById(id) {
+  const query = 'SELECT * FROM relays WHERE id = $1 LIMIT 1';
+
+  try {
+    const { rows } = await pgPool.query(query, [id]);
+    if (rows.length > 0) {
+      const row = rows[0];
+      const result = {
+        id: row.id,
+        rank: Number(row.rank),
+        name: row.name,
+        bondedICX: Number(row.bonded_icx),
+        serverStatus: Number(row.server_status),
+        transferredTransactions: Number(row.total_transferred_tx),
+        failedTransactions: Number(row.total_failed_tx),
+      };
+      return result;
+    }
+    return {};
+  } catch (err) {
+    logger.error('getById fails', { err });
+    throw err;
+  }
+}
 
 module.exports = {
   countTotalRelay,
   getRelayDetailList,
   getTotalBondedRelays,
+  getById,
 };
