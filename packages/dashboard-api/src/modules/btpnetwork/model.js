@@ -2,7 +2,7 @@
 
 const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
-const { countNetwork, sumTransactionAmount, countTransaction, getNetworkInfo} = require('./repository');
+const { countNetwork, sumTransactionAmount, countTransaction} = require('./repository');
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.NODE_URL);

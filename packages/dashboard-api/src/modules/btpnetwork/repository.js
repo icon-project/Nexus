@@ -26,16 +26,8 @@ async function countTransaction() {
   return Number(result.count) || 0;
 }
 
-async function getNetworkInfo() {
-  const {rows} = await pgPool.query(
-    `SELECT * FROM ${NETWORK_TBL_NAME}`,
-  );
-  return rows;
-}
-
 module.exports = {
   countNetwork,
   sumTransactionAmount,
-  countTransaction,
-  getNetworkInfo,
+  countTransaction
 };
