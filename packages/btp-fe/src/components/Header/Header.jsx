@@ -310,7 +310,7 @@ const Header = ({ userStatus = defaultUser }) => {
         onClick={() => setShowMenu(!showMenu)}
       />
       <div className="right-side">
-        <Nav />
+        <Nav setShowMenu={setShowMenu} />
         {address ? (
           <div className="account-info">
             <SubTitle className="small">{currentNetwork}</SubTitle>
