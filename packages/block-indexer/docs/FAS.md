@@ -138,7 +138,7 @@ Register token: `register` method
 # Test2206
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=Test2206 --param _tokenAddress=cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
-./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e
+./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cx97dd9c3e40982bf23ac67b110741323a909a1495
 
 [
   {
@@ -156,9 +156,12 @@ Register token: `register` method
 
 Bid for a special token: `bid` method with `--param _tokenName=MySampleToken`
 
-./goloop rpc call --uri http://localhost:9082/api/v3 --method getCurrentAuction --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=SampleToken1406
+./goloop rpc call --uri http://localhost:9082/api/v3 --method getCurrentAuction --to cx97dd9c3e40982bf23ac67b110741323a909a1495 --param _tokenName=Test2206
 
-./goloop rpc call --uri http://localhost:9082/api/v3 --method availableBalance --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=SampleToken1406
+./goloop rpc call --uri http://localhost:9082/api/v3 --method getCurrentAuction --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=Test2206
+
+
+./goloop rpc call --uri http://localhost:9082/api/v3 --method availableBalance --to cx97dd9c3e40982bf23ac67b110741323a909a1495 --param _tokenName=SangDepChai
 
 setDurationTime to 600s (in microsecond)
 https://git.baikal.io/btp-dashboard/pm/-/issues/46
@@ -167,4 +170,4 @@ https://git.baikal.io/btp-dashboard/pm/-/issues/46
 
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method setDurationTime --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _duration=300000000 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000
 
-./goloop rpc txresult 0xd9e3412ef560e5f8995a1cba66ddc81ae7d2fe004e532643d00128bf19b737c1 --uri http://localhost:9082/api/v3
+./goloop rpc txresult 0xd76f07ca45e1523ae9f6404878a697c4dac87f09c79d51fa7de075c2c3cf98f5 --uri http://localhost:9082/api/v3

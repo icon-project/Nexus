@@ -37,7 +37,7 @@ async function getAuctionDetail(request, response) {
 }
 
 // POST /auctions
-// curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"SampleToken1406", "tokenAmount": 100}'
+// curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"Test2206", "tokenAmount": 10}'
 async function createNewAuction(request, response) {
   const schema = Joi.object({
     tokenName: Joi.string().required(),

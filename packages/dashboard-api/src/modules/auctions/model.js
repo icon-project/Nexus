@@ -121,7 +121,7 @@ async function transferToken(tokenContract, tokenAmount) {
     .method('transfer')
     .params({
       _to: process.env.FEE_AGGREGATION_SCORE_ADDRESS,
-      _value: IconConverter.toHex(IconConverter.toBigNumber(tokenAmount))
+      _value: IconConverter.toHex(IconAmount.of(tokenAmount, IconAmount.Unit.ICX).toLoop())
     })
     .build();
 
