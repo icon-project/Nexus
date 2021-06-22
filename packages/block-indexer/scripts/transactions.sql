@@ -3,6 +3,8 @@ CREATE TABLE Transactions (
    Serial_Number char varying(200) UNIQUE NOT NULL,
    Token_Name char varying(300),
    Value numeric(100,5),
+   Block_Time bigint,
+   Nid bigint,
    To_Address char varying(300),
    From_Address char varying(300),
    Block_Height integer,
@@ -15,7 +17,8 @@ CREATE TABLE Transactions (
 );
 
 ALTER TABLE public.transactions
-ADD nid bigint,  timestamp bigint;
+ADD nid bigint,
+ADD block_time bigint;
 
 drop table Transactions
 TRUNCATE table Transactions
