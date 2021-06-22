@@ -27,8 +27,32 @@ async function countTransaction() {
   return Number(result.count) || 0;
 }
 
+async function getAllTimeFeeOfAssets() {
+  const query = 'SELECT token_name, SUM(token_amount) AS total_token_amount FROM transfer_fees GROUP BY token_name';
+
+  try {
+    const { rows } = await pgPool.query(query);
+    const assets = [];
+
+    if (rows.length > 0) {
+      for (const row of rows) {
+        assets.push({
+          name: row.token_name,
+          value: row.total_token_amount
+        });
+      }
+    }
+
+    return assets;
+  } catch (error) {
+    logger.error('getAllTimeFeeOfAssets fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   countNetwork,
   sumTransactionAmount,
   countTransaction,
+  getAllTimeFeeOfAssets
 };

@@ -4,11 +4,11 @@ const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
 const { IconConverter } = require('icon-sdk-js');
 const { logger, pgPool } = require('../../common');
+const { ICX_NUMBER } = require('./constants');
 
 const AUCTION_START_PROTOTYPE = 'AuctionStart(int,str,int,Address,int,int)';
 const AUCTION_ENDED_PROTOTYPE = 'AuctionEnded(int,str,Address,int,int,int)';
 const BID_INFO_PROTOTYPE = 'BidInfo(int,str,Address,int,Address,int)';
-const ICX_NUMBER = 10 ** 18;
 
 const nanoid = customAlphabet('1234567890abcdef', 10);
 

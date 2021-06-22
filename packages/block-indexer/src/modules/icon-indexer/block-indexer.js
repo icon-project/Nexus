@@ -5,8 +5,10 @@ const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger } = require('../../common');
 const { saveBlock, getLastBlock } = require('./repository');
+const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
 const { handleTransEvent } = require('./transactions');
+const { handleTransferFeeEvents } = require('./transfer-fee');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -18,6 +20,7 @@ let isWaitToStop = false;
 async function runTransactionHandlers(transaction, txResult, block) {
   await handleTransEvent(txResult);
   await handleAuctionEvents(txResult);
+  await handleTransferFeeEvents(txResult);
 
   // More transaction handlers go here.
 }
@@ -111,6 +114,10 @@ async function start() {
   }
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
+
+  logger.info('Loading registered token list...');
+  const tokens = await loadRegisteredTokens(iconService);
+  logger.info('Loaded registered token list', { tokens });
 
   await getBlockData();
 
