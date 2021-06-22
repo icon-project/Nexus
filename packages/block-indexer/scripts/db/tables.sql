@@ -105,3 +105,22 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.edgeware_blocks
     OWNER to postgres;
+
+-- Table: public.transfer_fees
+
+-- DROP TABLE public.transfer_fees;
+
+CREATE TABLE IF NOT EXISTS public.transfer_fees
+(
+    id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    token_amount numeric NOT NULL,
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    CONSTRAINT transfer_fees_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.transfer_fees
+    OWNER to postgres;
