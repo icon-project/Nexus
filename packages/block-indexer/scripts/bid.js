@@ -12,9 +12,10 @@ const iconService = new IconService(httpProvider);
 const fasAddress = 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e';
 const tokenName = 'SampleToken1406';
 
-//     000000000000000000
-//   15000000000000000000 =   15 ICX
-// 1088990666912500000000 = 1088 ICX
+//        000000000000000000
+// 1000000000000000000000000
+//      15000000000000000000 =   15 ICX
+//    1088990666912500000000 = 1088 ICX
 // ./goloop rpc balance hx774ca45c762872ac6dd4780784e279ceb389dec9 --uri http://localhost:9082/api/v3
 // ./goloop rpc balance hxfafd853a7b47be47aa19acfb60e730e476fad2ab --uri http://localhost:9082/api/v3
 async function transfer() {

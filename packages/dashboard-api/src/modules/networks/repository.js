@@ -4,7 +4,7 @@ const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME} = require('../../common'
 
 
 async function getTokensVolume24h() {
-    const at24hAgo = (new Date().getTime()*1000) - 86400000000;
+    const at24hAgo = (new Date().getTime()*1000) - 86400000000; // current_time(microsecond) - 24h(microsecond)
     try {
       const {rows} = await pgPool.query(
         `SELECT nid, token_name, sum(value) as token_volume

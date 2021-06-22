@@ -8,8 +8,7 @@ const model = require('./model');
 async function getRelayList(request, response) {
   let style = request.query.style;
 
-  if (!style)
-    style = 'list';
+  if (!style) style = 'list';
 
   switch (style) {
     case 'count':
@@ -32,8 +31,8 @@ async function getTotalRelay(request, response) {
 
   return response.status(HttpStatus.OK).json({
     content: {
-      count
-    }
+      count,
+    },
   });
 }
 
@@ -42,12 +41,30 @@ async function getRelayDetailList(request, response) {
   const relays = await model.getRelayList();
 
   return response.status(HttpStatus.OK).json({
-    content: [
-      ...relays
-    ]
+    content: [...relays],
+  });
+}
+
+async function getRelayById(request, response) {
+  const id = request.params.id;
+  if (!id) {
+    return response.sendStatus(HttpStatus.BadRequest);
+  }
+  const relay = await model.getRelayById(id);
+
+  // TODO it should call to BMC to get total amount of monthly reward fund for Relay Candidate
+  // follow this issue to get final discussion https://git.baikal.io/btp-dashboard/pm/-/issues/37
+  // just the sameple data
+  relay.monthlyReward = 12312312;
+
+  return response.status(HttpStatus.OK).json({
+    content: {
+      ...relay,
+    },
   });
 }
 
 module.exports = {
-  getRelayList
+  getRelayList,
+  getRelayById,
 };

@@ -2,7 +2,6 @@
 const { logger } = require('./index');
 const axios = require('axios');
 
-
 const COIN_MARKET_CAP_URL =
   process.env.PRO_COIN_MARKETCAP_API_URL || process.env.SANDBOX_COIN_MARKETCAP_API_URL;
 const COIN_MARKET_CAP_KEY =

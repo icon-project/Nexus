@@ -36,7 +36,40 @@ async function getAuctionDetail(request, response) {
   });
 }
 
+// POST /auctions
+// curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"SampleToken1406", "tokenAmount": 100}'
+async function createNewAuction(request, response) {
+  const schema = Joi.object({
+    tokenName: Joi.string().required(),
+    tokenAmount: Joi.number().required()
+  }).unknown().required();
+
+  const { error, value } = schema.validate(request.body);
+
+  if (error)
+    return response.sendStatus(HttpStatus.BadRequest);
+
+  const result = await model.createNewAuction(value.tokenName, value.tokenAmount);
+
+  if (404 === result) {
+    return response.status(HttpStatus.NotFound).json({
+      error: {
+        message: 'Token not found'
+      }
+    });
+  }
+
+  response.status(HttpStatus.OK).json({
+    content: {
+      txResult: {
+        ...result
+      }
+    }
+  });
+}
+
 module.exports = {
   getCurrentAuctions,
-  getAuctionDetail
+  getAuctionDetail,
+  createNewAuction
 };

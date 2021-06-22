@@ -78,6 +78,11 @@ Generate wallet:
 
 ./goloop rpc balance hx774ca45c762872ac6dd4780784e279ceb389dec9 --uri http://localhost:9082/api/v3
 
+# wallet1 on server
+./goloop rpc sendtx transfer --uri http://localhost:9082/api/v3 --message "Pay 100.000 ICX" --to hx93c436eb8a0a62721251c11d50753a6d43e592cf --value 0xD3C21BCECCEDA1000000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
+./goloop rpc balance hx93c436eb8a0a62721251c11d50753a6d43e592cf --uri http://localhost:9082/api/v3
+
 # wallet 2
 ./goloop rpc sendtx transfer --uri http://localhost:9082/api/v3 --message "Pay 500 ICX" --to hxfafd853a7b47be47aa19acfb60e730e476fad2ab --value 0x1B1AE4D6E2EF500000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
