@@ -1,8 +1,9 @@
 'use strict';
 
+const fs = require('fs');
 const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
-const { HttpProvider, IconBuilder, IconConverter } = require('icon-sdk-js');
+const { HttpProvider, IconBuilder, IconConverter, IconAmount, IconWallet, SignedTransaction } = require('icon-sdk-js');
 const { logger } = require('../../common');
 const { getAuctionById, getBidByAuctionId } = require('./repository');
 
@@ -92,7 +93,111 @@ async function getAuctionDetail(auctionId) {
   };
 }
 
+async function getRegisteredTokens() {
+  const callBuilder = new IconBuilder.CallBuilder();
+  const txObject = callBuilder
+    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .method('tokens')
+    .build();
+
+  const tokens = await iconService.call(txObject).execute();
+  debug('Registered tokens: ', tokens);
+
+  return tokens;
+}
+
+async function transferToken(tokenContract, tokenAmount) {
+  const keystore = JSON.parse(fs.readFileSync(process.env.GOD_WALLET_FILENAME));
+  const wallet = IconWallet.loadKeystore(keystore, process.env.GOD_WALLET_PASSWORD);
+  const { CallTransactionBuilder } = IconBuilder;
+
+  const txObj = new CallTransactionBuilder()
+    .from(wallet.getAddress())
+    .to(tokenContract)
+    .stepLimit(IconConverter.toBigNumber(1000000000))
+    .nid(IconConverter.toBigNumber(3))
+    .version(IconConverter.toBigNumber(3))
+    .timestamp((new Date()).getTime() * 1000)
+    .method('transfer')
+    .params({
+      _to: process.env.FEE_AGGREGATION_SCORE_ADDRESS,
+      _value: IconConverter.toHex(IconConverter.toBigNumber(tokenAmount))
+    })
+    .build();
+
+  const signedTransaction = new SignedTransaction(txObj, wallet);
+  const txHash = await iconService.sendTransaction(signedTransaction).execute();
+
+  return txHash;
+}
+
+async function placeBid(tokenName, bidAmount) {
+  const keystore = JSON.parse(fs.readFileSync(process.env.TEST_WALLET_FILENAME));
+  const wallet = IconWallet.loadKeystore(keystore, process.env.TEST_WALLET_PASSWORD);
+  const { CallTransactionBuilder } = IconBuilder;
+
+  const txObj = new CallTransactionBuilder()
+    .from(wallet.getAddress())
+    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .value(IconConverter.toHex(IconAmount.of(bidAmount, IconAmount.Unit.ICX).toLoop())) // minimum bid 100 ICX
+    .stepLimit(IconConverter.toBigNumber(1000000000))
+    .nid(IconConverter.toBigNumber(3))
+    .version(IconConverter.toBigNumber(3))
+    .timestamp((new Date()).getTime() * 1000)
+    .method('bid')
+    .params({
+      _tokenName: tokenName
+    })
+    .build();
+
+  const signedTransaction = new SignedTransaction(txObj, wallet);
+  const txHash = await iconService.sendTransaction(signedTransaction).execute();
+
+  return txHash;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// - Get list of registered tokens
+// - Get token contract
+// - Transfer token
+// - Make a bid
+async function createNewAuction(tokenName, tokenAmount) {
+  let tokens = await getRegisteredTokens();
+
+  if (!tokens || 0 === tokens.length)
+    return 404; // token not found
+
+  tokens = tokens.filter(t => tokenName === t.name);
+
+  if (0 === tokens.length)
+    return 404; // token not found
+
+  logger.info(`Transferring ${tokenAmount} ${tokenName}`);
+  let txHash = await transferToken(tokens[0].address, tokenAmount);
+
+  await sleep(5000);
+
+  let result = await iconService.getTransactionResult(txHash).execute();
+
+  if (1 !== result.status)
+    return result;
+
+  logger.info(`Bidding 100 ${tokenName}`);
+  txHash = await placeBid(tokenName, 100);
+
+  await sleep(5000);
+
+  result = await iconService.getTransactionResult(txHash).execute();
+
+  logger.info(`Created a new auction for ${tokenName}`, { txResult: result });
+  return result;
+}
+
 module.exports = {
   getCurrentAuctions,
-  getAuctionDetail
+  getAuctionDetail,
+  createNewAuction
 };
