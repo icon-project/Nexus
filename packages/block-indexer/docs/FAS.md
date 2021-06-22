@@ -19,11 +19,12 @@ IRC2 (ERC20)
 cp sample-token-0.2.0-optimized.jar GOCHAIN_LOCAL_ROOT/
 
 # initial 100M tokens
-./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=SampleToken1406 --param _symbol=ST1406 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
+./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=Test2206 --param _symbol=ST2206 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
 
 ./goloop rpc txresult 0x4af5be998a8457835afb2da37591afeed6c4f656c03971156bc5cbc8f9b42132 --uri http://localhost:9082/api/v3
 
 # scoreAddress: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
+# Test2206 scoreAddress": "cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e",
 ```
 
 ### CPS Contract
@@ -105,6 +106,12 @@ Transfer token: `transfer` on [token](#tokencontract) contract.
 # 100 token, decimal: 100000000000000000000 = 0x56BC75E2D63100000
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x56BC75E2D63100000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
+# 10 tokens
+./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x8AC7230489E80000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
+# 10 Test2206 tokens
+./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x8AC7230489E80000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
 # 150 token
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x821AB0D4414980000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
@@ -128,17 +135,20 @@ Register token: `register` method
 ```bash
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=SampleToken1406 --param _tokenAddress=cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
+# Test2206
+./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=Test2206 --param _tokenAddress=cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
 ./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e
 
 [
   {
-    "address": "cx18fbe903abdbb4b1e484e3135782ba2b8ba8dd4c",
-    "name": "SampleToken020",
+    "address": "cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e",
+    "name": "SampleToken1406",
     "tokenId": "0"
   },
   {
     "address": "cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e",
-    "name": "SampleToken1406",
+    "name": "Test2206",
     "tokenId": "0"
   }
 ]

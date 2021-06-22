@@ -1,4 +1,4 @@
-
+'use strict';
 const { logger } = require('./index');
 const axios = require('axios');
 
