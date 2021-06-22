@@ -1,6 +1,5 @@
 'use strict';
 
-const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const fs = require('fs');
 const IconService = require('icon-sdk-js');
 const { IconAmount, IconConverter, HttpProvider, IconWallet, IconBuilder, SignedTransaction } = require('icon-sdk-js');
@@ -13,6 +12,7 @@ const fasAddress = 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e';
 const tokenName = 'SampleToken1406';
 
 //        000000000000000000
+
 // 1000000000000000000000000
 //      15000000000000000000 =   15 ICX
 //    1088990666912500000000 = 1088 ICX
@@ -122,7 +122,9 @@ async function getDefaultStepCost() {
   // const defaultStep = await getDefaultStepCost();
   // console.log(defaultStep);
   // testBid();
-  bid('./wallet2.json', 100); // end current auction
+  // bid('./wallet2.json', 100); // end current auction
+  console.log('toLoop:', IconConverter.toHex(IconAmount.of(10, IconAmount.Unit.ICX).toLoop()));
+  console.log('toBigNumber:', IconConverter.toHex(IconConverter.toBigNumber(10)));
 })();
 
 /*
