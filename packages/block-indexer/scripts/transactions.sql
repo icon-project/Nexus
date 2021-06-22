@@ -14,5 +14,8 @@ CREATE TABLE Transactions (
    Delete_At integer
 );
 
+ALTER TABLE public.transactions
+ADD nid bigint,  timestamp bigint;
+
 drop table Transactions
 TRUNCATE table Transactions
