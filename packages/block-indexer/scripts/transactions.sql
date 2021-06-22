@@ -13,6 +13,8 @@ CREATE TABLE Transactions (
    Update_At integer,
    Delete_At integer
 );
+ALTER TABLE Transactions
+ADD nid bigint,  timestamp bigint;
 
 drop table Transactions
 TRUNCATE table Transactions
