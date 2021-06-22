@@ -12,6 +12,8 @@ async function getNetworkInfo(request, response) {
   const totalTransactionAmount = await model.getTotalTransactionAmount();
   const totalTransactions = await model.getTotalTransaction();
   const bondedRelays = await model.getBondedVolumeByRelays();
+  const allTimeFeeAssets = await model.getAllTimeFee();
+
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
@@ -20,13 +22,14 @@ async function getNetworkInfo(request, response) {
         cumulativeAmount: 100000, // TODO: total tokens ever had in FeeAggregationSCORE
         currentAmount: 500, // TODO: total amount of tokens valid in FeeAggregationSCORE
         assets,
+        allTimeAmount: allTimeFeeAssets
       },
       totalNetworks,
-      totalTransactions,
-    },
+      totalTransactions
+    }
   });
 }
 
 module.exports = {
-  getNetworkInfo,
+  getNetworkInfo
 };

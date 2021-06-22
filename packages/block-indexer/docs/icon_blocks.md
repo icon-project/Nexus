@@ -625,3 +625,82 @@ icon Block: e {
   icon   logsBloom: '0x040000000000000000000021000000200100...'
   icon } +19ms
 ```
+
+### FAS Transfer
+
+```bash
+icon Block: e {
+  icon   height: 58009,
+  icon   blockHash: '0x7ebbce88efc43e7a797f48fc45b8ae672e8eae4fc583a205db458014c98df6d6',
+  icon   merkleTreeRootHash: '0x243b275d8aba76430376e9c594d7473e11f2dcca6fe7ec20cc960528998079b1',
+  icon   prevBlockHash: '0xcd0e2efc75d6471fd00a7d43f4527af0510404c79da1040137bdc66eb9d2e370',
+  icon   peerId: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
+  icon   confirmedTransactionList: [
+  icon     e {
+  icon       timestamp: 1623913838954489,
+  icon       nid: H { s: 1, e: 0, c: [ 3 ] },
+  icon       stepLimit: H { s: 1, e: 10, c: [ 10000000000 ] },
+  icon       from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
+  icon       to: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
+  icon       signature: 'br5tuyysarMPi4H1+N2GEDGrsRD5ZvRhGDH9YQ8jhuU0tNp3DI9aHD/F0k9QdxiJMu0zeQsgk6Tj0BVDK3e7VwE=',
+  icon       dataType: 'call',
+  icon       data: {
+  icon         method: 'transfer',
+  icon         params: {
+  icon           _to: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e',
+  icon           _value: '0x56BC75E2D63100000'
+  icon         }
+  icon       },
+  icon       version: H { s: 1, e: 0, c: [ 3 ] },
+  icon       txHash: '0x607984145dfe46bb66b7e329e76569b73124e1bfb1936f55ecfd095499ed24b3'
+  icon     }
+  icon   ],
+  icon   signature: '',
+  icon   timeStamp: 1623913837633222,
+  icon   version: '2.0'
+  icon } +29s
+  icon Transaction: e {
+  icon   timestamp: 1623913838954489,
+  icon   nid: H { s: 1, e: 0, c: [ 3 ] },
+  icon   stepLimit: H { s: 1, e: 10, c: [ 10000000000 ] },
+  icon   from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
+  icon   to: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
+  icon   signature: 'br5tuyysarMPi4H1+N2GEDGrsRD5ZvRhGDH9YQ8jhuU0tNp3DI9aHD/F0k9QdxiJMu0zeQsgk6Tj0BVDK3e7VwE=',
+  icon   dataType: 'call',
+  icon   data: {
+  icon     method: 'transfer',
+  icon     params: {
+  icon       _to: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e',
+  icon       _value: '0x56BC75E2D63100000'
+  icon     }
+  icon   },
+  icon   version: H { s: 1, e: 0, c: [ 3 ] },
+  icon   txHash: '0x607984145dfe46bb66b7e329e76569b73124e1bfb1936f55ecfd095499ed24b3'
+  icon } +44ms
+  icon 0x607984145dfe46bb66b7e329e76569b73124e1bfb1936f55ecfd095499ed24b3: [RPC ERROR] Executing +5ms
+  icon Block height 58010: [RPC ERROR] E1005:Not found +1s
+  icon Transaction result: e {
+  icon   status: 1,
+  icon   to: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e', # token address
+  icon   txHash: '0x607984145dfe46bb66b7e329e76569b73124e1bfb1936f55ecfd095499ed24b3',
+  icon   txIndex: 0,
+  icon   blockHeight: 58009,
+  icon   blockHash: '0x7ebbce88efc43e7a797f48fc45b8ae672e8eae4fc583a205db458014c98df6d6',
+  icon   cumulativeStepUsed: H { s: 1, e: 5, c: [ 202282 ] },
+  icon   stepUsed: H { s: 1, e: 5, c: [ 202282 ] },
+  icon   stepPrice: H { s: 1, e: 10, c: [ 12500000000 ] },
+  icon   eventLogs: [
+  icon     {
+  icon       scoreAddress: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
+  icon       indexed: [
+  icon         'Transfer(Address,Address,int,bytes)',
+  icon         'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
+  icon         'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e', # FAS address
+  icon         '0x56bc75e2d63100000' # amount
+  icon       ],
+  icon       data: [ '0x' ]
+  icon     }
+  icon   ],
+  icon   logsBloom: '0x0000000000000000800000200000...'
+  icon }
+```
