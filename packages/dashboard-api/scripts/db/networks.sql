@@ -1,10 +1,13 @@
-CREATE TABLE Networks (
-   Id char varying(30) PRIMARY KEY,
-   name char varying(200) UNIQUE NOT NULL,
-   Logo char varying(300),
-   Create_At TIMESTAMP,
-   Update_At TIMESTAMP,
-   Delete_At TIMESTAMP
+CREATE TABLE public.networks (
+   id character varying(100) PRIMARY KEY,
+   name character varying(4000) NOT NULL,
+   path_logo character varying(100),
+   url character varying(100),
+   mint_fee numeric,
+   burn_fee numeric,
+   create_at integer,
+   update_at integer,
+   delete_at integer
 );
 
 

@@ -1,6 +1,5 @@
 'use strict';
-const { TRANSACTION_TBL_NAME } = require('../../../../block-indexer/src/common');
-const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL, TRANSACTION_TBL_NAME} = require('../../common');
 
 async function countNetwork() {
   const {
