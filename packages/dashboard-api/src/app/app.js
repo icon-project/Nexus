@@ -9,7 +9,7 @@ const { createAuctionRoute } = require('../modules/auctions');
 
 const { createRelayRoute } = require('../modules/relays');
 const { createTransRoute } = require('../modules/transactions');
-const { createNetworksRoute} = require('../modules/networks')
+const { createNetworksRoute} = require('../modules/networks');
 const app = express();
 const version = process.env.API_VERSION;
 app.use(cors());

@@ -9,20 +9,23 @@ const model = require('./model');
 async function getNetworksInfo(request, response) {
     const networkConnectedIcon = await model.getListNetworkConnectedIcon();
     response.status(HttpStatus.OK).json({
-          networkConnectedIcon,
-      });
+        content:{
+            networks: networkConnectedIcon,
+        }
+    });
 }
 
-
-async function getNetworksById(request, response) {
-    const id = request.params.id;
+async function getNetworkInfoById(request, response) {
+    const id = parseInt(request.params.id);
     const networkInfo = await model.getNetworkById(id);
     response.status(HttpStatus.OK).json({
-        networkInfo,
-      });
+        content: {
+            network: networkInfo,
+        }
+    });
 }
 
 module.exports = {
     getNetworksInfo,
-    getNetworksById
+    getNetworkInfoById
 }
