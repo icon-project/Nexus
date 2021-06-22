@@ -143,7 +143,7 @@ export const HistoryDetails = ({ details, onClose }) => {
     <Modal
       display
       title="Transfer details"
-      width="840px"
+      width="auto"
       marginTop="123px"
       setDisplay={() => onClose()}
     >
