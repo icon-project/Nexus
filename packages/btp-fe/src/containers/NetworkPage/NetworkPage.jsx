@@ -14,11 +14,9 @@ import { media } from 'components/Styles/Media';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 
-import binanceIcon from 'assets/images/binance.svg';
-
 const Network = ({ iconUrl, name, url }) => {
   return (
-    <Row>
+    <Row align="middle">
       <img className="network-icon" src={iconUrl} />
       <div>
         <div className="network-name">{name}</div>
@@ -41,7 +39,11 @@ const columns = [
     title: 'Network',
     dataIndex: 'name',
     render: (text, record) => (
-      <Network iconUrl={record.iconUrl || binanceIcon} name={text} url={record.url}></Network>
+      <Network
+        iconUrl={process.env.REACT_APP_BTP_ENDPOINT + record.pathLogo.substring(1)}
+        name={text}
+        url={record.url}
+      ></Network>
     ),
   },
   {
@@ -84,6 +86,7 @@ const NetworkStyled = styled.div`
   .network-icon {
     margin-right: 12px;
     width: 20px;
+    height: 20px;
   }
   .url {
     ${smallText}
