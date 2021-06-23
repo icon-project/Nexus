@@ -32,6 +32,8 @@ const TRANSACTION_TBL = {
   blockHash: 'block_hash',
   txHash: 'tx_hash',
   confirmed: 'confirmed',
+  networkId: 'network_id',
+  blockTime: 'block_time',
   createAt: 'create_at',
   updateAt: 'update_at',
   deleteAt: 'delete_at',
