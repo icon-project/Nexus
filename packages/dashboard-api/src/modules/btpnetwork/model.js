@@ -2,8 +2,9 @@
 
 const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
-const { countNetwork, sumTransactionAmount, countTransaction } = require('./repository');
+const { countNetwork, sumTransactionAmount, countTransaction, getAllTimeFeeOfAssets } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
+
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.NODE_URL);
@@ -13,15 +14,18 @@ async function getAmountFeeAggregationSCORE() {
   const { CallBuilder } = IconBuilder;
   const callBuilder = new CallBuilder();
   let result = [];
+
   try {
     const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
     const tokens = await iconService.call(call).execute();
+
     for (let data of tokens) {
       logger.debug(`[getAmountFeeAggregationSCORE] token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
       let dexBalance = parseInt(hexBalance.toString(16), 16);
       result.push({ name: data.name, value: dexBalance });
     }
+
     return result;
   } catch (e) {
     logger.error(e, 'getAmountFeeAggregationSCORE() failed when execute get list tokens');
@@ -37,6 +41,7 @@ async function getAvailableBalance(nameToken) {
     .method('availableBalance')
     .params({ _tokenName: nameToken })
     .build();
+
   try {
     const availableBalance = await iconService.call(call).execute();
     logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
@@ -83,10 +88,15 @@ async function getBondedVolumeByRelays() {
   }
 }
 
+async function getAllTimeFee() {
+  return await getAllTimeFeeOfAssets();
+}
+
 module.exports = {
   getAmountFeeAggregationSCORE,
   getTotalNetworks,
   getTotalTransactionAmount,
   getTotalTransaction,
   getBondedVolumeByRelays,
+  getAllTimeFee
 };

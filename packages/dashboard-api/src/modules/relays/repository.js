@@ -47,21 +47,13 @@ async function getRelayDetailList() {
 }
 
 async function getTotalBondedRelays() {
-  const query = 'SELECT name, bonded_icx as volume FROM relays';
+  const query = 'SELECT sum(bonded_icx) FROM relays';
 
   try {
-    const { rows } = await pgPool.query(query);
-    if (rows.length > 0) {
-      const bondedRelays = [];
-
-      for (const row of rows) {
-        bondedRelays.push({
-          relayName: row.name,
-          volume: Number(row.volume),
-        });
-      }
-      return bondedRelays;
-    }
+    const {
+      rows: [result],
+    } = await pgPool.query(query);
+    return Number(result.sum) || 0;
   } catch (err) {
     logger.error('getTotalBondedRelays fails', { err });
     throw err;
