@@ -10,5 +10,7 @@ CREATE TABLE public.networks (
    delete_at integer
 );
 
+ALTER TABLE networks
+ALTER COLUMN id TYPE char varying(100);
 
 SELECT SUM(value) FROM Transactions WHERE Confirmed = true

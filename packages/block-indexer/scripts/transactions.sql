@@ -23,5 +23,8 @@ ADD block_time bigint;
 ALTER TABLE public.transactions 
 RENAME COLUMN nid TO network_id;
 
+ALTER TABLE public.transactions
+ALTER COLUMN network_id TYPE char varying(100);
+
 drop table Transactions
 TRUNCATE table Transactions
