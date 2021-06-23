@@ -2,7 +2,6 @@
 const { logger } = require('../../common');
 const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME} = require('../../common');
 
-
 async function getTokensVolume24h() {
   const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
   try {
@@ -26,12 +25,12 @@ async function getTokensVolume24h() {
     throw err;
   }
 }
-  
-  async function getTokenVolumeAllTime() {
-    try {
-      const {rows} = await pgPool.query(
-        `SELECT network_id, token_name, sum(value) as token_volume
-        FROM ${TRANSACTION_TBL_NAME}
+
+async function getTokenVolumeAllTime() {
+  try {
+    const {rows} = await pgPool.query(
+      `SELECT network_id, token_name, sum(value) as token_volume
+        FROM ${TRANSACTION_TBL_NAME}  
         WHERE confirmed = true
         GROUP BY(token_name, network_id)`,
       );
