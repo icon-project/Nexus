@@ -90,8 +90,8 @@ async function getNetworkById(id) {
       result.push({
         nameToken: name,
         volume24h: token24h,
-        volume24hUSD: tokenAllTime,
-        volumeAllTime: USD24h,
+        volume24hUSD: USD24h,
+        volumeAllTime: tokenAllTime,
         volumeAlTimeUSD: USDAllTime,
       });
     }
