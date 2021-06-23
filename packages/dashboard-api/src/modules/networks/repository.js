@@ -4,41 +4,41 @@ const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME} = require('../../common'
 
 
 async function getTokensVolume24h() {
-    const at24hAgo = (new Date().getTime()*1000) - 86400000000;
-    try {
-      const {rows} = await pgPool.query(
-        `SELECT nid, token_name, sum(value) as token_volume
+  const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
+  try {
+    const { rows } = await pgPool.query(
+      `SELECT network_id, token_name, sum(value) as token_volume
         FROM ${TRANSACTION_TBL_NAME}
-        WHERE timestamp >= ${at24hAgo} AND confirmed = true
-        GROUP BY(token_name, nid)`,
-      );
-      let result = [];
-      for(let data of rows) {
-          result.push({
-          nid: data.nid,
-          tokenName: data.token_name,
-          tokenVolume: data.token_volume
-        });
-      }
-      return result;
-    } catch(error) {
-      logger.error('getTokensVolume24h fails', { err });
-      throw err;
+        WHERE block_time >= ${at24hAgo} AND confirmed = true
+        GROUP BY(token_name, network_id)`,
+    );
+    let result = [];
+    for (let data of rows) {
+      result.push({
+        networkId: data.network_id,
+        tokenName: data.token_name,
+        tokenVolume: data.token_volume,
+      });
     }
+    return result;
+  } catch (err) {
+    logger.error('getTokensVolume24h fails', { err });
+    throw err;
   }
+}
   
   async function getTokenVolumeAllTime() {
     try {
       const {rows} = await pgPool.query(
-        `SELECT nid, token_name, sum(value) as token_volume
+        `SELECT network_id, token_name, sum(value) as token_volume
         FROM ${TRANSACTION_TBL_NAME}
         WHERE confirmed = true
-        GROUP BY(token_name, nid)`,
+        GROUP BY(token_name, network_id)`,
       );
       let result = [];
       for(let data of rows) {
           result.push({
-          nid: data.nid,
+          networkId: data.network_id,
           tokenName: data.token_name,
           tokenVolume: data.token_volume
         });
@@ -75,13 +75,13 @@ async function getTokensVolume24h() {
   }
 
   async function getVolumeToken24hByNid(name, id) {
-    const at24hAgo = (new Date().getTime()*1000) - 86400000000;
+    const at24hAgo = (new Date().getTime()*1000) - 86400000000; // current_time(microsecond) - 24h(microsecond)
     const {
       rows: [result],
     } = await pgPool.query(
       `SELECT sum(value) as token_volume
       FROM ${TRANSACTION_TBL_NAME}
-      WHERE confirmed = true AND timestamp >= $1 AND nid = $2 AND token_name = $3 `,
+      WHERE confirmed = true AND block_time >= $1 AND network_id = $2 AND token_name = $3 `,
       [at24hAgo, id, name]
     );
     return Number(result.token_volume) || 0;
@@ -93,7 +93,7 @@ async function getTokensVolume24h() {
     } = await pgPool.query(
       `SELECT sum(value) as token_volume
       FROM ${TRANSACTION_TBL_NAME}
-      WHERE confirmed = true AND nid = $1 AND token_name = $2`,
+      WHERE confirmed = true AND network_id = $1 AND token_name = $2`,
       [id, name]
     );
     return Number(result.token_volume) || 0;
