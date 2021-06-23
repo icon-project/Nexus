@@ -1,23 +1,22 @@
 'use strict';
 
 const { logger } = require('../../common');
-
 const { getNetworkInfo, getTokensVolume24h, getTokenVolumeAllTime, getVolumeToken24hByNid, getVolumeTokenAllTimeByNid} = require('./repository')
 const { countNetwork } =  require('../btpnetwork/repository')
 const { exchangeToFiat } = require('../../common/util');
 const { get } = require('../btpnetwork/route');
 
 async function getListNetworkConnectedIcon() {
-    try {
-      const networks = await getNetworkInfo();
-      const tokensVolume24h = await getTokensVolume24h();
-      const tokensVolumeAllTime = await getTokenVolumeAllTime();
-  
-      return await updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime);
-    } catch (err) {
-      logger.error(err, '"getListNetworkConnectedIcon" failed while getting total transaction');
-      throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
-    }
+  try {
+    const networks = await getNetworkInfo();
+    const tokensVolume24h = await getTokensVolume24h();
+    const tokensVolumeAllTime = await getTokenVolumeAllTime();
+
+    return await updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime);
+  } catch (err) {
+    logger.error(err, '"getListNetworkConnectedIcon" failed while getting total transaction');
+    throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
+  }
 }
 
 async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) {
