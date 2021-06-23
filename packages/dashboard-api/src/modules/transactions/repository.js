@@ -1,13 +1,16 @@
 'use strict';
 
-const { logger, pgPool, TRANSACTION_TBL_NAME } = require('../../common');
+const { logger, pgPool, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
 
-async function getTransactions(page = 0, limit = 20) {
+async function getTransactions(page = 0, limit = 20, from, to) {
   let offset = page * limit;
-  const query = `SELECT * FROM ${TRANSACTION_TBL_NAME} LIMIT ${limit} OFFSET ${offset}`;
+  const query = `SELECT * FROM ${TRANSACTION_TBL_NAME}
+                    WHERE ${TRANSACTION_TBL.fromAddress} ~ $1
+                       AND ${TRANSACTION_TBL.toAddress} ~ $2
+                    LIMIT $3 OFFSET $4`;
 
   try {
-    const { rows } = await pgPool.query(query);
+    const { rows } = await pgPool.query(query, [from, to, limit, offset]);
     const transactions = [];
     if (rows.length > 0) {
       for (const row of rows) {
