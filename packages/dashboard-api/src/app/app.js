@@ -14,6 +14,7 @@ const app = express();
 const version = process.env.API_VERSION;
 app.use(cors());
 app.use(express.json());
+app.use(`/${version}/`, express.static('static'));
 app.use(`/${version}/btpnetwork`, createBtpNetworkRoute());
 app.use(`/${version}/networks`, createNetworksRoute());
 app.use(`/${version}/auctions`, createAuctionRoute());
