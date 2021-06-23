@@ -6,6 +6,7 @@ import { Tooltip } from 'components/Tooltip';
 
 import { colors } from 'components/Styles/Colors';
 import { smallText } from 'components/Typography/Text';
+import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
   ${smallText}
@@ -46,6 +47,19 @@ const Wrapper = styled.div`
       color: ${colors.graySubText};
     }
   }
+  ${media.sm`
+    display: inline-block;
+    .pie-chart {
+      margin-right: 0;
+      margin-bottom: 10px;
+      width: 180px;
+      height: 180px;
+    }
+    .desc-element {
+      margin-bottom: 10px;
+      height: 12px;
+    }
+  `};
 `;
 
 const Circle = styled.div`

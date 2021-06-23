@@ -26,6 +26,11 @@ const Wrapper = styled.div`
       height: 595px;
     `}
   }
+  ${media.xl`
+    .chart {
+      height: fit-content;
+    }
+  `};
 
   ${media.xl`
     flex-direction: column;
