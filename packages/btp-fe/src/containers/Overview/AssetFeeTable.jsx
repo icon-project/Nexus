@@ -4,6 +4,8 @@ import { HorizontalScrollContainer } from 'components/HorizontalScrollContainer'
 import { smallText } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
 
+import { shortenNumber } from 'utils/app';
+
 const Table = styled.table`
   th,
   td {
@@ -38,7 +40,7 @@ export const AssetFeeTable = ({ assets }) => {
           <tr>
             <td>Fee</td>
             {assets.map(({ value }, idx) => (
-              <td key={idx}>{value}</td>
+              <td key={idx}>{shortenNumber(value)}</td>
             ))}
           </tr>
         </tbody>

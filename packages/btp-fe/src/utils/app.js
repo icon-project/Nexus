@@ -26,4 +26,17 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-export { isEmpty, filterObjectByKeyArr, hashShortener };
+const shortenNumber = (num) => {
+  num = num + '';
+  const { length } = num;
+  switch (true) {
+    case length > 9:
+      return num.slice(0, -9) + ' B';
+    case length > 6:
+      return num.slice(0, -6) + ' M';
+    default:
+      return num;
+  }
+};
+
+export { isEmpty, filterObjectByKeyArr, hashShortener, shortenNumber };
