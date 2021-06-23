@@ -57,7 +57,7 @@ export const ChartArea = ({ volume = 0 }) => {
         <Header className="medium bold inline">
           ${volume.toLocaleString()} <UpDownPercent up percent="9.55%" />
         </Header>
-        <ChartBox />
+        <ChartBox chartId={'volume'} />
       </div>
       <div className="chart">
         <TextWithInfo tooltip="Total amount of mint transacted via BTP in $" width={300}>
@@ -66,7 +66,7 @@ export const ChartArea = ({ volume = 0 }) => {
         <Header className="medium bold inline">
           $892,797,895.53 <UpDownPercent up percent="9.55%" />
         </Header>
-        <ChartBox />
+        <ChartBox chartId={'mint'} />
       </div>
     </Wrapper>
   );
