@@ -87,6 +87,11 @@ const NetworkStyled = styled.div`
     margin-right: 12px;
     width: 20px;
     height: 20px;
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -o-crisp-edges; /* Opera */
+    image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
   }
   .url {
     ${smallText}
