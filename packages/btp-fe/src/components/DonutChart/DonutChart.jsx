@@ -48,10 +48,13 @@ const Wrapper = styled.div`
     }
   }
   ${media.sm`
-    display: inline-block;
+    
+    flex-direction: column;
+
     .pie-chart {
+      align-self: center;
       margin-right: 0;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
       width: 180px;
       height: 180px;
     }
