@@ -82,7 +82,7 @@ const tabs = {
   asset: 'asset',
 };
 
-export const ChartBox = () => {
+export const ChartBox = ({ chartId }) => {
   const [currentTab, setCurrentTab] = useState(tabs.history);
 
   const isCurrentTab = (tab) => (currentTab === tabs[tab] ? 'bold active' : 'regular');
@@ -108,7 +108,11 @@ export const ChartBox = () => {
       </div>
 
       <div className="tab-content">
-        {currentTab === tabs.history ? <AreaChart /> : <DonutChart />}
+        {currentTab === tabs.history ? (
+          <AreaChart chartId={chartId} />
+        ) : (
+          <DonutChart chartId={chartId} />
+        )}
       </div>
     </Wrapper>
   );

@@ -66,16 +66,15 @@ const dataMock = [
   { title: 'OTHER', value: 1323154.84, color: '#5EF38C' },
 ];
 
-const setTooltipPosition = (x, y) => {
-  const tooltipStyle = document.getElementById('donut-tooltip').style;
-  x = x - 50;
-  y = y - 60;
-  tooltipStyle.left = `${x}px`;
-  tooltipStyle.top = `${y}px`;
-};
-
-const DonutChart = () => {
+const DonutChart = ({ chartId }) => {
   const [hovered, setHovered] = useState(null);
+  const setTooltipPosition = (x, y) => {
+    const tooltipStyle = document.getElementById(`donut-tooltip-${chartId}`).style;
+    x = x - 50;
+    y = y - 60;
+    tooltipStyle.left = `${x}px`;
+    tooltipStyle.top = `${y}px`;
+  };
   return (
     <Wrapper>
       <PieChart
@@ -93,7 +92,7 @@ const DonutChart = () => {
           setHovered(null);
         }}
       />
-      <div id="donut-tooltip" className="donut-tooltip">
+      <div id={`donut-tooltip-${chartId}`} className="donut-tooltip">
         {typeof hovered === 'number' && (
           <Tooltip width={100} direction="bottom">
             <div>{dataMock[hovered].title}</div>

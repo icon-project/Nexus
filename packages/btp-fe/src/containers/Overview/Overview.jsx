@@ -20,13 +20,18 @@ const Overview = () => {
   const [loading, setLoading] = useState(true);
   const {
     app: { content = {} },
-  } = useSelect(({ app }) => ({
+    networks,
+  } = useSelect(({ app, network: { selectNetwotks } }) => ({
     app: app.selectAppInfo,
+    networks: selectNetwotks,
   }));
 
-  const { getAppInfo } = useDispatch(({ app: { getAppInfo } }) => ({
-    getAppInfo,
-  }));
+  const { getAppInfo, getNetworks } = useDispatch(
+    ({ app: { getAppInfo }, network: { getNetworks } }) => ({
+      getAppInfo,
+      getNetworks,
+    }),
+  );
 
   useEffect(() => {
     const handleGetAppInfo = async () => {
@@ -35,6 +40,11 @@ const Overview = () => {
     };
     handleGetAppInfo();
   }, [getAppInfo]);
+
+  useEffect(() => {
+    getNetworks();
+  }, [getNetworks]);
+
   return (
     <Wrapper>
       {loading ? (
@@ -42,7 +52,7 @@ const Overview = () => {
       ) : (
         <>
           <ChartArea volume={content.volume || 0} />
-          <StatisticArea data={content} />
+          <StatisticArea data={content} networks={networks} />
         </>
       )}
     </Wrapper>
