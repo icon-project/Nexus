@@ -19,6 +19,11 @@ const sizes = {
 
 const StyledIcon = styled.img`
   width: ${({ width, size }) => sizes[size] || width};
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
 `;
 
 export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL }) => {
