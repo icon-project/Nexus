@@ -70,4 +70,4 @@ export const NETWORKS = {
 
 const testnet = localStorage.getItem('dev');
 export const currentICONexNetwork =
-  (testnet ? NETWORKS[testnet] : NETWORKS.sejong) || NETWORKS.sejong;
+  (testnet ? NETWORKS[testnet] : NETWORKS.cloud) || NETWORKS.cloud;

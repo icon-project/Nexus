@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Table } from 'components/Table';
@@ -9,51 +10,34 @@ import { Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 import { Change } from 'components/Change';
 
-import iconexIcon from 'assets/images/icon-ex.svg';
+import { useDispatch, useSelect } from 'hooks/useRematch';
 
 const columns = [
   {
     title: '#',
-    dataIndex: 'key',
+    dataIndex: 'rank',
   },
   {
     title: 'Name',
     dataIndex: 'name',
-    render: (text) => (
-      <>
-        <img className="iconex" src={iconexIcon} />
-        <span className="copy-address">{text}</span>
-      </>
-    ),
   },
   {
     title: 'Bonded ICX',
-    dataIndex: 'bonded',
+    dataIndex: 'bondedICX',
   },
   {
     title: 'Server status',
-    dataIndex: 'status',
+    dataIndex: 'serverStatus',
   },
   {
     title: 'Transferred transaction',
-    dataIndex: 'transaction',
+    dataIndex: 'transferredTransactions',
   },
   {
     title: 'Failed transaction',
-    dataIndex: 'failed',
+    dataIndex: 'failedTransactions',
   },
 ];
-let dataSource = [];
-for (let i = 1; i < 22; i++) {
-  dataSource.push({
-    key: i,
-    name: 'ICON Foundation',
-    bonded: '52,254,777.1397',
-    status: 'Active',
-    transaction: '12,394',
-    failed: '127',
-  });
-}
 
 const GovernanceStyled = styled.div`
   max-width: 1120px;
@@ -117,6 +101,18 @@ const GovernanceStyled = styled.div`
 `;
 
 function GovernancePage() {
+  const { relayCandidates } = useSelect(({ governance: { selectRelayCandidates } }) => ({
+    relayCandidates: selectRelayCandidates,
+  }));
+
+  const { getRelayCandidates } = useDispatch(({ governance: { getRelayCandidates } }) => ({
+    getRelayCandidates,
+  }));
+
+  useEffect(() => {
+    getRelayCandidates();
+  }, [getRelayCandidates]);
+
   return (
     <GovernanceStyled>
       <div className="content">
@@ -125,7 +121,7 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REGISTERED</Text>
-              <Change status={'descrease'} value={'1,742'} percent={32} />
+              <Change status={'descrease'} value={relayCandidates.length} percent={32} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
@@ -135,8 +131,9 @@ function GovernancePage() {
           </div>
         </div>
         <Table
+          rowKey="id"
           columns={columns}
-          dataSource={dataSource}
+          dataSource={relayCandidates}
           pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
