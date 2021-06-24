@@ -7,7 +7,8 @@ const { getTotalBondedRelays } = require('../relays/repository');
 
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
-const provider = new HttpProvider(process.env.NODE_URL);
+
+const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
 
 async function getAmountFeeAggregationSCORE() {
