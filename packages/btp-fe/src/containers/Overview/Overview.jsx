@@ -20,13 +20,18 @@ const Overview = () => {
   const [loading, setLoading] = useState(true);
   const {
     app: { content = {} },
-  } = useSelect(({ app }) => ({
+    networks,
+  } = useSelect(({ app, network: { selectNetwotks } }) => ({
     app: app.selectAppInfo,
+    networks: selectNetwotks,
   }));
 
-  const { getAppInfo } = useDispatch(({ app: { getAppInfo } }) => ({
-    getAppInfo,
-  }));
+  const { getAppInfo, getNetworks } = useDispatch(
+    ({ app: { getAppInfo }, network: { getNetworks } }) => ({
+      getAppInfo,
+      getNetworks,
+    }),
+  );
   const { fee = {}, totalNetworks = 0, totalTransaction = 0, volume = 0 } = content;
 
   useEffect(() => {
@@ -36,6 +41,11 @@ const Overview = () => {
     };
     handleGetAppInfo();
   }, [getAppInfo]);
+
+  useEffect(() => {
+    getNetworks();
+  }, [getNetworks]);
+
   return (
     <Wrapper>
       {loading ? (
@@ -47,6 +57,7 @@ const Overview = () => {
             fee={fee}
             totalNetworks={totalNetworks}
             totalTransaction={totalTransaction}
+            networks={networks}
           />
         </>
       )}
