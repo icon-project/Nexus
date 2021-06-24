@@ -4,7 +4,6 @@ const { logger } = require('../../common');
 const { getNetworkInfo, getTokensVolume24h, getTokenVolumeAllTime, getVolumeToken24hByNid, getVolumeTokenAllTimeByNid} = require('./repository')
 const { countNetwork } =  require('../btpnetwork/repository')
 const { exchangeToFiat } = require('../../common/util');
-const { get } = require('../btpnetwork/route');
 
 async function getListNetworkConnectedIcon() {
   try {
