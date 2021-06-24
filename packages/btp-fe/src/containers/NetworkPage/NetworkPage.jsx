@@ -105,6 +105,7 @@ const NetworkStyled = styled.div`
 
 function NetworkPage() {
   const [isModalOpened, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
     networks: selectNetwotks,
@@ -115,7 +116,9 @@ function NetworkPage() {
   }));
 
   useEffect(() => {
-    getNetworks();
+    getNetworks().then(() => {
+      setLoading(false);
+    });
   }, [getNetworks]);
 
   return (
@@ -127,6 +130,7 @@ function NetworkPage() {
         </div>
         <Table
           rowKey="id"
+          loading={loading && networks.length === 0}
           columns={columns}
           dataSource={networks}
           pagination={false}

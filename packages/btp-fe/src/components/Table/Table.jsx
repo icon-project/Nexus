@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import { Table as antdTable } from 'antd';
 import { colors } from '../Styles/Colors';
+
 import { media } from '../Styles/Media';
 import { smallText, mediumText } from '../Typography/Text';
+import { Loader } from 'components/Loader';
 
 import UnionSrc from 'assets/images/union.svg';
 import PrevIconSrc from 'assets/images/prev-icon.svg';
@@ -129,6 +131,7 @@ export const Table = ({
   hoverColor,
   pagination,
   columns,
+  loading,
   ...rest
 }) => {
   function itemRender(current, type, originalElement) {
@@ -166,6 +169,7 @@ export const Table = ({
       bodyText={bodyText}
       hoverColor={hoverColor}
       columns={columns}
+      loading={loading && { indicator: <Loader size="25px" borderSize="3px" /> }}
       pagination={pagination ? { ...pagination, position: ['bottomCenter'], itemRender } : false}
       {...rest}
     >
