@@ -1,13 +1,14 @@
 import { colors } from 'components/Styles/Colors';
 import styled from 'styled-components/macro';
 import { smallText } from 'components/Typography/Text';
+import tooltipArrow from 'assets/images/tooltip-arrow.svg';
 
 const Wrapper = styled.div`
   position: absolute;
   padding: 4px 8px;
   background-color: #1d1b22;
   border-radius: 4px;
-  border: 1px solid #312f39;
+  border: 1px solid #43404f;
   width: ${({ width }) => `${width}px`};
   z-index: 101;
   div {
@@ -26,44 +27,47 @@ const Wrapper = styled.div`
 
   &.left {
     &:before {
-      border-style: solid;
-      left: 1px;
-      top: ${({ arrowPosition }) => arrowPosition};
-      border-width: 4.33px 7.5px 4.33px 0;
-      transform: translate(-100%, -50%);
-      border-color: transparent #1d1b22;
+      content: '';
+      width: 7.5px;
+      height: 8.66px;
+      background: transparent center / contain no-repeat url('${tooltipArrow}');
+      top: 40%;
+      left: -6px;
     }
   }
 
   &.right {
     &:before {
-      border-style: solid;
-      right: 1px;
-      top: ${({ arrowPosition }) => arrowPosition};
-      border-width: 4.33px 0 4.33px 7.5px;
-      transform: translate(100%, -50%);
-      border-color: transparent transparent transparent #1d1b22;
+      content: '';
+      width: 7.5px;
+      height: 8.66px;
+      background: transparent center / contain no-repeat url('${tooltipArrow}');
+      top: 40%;
+      right: -7px;
+      transform: rotate(180deg);
     }
   }
   &.top {
     &:before {
-      border-style: solid;
-      left: ${({ arrowPosition }) => arrowPosition};
-      top: 1px;
-      border-width: 0px 4.33px 7.5px 4.33px;
-      border-color: transparent transparent #1d1b22;
-      transform: translate(-50%, -100%);
+      content: '';
+      width: 7.5px;
+      height: 8.66px;
+      background: transparent center / contain no-repeat url('${tooltipArrow}');
+      left: 45%;
+      top: -8px;
+      transform: rotate(90deg);
     }
   }
 
   &.bottom {
     &:before {
-      border-style: solid;
-      left: ${({ arrowPosition }) => arrowPosition};
-      bottom: 1px;
-      border-width: 7.5px 4.33px 0 4.33px;
-      border-color: #1d1b22 transparent transparent;
-      transform: translate(-50%, 100%);
+      content: '';
+      width: 7.5px;
+      height: 8.66px;
+      background: transparent center / contain no-repeat url('${tooltipArrow}');
+      left: 44%;
+      bottom: -8px;
+      transform: rotate(-90deg);
     }
   }
 `;
