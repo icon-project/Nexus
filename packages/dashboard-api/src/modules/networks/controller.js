@@ -15,6 +15,20 @@ async function getNetworksInfo(request, response) {
     });
 }
 
+async function getNetworkInfoById(request, response) {
+    if (!request.params && !request.params.id) {
+        return response.sendStatus(HttpStatus.BadRequest);
+    }
+    const networkId = request.params.id;
+    const networkInfo = await model.getNetworkById(networkId);
+    response.status(HttpStatus.OK).json({
+        content: {
+            network: networkInfo,
+        }
+    });
+}
+
 module.exports = {
     getNetworksInfo,
+    getNetworkInfoById
 }
