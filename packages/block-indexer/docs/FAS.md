@@ -21,10 +21,16 @@ cp sample-token-0.2.0-optimized.jar GOCHAIN_LOCAL_ROOT/
 # initial 100M tokens
 ./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=Test2206 --param _symbol=ST2206 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
 
-./goloop rpc txresult 0x4af5be998a8457835afb2da37591afeed6c4f656c03971156bc5cbc8f9b42132 --uri http://localhost:9082/api/v3
+./goloop rpc txresult 0x179bd915517d146473266950a2e9a91af862d01b65de3cca47b06f9a4d04de48 --uri http://localhost:9082/api/v3
 
 # scoreAddress: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
 # Test2206 scoreAddress": "cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e",
+
+
+# remote
+./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=Test2206 --param _symbol=ST2206 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
+
+# "scoreAddress": "cx883f24e8b42f686fdfb48abb5efa709c7eacd64c"
 ```
 
 ### CPS Contract
@@ -138,6 +144,9 @@ Register token: `register` method
 # Test2206
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=Test2206 --param _tokenAddress=cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
+# remote
+./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx97dd9c3e40982bf23ac67b110741323a909a1495 --param _tokenName=Test2206 --param _tokenAddress=cx883f24e8b42f686fdfb48abb5efa709c7eacd64c --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
 ./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cx97dd9c3e40982bf23ac67b110741323a909a1495
 
 [
@@ -160,8 +169,7 @@ Bid for a special token: `bid` method with `--param _tokenName=MySampleToken`
 
 ./goloop rpc call --uri http://localhost:9082/api/v3 --method getCurrentAuction --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=Test2206
 
-
-./goloop rpc call --uri http://localhost:9082/api/v3 --method availableBalance --to cx97dd9c3e40982bf23ac67b110741323a909a1495 --param _tokenName=SangDepChai
+./goloop rpc call --uri http://localhost:9082/api/v3 --method availableBalance --to cx97dd9c3e40982bf23ac67b110741323a909a1495 --param _tokenName=Test2206
 
 setDurationTime to 600s (in microsecond)
 https://git.baikal.io/btp-dashboard/pm/-/issues/46
@@ -171,3 +179,5 @@ https://git.baikal.io/btp-dashboard/pm/-/issues/46
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method setDurationTime --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _duration=300000000 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000
 
 ./goloop rpc txresult 0xd76f07ca45e1523ae9f6404878a697c4dac87f09c79d51fa7de075c2c3cf98f5 --uri http://localhost:9082/api/v3
+
+curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"Test2206", "tokenAmount": 10}'
