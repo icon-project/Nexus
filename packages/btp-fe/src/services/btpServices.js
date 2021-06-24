@@ -7,3 +7,7 @@ export const getAuctions = () => {
 export const getAuctionDetails = (auctionId) => {
   return fetchAPI(`/auctions/${auctionId}`);
 };
+
+export const getConnectedNetworks = () => {
+  return fetchAPI(`/networks`);
+};
