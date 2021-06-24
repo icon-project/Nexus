@@ -57,7 +57,7 @@ async function getListTokenRegisteredNetwork(networkId) {
     case '0x4':
       return ["sol", "pol", "eth", "bnb"];
     default:
-      logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${id}`);
+      logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${networkId}`);
       return [];
   } 
 }
