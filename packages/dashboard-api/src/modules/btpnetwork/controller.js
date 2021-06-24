@@ -3,7 +3,6 @@
 const Boom = require('@hapi/boom');
 const Joi = require('@hapi/joi');
 const HttpStatus = require('@tiendq/http-status');
-
 const model = require('./model');
 
 async function getNetworkInfo(request, response) {

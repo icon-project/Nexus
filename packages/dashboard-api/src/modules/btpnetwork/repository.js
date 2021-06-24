@@ -37,7 +37,7 @@ async function getAllTimeFeeOfAssets() {
       for (const row of rows) {
         assets.push({
           name: row.token_name,
-          value: row.total_token_amount
+          value: Number(row.total_token_amount)
         });
       }
     }
