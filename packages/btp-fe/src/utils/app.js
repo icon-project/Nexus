@@ -26,4 +26,21 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-export { isEmpty, filterObjectByKeyArr, hashShortener };
+const roundToTwo = (num) => {
+  return +(Math.round(num + 'e+2') + 'e-2');
+};
+
+const shortenNumber = (num) => {
+  num = (num + '').split('.')[0];
+  const { length } = num;
+  switch (true) {
+    case length > 9:
+      return roundToTwo(num / 1000000000).toLocaleString() + ' B';
+    case length > 6:
+      return roundToTwo(num / 1000000).toLocaleString() + ' M';
+    default:
+      return (+num).toLocaleString();
+  }
+};
+
+export { isEmpty, filterObjectByKeyArr, hashShortener, shortenNumber };

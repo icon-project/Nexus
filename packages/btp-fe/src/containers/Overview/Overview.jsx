@@ -32,7 +32,6 @@ const Overview = () => {
       getNetworks,
     }),
   );
-  const { fee = {}, totalNetworks = 0, totalTransaction = 0, volume = 0 } = content;
 
   useEffect(() => {
     const handleGetAppInfo = async () => {
@@ -52,13 +51,8 @@ const Overview = () => {
         <div></div>
       ) : (
         <>
-          <ChartArea volume={volume} />
-          <StatisticArea
-            fee={fee}
-            totalNetworks={totalNetworks}
-            totalTransaction={totalTransaction}
-            networks={networks}
-          />
+          <ChartArea volume={content.volume || 0} />
+          <StatisticArea data={content} networks={networks} />
         </>
       )}
     </Wrapper>

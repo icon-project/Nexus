@@ -9,6 +9,8 @@ import { Feebox } from './FeeBox';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
+import { shortenNumber } from 'utils/app';
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -78,18 +80,23 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 0, networks }) => {
+export const StatisticArea = ({ data, networks }) => {
+  const { fee = {}, totalNetworks = 0, totalTransactions = 0, bondedValue } = data;
   return (
     <Wrapper>
       <div className="transaction">
         <div className="box value-bonded">
           <TextWithInfo>VALUE BONDED</TextWithInfo>
-          <Header className="small bold value">1,115.42 M</Header>
+          <Header className="small bold value" title={bondedValue}>
+            {shortenNumber(bondedValue)}
+          </Header>
           <UpDownPercent up percent="12.22%" />
         </div>
         <div className="box transaction">
           <TextWithInfo hasInfo={false}>TRANSACTIONS</TextWithInfo>
-          <Header className="small bold value">{totalTransaction}</Header>
+          <Header className="small bold value" title={totalTransactions}>
+            {shortenNumber(totalTransactions)}
+          </Header>
           <UpDownPercent up percent="12.22%" />
         </div>
       </div>
