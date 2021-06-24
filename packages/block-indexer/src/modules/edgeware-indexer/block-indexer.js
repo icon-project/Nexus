@@ -3,7 +3,7 @@
 const debug = require('debug')('edgeware');
 const axios = require('axios');
 const { logger } = require('../../common');
-const { saveBlock, saveTransaction, getLastBlock } = require('./repository');
+const { saveBlock, saveTransaction, getLastSavedBlock } = require('./repository');
 
 let blockHeight = Number(process.env.EDGEWARE_BLOCK_HEIGHT);
 let isWaitToStop = false;
@@ -37,20 +37,13 @@ async function getBlockByHeight(height) {
     return result.data;
   } catch (error) {
     if (error.response) {
-      logger.error(`getBlockByHeight ${height} failed with error ${error.response.status}`, {
-        error: {
-          code: error.response.data.code,
-          message: error.response.data.message
-        }
-      });
-
       if (400 === error.response.status) {
+        debug(`Block height ${height} not found`);
         return null; // block not found, let's waiting
       }
 
-      throw error;
+      throw error.response.data.message;
     } else {
-      logger.error(`getBlockByHeight ${height} failed with error: ${error.message}`);
       throw error;
     }
   }
@@ -59,6 +52,7 @@ async function getBlockByHeight(height) {
 async function getBlockData() {
   if (!isWaitToStop) {
     const block = await getBlockByHeight(blockHeight);
+    const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
     if (block) {
       // Block always has one extrinsics of set timestamp.
@@ -70,11 +64,9 @@ async function getBlockData() {
       }
 
       ++ blockHeight;
-      setTimeout(async () => await getBlockData(), 2000);
-    } else {
-      // Wait longer for new blocks created.
-      setTimeout(async () => await getBlockData(), 10000);
     }
+
+    setTimeout(async () => await retryGetBlockData(), timeout);
   }
 }
 
@@ -94,9 +86,18 @@ async function getHeadBlock() {
   }
 }
 
+async function retryGetBlockData() {
+  try {
+    await getBlockData();
+  } catch (error) {
+    logger.error(`Failed to fetch Edgeware block data, retry in 5 minutes`, { error });
+    setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
+  }
+}
+
 async function start() {
   if (-1 === blockHeight) {
-    const block = await getLastBlock();
+    const block = await getLastSavedBlock();
 
     if (block)
       blockHeight = Number(block.number) + 1;
@@ -110,7 +111,7 @@ async function start() {
   }
 
   logger.info('Starting Edgeware block indexer at block %d...', blockHeight);
-  await getBlockData();
+  await retryGetBlockData();
   logger.info('Started Edgeware block indexer');
 }
 

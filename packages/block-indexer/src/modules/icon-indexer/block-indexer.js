@@ -4,7 +4,7 @@ const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger } = require('../../common');
-const { saveBlock, getLastBlock } = require('./repository');
+const { saveBlock, getLastSavedBlock } = require('./repository');
 const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
 const { handleTransEvent } = require('./transactions');
@@ -15,7 +15,6 @@ const iconService = new IconService(httpProvider);
 
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 let isWaitToStop = false;
-
 
 async function runTransactionHandlers(transaction, txResult, block) {
   await handleTransEvent(txResult);
@@ -30,13 +29,12 @@ async function getTransactionResult(txHash) {
     const result = await iconService.getTransactionResult(txHash).execute();
     return result;
   } catch (error) {
-    if ('[RPC ERROR] Executing' !== error) {
-      logger.error(`Failed to get transaction result ${txHash}`, { error });
-      throw error;
+    if ('[RPC ERROR] Executing' === error) {
+      debug(`${txHash}: ${error}`);
+      return null;
     }
 
-    debug(`${txHash}: ${error}`);
-    return null;
+    logger.error(`Failed to get transaction result ${txHash}`, { error });
   }
 }
 
@@ -68,39 +66,47 @@ async function getBlockByHeight(height) {
     const block = await iconService.getBlockByHeight(height).execute();
     return block;
   } catch (error) {
-    if ('[RPC ERROR] E1005:Not found' !== error) {
-      logger.error(`Failed to get block ${height}`, { error });
-      throw error;
+    if ('[RPC ERROR] E1005:Not found' === error) {
+      debug(`Block height ${height} not found`);
+      return null;
     }
 
-    debug(`Block height ${height}: ${error}`);
-    return null;
+    throw error;
   }
 }
 
 async function getBlockData() {
   if (!isWaitToStop) {
     const block = await getBlockByHeight(blockHeight);
+    const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
     if (block) {
       if (block.confirmedTransactionList.length > 0) {
         debug('Block: %O', block);
+
         await saveBlock(block);
         await runBlockHandlers(block);
       }
 
-      ++blockHeight;
-      setTimeout(async () => await getBlockData(), 1000);
-    } else {
-      // Wait longer for new blocks created.
-      setTimeout(async () => await getBlockData(), 15000);
+      ++ blockHeight;
     }
+
+    setTimeout(async () => await retryGetBlockData(), timeout);
+  }
+}
+
+async function retryGetBlockData() {
+  try {
+    await getBlockData();
+  } catch (error) {
+    logger.error(`Failed to fetch ICON block data, retry in 5 minutes`, { error });
+    setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
 
 async function start() {
   if (-1 === blockHeight) {
-    const block = await getLastBlock();
+    const block = await getLastSavedBlock();
 
     if (block)
       blockHeight = block.height + 1;
@@ -119,7 +125,7 @@ async function start() {
   const tokens = await loadRegisteredTokens(iconService);
   logger.info('Loaded registered token list', { tokens });
 
-  await getBlockData();
+  await retryGetBlockData();
 
   logger.info('Started ICON block indexer');
 }
