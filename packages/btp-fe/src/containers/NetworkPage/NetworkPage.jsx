@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Row } from 'antd';
 
@@ -12,13 +12,11 @@ import { smallText } from 'components/Typography/Text';
 import { SortSelect } from 'components/Select';
 import { media } from 'components/Styles/Media';
 
-import binanceIcon from 'assets/images/binance.svg';
-import edgewareIcon from 'assets/images/edgeware.svg';
-import iconexIcon from 'assets/images/icon-ex.svg';
+import { useDispatch, useSelect } from 'hooks/useRematch';
 
 const Network = ({ iconUrl, name, url }) => {
   return (
-    <Row>
+    <Row align="middle">
       <img className="network-icon" src={iconUrl} />
       <div>
         <div className="network-name">{name}</div>
@@ -34,62 +32,35 @@ const Network = ({ iconUrl, name, url }) => {
 const columns = [
   {
     title: '#',
-    dataIndex: 'key',
+    dataIndex: 'index',
+    render: (text, record, index) => index + 1,
   },
   {
     title: 'Network',
-    dataIndex: 'network',
+    dataIndex: 'name',
     render: (text, record) => (
-      <Network iconUrl={record.iconUrl} name={text} url={record.url}></Network>
+      <Network
+        iconUrl={process.env.REACT_APP_BTP_ENDPOINT + record.pathLogo.substring(1)}
+        name={text}
+        url={record.url}
+      ></Network>
     ),
   },
   {
     title: 'Volume (24hr)',
-    dataIndex: 'vol24hr',
+    dataIndex: 'usd24h',
   },
   {
     title: 'Volume (All time)',
-    dataIndex: 'volalltime',
+    dataIndex: 'usdAllTime',
   },
   {
     title: 'Mint fee',
-    dataIndex: 'mint',
+    dataIndex: 'mintFee',
   },
   {
     title: 'Burn fee',
-    dataIndex: 'burn',
-  },
-];
-const dataSource = [
-  {
-    key: 1,
-    network: 'Binance Smart Chain',
-    url: 'www.binance.org/en',
-    iconUrl: binanceIcon,
-    vol24hr: '$8,156,717.24',
-    volalltime: '$1,866,877,934.27',
-    mint: '0.25%',
-    burn: '0.1%',
-  },
-  {
-    key: 2,
-    network: 'Edgeware',
-    url: 'www.edgewa.re/',
-    iconUrl: edgewareIcon,
-    vol24hr: '$8,156,717.24',
-    volalltime: '$1,866,877,934.27',
-    mint: '0.25%',
-    burn: '0.1%',
-  },
-  {
-    key: 3,
-    network: 'ICON blockchain',
-    url: 'iconrepublic.org/',
-    iconUrl: iconexIcon,
-    vol24hr: '$8,156,717.24',
-    volalltime: '$1,866,877,934.27',
-    mint: '0.25%',
-    burn: '0.1%',
+    dataIndex: 'burnFee',
   },
 ];
 
@@ -115,6 +86,7 @@ const NetworkStyled = styled.div`
   .network-icon {
     margin-right: 12px;
     width: 20px;
+    height: 20px;
   }
   .url {
     ${smallText}
@@ -133,6 +105,21 @@ const NetworkStyled = styled.div`
 
 function NetworkPage() {
   const [isModalOpened, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
+    networks: selectNetwotks,
+  }));
+
+  const { getNetworks } = useDispatch(({ network: { getNetworks } }) => ({
+    getNetworks,
+  }));
+
+  useEffect(() => {
+    getNetworks().then(() => {
+      setLoading(false);
+    });
+  }, [getNetworks]);
 
   return (
     <NetworkStyled>
@@ -142,8 +129,10 @@ function NetworkPage() {
           <SortSelect />
         </div>
         <Table
+          rowKey="id"
+          loading={loading && networks.length === 0}
           columns={columns}
-          dataSource={dataSource}
+          dataSource={networks}
           pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}

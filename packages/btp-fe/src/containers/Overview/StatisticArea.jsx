@@ -78,13 +78,7 @@ const Wrapper = styled.div`
   `}
 `;
 
-const networks = [
-  { icon: 'binance', name: 'Binance Smart Chain' },
-  { icon: 'edgeware', name: 'Edgeware' },
-  { icon: 'iconex', name: 'ICON blockchain' },
-];
-
-export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 0 }) => {
+export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 0, networks }) => {
   return (
     <Wrapper>
       <div className="transaction">
@@ -109,16 +103,21 @@ export const StatisticArea = ({ fee = {}, totalNetworks = 0, totalTransaction = 
         </div>
 
         <div className="network-list">
-          {networks.map(({ icon, name }) => (
+          {networks.slice(0, 3).map(({ pathLogo, name }) => (
             <SubTitle className="small bold" key={name}>
-              <Icon icon={icon} width="24px" />
+              <Icon
+                iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
+                width="24px"
+              />
               {name}
             </SubTitle>
           ))}
         </div>
-        <Link className="x-small" to="#" center>
-          See all
-        </Link>
+        {networks.length > 3 && (
+          <Link className="x-small" to="/network" center>
+            See all
+          </Link>
+        )}
       </div>
     </Wrapper>
   );

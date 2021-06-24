@@ -21,7 +21,7 @@ const StyledIcon = styled.img`
   width: ${({ width, size }) => sizes[size] || width};
 `;
 
-export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
+export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL }) => {
   const icons = {
     metaMask: metaMaskIcon,
     iconex: iconexIcon,
@@ -34,7 +34,13 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size }) => {
   };
 
   return (
-    <StyledIcon src={icons[icon]} alt="wallet icon" loading="lazy" width={width} size={size} />
+    <StyledIcon
+      src={iconURL || icons[icon]}
+      alt="wallet icon"
+      loading="lazy"
+      width={width}
+      size={size}
+    />
   );
 });
 
