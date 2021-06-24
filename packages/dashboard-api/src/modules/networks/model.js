@@ -46,13 +46,13 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
 async function getListTokenRegisteredNetwork(id) {
   //TODO: using SC to get list tokens registered network
   switch(id) {
-    case 0:
-      return ["icx", "xrp", "eth", "bnb"];
     case 1:
-      return ["edg", "ltc", "eth", "bnb"];
+      return ["icx", "xrp", "eth", "bnb"];
     case 2:
-      return ["near", "bsh", "eth", "bnb"];
+      return ["edg", "ltc", "eth", "bnb"];
     case 3:
+      return ["near", "bsh", "eth", "bnb"];
+    case 4  :
       return ["sol", "pol", "eth", "bnb"];
     default:
       logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${id}`);
