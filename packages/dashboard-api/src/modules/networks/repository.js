@@ -73,29 +73,27 @@ async function getTokenVolumeAllTime() {
     }
   }
 
-  async function getVolumeToken24hByNid(name, id) {
+  async function getVolumeToken24hByNid(name, networkId) {
     const at24hAgo = (new Date().getTime()*1000) - 86400000000; // current_time(microsecond) - 24h(microsecond)
-    let idHex = '0x' + id.toString(16); // convert number to hexadecimal string
     const {
       rows: [result],
     } = await pgPool.query(
       `SELECT sum(value) as token_volume
       FROM ${TRANSACTION_TBL_NAME}
       WHERE confirmed = true AND block_time >= $1 AND network_id = $2 AND token_name = $3 `,
-      [at24hAgo, idHex, name]
+      [at24hAgo, networkId, name]
     );
     return Number(result.token_volume) || 0;
   }
 
-  async function getVolumeTokenAllTimeByNid(name, id) {
-    let idHex = '0x' + id.toString(16); // convert number to hexadecimal string
-    const {
+  async function getVolumeTokenAllTimeByNid(name, networkId) {
+   const {
       rows: [result],
     } = await pgPool.query(
       `SELECT sum(value) as token_volume
       FROM ${TRANSACTION_TBL_NAME}
       WHERE confirmed = true AND network_id = $1 AND token_name = $2`,
-      [idHex, name]
+      [networkId, name]
     );
     return Number(result.token_volume) || 0;
   }

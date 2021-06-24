@@ -43,16 +43,16 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
   return networks;
 }
 
-async function getListTokenRegisteredNetwork(id) {
+async function getListTokenRegisteredNetwork(networkId) {
   //TODO: using SC to get list tokens registered network
-  switch(id) {
-    case 1:
+  switch(networkId) {
+    case '0x1':
       return ["icx", "xrp", "eth", "bnb"];
-    case 2:
+    case '0x2':
       return ["edg", "ltc", "eth", "bnb"];
-    case 3:
+    case '0x3':
       return ["near", "bsh", "eth", "bnb"];
-    case 4  :
+    case '0x4':
       return ["sol", "pol", "eth", "bnb"];
     default:
       logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${id}`);
@@ -60,12 +60,12 @@ async function getListTokenRegisteredNetwork(id) {
   } 
 }
 
-async function getNetworkById(id) {
-    const tokens = await getListTokenRegisteredNetwork(id);
+async function getNetworkById(networkId) {
+    const tokens = await getListTokenRegisteredNetwork(networkId);
     let result = [];
     for (let name of tokens) {//getVolumeToken24hByNid, getVolumeTokenAllTimeByNid
-      const token24h = await getVolumeToken24hByNid(name, id);
-      const tokenAllTime = await getVolumeTokenAllTimeByNid(name, id);
+      const token24h = await getVolumeToken24hByNid(name, networkId);
+      const tokenAllTime = await getVolumeTokenAllTimeByNid(name, networkId);
 
       let USD24h = 0;
       let USDAllTime = 0;
