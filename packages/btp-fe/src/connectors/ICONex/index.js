@@ -34,51 +34,56 @@ const eventHandler = async (event) => {
 
     case TYPES.RESPONSE_SIGNING:
       try {
+        modal.openModal({
+          icon: 'loader',
+          desc: 'Please wait a moment.',
+        });
+
         const txHash = await sendTransaction(payload);
 
-        switch (window[signingActions.globalName]) {
-          case signingActions.bid:
-            modal.openModal({
-              icon: 'checkIcon',
-              desc: 'Congratulation! Your bid successfully placed.',
-              button: {
-                text: 'Continue bidding',
-                onClick: () => modal.setDisplay(false),
-              },
-            });
-            break;
+        await new Promise((resolve, reject) => {
+          const checkTxRs = setInterval(async () => {
+            try {
+              await getTxResult(txHash);
 
-          case signingActions.transfer:
-            modal.openModal({
-              icon: 'checkIcon',
-              desc: 'Your transaction was submitted successfully.',
-              button: {
-                text: 'Continue transfer',
-                onClick: () => modal.setDisplay(false),
-              },
-            });
+              switch (window[signingActions.globalName]) {
+                case signingActions.bid:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: 'Congratulation! Your bid successfully placed.',
+                    button: {
+                      text: 'Continue bidding',
+                      onClick: () => modal.setDisplay(false),
+                    },
+                  });
+                  break;
 
-            // latency time fo fetching new balance
-            setTimeout(async () => {
-              var balance = await getBalance(address);
-              setBalance(+balance);
-            }, 2000);
-            break;
-          default:
-            break;
-        }
+                case signingActions.transfer:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: 'Your transaction was submitted successfully.',
+                    button: {
+                      text: 'Continue transfer',
+                      onClick: () => modal.setDisplay(false),
+                    },
+                  });
 
-        setTimeout(async () => {
-          await getTxResult(txHash);
-          modal.openModal({
-            icon: 'checkIcon',
-            desc: 'Your transaction was confirmed successfully.',
-            button: {
-              text: 'OK',
-              onClick: () => modal.setDisplay(false),
-            },
-          });
-        }, 5000);
+                  // latency time fo fetching new balance
+                  setTimeout(async () => {
+                    var balance = await getBalance(address);
+                    setBalance(+balance);
+                  }, 2000);
+                  break;
+                default:
+                  break;
+              }
+              clearInterval(checkTxRs);
+            } catch (err) {
+              if (err && /(Pending|Executing)/g.test(err)) return;
+              reject(err);
+            }
+          }, 1000);
+        });
       } catch (err) {
         switch (window[signingActions.globalName]) {
           case signingActions.bid:
