@@ -15,3 +15,7 @@ export const getRelayCandidates = () => {
 export const getRegisteredRelayCandidate = () => {
   return fetchAPI(`/relays?style=count`);
 };
+
+export const getConnectedNetworks = () => {
+  return fetchAPI(`/networks`);
+};
