@@ -48,7 +48,6 @@ const Wrapper = styled.div`
     }
   }
   ${media.sm`
-    
     flex-direction: column;
 
     .pie-chart {
