@@ -140,13 +140,7 @@ export const HistoryDetails = ({ details, onClose }) => {
     });
   }
   return (
-    <Modal
-      display
-      title="Transfer details"
-      width="auto"
-      marginTop="123px"
-      setDisplay={() => onClose()}
-    >
+    <Modal display title="Transfer details" width="auto" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
         <div className="history-details">
           <div className="content">
