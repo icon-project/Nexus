@@ -42,8 +42,11 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
   return networks;
 }
 
+/*===
+ *  TODO: Using function BSH contract to get list tokens registered in network.
+ *  Currently BSH contract not available to use, now this function just for test
+===*/
 async function getListTokenRegisteredNetwork(networkId) {
-  //TODO: using SC to get list tokens registered network
   switch(networkId) {
     case '0x1':
       return ["icx", "xrp", "eth", "bnb"];

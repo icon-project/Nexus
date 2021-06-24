@@ -16,12 +16,10 @@ async function getNetworksInfo(request, response) {
 }
 
 async function getNetworkInfoById(request, response) {
-    let networkId;
     if (!request.params && !request.params.id) {
         return response.sendStatus(HttpStatus.BadRequest);
-    } else {
-        networkId = '0x' + request.params.id;
     }
+    const networkId = request.params.id;
     const networkInfo = await model.getNetworkById(networkId);
     response.status(HttpStatus.OK).json({
         content: {
