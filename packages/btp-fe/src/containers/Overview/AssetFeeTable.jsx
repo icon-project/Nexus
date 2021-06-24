@@ -1,9 +1,10 @@
 import styled from 'styled-components/macro';
 
-import { Icon } from 'components/Icon';
 import { HorizontalScrollContainer } from 'components/HorizontalScrollContainer';
 import { smallText } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
+
+import { shortenNumber } from 'utils/app';
 
 const Table = styled.table`
   th,
@@ -23,43 +24,23 @@ const Table = styled.table`
   }
 `;
 
-const TH = ({ children, icon }) => (
-  <th>
-    <Icon icon={icon} width="16px" style="margin-right: 4px" />
-    {children}
-  </th>
-);
-
-const values = [
-  { icon: 'eth', symbol: 'ETH', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-  { icon: 'iconex', symbol: 'ICX', fee: 0.1 },
-];
-
-export const AssetFeeTable = () => {
+export const AssetFeeTable = ({ assets }) => {
   return (
     <HorizontalScrollContainer>
       <Table>
         <thead>
           <tr>
             <th></th>
-            {values.map(({ icon, symbol }, idx) => (
-              <TH icon={icon} key={idx}>
-                {symbol}
-              </TH>
+            {assets.map(({ name }, idx) => (
+              <th key={idx}>{name}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Fee</td>
-            {values.map(({ fee }, idx) => (
-              <td key={idx}>{fee}</td>
+            {assets.map(({ value }, idx) => (
+              <td key={idx}>{shortenNumber(value)}</td>
             ))}
           </tr>
         </tbody>

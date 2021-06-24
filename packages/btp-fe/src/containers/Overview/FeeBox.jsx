@@ -47,7 +47,7 @@ const Wrapper = styled.div`
 `;
 
 export const Feebox = ({ fee }) => {
-  const { cumulativeAmount, currentAmount } = fee;
+  const { cumulativeAmount, currentAmount, assets = [] } = fee;
   return (
     <Wrapper className="box fee">
       <TextWithInfo hasInfo={false}>FEE</TextWithInfo>
@@ -64,7 +64,7 @@ export const Feebox = ({ fee }) => {
         </SubTitle>
       </div>
       <TextWithInfo className="asset-fee">Asset fee</TextWithInfo>
-      <AssetFeeTable />
+      <AssetFeeTable assets={assets} />
     </Wrapper>
   );
 };
