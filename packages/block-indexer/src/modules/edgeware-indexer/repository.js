@@ -14,7 +14,7 @@ async function saveBlock(block) {
   }
 }
 
-async function getLastBlock() {
+async function getLastSavedBlock() {
   try {
     const query = 'SELECT * FROM edgeware_blocks ORDER BY block_height DESC LIMIT 1';
     const { rows } = await pgPool.query(query);
@@ -23,7 +23,7 @@ async function getLastBlock() {
       return JSON.parse(rows[0].block_data);
     }
   } catch (error) {
-    logger.error('getLastBlock fails', { error });
+    logger.error('getLastSavedBlock fails', { error });
   }
 }
 
@@ -33,5 +33,5 @@ async function saveTransaction(transaction) {
 module.exports = {
   saveBlock,
   saveTransaction,
-  getLastBlock
+  getLastSavedBlock
 };
