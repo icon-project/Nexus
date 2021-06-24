@@ -101,24 +101,17 @@ const GovernanceStyled = styled.div`
 `;
 
 function GovernancePage() {
-  const { relayCandidates, totalRegistered } = useSelect(
-    ({ governance: { selectRelayCandidates, selectTotalRegistered } }) => ({
-      relayCandidates: selectRelayCandidates,
-      totalRegistered: selectTotalRegistered,
-    }),
-  );
+  const { relayCandidates } = useSelect(({ governance: { selectRelayCandidates } }) => ({
+    relayCandidates: selectRelayCandidates,
+  }));
 
-  const { getRelayCandidates, getTotalRegistered } = useDispatch(
-    ({ governance: { getRelayCandidates, getTotalRegistered } }) => ({
-      getRelayCandidates,
-      getTotalRegistered,
-    }),
-  );
+  const { getRelayCandidates } = useDispatch(({ governance: { getRelayCandidates } }) => ({
+    getRelayCandidates,
+  }));
 
   useEffect(() => {
     getRelayCandidates();
-    getTotalRegistered();
-  }, [getRelayCandidates, getTotalRegistered]);
+  }, [getRelayCandidates]);
 
   return (
     <GovernanceStyled>
@@ -128,7 +121,7 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REGISTERED</Text>
-              <Change status={'descrease'} value={totalRegistered} percent={32} />
+              <Change status={'descrease'} value={relayCandidates.length} percent={32} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
