@@ -9,7 +9,6 @@ import { NetwotkDetails } from './NetwotkDetails';
 
 import { colors } from 'components/Styles/Colors';
 import { smallText } from 'components/Typography/Text';
-import { SortSelect } from 'components/Select';
 import { media } from 'components/Styles/Media';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
@@ -100,12 +99,6 @@ const NetworkStyled = styled.div`
   .network-name {
     margin-bottom: 8px;
   }
-  .filter-by {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 8px;
-  }
 `;
 
 function NetworkPage() {
@@ -130,9 +123,6 @@ function NetworkPage() {
     <NetworkStyled>
       <div className="content">
         <Header className="medium bold heading">Networks</Header>
-        <div className="filter-by">
-          <SortSelect />
-        </div>
         <Table
           rowKey="id"
           loading={loading && networks.length === 0}
