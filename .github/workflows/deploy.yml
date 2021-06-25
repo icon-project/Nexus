@@ -32,20 +32,12 @@ jobs:
         username: ${{ secrets.VM_SSH_USER }}
         key: ${{ secrets.VM_SSH_KEY }}
         script: |
-          pm2 stop all
-          pm2 delete all
           cd ./deploy/btp-be
+          pm2 stop ./packages/block-indexer/pm2.json
+          pm2 stop ./packages/dashboard-api/pm2.json
           cat ../.env-indexer >> ./packages/block-indexer/.env
-          cd ./packages/block-indexer
-          yarn
-          echo "start block-indexer"
-          pm2 start yarn --name block-indexer -- start
-          echo "block-indexer is starting"
-          cd ../dashboard-api
-          yarn
-          echo "start dashboard-api"
-          cat ../../../.env-dashboard >> ./.env
-          pm2 start yarn --name dashboard-api -- start
-          echo "dashboard-api is starting"
+          cat ../.env-dashboard >> ./packages/dashboard-api/.env
+          pm2 start ./packages/block-indexer/pm2.json
+          pm2 start ./packages/dashboard-api/pm2.json
           pm2 status
           echo "Deployment process finished"

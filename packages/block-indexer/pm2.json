@@ -1,0 +1,10 @@
+{
+  "apps": [{
+    "name": "block-indexer",
+    "script": "./index.js",
+    "cwd": "/home/ubuntu/deploy/btp-be/packages/block-indexer",
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }]
+}
