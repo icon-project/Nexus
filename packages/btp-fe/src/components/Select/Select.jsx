@@ -84,7 +84,7 @@ const Wrapper = styled.button`
   }
 `;
 
-const Select = ({ options = [], customeArrow, showCheck }) => {
+const Select = ({ options = [], customeArrow, showCheck, ...ots }) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [selectedValue, setSelectedValue] = useState(options[0]);
@@ -102,6 +102,7 @@ const Select = ({ options = [], customeArrow, showCheck }) => {
       isOpenSelect={isOpenSelect}
       customeArrow={customeArrow}
       showCheck={showCheck}
+      {...ots}
     >
       {selectedValue.renderLabel ? (
         selectedValue.renderLabel()

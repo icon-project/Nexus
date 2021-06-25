@@ -12,10 +12,11 @@ import { hashShortener } from 'utils/app';
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { SortSelect } from 'components/Select';
-import { SearchForm } from './SearchForm';
-import { AmountOfBidTable } from './AmountOfBidTable';
 import { Table } from 'components/Table';
 import { PrimaryButton } from 'components/Button';
+import { SearchForm } from './SearchForm';
+import { AmountOfBidTable } from './AmountOfBidTable';
+import { CreateBidModal } from './CreateBidModal';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
@@ -238,6 +239,7 @@ const FeeAuction = () => {
           <Text className="medium">Try again using more general search items</Text>
         </EmptySearch>
       )}
+      <CreateBidModal />
     </Wrapper>
   );
 };
