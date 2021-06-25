@@ -13,11 +13,15 @@ Connect to PostgreSQL with shell
 - Install packages:
   `yarn install`
 
-- Start server:
+- Start development server:
   `yarn start`
 
 - Access URL:
   `http://localhost:8000`
+
+## Production
+
+`yarn start:pm2`
 
 ## Documentations
 
