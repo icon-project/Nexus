@@ -16,10 +16,17 @@ const ButtonStyle = styled(AntButton)`
   color: ${(props) => props.$textColor};
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+  border: solid ${({ borderColor }) => (borderColor ? `1px ${borderColor}` : '0 transparent')};
 
   &:disabled {
     color: ${colors.grayScaleSubText};
     background-color: ${colors.grayScaleDisabled};
+  }
+
+  &:hover {
+    background-color: ${(props) => props.$backgroundColor};
+    color: ${(props) => props.$textColor};
+    border: solid ${({ borderColor }) => (borderColor ? `1px ${borderColor}` : '0 transparent')};
   }
 `;
 const Button = ({

@@ -1,16 +1,18 @@
 import { Form as FinalForm, Field } from 'react-final-form';
 import styled from 'styled-components/macro';
 
-import { SubTitle, Text } from 'components/Typography';
+import { Text } from 'components/Typography';
 import { Modal } from 'components/NotificationModal';
 import { TextInput } from 'components/Input';
-import { PrimaryButton } from 'components/Button';
+import { PrimaryButton, Button } from 'components/Button';
 import { SelectInput } from 'components/Select/SelectInput';
+import { colors } from 'components/Styles/Colors';
 
 import { minValue, composeValidators } from 'utils/inputValidation';
 
 const Form = styled.form`
   text-align: left;
+  margin-top: 37px;
 
   .input-field {
     margin-bottom: 32px;
@@ -18,6 +20,11 @@ const Form = styled.form`
     p.small {
       margin-bottom: 6px;
     }
+  }
+
+  .control-buttons {
+    display: flex;
+    justify-content: space-between;
   }
 `;
 
@@ -69,9 +76,20 @@ export const CreateBidModal = () => {
                 </div>
               </div>
 
-              <PrimaryButton htmlType="submit" disabled={!valid}>
-                <SubTitle className="medium bold">Place bid</SubTitle>
-              </PrimaryButton>
+              <div className="control-buttons">
+                <Button
+                  width={192}
+                  height={64}
+                  borderColor={colors.primaryBrandLight}
+                  backgroundColor="transparent"
+                  textColor={colors.primaryBrandLight}
+                >
+                  Cancel
+                </Button>
+                <PrimaryButton htmlType="submit" disabled={!valid} width={192} height={64}>
+                  Create new bid
+                </PrimaryButton>
+              </div>
             </Form>
           );
         }}
