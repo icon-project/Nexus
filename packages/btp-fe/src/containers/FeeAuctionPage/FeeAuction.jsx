@@ -5,7 +5,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-import { useDispatch, useSelect } from 'hooks/useRematch';
+// import { useDispatch, useSelect } from 'hooks/useRematch';
+import { useSelect } from 'hooks/useRematch';
 import { hashShortener } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
@@ -14,6 +15,7 @@ import { SortSelect } from 'components/Select';
 import { SearchForm } from './SearchForm';
 import { AmountOfBidTable } from './AmountOfBidTable';
 import { Table } from 'components/Table';
+import { PrimaryButton } from 'components/Button';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
@@ -36,6 +38,7 @@ const Wrapper = styled.div`
 
   .total-available {
     display: flex;
+    align-items: center;
     margin-bottom: 42px;
 
     .amount-of-bid {
@@ -49,8 +52,8 @@ const Wrapper = styled.div`
     }
 
     .table-container {
-      margin: 0 65px;
-      width: 58.5%;
+      margin: 0 63px;
+      width: 40.64%;
       display: flex;
       align-items: center;
     }
@@ -83,6 +86,14 @@ const Wrapper = styled.div`
       }
     }
   `};
+`;
+
+const CreateBidButton = styled(PrimaryButton)`
+  margin-left: auto;
+  width: 153px;
+  height: 48px;
+  line-height: 48px;
+  padding: 0;
 `;
 
 const EmptySearch = styled.div`
@@ -138,7 +149,7 @@ const formatData = (data = []) => {
 };
 
 const FeeAuction = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(true);
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
   const { auctions } = useSelect(({ auction }) => ({
@@ -146,15 +157,15 @@ const FeeAuction = () => {
   }));
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
-    getAuctions,
-  }));
+  // const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
+  //   getAuctions,
+  // }));
 
-  useEffect(() => {
-    getAuctions().then(() => {
-      setLoading(false);
-    });
-  }, [getAuctions]);
+  // useEffect(() => {
+  //   getAuctions().then(() => {
+  //     setLoading(false);
+  //   });
+  // }, [getAuctions]);
 
   useEffect(() => {
     if (keySearch) {
@@ -193,6 +204,11 @@ const FeeAuction = () => {
               <div className="table-container">
                 <AmountOfBidTable />
               </div>
+              <div className="divider"></div>
+
+              <CreateBidButton>
+                <SubTitle className="small bold">Create new bid</SubTitle>
+              </CreateBidButton>
             </div>
           )}
           <div className="filter-by">
