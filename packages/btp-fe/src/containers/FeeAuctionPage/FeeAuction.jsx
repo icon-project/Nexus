@@ -5,8 +5,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-// import { useDispatch, useSelect } from 'hooks/useRematch';
-import { useSelect } from 'hooks/useRematch';
+import { useDispatch, useSelect } from 'hooks/useRematch';
 import { hashShortener } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
@@ -150,7 +149,7 @@ const formatData = (data = []) => {
 };
 
 const FeeAuction = () => {
-  const [loading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
   const { push } = useHistory();
@@ -160,15 +159,15 @@ const FeeAuction = () => {
   }));
   const [filteredData, setFilteredData] = useState(auctions);
 
-  // const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
-  //   getAuctions,
-  // }));
+  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
+    getAuctions,
+  }));
 
-  // useEffect(() => {
-  //   getAuctions().then(() => {
-  //     setLoading(false);
-  //   });
-  // }, [getAuctions]);
+  useEffect(() => {
+    getAuctions().then(() => {
+      setLoading(false);
+    });
+  }, [getAuctions]);
 
   useEffect(() => {
     if (keySearch) {
