@@ -9,18 +9,17 @@ import lookupIcon from 'assets/images/look-up-icon.svg';
 
 const Form = styled.form`
   display: flex;
-  margin-bottom: 43px;
+  margin: 30px 0;
 
   ${media.md`
-    flex-direction: column;
+    justify-content: center;
 
     input {
       width: 100%;
     }
 
     button {
-      margin-left: 0;
-      margin-top: 24px;
+      height: 48px;
     }
   `};
 `;
