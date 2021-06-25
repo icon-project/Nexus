@@ -151,6 +151,8 @@ const formatData = (data = []) => {
 
 const FeeAuction = () => {
   const [loading] = useState(true);
+  const [open, setOpen] = useState(false);
+
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
   const { auctions } = useSelect(({ auction }) => ({
@@ -207,7 +209,11 @@ const FeeAuction = () => {
               </div>
               <div className="divider"></div>
 
-              <CreateBidButton>
+              <CreateBidButton
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
                 <SubTitle className="small bold">Create new bid</SubTitle>
               </CreateBidButton>
             </div>
@@ -239,7 +245,7 @@ const FeeAuction = () => {
           <Text className="medium">Try again using more general search items</Text>
         </EmptySearch>
       )}
-      <CreateBidModal />
+      {open && <CreateBidModal setOpen={setOpen} />}
     </Wrapper>
   );
 };

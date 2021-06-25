@@ -28,9 +28,9 @@ const Form = styled.form`
   }
 `;
 
-export const CreateBidModal = () => {
+export const CreateBidModal = ({ setOpen }) => {
   const onSubmit = (values) => {
-    console.log('🚀 ~ file: CreateBidModal.jsx ~ line 6 ~ onSubmit ~ values', values);
+    console.log('values', values);
   };
 
   const assets = [
@@ -43,14 +43,9 @@ export const CreateBidModal = () => {
     <Modal title="New bid" display hasClosedBtn={false}>
       <FinalForm
         onSubmit={onSubmit}
-        render={({ handleSubmit, valid, form }) => {
+        render={({ handleSubmit, valid }) => {
           return (
-            <Form
-              onSubmit={async (event) => {
-                await handleSubmit(event);
-                form.restart();
-              }}
-            >
+            <Form onSubmit={handleSubmit}>
               <div className="input-group">
                 <div className="input-field">
                   <Text className="small">Asset type</Text>
@@ -83,6 +78,9 @@ export const CreateBidModal = () => {
                   borderColor={colors.primaryBrandLight}
                   backgroundColor="transparent"
                   textColor={colors.primaryBrandLight}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
                 >
                   Cancel
                 </Button>
