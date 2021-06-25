@@ -8,7 +8,7 @@ import { Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
-import { Change } from 'components/Change';
+import { UpDownPercent } from 'components/UpDownPercent';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 
@@ -80,6 +80,10 @@ const GovernanceStyled = styled.div`
   .heading-area {
     display: inline-flex;
   }
+  .total-value {
+    display: inline-block;
+    margin-right: 9.33px;
+  }
   ${media.md`
   .heading-area {
     display: block;
@@ -121,12 +125,14 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REGISTERED</Text>
-              <Change status={'descrease'} value={relayCandidates.length} percent={32} />
+              <Text className="large bold total-value">{relayCandidates.length}</Text>
+              <UpDownPercent up={false} sm percent="32%" />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REWARD FUND</Text>
-              <Change status={'increase'} value={'1,742'} percent={32} />
+              <Text className="large bold total-value">1,742</Text>
+              <UpDownPercent up sm percent="9.55%" />
             </div>
           </div>
         </div>
