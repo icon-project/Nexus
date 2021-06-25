@@ -12,15 +12,19 @@ const Wrapper = styled(Text)`
   display: inline-block;
 
   img {
-    margin-right: 6.08px;
+    margin-right: ${({ sm }) => (sm ? '5.67px' : '6.08px')};
+  }
+  span {
+    font-size: ${({ sm }) => sm && '12px'};
+    display: inline-block;
   }
 `;
 
-export const UpDownPercent = memo(({ percent = '9.55%', up = true }) => {
+export const UpDownPercent = memo(({ percent = '9.55%', up = true, sm = false }) => {
   return (
-    <Wrapper up={up} className="small">
+    <Wrapper up={up} sm={sm} className="small">
       <img src={up ? upIcon : downIcon} alt="icon" />
-      {percent}
+      <span>{percent}</span>
     </Wrapper>
   );
 });
