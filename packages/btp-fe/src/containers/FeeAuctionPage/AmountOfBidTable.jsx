@@ -20,37 +20,21 @@ const Table = styled.table`
   }
 `;
 
-const values = [
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'ICX', bid: 100 },
-  { symbol: 'BTC', bid: 100 },
-  { symbol: 'BTC', bid: 100 },
-  { symbol: 'BTC', bid: 100 },
-  { symbol: 'BTC', bid: 100 },
-  { symbol: 'BTC', bid: 100 },
-  { symbol: 'BTC', bid: 100 },
-];
-
-export const AmountOfBidTable = () => {
+export const AmountOfBidTable = ({ fees }) => {
   return (
     <HorizontalScrollContainer>
       <Table>
         <thead>
           <tr>
-            {values.map(({ symbol }, idx) => (
-              <th key={idx}>{symbol}</th>
+            {fees.map(({ name }, idx) => (
+              <th key={idx}>{name}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           <tr>
-            {values.map(({ bid }, idx) => (
-              <td key={idx}>{bid}</td>
+            {fees.map(({ value }, idx) => (
+              <td key={idx}>{value}</td>
             ))}
           </tr>
         </tbody>

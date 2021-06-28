@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
-import { hashShortener } from 'utils/app';
+import { hashShortener, shortenNumber } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
@@ -154,20 +154,23 @@ const FeeAuction = () => {
 
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const { auctions } = useSelect(({ auction }) => ({
-    auctions: auction.selectAuctions,
+  const { auctions, fees } = useSelect(({ auction: { selectFees, selectAuctions } }) => ({
+    auctions: selectAuctions,
+    fees: selectFees,
   }));
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
+  const { getAuctions, getFees } = useDispatch(({ auction: { getAuctions, getFees } }) => ({
     getAuctions,
+    getFees,
   }));
 
   useEffect(() => {
+    getFees();
     getAuctions().then(() => {
       setLoading(false);
     });
-  }, [getAuctions]);
+  }, [getAuctions, getFees]);
 
   useEffect(() => {
     if (keySearch) {
@@ -180,6 +183,7 @@ const FeeAuction = () => {
   }, [keySearch, auctions]);
 
   const isPlural = filteredData.length > 1;
+  const totalFees = shortenNumber(fees.reduce((accumulator, curr) => accumulator + curr.value, 0));
 
   return (
     <Wrapper>
@@ -198,13 +202,13 @@ const FeeAuction = () => {
             <div className="total-available">
               <div className="amount-of-bid">
                 <TextWithInfo>TOTAL AVAILABLE BID AMOUNT</TextWithInfo>
-                <Header className="large bold">$ 1,049</Header>
+                <Header className="large bold">$ {totalFees}</Header>
               </div>
 
               <div className="divider"></div>
 
               <div className="table-container">
-                <AmountOfBidTable />
+                <AmountOfBidTable fees={fees} />
               </div>
               <div className="divider"></div>
 
