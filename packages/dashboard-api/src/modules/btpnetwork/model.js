@@ -28,9 +28,9 @@ async function getAmountFeeAggregationSCORE() {
     }
 
     return result;
-  } catch (e) {
-    logger.error(e, 'getAmountFeeAggregationSCORE() failed when execute get list tokens');
-    throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + e.message);
+  } catch (err) {
+    logger.error('getAmountFeeAggregationSCORE() failed when execute get list tokens', err);
+    throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + err.message);
   }
 }
 
@@ -47,8 +47,8 @@ async function getAvailableBalance(nameToken) {
     const availableBalance = await iconService.call(call).execute();
     logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
     return availableBalance;
-  } catch (e) {
-    logger.error(e, 'getAvailableBalance() failed when execute get balance FAS');
+  } catch (err) {
+    logger.error('getAvailableBalance() failed when execute get balance FAS', err);
     throw new Error('"getAvailableBalance" job failed: ' + e.message);
   }
 }
@@ -66,7 +66,7 @@ async function getTotalTransactionAmount() {
   try {
     return sumTransactionAmount();
   } catch (err) {
-    logger.error(err, '"getTotalTransactionAmount" failed while getting total transaction amount');
+    logger.error('"getTotalTransactionAmount" failed while getting total transaction amount', err);
     throw new Error('"getTotalTransactionAmount" job failed: ' + err.message);
   }
 }
@@ -75,7 +75,7 @@ async function getTotalTransaction() {
   try {
     return countTransaction();
   } catch (err) {
-    logger.error(err, '"getTotalTransaction" failed while getting total transaction');
+    logger.error('"getTotalTransaction" failed while getting total transaction', err);
     throw new Error('"getTotalTransaction" job failed: ' + err.message);
   }
 }
@@ -84,7 +84,7 @@ async function getBondedVolumeByRelays() {
   try {
     return getTotalBondedRelays();
   } catch (err) {
-    logger.error(err, '"getBondedVolumeByRelays" failed while getting total volume by Relays');
+    logger.error('"getBondedVolumeByRelays" failed while getting total volume by Relays', err);
     throw new Error('"getBondedVolumeByRelays" job failed: ' + err.message);
   }
 }

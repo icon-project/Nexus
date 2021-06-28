@@ -1,7 +1,6 @@
 'use strict';
 
-const debug = require('debug')('db');
-const { pgPool, logger } = require("../../common");
+const { pgPool, logger } = require('../../common');
 
 async function saveBlock(block) {
   try {

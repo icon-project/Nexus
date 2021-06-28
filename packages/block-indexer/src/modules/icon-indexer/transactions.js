@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 const { v4: uuidv4 } = require('uuid');
-const { TRANSACTION_TBL_NAME, TRANSACTION_TBL, RESULT_CODE, pgPool, logger } = require("../../common");
-const { sortValuesWithPropsOrdered, propsAsString, propsCountValueString, getCurrentTimestamp, hexToDecimal } = require("../../common/util");
+const { TRANSACTION_TBL_NAME, TRANSACTION_TBL, RESULT_CODE, pgPool, logger } = require('../../common');
+const { sortValuesWithPropsOrdered, propsAsString, propsCountValueString, getCurrentTimestamp, hexToDecimal } = require('../../common/util');
 
 
 /**
@@ -16,7 +16,7 @@ async function confirmTransfEnd(event, txInfo) {
   let transaction = await getBySerialNumber(hexToDecimal(indexedData[1]));
   // has transaction and transfer result code must be 0
   if (transaction && hexToDecimal(data[0]) == RESULT_CODE.RC_OK) {
-    await setTransactionConfirmed([transaction], txInfo)
+    await setTransactionConfirmed([transaction], txInfo);
   }
 }
 
@@ -24,7 +24,7 @@ async function confirmTransfEnd(event, txInfo) {
  * Handle TransferStart and TransferEnd events
  * @param {*} txResult
  */
-async function handleTransEvent(txResult) {
+async function handleTransEvent(txResult, transaction) {
   let transactions = [];
 
   for (let event of txResult.eventLogs) {
@@ -42,10 +42,12 @@ async function handleTransEvent(txResult) {
         blockHash: txResult.blockHash,
         blockHeight: txResult.blockHeight,
         confirmed: false,
-      }
-      transactions.push(transObj)
+        blockTime: transaction.timestamp,
+        networkId: transaction.nid.c[0], // get network id
+      };
+      transactions.push(transObj);
     } else if ((event.indexed.find(item => item.includes('TransferEnd')))) {
-      confirmTransfEnd(event, { txHash: txResult.txHash, blockHeight: txResult.blockHeight, blockHash: txResult.blockHash })
+      confirmTransfEnd(event, { txHash: txResult.txHash, blockHeight: txResult.blockHeight, blockHash: txResult.blockHash });
     }
   }
   if (transactions.length > 0) {
@@ -85,8 +87,7 @@ async function saveTransaction(transactions) {
     }
     await client.query('COMMIT');
   } catch (error) {
-    logger.error(`saveTransferStart Failed save transaction result: ${trans.txHash} ${trans.blockHeight}`, { error });
-    throw error;
+    logger.error('saveTransferStart Failed save transaction', { error });
   }
 }
 
@@ -113,7 +114,6 @@ async function setTransactionConfirmed(transactions, txInfo) {
     await client.query('COMMIT');
   } catch (error) {
     logger.error(`saveTransferStart Failed to set confirmed for transaction result: ${txInfo.txHash},  ${txInfo.blockHeight}`, { error });
-    throw error;
   }
 }
 
