@@ -1,8 +1,13 @@
 'use strict';
 
 const { logger } = require('../../common');
-const { getNetworkInfo, getTokensVolume24h, getTokenVolumeAllTime, getVolumeToken24hByNid, getVolumeTokenAllTimeByNid } = require('./repository')
-const { countNetwork } = require('../btpnetwork/repository')
+const {
+  getNetworkInfo,
+  getTokensVolume24h,
+  getTokenVolumeAllTime,
+  getVolumeToken24hByNid,
+  getVolumeTokenAllTimeByNid,
+} = require('./repository');
 const { exchangeToFiat } = require('../../common/util');
 
 async function getListNetworkConnectedIcon() {
@@ -19,7 +24,6 @@ async function getListNetworkConnectedIcon() {
 }
 
 async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) {
-  const numberNetworks = await countNetwork();
   for (let networkInfo of networks) {
     let USD24h = 0;
     let USDAllTime = 0;
@@ -49,13 +53,13 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
 async function getListTokenRegisteredNetwork(networkId) {
   switch (networkId) {
     case '0x1':
-      return ["icx", "xrp", "eth", "bnb"];
+      return ['icx', 'xrp', 'eth', 'bnb'];
     case '0x2':
-      return ["edg", "ltc", "eth", "bnb"];
+      return ['edg', 'ltc', 'eth', 'bnb'];
     case '0x3':
-      return ["near", "bsh", "eth", "bnb"];
+      return ['near', 'bsh', 'eth', 'bnb'];
     case '0x4':
-      return ["sol", "pol", "eth", "bnb"];
+      return ['sol', 'pol', 'eth', 'bnb'];
     default:
       logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${networkId}`);
       return [];
@@ -65,7 +69,8 @@ async function getListTokenRegisteredNetwork(networkId) {
 async function getNetworkById(networkId) {
   const tokens = await getListTokenRegisteredNetwork(networkId);
   let result = [];
-  for (let name of tokens) {//getVolumeToken24hByNid, getVolumeTokenAllTimeByNid
+  for (let name of tokens) {
+    //getVolumeToken24hByNid, getVolumeTokenAllTimeByNid
     const token24h = await getVolumeToken24hByNid(name, networkId);
     const tokenAllTime = await getVolumeTokenAllTimeByNid(name, networkId);
 
@@ -93,5 +98,5 @@ async function getNetworkById(networkId) {
 
 module.exports = {
   getListNetworkConnectedIcon,
-  getNetworkById
-}
+  getNetworkById,
+};

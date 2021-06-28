@@ -28,7 +28,7 @@ async function getTransactions(page = 0, limit = 20, from, to) {
           createAt: Number(row.create_at),
           updateAt: Number(row.update_at),
           deleteAt: Number(row.delete_at),
-          nid: row.nid,
+          networkId: row.network_id,
           blockTime: Number(row.block_time),
         });
       }

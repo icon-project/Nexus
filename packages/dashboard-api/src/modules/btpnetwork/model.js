@@ -1,9 +1,11 @@
 'use strict';
 
-const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
-const { countNetwork, sumTransactionAmount, countTransaction, getAllTimeFeeOfAssets } = require('./repository');
+const { logger, CURRENCIES } = require('../../common');
+const { exchangeToFiat } = require('../../common/util');
+const { countNetwork, countTransaction, getAllTimeFeeOfAssets } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
+const { getTokenVolumeAllTime } = require('../networks/repository');
 
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
@@ -49,7 +51,7 @@ async function getAvailableBalance(nameToken) {
     return availableBalance;
   } catch (err) {
     logger.error('getAvailableBalance() failed when execute get balance FAS', err);
-    throw new Error('"getAvailableBalance" job failed: ' + e.message);
+    throw new Error('"getAvailableBalance" job failed: ' + err.message);
   }
 }
 
@@ -64,7 +66,15 @@ async function getTotalNetworks() {
 
 async function getTotalTransactionAmount() {
   try {
-    return sumTransactionAmount();
+    let tokenTransAmount = await getTokenVolumeAllTime();
+    let totalUSD = 0;
+    let promises = [];
+    for (let item of tokenTransAmount) {
+      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], parseInt(item.tokenVolume)));
+    }
+    const results = await Promise.all(promises);
+    results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
+    return totalUSD || 0;
   } catch (err) {
     logger.error('"getTotalTransactionAmount" failed while getting total transaction amount', err);
     throw new Error('"getTotalTransactionAmount" job failed: ' + err.message);
@@ -99,5 +109,5 @@ module.exports = {
   getTotalTransactionAmount,
   getTotalTransaction,
   getBondedVolumeByRelays,
-  getAllTimeFee
+  getAllTimeFee,
 };
