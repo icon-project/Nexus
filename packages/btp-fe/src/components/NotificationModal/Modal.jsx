@@ -123,6 +123,7 @@ export const Modal = memo(
     display,
     marginTop = '0px',
     setDisplay = () => {},
+    hasClosedBtn = true,
   }) => {
     const iconURL = icons[icon];
     const { text, ...others } = button;
@@ -132,7 +133,9 @@ export const Modal = memo(
         <Content width={width} marginTop={marginTop}>
           <div className="heading">
             {title && <h3 className="title">{title}</h3>}
-            <button className="close-btn" onClick={() => setDisplay(false)}></button>
+            {hasClosedBtn && (
+              <button className="close-btn" onClick={() => setDisplay(false)}></button>
+            )}
           </div>
           <div className="content">
             {iconURL && iconURL}
