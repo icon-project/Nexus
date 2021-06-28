@@ -8,11 +8,11 @@ import { PrimaryButton, Button } from 'components/Button';
 import { SelectInput } from 'components/Select/SelectInput';
 import { colors } from 'components/Styles/Colors';
 
-import { minValue, composeValidators } from 'utils/inputValidation';
+import { minValue } from 'utils/inputValidation';
 
 const Form = styled.form`
   text-align: left;
-  margin-top: 37px;
+  margin-top: 27px;
 
   .input-field {
     margin-bottom: 32px;
@@ -56,9 +56,7 @@ export const CreateBidModal = ({ setOpen }) => {
                   <Text className="small">Bid amount</Text>
                   <Field
                     name="bidAmount"
-                    validate={composeValidators(
-                      minValue(100, 'Minimum bid is 100 ICX. Please input again'),
-                    )}
+                    validate={minValue(100, 'Minimum bid is 100 ICX. Please input again')}
                     render={({ input, meta }) => (
                       <TextInput
                         placeholder="Place a bid higher than 100 ICX"

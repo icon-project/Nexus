@@ -8,7 +8,6 @@ const StyledSelect = styled(Select)`
   width: 100%;
   justify-content: space-between;
   border: 1px solid ${colors.grayLine};
-  border-radius: 4px;
   padding: 20px 16px;
   background-color: transparent !important;
 
