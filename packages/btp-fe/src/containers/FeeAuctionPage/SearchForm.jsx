@@ -2,31 +2,36 @@ import styled from 'styled-components/macro';
 import { Form as FinalForm, Field } from 'react-final-form';
 
 import { OvalTextInput } from 'components/Input/OvalTextInput';
-import { PrimaryButton } from 'components/Button';
-import { SubTitle } from 'components/Typography';
 import { media } from 'components/Styles/Media';
+import { colors } from 'components/Styles/Colors';
+
+import lookupIcon from 'assets/images/look-up-icon.svg';
 
 const Form = styled.form`
   display: flex;
-  margin-bottom: 43px;
-
-  & > button {
-    height: 100%;
-    margin-left: 16px;
-  }
+  margin: 30px 0;
 
   ${media.md`
-    flex-direction: column;
+    justify-content: center;
 
     input {
       width: 100%;
     }
 
     button {
-      margin-left: 0;
-      margin-top: 24px;
+      height: 48px;
     }
   `};
+`;
+
+const SubmitButton = styled.button`
+  width: 60px;
+  height: 100%;
+
+  border: solid 1px ${colors.grayLine};
+  border-left: none;
+  border-radius: 0 100px 100px 0;
+  background: transparent center / 30% no-repeat url('${lookupIcon}');
 `;
 
 export const SearchForm = ({ setKeySearch }) => {
@@ -40,9 +45,7 @@ export const SearchForm = ({ setKeySearch }) => {
         return (
           <Form onSubmit={handleSubmit}>
             <Field name="keySearch" render={({ input }) => <OvalTextInput {...input} />} />
-            <PrimaryButton htmlType="submit">
-              <SubTitle className="small bold">Search</SubTitle>
-            </PrimaryButton>
+            <SubmitButton type="submit" />
           </Form>
         );
       }}
