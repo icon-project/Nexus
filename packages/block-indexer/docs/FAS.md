@@ -19,18 +19,17 @@ IRC2 (ERC20)
 cp sample-token-0.2.0-optimized.jar GOCHAIN_LOCAL_ROOT/
 
 # initial 100M tokens
-./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=Test2206 --param _symbol=ST2206 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
+./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=SunnyDay --param _symbol=SD28 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
 
-./goloop rpc txresult 0x179bd915517d146473266950a2e9a91af862d01b65de3cca47b06f9a4d04de48 --uri http://localhost:9082/api/v3
+./goloop rpc txresult 0x01bd3adcef788a4bcbf26f13cf451c3bd4c8f06286a9febe7dcb14fd4a64d66b --uri http://localhost:9082/api/v3
 
 # scoreAddress: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
-# Test2206 scoreAddress": "cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e",
-
+# SunnyDay "scoreAddress": "cx3c80950bcd83f54753da3a9f35aefa108920282d",
 
 # remote
 ./goloop rpc sendtx deploy ./sample-token-0.2.0-optimized.jar --uri http://localhost:9082/api/v3 --key_store ./data/godWallet.json --key_password gochain --nid 3 --step_limit 10000000000 --content_type application/java --param _name=Test2206 --param _symbol=ST2206 --param _decimals=0x12 --param _initialSupply=0x52B7D2DCC80CD2E4000000
 
-# "scoreAddress": "cx883f24e8b42f686fdfb48abb5efa709c7eacd64c"
+# Test2206 "scoreAddress": "cx883f24e8b42f686fdfb48abb5efa709c7eacd64c"
 ```
 
 ### CPS Contract
@@ -118,6 +117,9 @@ Transfer token: `transfer` on [token](#tokencontract) contract.
 # 10 Test2206 tokens
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x8AC7230489E80000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
+# 10 SunnyDay tokens
+./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx3c80950bcd83f54753da3a9f35aefa108920282d --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x8AC7230489E80000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
 # 150 token
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method transfer --to cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --param _to=cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _value=0x821AB0D4414980000 --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
@@ -144,10 +146,13 @@ Register token: `register` method
 # Test2206
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=Test2206 --param _tokenAddress=cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
+# SunnyDay
+./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e --param _tokenName=SunnyDay --param _tokenAddress=cx3c80950bcd83f54753da3a9f35aefa108920282d --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
 # remote
 ./goloop rpc sendtx call --uri http://localhost:9082/api/v3 --method registerIRC2 --to cx97dd9c3e40982bf23ac67b110741323a909a1495 --param _tokenName=Test2206 --param _tokenAddress=cx883f24e8b42f686fdfb48abb5efa709c7eacd64c --key_store ./data/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
 
-./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cx97dd9c3e40982bf23ac67b110741323a909a1495
+./goloop rpc call --uri http://localhost:9082/api/v3 --method tokens --to cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e
 
 [
   {
