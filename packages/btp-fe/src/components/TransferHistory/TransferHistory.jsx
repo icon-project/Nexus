@@ -4,6 +4,7 @@ import { Row } from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
+import { useDispatch } from 'hooks/useRematch';
 
 import { getTransferHistory } from 'services/btpServices';
 
@@ -129,17 +130,31 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
   const [selectedPage, setSelectedPage] = useState(0);
   const [historySource, setHistorySource] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const { handleError } = useDispatch(({ modal: { handleError } }) => ({
+    handleError,
+  }));
   useEffect(() => {
-    getTransferHistory(selectedPage).then((res) => {
-      setHistorySource(res?.content?.transHistory);
-      setIsFetching(false);
-    });
-  }, [selectedPage]);
+    const getHistory = async () => {
+      try {
+        const transferData = await getTransferHistory(selectedPage);
+        const dataSource = transferData?.content?.transHistory.map((history, index) => {
+          return {
+            ...history,
+            key: index,
+          };
+        });
+        setHistorySource(dataSource);
+        setIsFetching(false);
+      } catch (error) {
+        handleError();
+      }
+    };
+    getHistory();
+  }, [handleError, selectedPage]);
   const onClickDetail = (detail) => {
     setSelectedRow(detail);
     setShowDetails(true);
   };
-  console.log(historySource);
   return (
     <TransferHistoryStyled>
       <Row>
