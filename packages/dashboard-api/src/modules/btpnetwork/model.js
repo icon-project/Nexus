@@ -34,17 +34,17 @@ async function getAmountFeeAggregationSCORE() {
 }
 
 // Get available of token registered in FAS by name of token
-async function getAvailableBalance(nameToken) {
+async function getAvailableBalance(tokenName) {
   const callBuilder = new IconBuilder.CallBuilder();
   const call = callBuilder
     .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
     .method('availableBalance')
-    .params({ _tokenName: nameToken })
+    .params({ _tokenName: tokenName })
     .build();
 
   try {
     const availableBalance = await iconService.call(call).execute();
-    logger.debug(`getAvailableBalance tokeName: ${nameToken}, availableBalance: ${availableBalance}`);
+    logger.debug(`getAvailableBalance tokeName: ${tokenName}, availableBalance: ${availableBalance}`);
     return availableBalance;
   } catch (error) {
     logger.error('getAvailableBalance failed', { error });
