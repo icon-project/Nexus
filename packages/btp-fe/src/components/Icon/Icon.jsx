@@ -32,9 +32,9 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL 
     iconex: iconexIcon,
     eth: ethIcon,
     copy: copyIcon,
-    bnb: binanceIcon,
+    binance: binanceIcon,
     edgeware: edgewareIcon,
-    binance: btcIcon,
+    btc: btcIcon,
     bch: bchIcon,
   };
 
