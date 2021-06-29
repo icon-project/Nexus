@@ -19,7 +19,7 @@ async function getAmountFeeAggregationSCORE() {
     const tokens = await iconService.call(call).execute();
 
     for (let data of tokens) {
-      logger.debug(`token: ${data.name}, address: ${data.address}`);
+      logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
       result.push({ name: data.name, value: Math.floor(IconConverter.toNumber(hexBalance) / ICX_NUMBER)});
     }
@@ -42,7 +42,7 @@ async function getAvailableBalance(nameToken) {
 
   try {
     const availableBalance = await iconService.call(call).execute();
-    logger.debug(`tokeName: ${nameToken}, availableBalance: ${availableBalance}`);
+    logger.debug(`getAvailableBalance tokeName: ${nameToken}, availableBalance: ${availableBalance}`);
     return availableBalance;
   } catch (e) {
     logger.error('getAvailableBalance failed', { error });
