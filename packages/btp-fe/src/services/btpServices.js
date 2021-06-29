@@ -19,3 +19,7 @@ export const getRegisteredRelayCandidate = () => {
 export const getConnectedNetworks = () => {
   return fetchAPI(`/networks`);
 };
+
+export const getNetwork = (id) => {
+  return fetchAPI(`/networks/${id}`);
+};

@@ -32,7 +32,7 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL 
     iconex: iconexIcon,
     eth: ethIcon,
     copy: copyIcon,
-    binance: binanceIcon,
+    bnb: binanceIcon,
     edgeware: edgewareIcon,
     btc: btcIcon,
     bch: bchIcon,
@@ -40,7 +40,7 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL 
 
   return (
     <StyledIcon
-      src={iconURL || icons[icon]}
+      src={iconURL || icons[icon] || iconexIcon}
       alt="wallet icon"
       loading="lazy"
       width={width}
@@ -52,6 +52,5 @@ export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL 
 Icon.displayName = 'Icon';
 
 Icon.propTypes = {
-  icon: PropTypes.oneOf(['metaMask', 'iconex', 'eth', 'copy', 'binance', 'edgeware', 'btc', 'bch']),
   size: PropTypes.oneOf(['s', 'm']),
 };
