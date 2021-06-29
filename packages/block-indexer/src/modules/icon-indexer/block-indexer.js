@@ -17,7 +17,7 @@ let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, txResult, block) {
-  await handleTransEvent(txResult);
+  await handleTransEvent(txResult, transaction);
   await handleAuctionEvents(txResult);
   await handleTransferFeeEvents(txResult);
 
@@ -88,7 +88,7 @@ async function getBlockData() {
         await runBlockHandlers(block);
       }
 
-      ++ blockHeight;
+      ++blockHeight;
     }
 
     setTimeout(async () => await retryGetBlockData(), timeout);
@@ -99,7 +99,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error(`Failed to fetch ICON block data, retry in 5 minutes`, { error });
+    logger.error('Failed to fetch ICON block data, retry in 5 minutes', { error });
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }

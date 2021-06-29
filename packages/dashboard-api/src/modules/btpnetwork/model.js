@@ -1,10 +1,12 @@
 'use strict';
 
-const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
-const { countNetwork, sumTransactionAmount, countTransaction, getAllTimeFeeOfAssets } = require('./repository');
+const { logger, CURRENCIES } = require('../../common');
+const { exchangeToFiat } = require('../../common/util');
+const { countNetwork, countTransaction, getAllTimeFeeOfAssets } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { HttpProvider, IconBuilder, IconConverter } = IconService;
+const { getTokenVolumeAllTime } = require('../networks/repository');
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
 const ICX_NUMBER = 10 ** 18;
@@ -61,7 +63,15 @@ async function getTotalNetworks() {
 
 async function getTotalTransactionAmount() {
   try {
-    return sumTransactionAmount();
+    let tokenTransAmount = await getTokenVolumeAllTime();
+    let totalUSD = 0;
+    let promises = [];
+    for (let item of tokenTransAmount) {
+      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], parseInt(item.tokenVolume)));
+    }
+    const results = await Promise.all(promises);
+    results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
+    return totalUSD || 0;
   } catch (err) {
     logger.error('getTotalTransactionAmount failed', { error });
     throw error;
@@ -96,5 +106,5 @@ module.exports = {
   getTotalTransactionAmount,
   getTotalTransaction,
   getBondedVolumeByRelays,
-  getAllTimeFee
+  getAllTimeFee,
 };
