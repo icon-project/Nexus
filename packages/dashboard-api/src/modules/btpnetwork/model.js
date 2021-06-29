@@ -109,21 +109,24 @@ async function getMintedNetworks() {
   const networks = await getNetworkInfo();
   let results = [];
   let mapTokensVolume = new Map();
-  for( let token of mintedTokens) {
+  
+  for (let token of mintedTokens) {
     let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
     let volume = fiat.USD;
-    if(mapTokensVolume.has(token.networkId)) {
+    if (mapTokensVolume.has(token.networkId)) {
       volume += mapTokensVolume.get(token.networkId);
     }
     mapTokensVolume.set(token.networkId, volume);
   }
-  for( let data of networks ) {
+  
+  for (let data of networks) {
     results.push({
       networkId: data.id,
       networkName: data.name,
       mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
     })
   }
+  
   return results;
 }
 
