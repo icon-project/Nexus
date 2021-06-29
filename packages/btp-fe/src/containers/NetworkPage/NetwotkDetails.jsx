@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { Loader } from 'components/Loader';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { shortenNumber } from 'utils/app';
@@ -42,6 +43,10 @@ const NetworkWrapper = styled.div`
       margin-top: 5px;
       color: ${colors.grayScaleSubText};
     }
+
+    .values {
+      text-align: right;
+    }
   }
 
   .all-time {
@@ -56,6 +61,7 @@ const NetworkWrapper = styled.div`
 
 const NetWork = ({ detail = {} }) => {
   const { nameToken, volume24h, volume24hUSD, volumeAlTimeUSD, volumeAllTime } = detail;
+
   return (
     <NetworkWrapper>
       <TextWithIcon icon={nameToken} width="24px" className="uppercase">
@@ -87,6 +93,8 @@ const NetWork = ({ detail = {} }) => {
 };
 
 export const NetwotkDetails = ({ currentNetworkID }) => {
+  const [loading, setLoading] = useState(true);
+
   const { networkDetails = [] } = useSelect(({ network: { selectNetworkDetails } }) => ({
     networkDetails: selectNetworkDetails,
   }));
@@ -99,7 +107,7 @@ export const NetwotkDetails = ({ currentNetworkID }) => {
   );
 
   useEffect(() => {
-    if (currentNetworkID) getNetworkDetails(currentNetworkID);
+    if (currentNetworkID) getNetworkDetails(currentNetworkID).then(() => setLoading(false));
 
     return () => {
       setNetworkDetails([]);
@@ -107,10 +115,16 @@ export const NetwotkDetails = ({ currentNetworkID }) => {
   }, [getNetworkDetails, currentNetworkID, setNetworkDetails]);
 
   return (
-    <Wrapper>
-      {networkDetails.map((detail) => (
-        <NetWork key={detail.nameToken} detail={detail} />
-      ))}
-    </Wrapper>
+    <>
+      {loading ? (
+        <Loader size="40px" borderSize="3px" />
+      ) : (
+        <Wrapper>
+          {networkDetails.map((detail) => (
+            <NetWork key={detail.nameToken} detail={detail} />
+          ))}
+        </Wrapper>
+      )}
+    </>
   );
 };
