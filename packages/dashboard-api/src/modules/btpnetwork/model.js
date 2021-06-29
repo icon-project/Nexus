@@ -1,11 +1,12 @@
 'use strict';
 
-const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
 const { countNetwork, sumTransactionAmount, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
-const { exchangeToFiat } = require('../../common/util');
 const { getNetworkInfo } = require('../networks/repository');
+const { logger, CURRENCIES } = require('../../common');
+const { exchangeToFiat } = require('../../common/util');
+const { getTokenVolumeAllTime } = require('../networks/repository');
 
 const { HttpProvider } = IconService;
 const { IconBuilder } = IconService;
@@ -30,9 +31,9 @@ async function getAmountFeeAggregationSCORE() {
     }
 
     return result;
-  } catch (e) {
-    logger.error(e, 'getAmountFeeAggregationSCORE() failed when execute get list tokens');
-    throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + e.message);
+  } catch (err) {
+    logger.error('getAmountFeeAggregationSCORE() failed when execute get list tokens', err);
+    throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + err.message);
   }
 }
 
@@ -49,9 +50,9 @@ async function getAvailableBalance(nameToken) {
     const availableBalance = await iconService.call(call).execute();
     logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
     return availableBalance;
-  } catch (e) {
-    logger.error(e, 'getAvailableBalance() failed when execute get balance FAS');
-    throw new Error('"getAvailableBalance" job failed: ' + e.message);
+  } catch (err) {
+    logger.error('getAvailableBalance() failed when execute get balance FAS', err);
+    throw new Error('"getAvailableBalance" job failed: ' + err.message);
   }
 }
 
@@ -66,9 +67,17 @@ async function getTotalNetworks() {
 
 async function getTotalTransactionAmount() {
   try {
-    return sumTransactionAmount();
+    let tokenTransAmount = await getTokenVolumeAllTime();
+    let totalUSD = 0;
+    let promises = [];
+    for (let item of tokenTransAmount) {
+      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], parseInt(item.tokenVolume)));
+    }
+    const results = await Promise.all(promises);
+    results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
+    return totalUSD || 0;
   } catch (err) {
-    logger.error(err, '"getTotalTransactionAmount" failed while getting total transaction amount');
+    logger.error('"getTotalTransactionAmount" failed while getting total transaction amount', err);
     throw new Error('"getTotalTransactionAmount" job failed: ' + err.message);
   }
 }
@@ -77,7 +86,7 @@ async function getTotalTransaction() {
   try {
     return countTransaction();
   } catch (err) {
-    logger.error(err, '"getTotalTransaction" failed while getting total transaction');
+    logger.error('"getTotalTransaction" failed while getting total transaction', err);
     throw new Error('"getTotalTransaction" job failed: ' + err.message);
   }
 }
@@ -86,7 +95,7 @@ async function getBondedVolumeByRelays() {
   try {
     return getTotalBondedRelays();
   } catch (err) {
-    logger.error(err, '"getBondedVolumeByRelays" failed while getting total volume by Relays');
+    logger.error('"getBondedVolumeByRelays" failed while getting total volume by Relays', err);
     throw new Error('"getBondedVolumeByRelays" job failed: ' + err.message);
   }
 }

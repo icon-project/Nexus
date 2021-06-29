@@ -2,7 +2,7 @@
 const RESULT_CODE = {
   RC_OK: 0,
   RC_ERR_UNREGISTERED_TOKEN: -1
-}
+};
 
 const TRANSACTION_TBL_NAME = 'transactions';
 
@@ -16,11 +16,12 @@ const TRANSACTION_TBL = {
   blockHeight: 'block_height',
   blockHash: 'block_hash',
   txHash: 'tx_hash',
+  blockTime: 'block_time',
+  networkId: 'network_id',
   confirmed: 'confirmed',
   createAt: 'create_at',
   updateAt: 'update_at',
-  deleteAt: 'delete_at',
-  
+  deleteAt: 'delete_at'
 };
 
 module.exports = {
