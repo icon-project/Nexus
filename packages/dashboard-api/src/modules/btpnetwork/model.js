@@ -27,7 +27,7 @@ async function getAmountFeeAggregationSCORE() {
     }
 
     return result;
-  } catch (e) {
+  } catch (error) {
     logger.error('getAmountFeeAggregationSCORE failed', { error });
     throw error;
   }
@@ -46,7 +46,7 @@ async function getAvailableBalance(nameToken) {
     const availableBalance = await iconService.call(call).execute();
     logger.debug(`getAvailableBalance tokeName: ${nameToken}, availableBalance: ${availableBalance}`);
     return availableBalance;
-  } catch (e) {
+  } catch (error) {
     logger.error('getAvailableBalance failed', { error });
     throw error;
   }
@@ -55,7 +55,7 @@ async function getAvailableBalance(nameToken) {
 async function getTotalNetworks() {
   try {
     return countNetwork();
-  } catch (err) {
+  } catch (error) {
     logger.error('getTotalNetworks failed', { error });
     throw error;
   }
@@ -72,7 +72,7 @@ async function getTotalTransactionAmount() {
     const results = await Promise.all(promises);
     results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
     return totalUSD || 0;
-  } catch (err) {
+  } catch (error) {
     logger.error('getTotalTransactionAmount failed', { error });
     throw error;
   }
@@ -81,7 +81,7 @@ async function getTotalTransactionAmount() {
 async function getTotalTransaction() {
   try {
     return countTransaction();
-  } catch (err) {
+  } catch (error) {
     logger.error('getTotalTransaction failed', { error });
     throw error;
   }
@@ -90,7 +90,7 @@ async function getTotalTransaction() {
 async function getBondedVolumeByRelays() {
   try {
     return getTotalBondedRelays();
-  } catch (err) {
+  } catch (error) {
     logger.error('getBondedVolumeByRelays failed', { error });
     throw error;
   }
