@@ -1,6 +1,6 @@
 'use strict';
 
-const indexer = require('./block-indexer')
+const indexer = require('./block-indexer');
 
 module.exports = {
   ...indexer

@@ -90,7 +90,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error(`Failed to fetch Edgeware block data, retry in 5 minutes`, { error });
+    logger.error('Failed to fetch Edgeware block data, retry in 5 minutes', { error });
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }

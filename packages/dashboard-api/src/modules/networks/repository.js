@@ -30,7 +30,7 @@ async function getTokenVolumeAllTime() {
   try {
     const {rows} = await pgPool.query(
       `SELECT network_id, token_name, sum(value) as token_volume
-        FROM ${TRANSACTION_TBL_NAME}  
+        FROM ${TRANSACTION_TBL_NAME}
         WHERE confirmed = true
         GROUP BY(token_name, network_id)`,
       );
@@ -62,7 +62,7 @@ async function getTokenVolumeAllTime() {
           id: data.id,
           pathLogo: data.path_logo,
           url: data.url,
-          mintFee: Number(data.mint_fee),
+          mintFee: Number(data.mint_fee), 
           burnFee: Number(data.burn_fee),
         });
       }

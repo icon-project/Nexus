@@ -37,6 +37,9 @@ jobs:
           pm2 stop ./packages/dashboard-api/pm2.json
           cat ../.env-indexer >> ./packages/block-indexer/.env
           cat ../.env-dashboard >> ./packages/dashboard-api/.env
+          cd ./packages/block-indexer && yarn
+          cd ../dashboard-api && yarn
+          cd ../..
           pm2 start ./packages/block-indexer/pm2.json
           pm2 start ./packages/dashboard-api/pm2.json
           pm2 status
