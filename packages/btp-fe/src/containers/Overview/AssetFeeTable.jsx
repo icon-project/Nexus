@@ -34,6 +34,7 @@ export const AssetFeeTable = ({ assets }) => {
             {assets.map(({ name }, idx) => (
               <th key={idx}>{name}</th>
             ))}
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@ export const AssetFeeTable = ({ assets }) => {
             {assets.map(({ value }, idx) => (
               <td key={idx}>{shortenNumber(value)}</td>
             ))}
+            <td style={{ width: '100%' }}></td>
           </tr>
         </tbody>
       </Table>
