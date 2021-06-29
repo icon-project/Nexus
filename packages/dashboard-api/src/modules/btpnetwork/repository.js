@@ -55,17 +55,17 @@ async function getVolumeMintedNetworks() {
   GROUP BY(network_id, token_name)`;
   try {
     const { rows } = await pgPool.query(query);
-    let result = []
+    let results = [];
     if(rows.length > 0) {
       for( let row of rows) {
-        result.push({
+        results.push({
           networkId: row.network_id,
           tokenName: row.token_name, 
           tokenVolume: row.token_volume,
         });
       }
     }
-    return result;
+    return results;
   } catch (error) {
     logger.error('getVolumeMintedNetworks fails', { error });
     throw error;

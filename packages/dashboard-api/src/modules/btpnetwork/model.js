@@ -98,7 +98,7 @@ async function getAllTimeFee() {
 async function getMintedNetworks() {
   const mintedTokens = await getVolumeMintedNetworks();
   const networks = await getNetworkInfo();
-  let result = [];
+  let results = [];
   let mapTokensVolume = new Map();
   for( let token of mintedTokens) {
     let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
@@ -109,12 +109,13 @@ async function getMintedNetworks() {
     mapTokensVolume.set(token.networkId, volume);
   }
   for( let data of networks ) {
-    result.push({
+    results.push({
       networkId: data.id,
+      networkName: data.name,
       mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
     })
   }
-  return result;
+  return results;
 }
 
 module.exports = {
