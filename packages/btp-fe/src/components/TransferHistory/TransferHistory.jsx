@@ -7,6 +7,7 @@ dayjs.extend(relativeTime);
 import { useDispatch } from 'hooks/useRematch';
 
 import { getTransferHistory } from 'services/btpServices';
+import { exchangeToFiat } from 'utils/app';
 
 import { Table } from '../Table';
 import { Tag } from '../Tag';
@@ -137,6 +138,8 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
     const getHistory = async () => {
       try {
         const transferData = await getTransferHistory(selectedPage);
+        const data = exchangeToFiat('BTC', ['USD'], 1000);
+        console.log('data', data);
         const dataSource = transferData?.content?.transHistory.map((history, index) => {
           return {
             ...history,
