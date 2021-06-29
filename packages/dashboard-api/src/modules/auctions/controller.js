@@ -8,13 +8,23 @@ const model = require('./model');
 // Show the list of auctions currently in progress.
 // GET /auctions
 async function getCurrentAuctions(request, response) {
-  const auctions = await model.getCurrentAuctions();
+  if (request.query.availableAssets) {
+    const assets = await model.getAvailableAssetsToAuction();
 
-  response.status(HttpStatus.OK).json({
-    content: [
-      ...auctions
-    ]
-  });
+    response.status(HttpStatus.OK).json({
+      content: [
+        ...assets
+      ]
+    });
+  } else {
+    const auctions = await model.getCurrentAuctions();
+
+    response.status(HttpStatus.OK).json({
+      content: [
+        ...auctions
+      ]
+    });
+  }
 }
 
 // GET /auctions/:id
