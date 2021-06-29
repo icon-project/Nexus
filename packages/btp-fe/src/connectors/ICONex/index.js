@@ -44,7 +44,11 @@ const eventHandler = async (event) => {
         await new Promise((resolve, reject) => {
           const checkTxRs = setInterval(async () => {
             try {
-              await getTxResult(txHash);
+              const result = await getTxResult(txHash);
+              // https://www.icondev.io/docs/icon-json-rpc-v3#icx_gettransactionresult
+              if (!result.status || result.status === '0x0') {
+                throw new Error(result.failure.message);
+              }
 
               switch (window[signingActions.globalName]) {
                 case signingActions.bid:
