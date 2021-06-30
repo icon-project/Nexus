@@ -33,14 +33,44 @@ async function getAuctionById(auctionId) {
   }
 }
 
-async function getBidByAuctionId(auctionId) {
-  const query = 'SELECT * FROM bids WHERE auction_id=$1 ORDER BY created_time';
+async function getTopBidder(auctionId) {
+  const query = 'SELECT * FROM bids WHERE auction_id=$1 ORDER BY created_time DESC LIMIT 1';
   const values = [auctionId];
 
   try {
     const { rows } = await pgPool.query(query, values);
 
-    if (rows.length > 0) {
+    if (rows[0]) {
+      const bid = {
+        auctionId,
+        id: rows[0].id,
+        tokenName: rows[0].token_name,
+        currentBidder: rows[0].current_bidder_address,
+        currentBidAmount: Number(rows[0].current_bid_amount),
+        newBidder: rows[0].new_bidder_address,
+        newBidAmount: Number(rows[0].new_bid_amount),
+        txHash: rows[0].tx_hash,
+        createdTime: rows[0].created_time
+      };
+
+      return bid;
+    }
+  } catch (error) {
+    logger.error(`getTopBidder fails with auction ID ${auctionId}`, { error });
+    throw error;
+  }
+}
+
+async function getBidByAuctionId(auctionId, limit, offset) {
+  const countQuery = 'SELECT COUNT(*) FROM bids WHERE auction_id=$1';
+  const selectQuery = 'SELECT * FROM bids WHERE auction_id=$1 ORDER BY created_time DESC LIMIT $2 OFFSET $3';
+
+  try {
+    const { rows } = await pgPool.query(countQuery, [auctionId]);
+    const count = Number(rows[0].count);
+
+    if (count > 0) {
+      const { rows } = await pgPool.query(selectQuery, [auctionId, limit, offset]);
       const bids = [];
 
       for (const row of rows) {
@@ -57,17 +87,19 @@ async function getBidByAuctionId(auctionId) {
         });
       }
 
-      return bids;
+      return {
+        items: bids,
+        totalItem: count
+      };
     }
   } catch (error) {
     logger.error(`getBidByAuctionId fails with auction ID ${auctionId}`, { error });
     throw error;
   }
-
-  return [];
 }
 
 module.exports = {
   getAuctionById,
-  getBidByAuctionId
+  getBidByAuctionId,
+  getTopBidder
 };

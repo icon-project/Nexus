@@ -5,7 +5,7 @@ const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider, IconBuilder, IconConverter, IconAmount, IconWallet, SignedTransaction } = require('icon-sdk-js');
 const { logger } = require('../../common');
-const { getAuctionById, getBidByAuctionId } = require('./repository');
+const { getAuctionById, getBidByAuctionId, getTopBidder } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -95,21 +95,15 @@ async function getAuctionDetail(auctionId) {
   if (!auction)
     return null;
 
-  const bids = await getBidByAuctionId(auctionId);
+  const bid = await getTopBidder(auctionId);
 
   return {
     name: auction.tokenName,
-    topBidder: bids.length > 0 ? bids[bids.length - 1].newBidder : auction.bidder,
-    currentBidAmount: bids.length > 0 ? bids[bids.length - 1].newBidAmount : auction.bidAmount,
+    topBidder: bid ? bid.newBidder : auction.bidder,
+    currentBidAmount: bid ? bid.newBidAmount : auction.bidAmount,
     availableBidAmount: auction.tokenAmount,
     createdTime: auction.createdTime,
-    endTime: auction.endTime,
-    bids: bids.map(b => ({
-      id: b.id,
-      bidder: b.newBidder,
-      amount: b.newBidAmount,
-      createdTime: b.createdTime
-    }))
+    endTime: auction.endTime
   };
 }
 
@@ -238,9 +232,34 @@ async function getAvailableAssetsToAuction() {
   return result;
 }
 
+async function getBidHistory(auctionId, limit, offset) {
+  const result = await getBidByAuctionId(auctionId, limit, offset);
+
+  if (!result) {
+    return {
+      items: [],
+      pagination: {
+        limit,
+        offset,
+        totalItem: 0
+      }
+    };
+  }
+
+  return {
+    items: result.items,
+    pagination: {
+      limit,
+      offset,
+      totalItem: result.totalItem
+    }
+  };
+}
+
 module.exports = {
   getCurrentAuctions,
   getAuctionDetail,
   createNewAuction,
-  getAvailableAssetsToAuction
+  getAvailableAssetsToAuction,
+  getBidHistory
 };

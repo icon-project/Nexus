@@ -46,6 +46,48 @@ async function getAuctionDetail(request, response) {
   });
 }
 
+// GET /auctions/:id/bids
+// curl http://localhost:8000/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids
+// curl http://localhost:8000/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids?limit=5
+// curl http://localhost:8000/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids?limit=5&offset=0
+async function getBidHistory(request, response) {
+  const auctionId = request.params.id;
+
+  if (!auctionId)
+    return response.sendStatus(HttpStatus.BadRequest);
+
+  let limit = request.query.limit;
+
+  if (limit) {
+    limit = Number(limit);
+
+    if (Number.isNaN(limit) || limit <= 0)
+      return response.sendStatus(HttpStatus.BadRequest);
+  } else {
+    limit = 25;
+  }
+
+  let offset = request.query.offset;
+
+  if (offset) {
+    offset = Number(offset);
+
+    if (Number.isNaN(offset) || offset < 0)
+      return response.sendStatus(HttpStatus.BadRequest);
+  } else {
+    offset = 0;
+  }
+
+  const result = await model.getBidHistory(auctionId, limit, offset);
+
+  response.status(HttpStatus.OK).json({
+    content: result.items,
+    metadata: {
+      pagination: result.pagination
+    }
+  });
+}
+
 // POST /auctions
 // curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"Test2206", "tokenAmount": 10}'
 async function createNewAuction(request, response) {
@@ -81,5 +123,6 @@ async function createNewAuction(request, response) {
 module.exports = {
   getCurrentAuctions,
   getAuctionDetail,
-  createNewAuction
+  createNewAuction,
+  getBidHistory
 };

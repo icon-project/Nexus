@@ -5,7 +5,7 @@
   "author": "Tien Do",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint ./src",
+    "lint": "eslint -c .eslintrc.js --no-eslintrc ./src",
     "start": "nodemon index.js",
     "start:pm2": "pm2 start pm2.json",
     "stop:pm2": "pm2 stop pm2.json"
@@ -31,6 +31,7 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.3.1",
+    "eslint-plugin-jest": "24.3.6",
     "nock": "^13.0.0",
     "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
