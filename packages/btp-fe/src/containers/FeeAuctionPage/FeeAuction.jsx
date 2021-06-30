@@ -201,7 +201,9 @@ const FeeAuction = () => {
           ) : (
             <div className="total-available">
               <div className="amount-of-bid">
-                <TextWithInfo>TOTAL AVAILABLE BID AMOUNT</TextWithInfo>
+                <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">
+                  TOTAL AVAILABLE BID AMOUNT
+                </TextWithInfo>
                 <Header className="large bold">$ 1,049</Header>
               </div>
 

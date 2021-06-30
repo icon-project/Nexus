@@ -1,6 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Row } from 'antd';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+import { useDispatch } from 'hooks/useRematch';
+
+import { getTransferHistory } from 'services/btpServices';
 
 import { Table } from '../Table';
 import { Tag } from '../Tag';
@@ -39,26 +45,29 @@ const TableStyled = styled(Table)`
 const columns = [
   {
     title: 'Details',
-    dataIndex: 'details',
+    dataIndex: 'txHash',
     render: (text) => <div className="details-column">{text}</div>,
   },
   {
     title: 'Time',
-    dataIndex: 'time',
-    render: (text) => <div className="time-column">{text}</div>,
+    dataIndex: 'updateAt',
+    render: (updateAt) => <div className="time-column">{dayjs(updateAt).fromNow()}</div>,
   },
   {
     title: 'Amount',
-    dataIndex: 'amount',
-    render: (text) => <div className="amount-column">{text}</div>,
+    dataIndex: 'value',
+    render: (text, dataSource) => (
+      <div className="amount-column">{text + ' ' + dataSource.tokenName}</div>
+    ),
   },
   {
     title: 'Status',
-    dataIndex: 'status',
+    dataIndex: 'confirmed',
     width: 160,
     render: (text) => {
+      const status = text ? 'success' : 'failed';
       let color = '#5EF38C';
-      switch (text) {
+      switch (status) {
         case 'pending':
           color = '#FFBA49';
           break;
@@ -66,20 +75,10 @@ const columns = [
           color = '#F05365';
           break;
       }
-      return <Tag color={color}>{text}</Tag>;
+      return <Tag color={color}>{status}</Tag>;
     },
   },
 ];
-const dataSource = [];
-for (let i = 0; i < 30; i++) {
-  dataSource.push({
-    key: i,
-    details: '0x7859eef12402fba1fe05205194be861f2cfd97eaf5b3eeeb7787c0e8d393e480',
-    time: i < 3 ? '55sec ago' : '1min ago',
-    amount: i < 4 ? '0.000789 Ether' : '0.018184755491286 Ether',
-    status: i === 5 ? 'failed' : i < 1 ? 'pending' : 'success',
-  });
-}
 
 const TransferHistoryStyled = styled.div`
   margin-top: 36px;
@@ -128,11 +127,34 @@ const TransferHistoryStyled = styled.div`
 export const TransferHistory = ({ setIsOpenHistory }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
+  const [selectedPage, setSelectedPage] = useState(0);
+  const [historySource, setHistorySource] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const { handleError } = useDispatch(({ modal: { handleError } }) => ({
+    handleError,
+  }));
+  useEffect(() => {
+    const getHistory = async () => {
+      try {
+        const transferData = await getTransferHistory(selectedPage);
+        const dataSource = transferData?.content?.transHistory.map((history, index) => {
+          return {
+            ...history,
+            key: index,
+          };
+        });
+        setHistorySource(dataSource);
+        setIsFetching(false);
+      } catch (error) {
+        handleError();
+      }
+    };
+    getHistory();
+  }, [handleError, selectedPage]);
   const onClickDetail = (detail) => {
     setSelectedRow(detail);
     setShowDetails(true);
   };
-
   return (
     <TransferHistoryStyled>
       <Row>
@@ -151,11 +173,13 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
         backgroundColor={colors.darkBG}
         bodyText={'md'}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={historySource}
         onRow={(r) => ({
           onClick: () => onClickDetail(r),
         })}
         pagination
+        onChange={(pagination) => setSelectedPage(pagination.current - 1)}
+        loading={isFetching}
       />
       {showDetails && (
         <HistoryDetails
