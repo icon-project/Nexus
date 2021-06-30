@@ -15,6 +15,7 @@ const Table = styled.table`
     text-align: left;
     padding: 1.5px 20px;
     color: ${colors.grayScaleSubText};
+    text-transform: uppercase;
   }
 
   td {

@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
-import { hashShortener, shortenNumber } from 'utils/app';
+import { hashShortener } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
@@ -184,7 +184,6 @@ const FeeAuction = () => {
   }, [keySearch, auctions]);
 
   const isPlural = filteredData.length > 1;
-  const totalFees = shortenNumber(fees.reduce((accumulator, curr) => accumulator + curr.value, 0));
 
   return (
     <Wrapper>
@@ -203,7 +202,7 @@ const FeeAuction = () => {
             <div className="total-available">
               <div className="amount-of-bid">
                 <TextWithInfo>TOTAL AVAILABLE BID AMOUNT</TextWithInfo>
-                <Header className="large bold">$ {totalFees}</Header>
+                <Header className="large bold">$ 1,049</Header>
               </div>
 
               <div className="divider"></div>
