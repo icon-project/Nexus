@@ -4,18 +4,14 @@ const auction = {
   state: {
     auctions: [],
     currentAuction: {},
+    availableAssets: [],
   },
   reducers: {
-    setAuctions(state, auctions = []) {
+    setAuctionState(state, prop = []) {
+      const [property, payload] = prop;
       return {
         ...state,
-        auctions,
-      };
-    },
-    setAuction(state, auction = {}) {
-      return {
-        ...state,
-        currentAuction: auction,
+        [property]: payload,
       };
     },
   },
@@ -23,7 +19,7 @@ const auction = {
     async getAuctions() {
       try {
         const auctions = await getAuctions();
-        this.setAuctions(auctions.content || []);
+        this.setAuctionState(['auctions', auctions.content || []]);
         return auctions;
       } catch (error) {
         dispatch.modal.handleError();
@@ -32,10 +28,36 @@ const auction = {
     async getAuctionDetails(auctionId) {
       try {
         const auction = await getAuctionDetails(auctionId);
-        this.setAuction(auction.content);
+        this.setAuctionState(['currentAuction', auction.content]);
         return auction;
       } catch (error) {
         dispatch.modal.handleError();
+      }
+    },
+    async getAvailableAssets() {
+      try {
+        // const avalibleAssets = await getAvailableAssets();
+        setTimeout(() => {
+          this.setAuctionState([
+            'availableAssets',
+            [
+              {
+                name: 'SampleToken1406',
+                value: 40,
+              },
+              {
+                name: 'Test2206',
+                value: 10,
+              },
+              {
+                name: 'SunnyDay',
+                value: 10,
+              },
+            ],
+          ]);
+        }, 1000);
+      } catch (error) {
+        console.log(error);
       }
     },
   }),
@@ -45,6 +67,9 @@ const auction = {
     },
     selectCurrentAuction() {
       return slice((state) => state.currentAuction);
+    },
+    selectAvailableAssets() {
+      return slice((state) => state.availableAssets);
     },
   }),
 };
