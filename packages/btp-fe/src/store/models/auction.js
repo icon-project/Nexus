@@ -1,9 +1,10 @@
-import { getAuctions, getAuctionDetails } from 'services/btpServices';
+import { getAuctions, getAuctionDetails, getFeeAssets } from 'services/btpServices';
 
 const auction = {
   state: {
     auctions: [],
     currentAuction: {},
+    fees: [],
   },
   reducers: {
     setAuctions(state, auctions = []) {
@@ -16,6 +17,12 @@ const auction = {
       return {
         ...state,
         currentAuction: auction,
+      };
+    },
+    setFees(state, fees = []) {
+      return {
+        ...state,
+        fees,
       };
     },
   },
@@ -38,6 +45,15 @@ const auction = {
         dispatch.modal.handleError();
       }
     },
+    async getFees() {
+      try {
+        const fees = await getFeeAssets();
+        this.setFees(fees.content.assets);
+        return fees;
+      } catch (error) {
+        dispatch.modal.handleError();
+      }
+    },
   }),
   selectors: (slice) => ({
     selectAuctions() {
@@ -45,6 +61,9 @@ const auction = {
     },
     selectCurrentAuction() {
       return slice((state) => state.currentAuction);
+    },
+    selectFees() {
+      return slice((state) => state.fees);
     },
   }),
 };
