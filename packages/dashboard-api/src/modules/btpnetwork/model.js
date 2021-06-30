@@ -1,10 +1,11 @@
 'use strict';
 
 const IconService = require('icon-sdk-js');
+const { countNetwork, sumTransactionAmount, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
+const { getTotalBondedRelays } = require('../relays/repository');
+const { getNetworkInfo } = require('../networks/repository');
 const { logger, CURRENCIES } = require('../../common');
 const { exchangeToFiat } = require('../../common/util');
-const { countNetwork, countTransaction, getAllTimeFeeOfAssets } = require('./repository');
-const { getTotalBondedRelays } = require('../relays/repository');
 const { HttpProvider, IconBuilder, IconConverter } = IconService;
 const { getTokenVolumeAllTime } = require('../networks/repository');
 const provider = new HttpProvider(process.env.ICON_API_URL);
@@ -100,6 +101,32 @@ async function getAllTimeFee() {
   return await getAllTimeFeeOfAssets();
 }
 
+async function getMintedNetworks() {
+  const mintedTokens = await getVolumeMintedNetworks();
+  const networks = await getNetworkInfo();
+  let results = [];
+  let mapTokensVolume = new Map();
+  
+  for (let token of mintedTokens) {
+    let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
+    let volume = fiat.USD;
+    if (mapTokensVolume.has(token.networkId)) {
+      volume += mapTokensVolume.get(token.networkId);
+    }
+    mapTokensVolume.set(token.networkId, volume);
+  }
+  
+  for (let data of networks) {
+    results.push({
+      networkId: data.id,
+      networkName: data.name,
+      mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
+    })
+  }
+  
+  return results;
+}
+
 module.exports = {
   getAmountFeeAggregationSCORE,
   getTotalNetworks,
@@ -107,4 +134,5 @@ module.exports = {
   getTotalTransaction,
   getBondedVolumeByRelays,
   getAllTimeFee,
+  getMintedNetworks
 };

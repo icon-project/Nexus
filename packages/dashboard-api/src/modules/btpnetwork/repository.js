@@ -1,5 +1,5 @@
 'use strict';
-const { pgPool, NETWORK_TBL_NAME, TRANSACTION_TBL, TRANSACTION_TBL_NAME} = require('../../common');
+const { pgPool, logger, NETWORK_TBL_NAME, TRANSACTION_TBL, TRANSACTION_TBL_NAME } = require('../../common');
 
 async function countNetwork() {
   const {
@@ -49,9 +49,34 @@ async function getAllTimeFeeOfAssets() {
   }
 }
 
+async function getVolumeMintedNetworks() {
+  const query = 'SELECT network_id, token_name,  SUM(token_value) AS token_volume FROM minted_tokens GROUP BY(network_id, token_name)';
+
+  try {
+    const { rows } = await pgPool.query(query);
+    let results = [];
+
+    if (rows.length > 0) {
+      for (let row of rows) {
+        results.push({
+          networkId: row.network_id,
+          tokenName: row.token_name,
+          tokenVolume: row.token_volume,
+        });
+      }
+    }
+
+    return results;
+  } catch (error) {
+    logger.error('getVolumeMintedNetworks fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   countNetwork,
   sumTransactionAmount,
   countTransaction,
-  getAllTimeFeeOfAssets
+  getAllTimeFeeOfAssets,
+  getVolumeMintedNetworks
 };

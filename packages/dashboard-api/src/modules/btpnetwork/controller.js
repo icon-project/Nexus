@@ -12,6 +12,7 @@ async function getNetworkInfo(request, response) {
   const totalTransactions = await model.getTotalTransaction();
   const bondedRelays = await model.getBondedVolumeByRelays();
   const allTimeFeeAssets = await model.getAllTimeFee();
+  const mintedNetworks = await model.getMintedNetworks();
 
   response.status(HttpStatus.OK).json({
     content: {
@@ -24,7 +25,8 @@ async function getNetworkInfo(request, response) {
         allTimeAmount: allTimeFeeAssets
       },
       totalNetworks,
-      totalTransactions
+      totalTransactions,
+      minted: mintedNetworks
     }
   });
 }
