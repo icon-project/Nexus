@@ -31,7 +31,7 @@ const roundToTwo = (num) => {
 };
 
 const shortenNumber = (num) => {
-  if (!num) return '';
+  if (num === undefined) return 0;
   num = (num + '').split('.')[0];
   const { length } = num;
   switch (true) {
