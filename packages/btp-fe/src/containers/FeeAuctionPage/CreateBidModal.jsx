@@ -9,7 +9,7 @@ import { PrimaryButton, Button } from 'components/Button';
 import { SelectInput } from 'components/Select/SelectInput';
 import { colors } from 'components/Styles/Colors';
 
-import { minValue } from 'utils/inputValidation';
+import { minValue, required } from 'utils/inputValidation';
 
 const Form = styled.form`
   text-align: left;
@@ -45,13 +45,24 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets })
     <Modal title="New bid" display hasClosedBtn={false}>
       <FinalForm
         onSubmit={onSubmit}
-        render={({ handleSubmit, valid }) => {
+        render={({ handleSubmit }) => {
           return (
             <Form onSubmit={handleSubmit}>
               <div className="input-group">
                 <div className="input-field">
                   <Text className="small">Asset type</Text>
-                  <SelectInput options={availableAssets} loading={loading} />
+                  <Field
+                    name="asset"
+                    validate={required}
+                    render={({ input, meta }) => (
+                      <SelectInput
+                        options={availableAssets}
+                        loading={loading}
+                        {...input}
+                        meta={meta}
+                      />
+                    )}
+                  />
                 </div>
 
                 <div className="input-field">
@@ -84,7 +95,7 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets })
                 >
                   Cancel
                 </Button>
-                <PrimaryButton htmlType="submit" disabled={!valid} width={192} height={64}>
+                <PrimaryButton htmlType="submit" width={192} height={64}>
                   Create new bid
                 </PrimaryButton>
               </div>

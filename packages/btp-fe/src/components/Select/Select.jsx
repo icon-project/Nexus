@@ -85,14 +85,26 @@ const Wrapper = styled.button`
   }
 `;
 
-const Select = ({ options = [], customeArrow, showCheck, loading, ...ots }) => {
+const Select = ({
+  options = [],
+  customeArrow,
+  showCheck,
+  loading,
+  onChange = () => {},
+  name: fieldName,
+  ...ots
+}) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
   const [selectedValue, setSelectedValue] = useState(options[0] || {});
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!loading) {
       setSelectedValue(options[0] || {});
+      onChange({
+        target: { value: options[0] ? '' : '', name: fieldName, type: 'input' },
+      });
     }
   }, [loading]);
 
@@ -124,12 +136,13 @@ const Select = ({ options = [], customeArrow, showCheck, loading, ...ots }) => {
       {isOpenSelect && (
         <ul>
           {options.map((opt, idx) => {
-            const { label, name, renderItem } = opt;
+            const { label, name, value, renderItem } = opt;
             return (
               <li
                 key={idx}
                 onClick={() => {
                   setSelectedValue(opt);
+                  onChange({ target: { value, name: fieldName, type: 'input' } });
                 }}
                 className={`${
                   (selectedValue.label && selectedValue.label === label) ||
