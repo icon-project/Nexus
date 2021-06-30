@@ -6,6 +6,7 @@ import { colors } from 'components/Styles/Colors';
 
 const StyledSelect = styled(Select)`
   width: 100%;
+  height: 66px;
   justify-content: space-between;
   border: 1px solid ${colors.grayLine};
   padding: 20px 16px;

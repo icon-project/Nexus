@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import styled from 'styled-components/macro';
 
@@ -28,16 +29,17 @@ const Form = styled.form`
   }
 `;
 
-export const CreateBidModal = ({ setOpen }) => {
+export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets }) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getAvailableAssets().then(() => {
+      setLoading(false);
+    });
+  }, [getAvailableAssets]);
+
   const onSubmit = (values) => {
     console.log('values', values);
   };
-
-  const assets = [
-    { value: 'bsc', label: 'BTC' },
-    { value: 'ed', label: 'ETH' },
-    { value: 'ic', label: 'SHIBA' },
-  ];
 
   return (
     <Modal title="New bid" display hasClosedBtn={false}>
@@ -49,7 +51,7 @@ export const CreateBidModal = ({ setOpen }) => {
               <div className="input-group">
                 <div className="input-field">
                   <Text className="small">Asset type</Text>
-                  <SelectInput options={assets} />
+                  <SelectInput options={availableAssets} loading={loading} />
                 </div>
 
                 <div className="input-field">

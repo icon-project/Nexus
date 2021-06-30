@@ -154,14 +154,20 @@ const FeeAuction = () => {
 
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const { auctions } = useSelect(({ auction }) => ({
-    auctions: auction.selectAuctions,
-  }));
+  const { auctions, availableAssets } = useSelect(
+    ({ auction: { selectAuctions, selectAvailableAssets } }) => ({
+      auctions: selectAuctions,
+      availableAssets: selectAvailableAssets,
+    }),
+  );
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
-    getAuctions,
-  }));
+  const { getAuctions, getAvailableAssets } = useDispatch(
+    ({ auction: { getAuctions, getAvailableAssets } }) => ({
+      getAuctions,
+      getAvailableAssets,
+    }),
+  );
 
   useEffect(() => {
     getAuctions().then(() => {
@@ -246,7 +252,13 @@ const FeeAuction = () => {
           <Text className="medium">Try again using more general search items</Text>
         </EmptySearch>
       )}
-      {open && <CreateBidModal setOpen={setOpen} />}
+      {open && (
+        <CreateBidModal
+          setOpen={setOpen}
+          getAvailableAssets={getAvailableAssets}
+          availableAssets={availableAssets}
+        />
+      )}
     </Wrapper>
   );
 };

@@ -37,25 +37,28 @@ const auction = {
     async getAvailableAssets() {
       try {
         // const avalibleAssets = await getAvailableAssets();
-        setTimeout(() => {
-          this.setAuctionState([
-            'availableAssets',
-            [
-              {
-                name: 'SampleToken1406',
-                value: 40,
-              },
-              {
-                name: 'Test2206',
-                value: 10,
-              },
-              {
-                name: 'SunnyDay',
-                value: 10,
-              },
-            ],
-          ]);
-        }, 1000);
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.setAuctionState([
+              'availableAssets',
+              [
+                {
+                  name: 'SampleToken1406',
+                  value: 40,
+                },
+                {
+                  name: 'Test2206',
+                  value: 10,
+                },
+                {
+                  name: 'SunnyDay',
+                  value: 10,
+                },
+              ],
+            ]);
+            resolve(true);
+          }, 1000);
+        });
       } catch (error) {
         console.log(error);
       }

@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'components/Typography';
+import { Loader } from 'components/Loader';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 
 import arrowIcon from 'assets/images/arrow-icon.svg';
@@ -84,10 +85,16 @@ const Wrapper = styled.button`
   }
 `;
 
-const Select = ({ options = [], customeArrow, showCheck, ...ots }) => {
+const Select = ({ options = [], customeArrow, showCheck, loading, ...ots }) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(options[0]);
+  const [selectedValue, setSelectedValue] = useState(options[0] || {});
+
+  useEffect(() => {
+    if (!loading) {
+      setSelectedValue(options[0] || {});
+    }
+  }, [loading]);
 
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);
@@ -104,24 +111,32 @@ const Select = ({ options = [], customeArrow, showCheck, ...ots }) => {
       showCheck={showCheck}
       {...ots}
     >
-      {selectedValue.renderLabel ? (
+      {loading ? (
+        <Loader size="25px" borderSize="3px" />
+      ) : selectedValue.renderLabel ? (
         selectedValue.renderLabel()
       ) : (
-        <Text className="medium">{selectedValue.label}</Text>
+        <Text className="medium">{selectedValue.label || selectedValue.name || 'No options'}</Text>
       )}
-      {isOpenSelect && (
+
+      {isOpenSelect && !loading && options.length > 0 && (
         <ul>
           {options.map((opt) => {
-            const { label, value, renderItem } = opt;
+            const { label, name, renderItem } = opt;
             return (
               <li
-                key={value}
+                key={name}
                 onClick={() => {
                   setSelectedValue(opt);
                 }}
-                className={`${selectedValue.value === value ? 'active' : ''}`}
+                className={`${
+                  (selectedValue.label && selectedValue.label === label) ||
+                  selectedValue.name === name
+                    ? 'active'
+                    : ''
+                }`}
               >
-                {renderItem ? renderItem() : <Text className="small">{label}</Text>}
+                {renderItem ? renderItem() : <Text className="small">{label || name}</Text>}
               </li>
             );
           })}
