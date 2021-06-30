@@ -34,6 +34,8 @@ const shortenNumber = (num) => {
   num = (num + '').split('.')[0];
   const { length } = num;
   switch (true) {
+    case length > 12:
+      return roundToTwo(num / 1000000000000).toLocaleString() + ' T';
     case length > 9:
       return roundToTwo(num / 1000000000).toLocaleString() + ' B';
     case length > 6:
