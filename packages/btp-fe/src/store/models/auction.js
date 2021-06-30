@@ -20,12 +20,6 @@ const auction = {
         [property]: payload,
       };
     },
-    setFees(state, fees = []) {
-      return {
-        ...state,
-        fees,
-      };
-    },
   },
   effects: (dispatch) => ({
     async getAuctions() {
