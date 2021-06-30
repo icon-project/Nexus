@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table as antdTable } from 'antd';
 import { colors } from '../Styles/Colors';
@@ -122,6 +123,9 @@ const TableStyled = styled(antdTable)`
     }
   `};
 `;
+
+let myTimer;
+
 export const Table = ({
   headerColor,
   headerText,
@@ -134,6 +138,20 @@ export const Table = ({
   loading,
   ...rest
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  // we don't set loading immediately to avoid blinking UI
+  useEffect(() => {
+    if (loading) {
+      myTimer = setTimeout(() => {
+        if (loading) setIsLoading(true);
+      }, 300);
+    } else {
+      clearTimeout(myTimer);
+      setIsLoading(false);
+    }
+  }, [loading]);
+
   function itemRender(current, type, originalElement) {
     if (type === 'prev') {
       return (
@@ -169,7 +187,7 @@ export const Table = ({
       bodyText={bodyText}
       hoverColor={hoverColor}
       columns={columns}
-      loading={loading && { indicator: <Loader size="25px" borderSize="3px" /> }}
+      loading={isLoading && { indicator: <Loader size="25px" borderSize="3px" /> }}
       pagination={pagination ? { ...pagination, position: ['bottomCenter'], itemRender } : false}
       {...rest}
     >
