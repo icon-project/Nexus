@@ -1,10 +1,16 @@
-import { getAuctions, getAuctionDetails, getAvailableAssets } from 'services/btpServices';
+import {
+  getAuctions,
+  getAuctionDetails,
+  getAvailableAssets,
+  getFeeAssets,
+} from 'services/btpServices';
 
 const auction = {
   state: {
     auctions: [],
     currentAuction: {},
     availableAssets: [],
+    fees: [],
   },
   reducers: {
     setAuctionState(state, prop = []) {
@@ -12,6 +18,12 @@ const auction = {
       return {
         ...state,
         [property]: payload,
+      };
+    },
+    setFees(state, fees = []) {
+      return {
+        ...state,
+        fees,
       };
     },
   },
@@ -43,6 +55,15 @@ const auction = {
         console.log(error);
       }
     },
+    async getFees() {
+      try {
+        const fees = await getFeeAssets();
+        this.setAuctionState(['fees', fees.content.assets]);
+        return fees;
+      } catch (error) {
+        dispatch.modal.handleError();
+      }
+    },
   }),
   selectors: (slice) => ({
     selectAuctions() {
@@ -53,6 +74,9 @@ const auction = {
     },
     selectAvailableAssets() {
       return slice((state) => state.availableAssets);
+    },
+    selectFees() {
+      return slice((state) => state.fees);
     },
   }),
 };

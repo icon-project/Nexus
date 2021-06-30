@@ -12,6 +12,10 @@ export const getAvailableAssets = () => {
   return fetchAPI(`/auctions/?availableAssets=1`);
 };
 
+export const getFeeAssets = () => {
+  return fetchAPI(`/fees`);
+};
+
 export const getRelayCandidates = () => {
   return fetchAPI(`/relays`);
 };
@@ -22,6 +26,10 @@ export const getRegisteredRelayCandidate = () => {
 
 export const getConnectedNetworks = () => {
   return fetchAPI(`/networks`);
+};
+
+export const getNetwork = (id) => {
+  return fetchAPI(`/networks/${id}`);
 };
 
 export const getTransferHistory = (page) => {

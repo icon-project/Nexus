@@ -102,7 +102,7 @@ const NetworkStyled = styled.div`
 `;
 
 function NetworkPage() {
-  const [isModalOpened, setModalOpen] = useState(false);
+  const [currentNetworkID, setCurrentNetworkID] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
@@ -133,13 +133,20 @@ function NetworkPage() {
           backgroundColor={colors.darkBG}
           bodyText={'md'}
           onRow={(r) => ({
-            onClick: () => setModalOpen(r),
+            onClick: () => {
+              setCurrentNetworkID(r.id);
+            },
           })}
         />
       </div>
-      {isModalOpened && (
-        <Modal display={isModalOpened} width="736px" title="Curve" setDisplay={setModalOpen}>
-          <NetwotkDetails />
+      {currentNetworkID && (
+        <Modal
+          display={currentNetworkID}
+          width="736px"
+          title="Curve"
+          setDisplay={setCurrentNetworkID}
+        >
+          <NetwotkDetails currentNetworkID={currentNetworkID} />
         </Modal>
       )}
     </NetworkStyled>

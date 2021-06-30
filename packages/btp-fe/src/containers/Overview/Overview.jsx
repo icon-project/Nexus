@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 
@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 `;
 
 const Overview = () => {
-  const [loading, setLoading] = useState(true);
   const {
     app: { content = {} },
     networks,
@@ -34,27 +33,14 @@ const Overview = () => {
   );
 
   useEffect(() => {
-    const handleGetAppInfo = async () => {
-      await getAppInfo();
-      setLoading(false);
-    };
-    handleGetAppInfo();
-  }, [getAppInfo]);
-
-  useEffect(() => {
+    getAppInfo();
     getNetworks();
-  }, [getNetworks]);
+  }, [getAppInfo, getNetworks]);
 
   return (
     <Wrapper>
-      {loading ? (
-        <div></div>
-      ) : (
-        <>
-          <ChartArea volume={content.volume || 0} />
-          <StatisticArea data={content} networks={networks} />
-        </>
-      )}
+      <ChartArea volume={content.volume || 0} />
+      <StatisticArea data={content} networks={networks} />
     </Wrapper>
   );
 };
