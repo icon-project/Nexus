@@ -15,15 +15,18 @@ const StyledHeading = styled(SubTitle)`
     display: flex;
     align-items: center;
   }
-  .icon-with-tooltip:hover .left {
+  .icon-with-tooltip:hover .left,
+  .icon-with-tooltip:hover .bottom {
     display: initial;
   }
   .left {
     display: none;
     margin-left: 38.42px;
   }
-  .right {
+  .bottom {
     display: none;
+    margin-bottom: 100px;
+    margin-left: -77px;
   }
 `;
 

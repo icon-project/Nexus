@@ -60,7 +60,10 @@ export const ChartArea = ({ volume = 0 }) => {
         <ChartBox chartId={'volume'} />
       </div>
       <div className="chart">
-        <TextWithInfo tooltip="Total amount of mint transacted via BTP in $" width={300}>
+        <TextWithInfo
+          tooltip="Total value (TVL) of all digital assets currently minted on each blockchain by BTP in $"
+          width={300}
+        >
           VALUE MINT
         </TextWithInfo>
         <Header className="medium bold">

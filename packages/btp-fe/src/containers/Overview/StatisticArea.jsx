@@ -86,14 +86,18 @@ export const StatisticArea = ({ data, networks }) => {
     <Wrapper>
       <div className="transaction">
         <div className="box value-bonded">
-          <TextWithInfo>VALUE BONDED</TextWithInfo>
+          <TextWithInfo tooltip="Total collective value bonded by Relays">
+            VALUE BONDED
+          </TextWithInfo>
           <Header className="small bold value" title={bondedValue}>
             {shortenNumber(bondedValue)}
           </Header>
           <UpDownPercent up percent="12.22%" />
         </div>
         <div className="box transaction">
-          <TextWithInfo hasInfo={false}>TRANSACTIONS</TextWithInfo>
+          <TextWithInfo tooltip="Total number of transactions on the BTP Network">
+            TRANSACTIONS
+          </TextWithInfo>
           <Header className="small bold value" title={totalTransactions}>
             {shortenNumber(totalTransactions)}
           </Header>
@@ -105,7 +109,12 @@ export const StatisticArea = ({ data, networks }) => {
 
       <div className="networks box">
         <div className="amount-of-networks">
-          <TextWithInfo direction="right">NETWORKS CONNECTED</TextWithInfo>
+          <TextWithInfo
+            tooltip="Total number of transactions on the BTP Network"
+            direction="bottom"
+          >
+            NETWORKS CONNECTED
+          </TextWithInfo>
           <Header className="small bold value">{totalNetworks}</Header>
         </div>
 
