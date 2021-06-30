@@ -35,6 +35,26 @@ async function getAuctionByName(name) {
   }
 }
 
+async function getAvailableBalance(name) {
+  const callBuilder = new IconBuilder.CallBuilder();
+  const txObject = callBuilder
+    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .method('availableBalance')
+    .params({ _tokenName: name })
+    .build();
+
+  try {
+    const balance = await iconService.call(txObject).execute();
+    const value = Math.floor(IconConverter.toNumber(balance) / ICX_NUMBER);
+    debug(`Current balance ${name}: %s %d`, balance, value);
+
+    return value;
+  } catch (error) {
+    logger.error(`getAvailableBalance failed ${name}`, { error });
+    throw error;
+  }
+}
+
 async function getCurrentAuctions() {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
@@ -196,8 +216,31 @@ async function createNewAuction(tokenName, tokenAmount) {
   return result;
 }
 
+async function getAvailableAssetsToAuction() {
+  const tokens = await getRegisteredTokens();
+  const result = [];
+
+  for (const token of tokens) {
+    const auction = await getAuctionByName(token.name);
+
+    if (!auction) {
+      const value = await getAvailableBalance(token.name);
+
+      if (value > 0) {
+        result.push({
+          name: token.name,
+          value
+        });
+      }
+    }
+  }
+
+  return result;
+}
+
 module.exports = {
   getCurrentAuctions,
   getAuctionDetail,
-  createNewAuction
+  createNewAuction,
+  getAvailableAssetsToAuction
 };

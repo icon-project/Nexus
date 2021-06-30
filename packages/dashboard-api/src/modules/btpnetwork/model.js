@@ -6,17 +6,15 @@ const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
 const { logger, CURRENCIES } = require('../../common');
 const { exchangeToFiat } = require('../../common/util');
+const { HttpProvider, IconBuilder, IconConverter } = IconService;
 const { getTokenVolumeAllTime } = require('../networks/repository');
-
-const { HttpProvider } = IconService;
-const { IconBuilder } = IconService;
-
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
+const ICX_NUMBER = 10 ** 18;
 
+// Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
-  const { CallBuilder } = IconBuilder;
-  const callBuilder = new CallBuilder();
+  const callBuilder = new IconBuilder.CallBuilder();
   let result = [];
 
   try {
@@ -24,44 +22,43 @@ async function getAmountFeeAggregationSCORE() {
     const tokens = await iconService.call(call).execute();
 
     for (let data of tokens) {
-      logger.debug(`[getAmountFeeAggregationSCORE] token: ${data.name}, address: ${data.address}`);
+      logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
-      let dexBalance = parseInt(hexBalance.toString(16), 16);
-      result.push({ name: data.name, value: dexBalance });
+      result.push({ name: data.name, value: Math.floor(IconConverter.toNumber(hexBalance) / ICX_NUMBER)});
     }
 
     return result;
-  } catch (err) {
-    logger.error('getAmountFeeAggregationSCORE() failed when execute get list tokens', err);
-    throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + err.message);
+  } catch (error) {
+    logger.error('getAmountFeeAggregationSCORE failed', { error });
+    throw error;
   }
 }
 
-async function getAvailableBalance(nameToken) {
-  const { CallBuilder } = IconBuilder;
-  const callBuilder = new CallBuilder();
+// Get available of token registered in FAS by name of token
+async function getAvailableBalance(tokenName) {
+  const callBuilder = new IconBuilder.CallBuilder();
   const call = callBuilder
     .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
     .method('availableBalance')
-    .params({ _tokenName: nameToken })
+    .params({ _tokenName: tokenName })
     .build();
 
   try {
     const availableBalance = await iconService.call(call).execute();
-    logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
+    logger.debug(`getAvailableBalance tokeName: ${tokenName}, availableBalance: ${availableBalance}`);
     return availableBalance;
-  } catch (err) {
-    logger.error('getAvailableBalance() failed when execute get balance FAS', err);
-    throw new Error('"getAvailableBalance" job failed: ' + err.message);
+  } catch (error) {
+    logger.error('getAvailableBalance failed', { error });
+    throw error;
   }
 }
 
 async function getTotalNetworks() {
   try {
     return countNetwork();
-  } catch (err) {
-    logger.error(err, '"getTotalNetworks" failed while getting total networks');
-    throw new Error('"getTotalNetworks" job failed: ' + err.message);
+  } catch (error) {
+    logger.error('getTotalNetworks failed', { error });
+    throw error;
   }
 }
 
@@ -76,27 +73,27 @@ async function getTotalTransactionAmount() {
     const results = await Promise.all(promises);
     results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
     return totalUSD || 0;
-  } catch (err) {
-    logger.error('"getTotalTransactionAmount" failed while getting total transaction amount', err);
-    throw new Error('"getTotalTransactionAmount" job failed: ' + err.message);
+  } catch (error) {
+    logger.error('getTotalTransactionAmount failed', { error });
+    throw error;
   }
 }
 
 async function getTotalTransaction() {
   try {
     return countTransaction();
-  } catch (err) {
-    logger.error('"getTotalTransaction" failed while getting total transaction', err);
-    throw new Error('"getTotalTransaction" job failed: ' + err.message);
+  } catch (error) {
+    logger.error('getTotalTransaction failed', { error });
+    throw error;
   }
 }
 
 async function getBondedVolumeByRelays() {
   try {
     return getTotalBondedRelays();
-  } catch (err) {
-    logger.error('"getBondedVolumeByRelays" failed while getting total volume by Relays', err);
-    throw new Error('"getBondedVolumeByRelays" job failed: ' + err.message);
+  } catch (error) {
+    logger.error('getBondedVolumeByRelays failed', { error });
+    throw error;
   }
 }
 

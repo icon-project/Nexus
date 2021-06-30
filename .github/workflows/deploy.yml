@@ -32,6 +32,7 @@ jobs:
         username: ${{ secrets.VM_SSH_USER }}
         key: ${{ secrets.VM_SSH_KEY }}
         script: |
+          echo "Deployment process started"
           cd ./deploy/btp-be
           pm2 stop ./packages/block-indexer/pm2.json
           pm2 stop ./packages/dashboard-api/pm2.json
