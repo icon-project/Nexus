@@ -104,7 +104,9 @@ const Select = ({ options = [], customeArrow, showCheck, loading, ...ots }) => {
   return (
     <Wrapper
       ref={ref}
-      onClick={onToggleSelect}
+      onClick={() => {
+        if (!loading && options.length > 0) onToggleSelect();
+      }}
       type="button"
       isOpenSelect={isOpenSelect}
       customeArrow={customeArrow}
@@ -119,13 +121,13 @@ const Select = ({ options = [], customeArrow, showCheck, loading, ...ots }) => {
         <Text className="medium">{selectedValue.label || selectedValue.name || 'No options'}</Text>
       )}
 
-      {isOpenSelect && !loading && options.length > 0 && (
+      {isOpenSelect && (
         <ul>
-          {options.map((opt) => {
+          {options.map((opt, idx) => {
             const { label, name, renderItem } = opt;
             return (
               <li
-                key={name}
+                key={idx}
                 onClick={() => {
                   setSelectedValue(opt);
                 }}
