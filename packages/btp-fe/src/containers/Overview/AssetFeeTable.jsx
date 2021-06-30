@@ -18,6 +18,10 @@ const Table = styled.table`
     }
   }
 
+  th {
+    text-transform: uppercase;
+  }
+
   tbody {
     border-top: solid 1px ${colors.grayLine};
     border-bottom: solid 1px ${colors.grayLine};

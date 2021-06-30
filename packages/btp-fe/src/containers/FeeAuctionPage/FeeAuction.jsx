@@ -43,6 +43,7 @@ const Wrapper = styled.div`
 
     .amount-of-bid {
       margin-right: 60px;
+      max-width: 255px;
     }
 
     .divider {
@@ -154,20 +155,23 @@ const FeeAuction = () => {
 
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const { auctions } = useSelect(({ auction }) => ({
-    auctions: auction.selectAuctions,
+  const { auctions, fees } = useSelect(({ auction: { selectFees, selectAuctions } }) => ({
+    auctions: selectAuctions,
+    fees: selectFees,
   }));
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions } = useDispatch(({ auction: { getAuctions } }) => ({
+  const { getAuctions, getFees } = useDispatch(({ auction: { getAuctions, getFees } }) => ({
     getAuctions,
+    getFees,
   }));
 
   useEffect(() => {
+    getFees();
     getAuctions().then(() => {
       setLoading(false);
     });
-  }, [getAuctions]);
+  }, [getAuctions, getFees]);
 
   useEffect(() => {
     if (keySearch) {
@@ -206,7 +210,7 @@ const FeeAuction = () => {
               <div className="divider"></div>
 
               <div className="table-container">
-                <AmountOfBidTable />
+                <AmountOfBidTable fees={fees} />
               </div>
               <div className="divider"></div>
 

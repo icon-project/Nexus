@@ -8,6 +8,10 @@ export const getAuctionDetails = (auctionId) => {
   return fetchAPI(`/auctions/${auctionId}`);
 };
 
+export const getFeeAssets = () => {
+  return fetchAPI(`/fees`);
+};
+
 export const getRelayCandidates = () => {
   return fetchAPI(`/relays`);
 };
