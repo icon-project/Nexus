@@ -1,4 +1,4 @@
-import { getAuctions, getAuctionDetails } from 'services/btpServices';
+import { getAuctions, getAuctionDetails, getAvailableAssets } from 'services/btpServices';
 
 const auction = {
   state: {
@@ -36,29 +36,9 @@ const auction = {
     },
     async getAvailableAssets() {
       try {
-        // const avalibleAssets = await getAvailableAssets();
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            this.setAuctionState([
-              'availableAssets',
-              [
-                {
-                  name: 'SampleToken1406',
-                  value: 40,
-                },
-                {
-                  name: 'Test2206',
-                  value: 10,
-                },
-                {
-                  name: 'SunnyDay',
-                  value: 10,
-                },
-              ],
-            ]);
-            resolve(true);
-          }, 1000);
-        });
+        const avalibleAssets = await getAvailableAssets();
+        this.setAuctionState(['availableAssets', avalibleAssets.content]);
+        return avalibleAssets;
       } catch (error) {
         console.log(error);
       }

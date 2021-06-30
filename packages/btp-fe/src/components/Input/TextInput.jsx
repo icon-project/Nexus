@@ -27,14 +27,14 @@ export const StyledTextInput = styled(Input)`
 `;
 
 export const TextInput = ({ children, meta = {}, ...props }) => {
-  const isError = meta.error && meta.touched;
+  const hasError = meta.error && meta.touched;
 
   return (
     <>
-      <StyledTextInput {...props} isError={isError}>
+      <StyledTextInput {...props} isError={hasError}>
         {children}
       </StyledTextInput>
-      {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
+      {hasError && <Text className="x-small err-msg">{meta.error}</Text>}
     </>
   );
 };

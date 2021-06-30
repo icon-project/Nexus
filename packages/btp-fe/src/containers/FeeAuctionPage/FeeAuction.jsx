@@ -162,10 +162,11 @@ const FeeAuction = () => {
   );
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions, getAvailableAssets } = useDispatch(
-    ({ auction: { getAuctions, getAvailableAssets } }) => ({
+  const { getAuctions, getAvailableAssets, openModal } = useDispatch(
+    ({ auction: { getAuctions, getAvailableAssets }, modal: { openModal } }) => ({
       getAuctions,
       getAvailableAssets,
+      openModal,
     }),
   );
 
@@ -257,6 +258,7 @@ const FeeAuction = () => {
           setOpen={setOpen}
           getAvailableAssets={getAvailableAssets}
           availableAssets={availableAssets}
+          openModal={openModal}
         />
       )}
     </Wrapper>

@@ -10,6 +10,7 @@ import { SelectInput } from 'components/Select/SelectInput';
 import { colors } from 'components/Styles/Colors';
 
 import { minValue, required } from 'utils/inputValidation';
+import { placeBid } from 'connectors/ICONex/iconService';
 
 const Form = styled.form`
   text-align: left;
@@ -29,7 +30,7 @@ const Form = styled.form`
   }
 `;
 
-export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets }) => {
+export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, openModal }) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getAvailableAssets().then(() => {
@@ -38,7 +39,14 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets })
   }, [getAvailableAssets]);
 
   const onSubmit = (values) => {
-    console.log('values', values);
+    const { bidAmount, auctionName } = values;
+    if (bidAmount && auctionName) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      placeBid(auctionName, bidAmount);
+    }
   };
 
   return (
@@ -52,7 +60,7 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets })
                 <div className="input-field">
                   <Text className="small">Asset type</Text>
                   <Field
-                    name="asset"
+                    name="auctionName"
                     validate={required}
                     render={({ input, meta }) => (
                       <SelectInput
