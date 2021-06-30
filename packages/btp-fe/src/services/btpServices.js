@@ -24,6 +24,10 @@ export const getConnectedNetworks = () => {
   return fetchAPI(`/networks`);
 };
 
+export const getNetwork = (id) => {
+  return fetchAPI(`/networks/${id}`);
+};
+
 export const getTransferHistory = (page) => {
   return fetchAPI(`/transactions?page=${page}`);
 };

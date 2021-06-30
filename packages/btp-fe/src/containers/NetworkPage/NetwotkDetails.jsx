@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { Loader } from 'components/Loader';
+
+import { useDispatch, useSelect } from 'hooks/useRematch';
+import { shortenNumber } from 'utils/app';
 
 const Wrapper = styled.div`
   display: grid;
@@ -25,6 +30,10 @@ const NetworkWrapper = styled.div`
   border-radius: 4px;
   background-color: ${colors.brandSecondaryBase};
 
+  .uppercase {
+    text-transform: uppercase;
+  }
+
   .all-time,
   .one-day {
     display: flex;
@@ -33,6 +42,10 @@ const NetworkWrapper = styled.div`
     .x-small {
       margin-top: 5px;
       color: ${colors.grayScaleSubText};
+    }
+
+    .values {
+      text-align: right;
     }
   }
 
@@ -46,17 +59,21 @@ const NetworkWrapper = styled.div`
   }
 `;
 
-const NetWork = () => {
+const NetWork = ({ detail = {} }) => {
+  const { nameToken, volume24h, volume24hUSD, volumeAlTimeUSD, volumeAllTime } = detail;
+
   return (
     <NetworkWrapper>
-      <TextWithIcon icon="btc" width="24px">
-        Bitcoin BTC
+      <TextWithIcon icon={nameToken} width="24px" className="uppercase">
+        {nameToken}
       </TextWithIcon>
       <div className="all-time">
         <Text className="small">All time</Text>
         <div className="values">
-          <Text className="small">54,714.618 BTC</Text>
-          <Text className="x-small">= $1,220,152,075.81</Text>
+          <Text className="small uppercase">
+            {shortenNumber(volumeAllTime)} {nameToken}
+          </Text>
+          <Text className="x-small">= ${(volumeAlTimeUSD + '').toLocaleString()}</Text>
         </div>
       </div>
 
@@ -65,28 +82,49 @@ const NetWork = () => {
       <div className="one-day">
         <Text className="small">24 hour</Text>
         <div className="values">
-          <Text className="small">177.802 BTC</Text>
-          <Text className="x-small">= $10,053,952.70</Text>
+          <Text className="small uppercase">
+            {shortenNumber(volume24h)} {nameToken}
+          </Text>
+          <Text className="x-small">= ${(volume24hUSD + '').toLocaleString()}</Text>
         </div>
       </div>
     </NetworkWrapper>
   );
 };
 
-export const NetwotkDetails = () => {
+export const NetwotkDetails = ({ currentNetworkID }) => {
+  const [loading, setLoading] = useState(true);
+
+  const { networkDetails = [] } = useSelect(({ network: { selectNetworkDetails } }) => ({
+    networkDetails: selectNetworkDetails,
+  }));
+
+  const { getNetworkDetails, setNetworkDetails } = useDispatch(
+    ({ network: { getNetworkDetails, setNetworkDetails } }) => ({
+      getNetworkDetails,
+      setNetworkDetails,
+    }),
+  );
+
+  useEffect(() => {
+    if (currentNetworkID) getNetworkDetails(currentNetworkID).then(() => setLoading(false));
+
+    return () => {
+      setNetworkDetails([]);
+    };
+  }, [getNetworkDetails, currentNetworkID, setNetworkDetails]);
+
   return (
-    <Wrapper>
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-      <NetWork />
-    </Wrapper>
+    <>
+      {loading ? (
+        <Loader size="40px" borderSize="3px" />
+      ) : (
+        <Wrapper>
+          {networkDetails.map((detail) => (
+            <NetWork key={detail.nameToken} detail={detail} />
+          ))}
+        </Wrapper>
+      )}
+    </>
   );
 };
