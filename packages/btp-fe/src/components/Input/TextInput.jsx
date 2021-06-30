@@ -9,7 +9,7 @@ export const StyledTextInput = styled(Input)`
   padding: 20px 16px;
   background-color: ${colors.grayDark};
   border-radius: 4px;
-  border: solid 1px ${({ isError }) => (isError ? colors.errorState : colors.grayLine)};
+  border: solid 1px ${({ hasError }) => (hasError ? colors.errorState : colors.grayLine)};
 
   &:focus {
     border-color: ${colors.primaryBrand};
@@ -31,7 +31,7 @@ export const TextInput = ({ children, meta = {}, ...props }) => {
 
   return (
     <>
-      <StyledTextInput {...props} isError={hasError}>
+      <StyledTextInput {...props} hasError={hasError}>
         {children}
       </StyledTextInput>
       {hasError && <Text className="x-small err-msg">{meta.error}</Text>}
