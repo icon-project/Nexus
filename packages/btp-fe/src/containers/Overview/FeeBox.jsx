@@ -52,18 +52,30 @@ export const Feebox = ({ fee }) => {
     <Wrapper className="box fee">
       <TextWithInfo hasInfo={false}>FEE</TextWithInfo>
       <div className="cumulative-amount d-flex">
-        <TextWithInfo className="medium-text">Total cumulative amount</TextWithInfo>
+        <TextWithInfo
+          tooltip="Total cumulative amount that the Fee Aggregation SCORE has received"
+          className="medium-text"
+        >
+          Total cumulative amount
+        </TextWithInfo>
         <SubTitle className="medium bold">
           {cumulativeAmount && cumulativeAmount.toLocaleString()}
         </SubTitle>
       </div>
       <div className="current-amount d-flex">
-        <TextWithInfo className="medium-text">Total current amount of fee</TextWithInfo>
+        <TextWithInfo
+          tooltip="Total current amount of fee in the Fee Aggregation SCORE"
+          className="medium-text"
+        >
+          Total current amount of fee
+        </TextWithInfo>
         <SubTitle className="medium bold">
           {currentAmount && currentAmount.toLocaleString()}
         </SubTitle>
       </div>
-      <TextWithInfo className="asset-fee">Asset fee</TextWithInfo>
+      <TextWithInfo tooltip="Amount of fee for each asset" className="asset-fee">
+        Asset fee
+      </TextWithInfo>
       <AssetFeeTable assets={assets} />
     </Wrapper>
   );
