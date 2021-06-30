@@ -5,6 +5,8 @@ import { smallBoldText } from 'components/Typography/Text';
 import { smallBoldHeader } from 'components/Typography/Header';
 import { colors } from 'components/Styles/Colors';
 
+import { shortenNumber } from 'utils/app';
+
 const Table = styled.table`
   flex: 1;
   th,
@@ -34,7 +36,7 @@ export const AmountOfBidTable = ({ fees }) => {
         <tbody>
           <tr>
             {fees.map(({ value }, idx) => (
-              <td key={idx}>{value}</td>
+              <td key={idx}>{shortenNumber(value)}</td>
             ))}
           </tr>
         </tbody>

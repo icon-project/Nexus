@@ -43,6 +43,7 @@ const Wrapper = styled.div`
 
     .amount-of-bid {
       margin-right: 60px;
+      max-width: 255px;
     }
 
     .divider {
