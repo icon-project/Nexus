@@ -31,6 +31,25 @@ async function getNetworkInfo(request, response) {
   });
 }
 
+async function getPriceConversion(request, response) {
+  if (!request.query || !request.query.token || !request.query.amount || !request.query.convert_to) {
+    return response.sendStatus(HttpStatus.BadRequest);
+  }
+
+  const baseToken = request.query.token;
+  const amount = parseInt(request.query.amount);
+  const tokensToConvertTo = request.query.convert_to.split(',');
+  
+  const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
+  
+  response.status(HttpStatus.OK).json({
+    content: {
+      data: priceTokens,
+    }
+  });
+}
+
 module.exports = {
-  getNetworkInfo
+  getNetworkInfo,
+  getPriceConversion
 };

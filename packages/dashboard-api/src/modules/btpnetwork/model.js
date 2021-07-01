@@ -121,9 +121,24 @@ async function getMintedNetworks() {
       networkId: data.id,
       networkName: data.name,
       mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
-    })
+    });
   }
   
+  return results;
+}
+
+async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
+  let results = [];
+
+  for(let data of tokensToConvertTo) {
+    const price = await exchangeToFiat(baseToken, [data], amount);
+    const tokenUpperCase = data.toUpperCase();
+    results.push( {
+      tokenName: tokenUpperCase,
+      value: price[`${tokenUpperCase}`]
+    });
+  }
+
   return results;
 }
 
@@ -134,5 +149,6 @@ module.exports = {
   getTotalTransaction,
   getBondedVolumeByRelays,
   getAllTimeFee,
-  getMintedNetworks
+  getMintedNetworks,
+  getTokensPriceConversion
 };
