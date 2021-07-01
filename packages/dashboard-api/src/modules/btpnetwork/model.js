@@ -134,8 +134,8 @@ async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
     const price = await exchangeToFiat(baseToken, [data], amount);
     const tokenUpperCase = data.toUpperCase();
     results.push( {
-      tokenName: tokenUpperCase,
-      value: price[`${tokenUpperCase}`]
+      name: tokenUpperCase,
+      value: price[`${tokenUpperCase}`].toFixed(2)
     });
   }
 
