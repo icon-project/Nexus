@@ -75,7 +75,7 @@ export const ChartBox = ({ chartId, networks, setValueMint }) => {
   const onChange = (event) => {
     const { value } = event.target;
     if (value) {
-      setValueMint(networks[event.target.value].mintedVolume);
+      if (setValueMint) setValueMint(networks[event.target.value].mintedVolume);
     }
   };
 
