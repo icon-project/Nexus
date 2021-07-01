@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'components/Typography';
+import { Loader } from 'components/Loader';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 
 import arrowIcon from 'assets/images/arrow-icon.svg';
@@ -84,10 +85,28 @@ const Wrapper = styled.button`
   }
 `;
 
-const Select = ({ options = [], customeArrow, showCheck, ...ots }) => {
+const Select = ({
+  options = [],
+  customeArrow,
+  showCheck,
+  loading,
+  onChange = () => {},
+  name: fieldName,
+  ...ots
+}) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(options[0]);
+  const [selectedValue, setSelectedValue] = useState(options[0] || {});
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (!loading) {
+      setSelectedValue(options[0] || {});
+      onChange({
+        target: { value: options[0] ? '' : '', name: fieldName, type: 'input' },
+      });
+    }
+  }, [loading]);
 
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);
@@ -97,31 +116,42 @@ const Select = ({ options = [], customeArrow, showCheck, ...ots }) => {
   return (
     <Wrapper
       ref={ref}
-      onClick={onToggleSelect}
+      onClick={() => {
+        if (!loading && options.length > 0) onToggleSelect();
+      }}
       type="button"
       isOpenSelect={isOpenSelect}
       customeArrow={customeArrow}
       showCheck={showCheck}
       {...ots}
     >
-      {selectedValue.renderLabel ? (
+      {loading ? (
+        <Loader size="25px" borderSize="3px" />
+      ) : selectedValue.renderLabel ? (
         selectedValue.renderLabel()
       ) : (
-        <Text className="medium">{selectedValue.label}</Text>
+        <Text className="medium">{selectedValue.label || selectedValue.name || 'No options'}</Text>
       )}
+
       {isOpenSelect && (
         <ul>
-          {options.map((opt) => {
-            const { label, value, renderItem } = opt;
+          {options.map((opt, idx) => {
+            const { label, name, value, renderItem } = opt;
             return (
               <li
-                key={value}
+                key={idx}
                 onClick={() => {
                   setSelectedValue(opt);
+                  onChange({ target: { value, name: fieldName, type: 'input' } });
                 }}
-                className={`${selectedValue.value === value ? 'active' : ''}`}
+                className={`${
+                  (selectedValue.label && selectedValue.label === label) ||
+                  selectedValue.name === name
+                    ? 'active'
+                    : ''
+                }`}
               >
-                {renderItem ? renderItem() : <Text className="small">{label}</Text>}
+                {renderItem ? renderItem() : <Text className="small">{label || name}</Text>}
               </li>
             );
           })}
