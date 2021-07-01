@@ -2,7 +2,11 @@ import { fetchAPI } from 'utils/fetch';
 
 const app = {
   state: {
-    appInfo: {},
+    appInfo: {
+      content: {
+        minted: [],
+      },
+    },
   },
   reducers: {
     setAppInfo(state, payload) {
@@ -26,6 +30,14 @@ const app = {
   selectors: (slice) => ({
     selectAppInfo() {
       return slice((state) => state.appInfo);
+    },
+    selectConnectedNetworks() {
+      return slice((state) => {
+        return state.appInfo.content.minted.map(({ networkId, networkName }) => ({
+          name: networkName,
+          value: networkId,
+        }));
+      });
     },
   }),
 };

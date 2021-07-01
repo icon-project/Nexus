@@ -106,7 +106,7 @@ const Select = ({
         target: { value: options[0] ? '' : '', name: fieldName, type: 'input' },
       });
     }
-  }, [loading]);
+  }, [loading, options.length]);
 
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);

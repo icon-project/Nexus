@@ -67,12 +67,7 @@ const tabs = {
   asset: 'asset',
 };
 
-const options = [
-  { label: 'Binanace Smart Chain', value: 'abc' },
-  { label: 'NEAR', value: 'near' },
-];
-
-export const ChartBox = ({ chartId }) => {
+export const ChartBox = ({ chartId, networks }) => {
   const [currentTab, setCurrentTab] = useState(tabs.history);
 
   const isCurrentTab = (tab) => (currentTab === tabs[tab] ? 'bold active' : 'regular');
@@ -94,7 +89,7 @@ export const ChartBox = ({ chartId }) => {
             Digital Asset
           </SubTitle>
         </div>
-        <SelectNetwork options={options} />
+        <SelectNetwork options={networks} />
       </div>
 
       <div className="tab-content">
