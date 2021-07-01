@@ -146,7 +146,7 @@ const Select = ({
                 }}
                 className={`${
                   (selectedValue.label && selectedValue.label === label) ||
-                  selectedValue.name === name
+                  (selectedValue.name && selectedValue.name === name)
                     ? 'active'
                     : ''
                 }`}
