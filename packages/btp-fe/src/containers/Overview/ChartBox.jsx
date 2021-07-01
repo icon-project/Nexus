@@ -67,10 +67,17 @@ const tabs = {
   asset: 'asset',
 };
 
-export const ChartBox = ({ chartId, networks }) => {
+export const ChartBox = ({ chartId, networks, setValueMint }) => {
   const [currentTab, setCurrentTab] = useState(tabs.history);
+  const connectedNetworks = Object.values(networks);
 
   const isCurrentTab = (tab) => (currentTab === tabs[tab] ? 'bold active' : 'regular');
+  const onChange = (event) => {
+    const { value } = event.target;
+    if (value) {
+      setValueMint(networks[event.target.value].mintedVolume);
+    }
+  };
 
   return (
     <Wrapper>
@@ -89,7 +96,7 @@ export const ChartBox = ({ chartId, networks }) => {
             Digital Asset
           </SubTitle>
         </div>
-        <SelectNetwork options={networks} />
+        <SelectNetwork options={connectedNetworks} onChange={onChange} />
       </div>
 
       <div className="tab-content">

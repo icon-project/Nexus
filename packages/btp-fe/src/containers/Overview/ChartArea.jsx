@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components/macro';
 import { useSelect } from 'hooks/useRematch';
 
@@ -53,6 +54,9 @@ export const ChartArea = ({ volume = 0 }) => {
   const { networks } = useSelect(({ app: { selectConnectedNetworks } }) => ({
     networks: selectConnectedNetworks,
   }));
+  const connectedNetworks = Object.values(networks);
+  const [valueMint, setValueMint] = useState(null);
+
   return (
     <Wrapper>
       <div className="chart">
@@ -60,7 +64,7 @@ export const ChartArea = ({ volume = 0 }) => {
         <Header className="medium bold">
           ${volume.toLocaleString()} <UpDownPercent percent="9.55%" />
         </Header>
-        <ChartBox chartId={'volume'} networks={networks} />
+        <ChartBox chartId={'volume'} networks={networks} setValueMint={setValueMint} />
       </div>
       <div className="chart">
         <TextWithInfo
@@ -70,9 +74,14 @@ export const ChartArea = ({ volume = 0 }) => {
           VALUE MINT
         </TextWithInfo>
         <Header className="medium bold">
-          $892,797,895.53 <UpDownPercent up percent="9.55%" />
+          $
+          {(valueMint !== null
+            ? valueMint
+            : (connectedNetworks[0] && connectedNetworks[0].mintedVolume) || 0
+          ).toLocaleString()}{' '}
+          <UpDownPercent up percent="9.55%" />
         </Header>
-        <ChartBox chartId={'mint'} networks={networks} />
+        <ChartBox chartId={'mint'} networks={networks} setValueMint={setValueMint} />
       </div>
     </Wrapper>
   );
