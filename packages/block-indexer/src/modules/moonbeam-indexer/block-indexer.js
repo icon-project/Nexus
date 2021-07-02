@@ -1,11 +1,11 @@
 'use strict';
 
-const debug = require('debug')('edgeware');
+const debug = require('debug')('moonbeam');
 const axios = require('axios');
 const { logger } = require('../../common');
 const { saveBlock, saveTransaction, getLastSavedBlock } = require('./repository');
 
-let blockHeight = Number(process.env.EDGEWARE_BLOCK_HEIGHT);
+let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, block) {
@@ -90,7 +90,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('Failed to fetch Edgeware block data, retry in 5 minutes', { error });
+    logger.error('Failed to fetch Moonbeam block data, retry in 5 minutes', { error });
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
@@ -110,9 +110,9 @@ async function start() {
     blockHeight = Number(block.number);
   }
 
-  logger.info('Starting Edgeware block indexer at block %d...', blockHeight);
+  logger.info('Starting Moonbeam block indexer at block %d...', blockHeight);
   await retryGetBlockData();
-  logger.info('Started Edgeware block indexer');
+  logger.info('Started Moonbeam block indexer');
 }
 
 module.exports = {
