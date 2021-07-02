@@ -247,7 +247,12 @@ async function getBidHistory(auctionId, limit, offset) {
   }
 
   return {
-    items: result.items,
+    items: result.items.map(b => ({
+      id: b.id,
+      bidder: b.newBidder,
+      amount: b.newBidAmount,
+      createdTime: b.createdTime
+    })),
     pagination: {
       limit,
       offset,

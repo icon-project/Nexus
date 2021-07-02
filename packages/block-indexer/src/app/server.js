@@ -1,8 +1,10 @@
+'use strict';
+
 const http = require('http');
 const { logger } = require('../common');
 const app = require('./app');
 const iconIndexer = require('../modules/icon-indexer');
-const edgewareIndexer = require('../modules/edgeware-indexer');
+const moonbeamIndexer = require('../modules/moonbeam-indexer');
 
 function start() {
   // Separate Express 'app' and 'server'
@@ -18,8 +20,8 @@ function start() {
     iconIndexer.start();
   }
 
-  if ('true' === process.env.EDGEWARE_INDEXER_ENABLED) {
-    edgewareIndexer.start();
+  if ('true' === process.env.MOONBEAM_INDEXER_ENABLED) {
+    moonbeamIndexer.start();
   }
 }
 

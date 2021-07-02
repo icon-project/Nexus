@@ -4,7 +4,7 @@ const { logger, pgPool } = require('../../common');
 
 async function saveBlock(block) {
   try {
-    const query = 'INSERT INTO edgeware_blocks (block_hash, block_height, block_data, created_time) VALUES ($1, $2, $3, NOW())';
+    const query = 'INSERT INTO moonbeam_blocks (block_hash, block_height, block_data, created_time) VALUES ($1, $2, $3, NOW())';
     const values = [block.hash, Number(block.number), JSON.stringify(block)];
 
     await pgPool.query(query, values);
@@ -15,7 +15,7 @@ async function saveBlock(block) {
 
 async function getLastSavedBlock() {
   try {
-    const query = 'SELECT * FROM edgeware_blocks ORDER BY block_height DESC LIMIT 1';
+    const query = 'SELECT * FROM moonbeam_blocks ORDER BY block_height DESC LIMIT 1';
     const { rows } = await pgPool.query(query);
 
     if (rows[0]) {
