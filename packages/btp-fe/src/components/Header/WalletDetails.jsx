@@ -1,6 +1,11 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
+
+import { tokenToUsd } from 'services/btpServices';
+
+import { Loader } from 'components/Loader';
 
 import { Text, Header } from '../Typography';
 import { colors } from '../Styles/Colors';
@@ -103,6 +108,24 @@ export const WalletDetails = ({
   onDisconnectWallet,
   onSwitchWallet,
 }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [usdBalance, setUsdBalance] = useState(0);
+  useEffect(() => {
+    const getUsbalance = async () => {
+      if (!unit || !balance) {
+        setUsdBalance(0);
+      } else {
+        try {
+          const usdBalance = await tokenToUsd(unit, balance);
+          setUsdBalance(parseInt(usdBalance?.content[0]?.value));
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      setIsLoading(false);
+    };
+    getUsbalance();
+  }, [balance, unit]);
   return (
     <Wrapper>
       <Text className="medium network-name">{networkName}</Text>
@@ -111,7 +134,17 @@ export const WalletDetails = ({
         <Text className="medium dark-text">Balance</Text>
         <div className="right">
           <Header className="small bold">{`${balance} ${unit}`}</Header>
-          <Text className="small dark-text">= $98.22 USD</Text>
+          {isLoading ? (
+            <Loader size="14px" borderSize="1px" />
+          ) : (
+            <Text className="small dark-text">
+              ={' '}
+              {usdBalance.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </Text>
+          )}
         </div>
       </div>
       <div className="wallet-address">
