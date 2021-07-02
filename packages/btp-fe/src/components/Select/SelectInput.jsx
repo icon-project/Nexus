@@ -18,6 +18,10 @@ const StyledSelect = styled(Select)`
     height: 10px;
   }
 
+  & > p.medium {
+    text-transform: uppercase;
+  }
+
   ul {
     width: 100%;
     top: calc(100% - 20px);
