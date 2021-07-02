@@ -72,15 +72,10 @@ const formatData = (data = {}) => {
   };
 };
 
-export const Details = ({ auction }) => {
-  const {
-    bids,
-    createdTime,
-    endTime,
-    availableBidAmount,
-    currentBidAmount,
-    topBidder,
-  } = formatData(auction);
+export const Details = ({ auction, pagination, bids }) => {
+  const { createdTime, endTime, availableBidAmount, currentBidAmount, topBidder } = formatData(
+    auction,
+  );
   return (
     <>
       <Info>
@@ -120,6 +115,7 @@ export const Details = ({ auction }) => {
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
         bodyText={'md'}
+        pagination={pagination}
       />
     </>
   );
