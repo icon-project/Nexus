@@ -2,7 +2,11 @@ import { fetchAPI } from 'utils/fetch';
 
 const app = {
   state: {
-    appInfo: {},
+    appInfo: {
+      content: {
+        minted: [],
+      },
+    },
   },
   reducers: {
     setAppInfo(state, payload) {
@@ -26,6 +30,17 @@ const app = {
   selectors: (slice) => ({
     selectAppInfo() {
       return slice((state) => state.appInfo);
+    },
+    selectConnectedNetworks() {
+      return slice((state) => {
+        return state.appInfo.content.minted.reduce(
+          (accumulator, { networkId, networkName, mintedVolume }) => ({
+            ...accumulator,
+            [networkId]: { name: networkName, value: networkId, mintedVolume },
+          }),
+          {},
+        );
+      });
     },
   }),
 };

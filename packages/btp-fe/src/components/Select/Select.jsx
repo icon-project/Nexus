@@ -103,10 +103,10 @@ const Select = ({
     if (!loading) {
       setSelectedValue(options[0] || {});
       onChange({
-        target: { value: options[0] ? options[0].value : '', name: fieldName, type: 'input' },
+        target: { value: options[0] ? '' : '', name: fieldName, type: 'input' },
       });
     }
-  }, [loading]);
+  }, [loading, options.length]);
 
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);
@@ -146,7 +146,7 @@ const Select = ({
                 }}
                 className={`${
                   (selectedValue.label && selectedValue.label === label) ||
-                  selectedValue.name === name
+                  (selectedValue.name && selectedValue.name === name)
                     ? 'active'
                     : ''
                 }`}
