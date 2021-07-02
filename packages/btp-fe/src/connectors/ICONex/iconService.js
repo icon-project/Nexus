@@ -40,7 +40,7 @@ export const sendTransaction = async (signature) => {
     });
     return await httpProvider.request(request).execute();
   } catch (err) {
-    throw new Error(err.message);
+    throw new Error(err.message || err);
   }
 };
 
