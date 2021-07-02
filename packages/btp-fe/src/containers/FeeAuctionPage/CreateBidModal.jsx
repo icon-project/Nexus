@@ -11,6 +11,7 @@ import { colors } from 'components/Styles/Colors';
 
 import { minValue, required } from 'utils/inputValidation';
 import { placeBid } from 'connectors/ICONex/iconService';
+import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
 const Form = styled.form`
   text-align: left;
@@ -37,6 +38,10 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, o
       setLoading(false);
     });
   }, [getAvailableAssets]);
+
+  useListenForSuccessTransaction(() => {
+    setOpen(false);
+  });
 
   const onSubmit = (values) => {
     const { bidAmount, auctionName } = values;
