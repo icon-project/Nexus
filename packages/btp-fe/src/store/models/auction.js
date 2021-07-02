@@ -42,9 +42,9 @@ const auction = {
     },
     async getAvailableAssets() {
       try {
-        const avalibleAssets = await getAvailableAssets();
-        this.setAuctionState(['availableAssets', avalibleAssets.content]);
-        return avalibleAssets;
+        const availableAssets = await getAvailableAssets();
+        this.setAuctionState(['availableAssets', availableAssets.content]);
+        return availableAssets;
       } catch (error) {
         console.log(error);
       }
