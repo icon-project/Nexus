@@ -26,6 +26,13 @@ export const smallBoldText = css`
   font-weight: 600;
 `;
 
+export const xSmallBoldText = css`
+  ${normalText}
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+`;
+
 export const Text = styled.p`
   ${normalText}
 
