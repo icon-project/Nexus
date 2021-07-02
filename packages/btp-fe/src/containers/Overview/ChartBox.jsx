@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import styled from 'styled-components/macro';
-import { SubTitle, Text } from 'components/Typography';
+import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { AreaChart } from 'components/AreaChart';
 import { DonutChart } from 'components/DonutChart';
 
-import arrowIcon from '../../assets/images/blue-arrow-icon.svg';
+import { SelectNetwork } from 'components/Select/SelectNetwork';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -39,21 +39,6 @@ const Wrapper = styled.div`
         }
       }
     }
-
-    .filter-control {
-      color: ${colors.tertiaryBase};
-      display: flex;
-      align-items: center;
-
-      &:after {
-        content: '';
-        display: inline-block;
-        width: 9.33px;
-        height: 5.33px;
-        margin-left: 7.67px;
-        background: transparent center / contain no-repeat url('${arrowIcon}');
-      }
-    }
   }
 
   .tab-content {
@@ -82,10 +67,17 @@ const tabs = {
   asset: 'asset',
 };
 
-export const ChartBox = ({ chartId }) => {
+export const ChartBox = ({ chartId, networks, setValueMint }) => {
   const [currentTab, setCurrentTab] = useState(tabs.history);
+  const connectedNetworks = Object.values(networks);
 
   const isCurrentTab = (tab) => (currentTab === tabs[tab] ? 'bold active' : 'regular');
+  const onChange = (event) => {
+    const { value } = event.target;
+    if (value) {
+      if (setValueMint) setValueMint(networks[event.target.value].mintedVolume);
+    }
+  };
 
   return (
     <Wrapper>
@@ -104,7 +96,7 @@ export const ChartBox = ({ chartId }) => {
             Digital Asset
           </SubTitle>
         </div>
-        <Text className="x-small filter-control">Binanace Smart Chain</Text>
+        <SelectNetwork options={connectedNetworks} onChange={onChange} />
       </div>
 
       <div className="tab-content">
