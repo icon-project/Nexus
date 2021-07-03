@@ -60,55 +60,93 @@ const auction = {
         dispatch.modal.handleError();
       }
     },
-    async getBids() {
+    async getBids(pageIndex) {
       try {
-        this.setBids({
-          content: [
-            {
-              id: 'e81de1f45f',
-              bidder: 'hxf929970f97646433610c5b7367e12bb5bd1cab58',
-              amount: 130,
-              createdTime: '2021-06-15T23:26:14.188Z',
+        if (pageIndex === 1) {
+          this.setBids({
+            content: [
+              {
+                id: 'e81de1f45f',
+                bidder: 'hxf929970f97646433610c5b7367e12bb5bd1cab58',
+                amount: 130,
+                createdTime: '2021-06-15T23:26:14.188Z',
+              },
+              {
+                id: '3c7ecde75e',
+                bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+              {
+                id: '3c7ecde75e1',
+                bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+              {
+                id: '3c7ecde75e2',
+                bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+              {
+                id: '3c7ecde75e3',
+                bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+            ],
+            metadata: {
+              pagination: {
+                limit: 6,
+                offset: 2,
+                totalItem: 6,
+              },
             },
-            {
-              id: '3c7ecde75e',
-              bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
-              amount: 110,
-              createdTime: '2021-06-15T23:25:43.884Z',
+          });
+        } else {
+          this.setBids({
+            content: [
+              {
+                id: 'e81de1f45f',
+                bidder: 'qwqe',
+                amount: 130,
+                createdTime: '2021-06-15T23:26:14.188Z',
+              },
+              {
+                id: '3c7ecde75e',
+                bidder: 'rter',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+              {
+                id: '3c7ecde75e1',
+                bidder: 'yut',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+              {
+                id: '3c7ecde75e2',
+                bidder: 'ui',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+              {
+                id: '3c7ecde75e3',
+                bidder: 'uiy',
+                amount: 110,
+                createdTime: '2021-06-15T23:25:43.884Z',
+              },
+            ],
+            metadata: {
+              pagination: {
+                limit: 6,
+                offset: 2,
+                totalItem: 6,
+              },
             },
-            {
-              id: '3c7ecde75e1',
-              bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
-              amount: 110,
-              createdTime: '2021-06-15T23:25:43.884Z',
-            },
-            {
-              id: '3c7ecde75e2',
-              bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
-              amount: 110,
-              createdTime: '2021-06-15T23:25:43.884Z',
-            },
-            {
-              id: '3c7ecde75e3',
-              bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
-              amount: 110,
-              createdTime: '2021-06-15T23:25:43.884Z',
-            },
-            {
-              id: '3c7ecde75e4',
-              bidder: 'hxfafd853a7b47be47aa19acfb60e730e476fad2ab',
-              amount: 110,
-              createdTime: '2021-06-15T23:25:43.884Z',
-            },
-          ],
-          metadata: {
-            pagination: {
-              limit: 2,
-              offset: 2,
-              totalItem: 4,
-            },
-          },
-        });
+          });
+        }
       } catch (error) {
         dispatch.modal.handleError();
       }

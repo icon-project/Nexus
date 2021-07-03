@@ -66,9 +66,8 @@ const FeeAuctionDetails = () => {
   useEffect(() => {
     if (id) {
       getAuctionDetails(id);
-      getBids(1);
     }
-  }, [getAuctionDetails, getBids, id]);
+  }, [getAuctionDetails, id]);
 
   return (
     <Wrapper>
@@ -76,7 +75,7 @@ const FeeAuctionDetails = () => {
 
       <div className="content">
         <div className="details">
-          <Details auction={auction} bids={bids} pagination={pagination} />
+          <Details auction={auction} bids={bids} pagination={pagination} getBids={getBids} />
         </div>
         <div className="place-bid-form">
           <PlaceBidForm currentBidAmount={auction.currentBidAmount} auctionName={auction.name} />

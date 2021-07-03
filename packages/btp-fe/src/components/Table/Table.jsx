@@ -13,9 +13,11 @@ import PrevIconSrc from 'assets/images/prev-icon.svg';
 const TableStyled = styled(antdTable)`
   width: 100%;
   /* hide empty row */
-  .ant-table-placeholder {
+  .ant-table-placeholder,
+  .ant-pagination-options {
     display: none;
   }
+
   .ant-table-content {
     font-family: Poppins;
   }
@@ -82,6 +84,10 @@ const TableStyled = styled(antdTable)`
         color: ${colors.primaryBrandBase};
       }
     }
+
+    span {
+      color: ${colors.primaryBrandLight} !important;
+    }
   }
   .ant-pagination-item-active {
     border: none;
@@ -133,12 +139,21 @@ export const Table = ({
   bodyText,
   children,
   hoverColor,
-  pagination,
+  pagination = {},
   columns,
   loading,
+  itemPerPage = 5,
+  getItemsHandler,
   ...rest
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [current, setCurrent] = useState(1);
+  const { totalItem } = pagination;
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (getItemsHandler) getItemsHandler(current);
+  }, [current]);
 
   // we don't set loading immediately to avoid blinking UI
   useEffect(() => {
@@ -188,7 +203,20 @@ export const Table = ({
       hoverColor={hoverColor}
       columns={columns}
       loading={isLoading && { indicator: <Loader size="25px" borderSize="3px" /> }}
-      pagination={pagination ? { ...pagination, position: ['bottomCenter'], itemRender } : false}
+      pagination={
+        totalItem && itemPerPage < totalItem
+          ? {
+              ...pagination,
+              position: ['bottomCenter'],
+              itemRender,
+              pageSize: 5,
+              onChange: (page) => {
+                setCurrent(page);
+              },
+              total: totalItem,
+            }
+          : false
+      }
       {...rest}
     >
       {children}
