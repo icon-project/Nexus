@@ -148,7 +148,7 @@ export const Table = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [current, setCurrent] = useState(1);
-  const { totalItem } = pagination;
+  const { totalItem, limit } = pagination;
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -209,7 +209,7 @@ export const Table = ({
               ...pagination,
               position: ['bottomCenter'],
               itemRender,
-              pageSize: 5,
+              pageSize: limit,
               onChange: (page) => {
                 setCurrent(page);
               },

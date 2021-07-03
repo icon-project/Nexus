@@ -1,3 +1,8 @@
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+import { hashShortener } from 'utils/app';
+
 // import { getAuctions, getAuctionDetails, getFeeAssets } from 'services/btpServices';
 import { getAuctions, getFeeAssets } from 'services/btpServices';
 
@@ -98,9 +103,9 @@ const auction = {
             ],
             metadata: {
               pagination: {
-                limit: 6,
+                limit: 5,
                 offset: 2,
-                totalItem: 6,
+                totalItem: 50,
               },
             },
           });
@@ -140,9 +145,9 @@ const auction = {
             ],
             metadata: {
               pagination: {
-                limit: 6,
+                limit: 5,
                 offset: 2,
-                totalItem: 6,
+                totalItem: 50,
               },
             },
           });
@@ -166,13 +171,30 @@ const auction = {
       return slice((state) => state.auctions);
     },
     selectCurrentAuction() {
-      return slice((state) => state.currentAuction);
+      return slice(({ currentAuction }) => {
+        if (Object.keys(currentAuction).length === 0) return currentAuction;
+        const { createdTime, endTime, topBidder, ...ots } = currentAuction;
+        return {
+          ...ots,
+          createdTime: dayjs(createdTime).format('DD/MM/YYYY'),
+          endTime: dayjs(endTime).format('DD/MM/YYYY'),
+          topBidder: hashShortener(topBidder),
+        };
+      });
     },
     selectFees() {
       return slice((state) => state.fees);
     },
     selectBids() {
-      return slice((state) => state.bids.content || []);
+      return slice((state) =>
+        (state.bids.content || []).map((bid) => {
+          return {
+            ...bid,
+            bidder: hashShortener(bid.bidder),
+            createdTime: dayjs(bid.createdTime).fromNow(),
+          };
+        }),
+      );
     },
     selectPagination() {
       return slice((state) => state.bids.metadata?.pagination || {});
