@@ -116,6 +116,8 @@ export const Table = ({
           onChange={(page) => {
             setCurrent(page);
           }}
+          setCurrent={setCurrent}
+          current={current}
           total={totalItem}
           showSizeChanger={false}
           showLessItems

@@ -90,12 +90,27 @@ const StyledPagination = styled(AntdPagination)`
   }
 `;
 
-export const Pagination = (props) => {
+export const Pagination = ({ current, setCurrent, ...props }) => {
+  const fastForwardStep = 1;
+
+  const handleFastForward = (step) => {
+    setCurrent(current + step);
+  };
   return (
     <Wrapper>
-      <button className="fast-forward fast-forward__prev"></button>
-      <StyledPagination {...props} />
-      <button className="fast-forward fast-forward__next"></button>
+      <button
+        className="fast-forward fast-forward__prev"
+        onClick={() => {
+          handleFastForward(-fastForwardStep);
+        }}
+      ></button>
+      <StyledPagination current={current} {...props} />
+      <button
+        className="fast-forward fast-forward__next"
+        onClick={() => {
+          handleFastForward(fastForwardStep);
+        }}
+      ></button>
     </Wrapper>
   );
 };
