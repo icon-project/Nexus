@@ -47,7 +47,7 @@ const columns = [
   },
 ];
 
-export const Details = ({ auction, pagination, bids, getBids }) => {
+export const Details = ({ auction, auctionId, pagination, bids, getBids }) => {
   const { createdTime, endTime, availableBidAmount, currentBidAmount, topBidder } = auction;
   return (
     <>
@@ -89,7 +89,7 @@ export const Details = ({ auction, pagination, bids, getBids }) => {
         backgroundColor={colors.darkBG}
         bodyText={'md'}
         pagination={pagination}
-        getItemsHandler={getBids}
+        getItemsHandler={(pageIndex) => () => getBids(pageIndex, auctionId)}
       />
     </>
   );

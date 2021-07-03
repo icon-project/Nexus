@@ -75,7 +75,13 @@ const FeeAuctionDetails = () => {
 
       <div className="content">
         <div className="details">
-          <Details auction={auction} bids={bids} pagination={pagination} getBids={getBids} />
+          <Details
+            auction={auction}
+            bids={bids}
+            pagination={pagination}
+            getBids={getBids}
+            auctionId={id}
+          />
         </div>
         <div className="place-bid-form">
           <PlaceBidForm currentBidAmount={auction.currentBidAmount} auctionName={auction.name} />

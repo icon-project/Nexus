@@ -3,7 +3,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { hashShortener } from 'utils/app';
 
-// import { getAuctions, getAuctionDetails, getFeeAssets } from 'services/btpServices';
+// import { getAuctions, getAuctionDetails, getFeeAssets, getAuctionBids } from 'services/btpServices';
 import { getAuctions, getFeeAssets } from 'services/btpServices';
 
 const auction = {
@@ -66,6 +66,8 @@ const auction = {
       }
     },
     async getBids(pageIndex) {
+      // offset is default 0 = first page
+      // const auction = await getAuctionBids(auctionId, pageIndex - 1);
       try {
         if (pageIndex === 1) {
           this.setBids({

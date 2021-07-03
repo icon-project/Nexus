@@ -79,7 +79,7 @@ export const Table = ({
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    if (getItemsHandler) getItemsHandler(current);
+    if (getItemsHandler) getItemsHandler(current)();
   }, [current]);
 
   // we don't set loading immediately to avoid blinking UI
