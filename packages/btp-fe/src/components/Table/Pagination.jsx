@@ -90,11 +90,18 @@ const StyledPagination = styled(AntdPagination)`
   }
 `;
 
-export const Pagination = ({ current, setCurrent, ...props }) => {
-  const fastForwardStep = 1;
+export const Pagination = ({ current, total, pageSize, setCurrent, ...props }) => {
+  const fastForwardStep = 2;
+  const totalPage = Math.ceil(total / pageSize);
 
   const handleFastForward = (step) => {
-    setCurrent(current + step);
+    const page = current + step;
+    if (page < 1) return;
+    if (page > totalPage) {
+      setCurrent(totalPage);
+      return;
+    }
+    setCurrent(page);
   };
   return (
     <Wrapper>
@@ -104,7 +111,7 @@ export const Pagination = ({ current, setCurrent, ...props }) => {
           handleFastForward(-fastForwardStep);
         }}
       ></button>
-      <StyledPagination current={current} {...props} />
+      <StyledPagination current={current} total={total} pageSize={pageSize} {...props} />
       <button
         className="fast-forward fast-forward__next"
         onClick={() => {
