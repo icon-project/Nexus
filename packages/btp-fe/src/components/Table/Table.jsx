@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Table as antdTable, Pagination } from 'antd';
-import { colors } from '../Styles/Colors';
+import { Table as antdTable } from 'antd';
 
-import { media } from '../Styles/Media';
+import { Pagination } from './Pagination';
 import { smallText, mediumText } from '../Typography/Text';
 import { Loader } from 'components/Loader';
+
+import { colors } from '../Styles/Colors';
+import { media } from '../Styles/Media';
 
 // import UnionSrc from 'assets/images/union.svg';
 // import PrevIconSrc from 'assets/images/prev-icon.svg';
@@ -110,6 +112,7 @@ export const Table = ({
       >
         {children}
       </TableStyled>
+
       {totalItem && limit < totalItem && (
         <Pagination
           pageSize={limit}

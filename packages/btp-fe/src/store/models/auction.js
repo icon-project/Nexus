@@ -105,7 +105,7 @@ const auction = {
               pagination: {
                 limit: 5,
                 offset: 2,
-                totalItem: 1000,
+                totalItem: 12,
               },
             },
           });
@@ -147,7 +147,7 @@ const auction = {
               pagination: {
                 limit: 5,
                 offset: 2,
-                totalItem: 1000,
+                totalItem: 12,
               },
             },
           });
