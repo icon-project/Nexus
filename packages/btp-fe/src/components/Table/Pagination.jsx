@@ -4,12 +4,35 @@ import { smallBoldSubtitle } from 'components/Typography/SubTitle';
 import { colors } from 'components/Styles/Colors';
 
 import prevIcon from 'assets/images/prev-icon.svg';
+import fastForward from 'assets/images/union.svg';
 
 const { primaryBrandLight, primaryBrandBG, primaryBrandBase } = colors;
 
-const StyledPagination = styled(AntdPagination)`
+const Wrapper = styled.div`
   margin-top: 24px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .fast-forward {
+    height: 36px;
+    width: 36px;
+    background-color: transparent;
+    border: 1px solid ${primaryBrandLight};
+    border-radius: 4px;
+    margin-right: 8px;
+    background: transparent center / 37% no-repeat url('${fastForward}');
+  }
+
+  .fast-forward__next {
+    margin-right: 0;
+    margin-left: 8px;
+    transform: rotate(180deg);
+  }
+`;
+
+const StyledPagination = styled(AntdPagination)`
+  display: inline-block;
 
   > .ant-pagination-item,
   > .ant-pagination-prev,
@@ -68,5 +91,11 @@ const StyledPagination = styled(AntdPagination)`
 `;
 
 export const Pagination = (props) => {
-  return <StyledPagination {...props} />;
+  return (
+    <Wrapper>
+      <button className="fast-forward fast-forward__prev"></button>
+      <StyledPagination {...props} />
+      <button className="fast-forward fast-forward__next"></button>
+    </Wrapper>
+  );
 };

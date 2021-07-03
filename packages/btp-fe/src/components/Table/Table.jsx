@@ -9,9 +9,6 @@ import { Loader } from 'components/Loader';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
-// import UnionSrc from 'assets/images/union.svg';
-// import PrevIconSrc from 'assets/images/prev-icon.svg';
-
 const TableStyled = styled(antdTable)`
   width: 100%;
 
