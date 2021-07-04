@@ -36,7 +36,9 @@ const StyledPagination = styled(AntdPagination)`
 
   > .ant-pagination-item,
   > .ant-pagination-prev,
-  > .ant-pagination-next {
+  > .ant-pagination-next,
+  > .ant-pagination-jump-next,
+  > .ant-pagination-jump-prev {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -59,7 +61,11 @@ const StyledPagination = styled(AntdPagination)`
       width: 100%;
     }
 
-    .ant-pagination-item-link {
+    .ant-pagination-item-ellipsis {
+      color: ${primaryBrandLight};
+    }
+
+    button.ant-pagination-item-link {
       display: none;
     }
 
@@ -67,6 +73,24 @@ const StyledPagination = styled(AntdPagination)`
       color: ${primaryBrandBG};
       background-color: ${primaryBrandBase};
       border-color: ${primaryBrandBase};
+    }
+  }
+
+  > .ant-pagination-jump-next,
+  > .ant-pagination-jump-prev {
+    .anticon {
+      opacity: 0 !important;
+    }
+
+    :hover,
+    :focus {
+      .ant-pagination-item-ellipsis {
+        opacity: 1;
+      }
+    }
+
+    .ant-pagination-item-ellipsis {
+      color: ${primaryBrandLight};
     }
   }
 
