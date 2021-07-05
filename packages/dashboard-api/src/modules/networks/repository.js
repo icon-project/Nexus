@@ -30,50 +30,50 @@ async function getTokenVolumeAllTime() {
   try {
     const {rows} = await pgPool.query(
       `SELECT network_id, token_name, sum(value) as token_volume
-        FROM ${TRANSACTION_TBL_NAME}
-        WHERE confirmed = true
-        GROUP BY(token_name, network_id)`,
-      );
-      let result = [];
-      for(let data of rows) {
-          result.push({
-          networkId: data.network_id,
-          tokenName: data.token_name,
-          tokenVolume: data.token_volume
-        });
-      }
-      return result;
-    } catch(error) {
-      logger.error('getTokenVolumeAllTime fails', { err });
-      throw err;
+      FROM ${TRANSACTION_TBL_NAME}
+      WHERE confirmed = true
+      GROUP BY(token_name, network_id)`,
+    );
+    let result = [];
+    for(let data of rows) {
+      result.push({
+        networkId: data.network_id,
+        tokenName: data.token_name,
+        tokenVolume: data.token_volume
+      });
     }
+    return result;
+  } catch(error) {
+    logger.error('getTokenVolumeAllTime fails', { error });
+    throw error;
   }
+}
 
-  async function getNetworkInfo() {
-    try {
-      const {rows} = await pgPool.query(
-        `SELECT * FROM ${NETWORK_TBL_NAME}`,
-      );
-      let result = [];
-      for(let data of rows) {
-        const row = rows[0];
-        result.push({
-          name: data.name,
-          id: data.id,
-          pathLogo: data.path_logo,
-          url: data.url,
-          mintFee: Number(data.mint_fee), 
-          burnFee: Number(data.burn_fee),
-        });
-      }
-      return result;
-    } catch(error) {
-      logger.error('getNetworkInfo fails', { err });
-      throw err;
+async function getNetworkInfo() {
+  try {
+    const {rows} = await pgPool.query(
+      `SELECT * FROM ${NETWORK_TBL_NAME}`,
+    );
+    let result = [];
+    for (let data of rows) {
+      result.push({
+        name: data.name,
+        id: data.id,
+        pathLogo: data.path_logo,
+        url: data.url,
+        mintFee: Number(data.mint_fee),
+        burnFee: Number(data.burn_fee),
+      });
     }
+    return result;
+  } catch(error) {
+    logger.error('getNetworkInfo fails', { error });
+    throw error;
   }
+}
 
-  async function getVolumeToken24hByNid(name, networkId) {
+async function getVolumeToken24hByNid(name, networkId) {
+  try {
     const at24hAgo = (new Date().getTime()*1000) - 86400000000; // current_time(microsecond) - 24h(microsecond)
     const {
       rows: [result],
@@ -84,10 +84,15 @@ async function getTokenVolumeAllTime() {
       [at24hAgo, networkId, name]
     );
     return Number(result.token_volume) || 0;
+  } catch(error) {
+    logger.error('getVolumeToken24hByNid fails', { error });
+    throw error;
   }
+}
 
-  async function getVolumeTokenAllTimeByNid(name, networkId) {
-   const {
+async function getVolumeTokenAllTimeByNid(name, networkId) {
+  try {
+    const {
       rows: [result],
     } = await pgPool.query(
       `SELECT sum(value) as token_volume
@@ -96,12 +101,16 @@ async function getTokenVolumeAllTime() {
       [networkId, name]
     );
     return Number(result.token_volume) || 0;
+  } catch(error) {
+    logger.error('getVolumeTokenAllTimeByNid fails', { error });
+    throw error;
   }
+}
 
-  module.exports  =  {
-    getNetworkInfo,
-    getTokensVolume24h,
-    getTokenVolumeAllTime,
-    getVolumeToken24hByNid,
-    getVolumeTokenAllTimeByNid
-  };
+module.exports  =  {
+  getNetworkInfo,
+  getTokensVolume24h,
+  getTokenVolumeAllTime,
+  getVolumeToken24hByNid,
+  getVolumeTokenAllTimeByNid
+};
