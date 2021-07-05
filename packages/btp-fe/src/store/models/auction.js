@@ -1,28 +1,23 @@
-import { getAuctions, getAuctionDetails, getFeeAssets } from 'services/btpServices';
+import {
+  getAuctions,
+  getAuctionDetails,
+  getAvailableAssets,
+  getFeeAssets,
+} from 'services/btpServices';
 
 const auction = {
   state: {
     auctions: [],
     currentAuction: {},
+    availableAssets: [],
     fees: [],
   },
   reducers: {
-    setAuctions(state, auctions = []) {
+    setAuctionState(state, prop = []) {
+      const [property, payload] = prop;
       return {
         ...state,
-        auctions,
-      };
-    },
-    setAuction(state, auction = {}) {
-      return {
-        ...state,
-        currentAuction: auction,
-      };
-    },
-    setFees(state, fees = []) {
-      return {
-        ...state,
-        fees,
+        [property]: payload,
       };
     },
   },
@@ -30,7 +25,7 @@ const auction = {
     async getAuctions() {
       try {
         const auctions = await getAuctions();
-        this.setAuctions(auctions.content || []);
+        this.setAuctionState(['auctions', auctions.content || []]);
         return auctions;
       } catch (error) {
         dispatch.modal.handleError();
@@ -39,16 +34,25 @@ const auction = {
     async getAuctionDetails(auctionId) {
       try {
         const auction = await getAuctionDetails(auctionId);
-        this.setAuction(auction.content);
+        this.setAuctionState(['currentAuction', auction.content]);
         return auction;
       } catch (error) {
         dispatch.modal.handleError();
       }
     },
+    async getAvailableAssets() {
+      try {
+        const availableAssets = await getAvailableAssets();
+        this.setAuctionState(['availableAssets', availableAssets.content]);
+        return availableAssets;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getFees() {
       try {
         const fees = await getFeeAssets();
-        this.setFees(fees.content.assets);
+        this.setAuctionState(['fees', fees.content.assets]);
         return fees;
       } catch (error) {
         dispatch.modal.handleError();
@@ -61,6 +65,9 @@ const auction = {
     },
     selectCurrentAuction() {
       return slice((state) => state.currentAuction);
+    },
+    selectAvailableAssets() {
+      return slice((state) => state.availableAssets.map(({ name }) => ({ name, value: name })));
     },
     selectFees() {
       return slice((state) => state.fees);

@@ -3,7 +3,7 @@ import { getBalance, sendTransaction, getTxResult } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from '../../store';
-import { wallets } from '../../utils/constants';
+import { wallets, SUCCESS_TRANSACTION } from '../../utils/constants';
 import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork, signingActions } from '../constants';
 
 const { modal, account } = store.dispatch;
@@ -47,6 +47,7 @@ const eventHandler = async (event) => {
               const result = await getTxResult(txHash);
               // https://www.icondev.io/docs/icon-json-rpc-v3#icx_gettransactionresult
               if (!result.status || result.status === '0x0') {
+                clearInterval(checkTxRs);
                 throw new Error(result.failure.message);
               }
 
@@ -82,6 +83,8 @@ const eventHandler = async (event) => {
                   break;
               }
               clearInterval(checkTxRs);
+              const event = new Event(SUCCESS_TRANSACTION);
+              document.dispatchEvent(event);
             } catch (err) {
               if (err && /(Pending|Executing)/g.test(err)) return;
               reject(err);

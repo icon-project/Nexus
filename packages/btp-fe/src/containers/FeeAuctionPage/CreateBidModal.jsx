@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import styled from 'styled-components/macro';
 
@@ -8,7 +9,9 @@ import { PrimaryButton, Button } from 'components/Button';
 import { SelectInput } from 'components/Select/SelectInput';
 import { colors } from 'components/Styles/Colors';
 
-import { minValue } from 'utils/inputValidation';
+import { minValue, required } from 'utils/inputValidation';
+import { placeBid } from 'connectors/ICONex/iconService';
+import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
 const Form = styled.form`
   text-align: left;
@@ -28,28 +31,51 @@ const Form = styled.form`
   }
 `;
 
-export const CreateBidModal = ({ setOpen }) => {
-  const onSubmit = (values) => {
-    console.log('values', values);
-  };
+export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, openModal }) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getAvailableAssets().then(() => {
+      setLoading(false);
+    });
+  }, [getAvailableAssets]);
 
-  const assets = [
-    { value: 'bsc', label: 'BTC' },
-    { value: 'ed', label: 'ETH' },
-    { value: 'ic', label: 'SHIBA' },
-  ];
+  useListenForSuccessTransaction(() => {
+    setOpen(false);
+  });
+
+  const onSubmit = (values) => {
+    const { bidAmount, auctionName } = values;
+    if (bidAmount && auctionName) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      placeBid(auctionName, bidAmount);
+    }
+  };
 
   return (
     <Modal title="New bid" display hasClosedBtn={false}>
       <FinalForm
         onSubmit={onSubmit}
-        render={({ handleSubmit, valid }) => {
+        render={({ handleSubmit }) => {
           return (
             <Form onSubmit={handleSubmit}>
               <div className="input-group">
                 <div className="input-field">
                   <Text className="small">Asset type</Text>
-                  <SelectInput options={assets} />
+                  <Field
+                    name="auctionName"
+                    validate={required}
+                    render={({ input, meta }) => (
+                      <SelectInput
+                        options={availableAssets}
+                        loading={loading}
+                        {...input}
+                        meta={meta}
+                      />
+                    )}
+                  />
                 </div>
 
                 <div className="input-field">
@@ -82,7 +108,7 @@ export const CreateBidModal = ({ setOpen }) => {
                 >
                   Cancel
                 </Button>
-                <PrimaryButton htmlType="submit" disabled={!valid} width={192} height={64}>
+                <PrimaryButton htmlType="submit" width={192} height={64}>
                   Create new bid
                 </PrimaryButton>
               </div>
