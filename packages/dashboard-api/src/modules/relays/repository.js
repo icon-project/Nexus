@@ -1,6 +1,5 @@
 'use strict';
 
-const debug = require('debug')('db');
 const { logger, pgPool } = require('../../common');
 
 async function countTotalRelay() {

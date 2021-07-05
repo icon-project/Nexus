@@ -11,17 +11,17 @@ async function getRelayList(request, response) {
   if (!style) style = 'list';
 
   switch (style) {
-    case 'count':
-      return await getTotalRelay(request, response);
+  case 'count':
+    return await getTotalRelay(request, response);
 
-    case 'reward':
-      return response.sendStatus(HttpStatus.NotImplemented);
+  case 'reward':
+    return response.sendStatus(HttpStatus.NotImplemented);
 
-    case 'list':
-      return await getRelayDetailList(request, response);
+  case 'list':
+    return await getRelayDetailList(request, response);
 
-    default:
-      return response.sendStatus(HttpStatus.BadRequest);
+  default:
+    return response.sendStatus(HttpStatus.BadRequest);
   }
 }
 

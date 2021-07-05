@@ -1,7 +1,5 @@
 'use strict';
 
-const Boom = require('@hapi/boom');
-const Joi = require('@hapi/joi');
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
 
@@ -39,9 +37,9 @@ async function getPriceConversion(request, response) {
   const baseToken = request.query.token;
   const amount = parseInt(request.query.amount);
   const tokensToConvertTo = request.query.convert_to.split(',');
-  
+
   const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
-  
+
   response.status(HttpStatus.OK).json({
     content:  priceTokens,
   });

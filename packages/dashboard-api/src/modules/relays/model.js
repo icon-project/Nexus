@@ -1,6 +1,5 @@
 'use strict';
 
-const { logger } = require('../../common');
 const { countTotalRelay, getRelayDetailList, getById } = require('./repository');
 
 async function getTotalRelay() {

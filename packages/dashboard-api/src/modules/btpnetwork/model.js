@@ -1,7 +1,7 @@
 'use strict';
 
 const IconService = require('icon-sdk-js');
-const { countNetwork, sumTransactionAmount, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
+const { countNetwork, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
 const { logger, CURRENCIES } = require('../../common');
@@ -106,7 +106,7 @@ async function getMintedNetworks() {
   const networks = await getNetworkInfo();
   let results = [];
   let mapTokensVolume = new Map();
-  
+
   for (let token of mintedTokens) {
     let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
     let volume = fiat.USD;
@@ -115,7 +115,7 @@ async function getMintedNetworks() {
     }
     mapTokensVolume.set(token.networkId, volume);
   }
-  
+
   for (let data of networks) {
     results.push({
       networkId: data.id,
@@ -123,7 +123,7 @@ async function getMintedNetworks() {
       mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
     });
   }
-  
+
   return results;
 }
 

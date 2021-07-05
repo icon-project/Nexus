@@ -4,10 +4,11 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Launch Program BTP-DB",
+      "name": "BTP-DB",
       "envFile": "${workspaceRoot}/packages/dashboard-api/.env",
       "skipFiles": [
         "<node_internals>/**"
@@ -17,7 +18,7 @@
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Launch Program ICON-Block-Idx",
+      "name": "ICON-Block-Idx",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
       "skipFiles": [
         "<node_internals>/**"
