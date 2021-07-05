@@ -23,6 +23,7 @@ const modal = {
   },
   effects: () => ({
     handleError(error) {
+      console.log('error', error);
       this.openModal({
         icon: 'xIcon',
         desc: (error && error.message) || error || 'Something went wrong!',

@@ -1,14 +1,9 @@
 import styled from 'styled-components/macro';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 
 import { Table } from 'components/Table';
 import { Text, SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
-
-import { hashShortener } from 'utils/app';
 
 const Info = styled.div`
   margin: 33px 0 36px;
@@ -52,35 +47,8 @@ const columns = [
   },
 ];
 
-const formatData = (data = {}) => {
-  if (Object.keys(data).length === 0) return data;
-  const { createdTime, endTime, topBidder, bids = [], ...ots } = data;
-  return {
-    ...ots,
-    createdTime: dayjs(createdTime).format('DD/MM/YYYY'),
-    endTime: dayjs(endTime).format('DD/MM/YYYY'),
-    topBidder: hashShortener(topBidder),
-    bids: bids
-      .map((bid) => {
-        return {
-          ...bid,
-          bidder: hashShortener(bid.bidder),
-          createdTime: dayjs(bid.createdTime).fromNow(),
-        };
-      })
-      .reverse(),
-  };
-};
-
-export const Details = ({ auction }) => {
-  const {
-    bids,
-    createdTime,
-    endTime,
-    availableBidAmount,
-    currentBidAmount,
-    topBidder,
-  } = formatData(auction);
+export const Details = ({ auction, auctionId, pagination, bids, getBids }) => {
+  const { createdTime, endTime, availableBidAmount, currentBidAmount, topBidder } = auction;
   return (
     <>
       <Info>
@@ -120,6 +88,8 @@ export const Details = ({ auction }) => {
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
         bodyText={'md'}
+        pagination={pagination}
+        getItemsHandler={(pageIndex) => () => getBids({ pageIndex, auctionId })}
       />
     </>
   );

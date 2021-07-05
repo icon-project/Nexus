@@ -48,16 +48,25 @@ const Wrapper = styled.div`
 const FeeAuctionDetails = () => {
   const { id } = useParams();
 
-  const { auction } = useSelect(({ auction }) => ({
-    auction: auction.selectCurrentAuction,
-  }));
+  const { auction, bids, pagination } = useSelect(
+    ({ auction: { selectCurrentAuction, selectBids, selectPagination } }) => ({
+      auction: selectCurrentAuction,
+      bids: selectBids,
+      pagination: selectPagination,
+    }),
+  );
 
-  const { getAuctionDetails } = useDispatch(({ auction: { getAuctionDetails } }) => ({
-    getAuctionDetails,
-  }));
+  const { getAuctionDetails, getBids } = useDispatch(
+    ({ auction: { getAuctionDetails, getBids } }) => ({
+      getAuctionDetails,
+      getBids,
+    }),
+  );
 
   useEffect(() => {
-    if (id) getAuctionDetails(id);
+    if (id) {
+      getAuctionDetails(id);
+    }
   }, [getAuctionDetails, id]);
 
   return (
@@ -66,7 +75,13 @@ const FeeAuctionDetails = () => {
 
       <div className="content">
         <div className="details">
-          <Details auction={auction} />
+          <Details
+            auction={auction}
+            bids={bids}
+            pagination={pagination}
+            getBids={getBids}
+            auctionId={id}
+          />
         </div>
         <div className="place-bid-form">
           <PlaceBidForm currentBidAmount={auction.currentBidAmount} auctionName={auction.name} />
