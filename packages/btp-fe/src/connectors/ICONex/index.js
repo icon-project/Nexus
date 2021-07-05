@@ -47,6 +47,7 @@ const eventHandler = async (event) => {
               const result = await getTxResult(txHash);
               // https://www.icondev.io/docs/icon-json-rpc-v3#icx_gettransactionresult
               if (!result.status || result.status === '0x0') {
+                clearInterval(checkTxRs);
                 throw new Error(result.failure.message);
               }
 

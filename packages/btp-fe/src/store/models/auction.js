@@ -67,7 +67,7 @@ const auction = {
       return slice((state) => state.currentAuction);
     },
     selectAvailableAssets() {
-      return slice((state) => state.availableAssets);
+      return slice((state) => state.availableAssets.map(({ name }) => ({ name, value: name })));
     },
     selectFees() {
       return slice((state) => state.fees);
