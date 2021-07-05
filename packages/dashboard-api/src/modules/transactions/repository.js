@@ -24,7 +24,7 @@ async function getTransactions(page = 0, limit = 20, from, to) {
           blockHeight: row.block_height,
           blockHash: row.block_hash,
           txHash: row.tx_hash,
-          confirmed: row.confirmed,
+          status: row.status,
           createAt: Number(row.create_at),
           updateAt: Number(row.update_at),
           deleteAt: Number(row.delete_at),
@@ -40,6 +40,42 @@ async function getTransactions(page = 0, limit = 20, from, to) {
   }
 }
 
+
+async function getTransactionById(id) {
+  let transaction = {};
+  const query = `SELECT * FROM ${TRANSACTION_TBL_NAME} WHERE id = $1`;
+
+  try {
+    const { rows } = await pgPool.query(query, [id]);
+    if (rows.length > 0) {
+      let row = rows[0];
+      transaction = {
+        id: row.id,
+        serialNumber: row.serial_number,
+        tokenName: row.token_name,
+        value: Number(row.value),
+        toAddress: row.to_address,
+        fromAddress: row.from_address,
+        blockHeight: row.block_height,
+        blockHash: row.block_hash,
+        txHash: row.tx_hash,
+        status: Number(row.status),
+        createAt: Number(row.create_at),
+        updateAt: Number(row.update_at),
+        deleteAt: Number(row.delete_at),
+        networkId: row.network_id,
+        blockTime: Number(row.block_time),
+        bptFee: Number(row.btp_fee) || 0,
+        networkFee: Number(row.network_fee) || 0,
+      };
+    }
+    return transaction;
+  } catch (error) {
+    logger.error('getTransactionById fails', { error });
+    throw error;
+  }
+}
 module.exports = {
   getTransactions,
+  getTransactionById
 };

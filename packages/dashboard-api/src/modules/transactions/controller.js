@@ -16,12 +16,28 @@ async function getTransHistory(request, response) {
   if (!transHistory) return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
-    content: {
-      transHistory,
-    },
+    content: [...transHistory],
+  });
+}
+
+// Show the list of transactions.
+// GET /transactions/:id
+async function getTransaction(request, response) {
+  let id = request.params.id;
+  if (!id) {
+    return response.sendStatus(HttpStatus.BadRequest);
+  }
+
+  let trans = await model.getTransById(id);
+
+  if (!trans) return response.sendStatus(HttpStatus.NotFound);
+
+  response.status(HttpStatus.OK).json({
+    content: { ...trans, internalTransactions: [] }
   });
 }
 
 module.exports = {
   getTransHistory,
+  getTransaction
 };

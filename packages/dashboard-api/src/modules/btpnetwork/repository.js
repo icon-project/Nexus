@@ -12,7 +12,7 @@ async function sumTransactionAmount() {
   const {
     rows: [result],
   } = await pgPool.query(
-    `SELECT SUM(value) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.confirmed} = true AND ${TRANSACTION_TBL.deleteAt} = 0`,
+    `SELECT SUM(value) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.status} = 1 AND ${TRANSACTION_TBL.deleteAt} = 0`,
   );
   return Number(result.sum) || 0;
 }
@@ -21,7 +21,7 @@ async function countTransaction() {
   const {
     rows: [result],
   } = await pgPool.query(
-    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.confirmed} = true AND ${TRANSACTION_TBL.deleteAt} = 0`,
+    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.status} = 1 AND ${TRANSACTION_TBL.deleteAt} = 0`,
   );
   return Number(result.count) || 0;
 }
