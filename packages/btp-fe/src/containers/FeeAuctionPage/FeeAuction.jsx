@@ -152,19 +152,26 @@ const formatData = (data = []) => {
 const FeeAuction = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const { auctions, fees } = useSelect(({ auction: { selectFees, selectAuctions } }) => ({
-    auctions: selectAuctions,
-    fees: selectFees,
-  }));
+
+  const { auctions, availableAssets, fees } = useSelect(
+    ({ auction: { selectAuctions, selectAvailableAssets, selectFees } }) => ({
+      auctions: selectAuctions,
+      availableAssets: selectAvailableAssets,
+      fees: selectFees,
+    }),
+  );
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions, getFees } = useDispatch(({ auction: { getAuctions, getFees } }) => ({
-    getAuctions,
-    getFees,
-  }));
+  const { getAuctions, getAvailableAssets, getFees, openModal } = useDispatch(
+    ({ auction: { getAuctions, getAvailableAssets, getFees }, modal: { openModal } }) => ({
+      getAuctions,
+      getAvailableAssets,
+      openModal,
+      getFees,
+    }),
+  );
 
   useEffect(() => {
     getFees();
@@ -250,7 +257,14 @@ const FeeAuction = () => {
           <Text className="medium">Try again using more general search items</Text>
         </EmptySearch>
       )}
-      {open && <CreateBidModal setOpen={setOpen} />}
+      {open && (
+        <CreateBidModal
+          setOpen={setOpen}
+          getAvailableAssets={getAvailableAssets}
+          availableAssets={availableAssets}
+          openModal={openModal}
+        />
+      )}
     </Wrapper>
   );
 };

@@ -13,11 +13,6 @@ const StyledInput = styled.input`
     outline: none;
   }
 
-  & ~ p.err-msg {
-    color: ${colors.errorState} !important;
-    margin-top: 7px;
-  }
-
   /* remove number arrows */
   /* Chrome, Safari, Edge, Opera */
   &::-webkit-outer-spin-button,
