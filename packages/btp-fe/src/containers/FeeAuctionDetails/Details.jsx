@@ -89,7 +89,7 @@ export const Details = ({ auction, auctionId, pagination, bids, getBids }) => {
         backgroundColor={colors.darkBG}
         bodyText={'md'}
         pagination={pagination}
-        getItemsHandler={(pageIndex) => () => getBids(pageIndex, auctionId)}
+        getItemsHandler={(pageIndex) => () => getBids({ pageIndex, auctionId })}
       />
     </>
   );
