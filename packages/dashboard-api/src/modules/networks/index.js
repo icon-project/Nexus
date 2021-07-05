@@ -7,5 +7,5 @@ function createNetworksRoute() {
 }
 
 module.exports = {
-    createNetworksRoute,
+  createNetworksRoute,
 };

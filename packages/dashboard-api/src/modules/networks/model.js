@@ -52,17 +52,17 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
 ===*/
 async function getListTokenRegisteredNetwork(networkId) {
   switch (networkId) {
-    case '0x1':
-      return ['icx', 'xrp', 'eth', 'bnb'];
-    case '0x2':
-      return ['edg', 'ltc', 'eth', 'bnb'];
-    case '0x3':
-      return ['near', 'bsh', 'eth', 'bnb'];
-    case '0x4':
-      return ['sol', 'pol', 'eth', 'bnb'];
-    default:
-      logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${networkId}`);
-      return [];
+  case '0x1':
+    return ['icx', 'xrp', 'eth', 'bnb'];
+  case '0x2':
+    return ['edg', 'ltc', 'eth', 'bnb'];
+  case '0x3':
+    return ['near', 'bsh', 'eth', 'bnb'];
+  case '0x4':
+    return ['sol', 'pol', 'eth', 'bnb'];
+  default:
+    logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${networkId}`);
+    return [];
   }
 }
 
