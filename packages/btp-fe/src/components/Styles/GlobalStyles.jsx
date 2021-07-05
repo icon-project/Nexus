@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components/macro';
+import { colors } from './Colors';
 
 export default createGlobalStyle`
   * {
@@ -30,5 +31,10 @@ export default createGlobalStyle`
   }
   p, h3, ul {
     margin: 0;
+  }
+
+  p.err-msg {
+    color: ${colors.errorState} !important;
+    margin-top: 7px;
   }
 `;

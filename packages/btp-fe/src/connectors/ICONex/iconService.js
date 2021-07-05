@@ -40,7 +40,7 @@ export const sendTransaction = async (signature) => {
     });
     return await httpProvider.request(request).execute();
   } catch (err) {
-    throw new Error(err.message);
+    throw new Error(err.message || err);
   }
 };
 
@@ -59,7 +59,7 @@ export const getTxResult = (txHash) => {
 
 export const placeBid = (auctionName, value, fas) => {
   const transaction = {
-    to: fas || 'cx97dd9c3e40982bf23ac67b110741323a909a1495', // default FAS addess to our server
+    to: fas || 'cxe3d36b26abbe6e1005eacf7e1111d5fefbdbdcad', // default FAS addess to our server
     value,
   };
 
