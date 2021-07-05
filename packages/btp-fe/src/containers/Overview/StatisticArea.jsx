@@ -52,13 +52,14 @@ const Wrapper = styled.div`
 
     .network-list {
       margin: 23px 0;
-      padding: 0 15px;
-
+      padding: 4px 15px;
       h3 {
         height: 40px;
         padding: 0 12px;
+        font-size: 16px;
         display: flex;
         align-items: center;
+        border-radius: 4px;
 
         &:hover {
           background-color: #312f39;
