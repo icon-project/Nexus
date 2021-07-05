@@ -84,6 +84,12 @@ const GovernanceStyled = styled.div`
     display: inline-block;
     margin-right: 9.33px;
   }
+  tr {
+    height: 48px;
+  }
+  .ant-table-tbody > tr > td {
+    padding: 11.5px 14px;
+  }
   ${media.md`
   .heading-area {
     display: block;
@@ -143,6 +149,7 @@ function GovernancePage() {
           pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
+          hoverColor={colors.darkBG}
           bodyText={'md'}
         />
       </div>
