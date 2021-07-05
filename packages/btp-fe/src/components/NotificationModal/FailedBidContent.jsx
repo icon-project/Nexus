@@ -29,7 +29,7 @@ export const FailedBidContent = ({ message }) => {
       <Text className="x-small">
         Minimium incremental bid: <span>10%</span> higher than the current bid
       </Text>
-      {message && <Text className="x-small subtext">{message}</Text>}
+      {message && <Text className="x-small subtext">{message.toString()}</Text>}
     </Wrapper>
   );
 };
