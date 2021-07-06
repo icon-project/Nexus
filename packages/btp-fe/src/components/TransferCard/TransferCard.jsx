@@ -71,11 +71,7 @@ export const TransferCard = ({ setStep }) => {
     isConnected: account.selectIsConnected,
   }));
 
-  const listNetwork = [
-    { value: 'bsc', label: 'Binance Smart Chain' },
-    { value: 'ed', label: 'Edgeware' },
-    { value: 'ic', label: 'ICON blockchain' },
-  ];
+  const listNetwork = [{ value: 'ic', label: 'ICON blockchain' }];
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
       <h1>Transfer</h1>

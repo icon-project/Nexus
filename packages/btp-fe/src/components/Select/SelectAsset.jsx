@@ -5,9 +5,7 @@ import { Text } from 'components/Typography';
 import { TextWithIcon } from 'components/TextWithIcon';
 import Select from './Select';
 
-import BTCIconSrc from 'assets/images/btc-icon.svg';
-import BCHIconSrc from 'assets/images/bch-icon.svg';
-import ETHIconSrc from 'assets/images/eth-icon.svg';
+import iconexIcon from 'assets/images/icon-ex.svg';
 
 const StyledItem = styled.div`
   display: flex;
@@ -42,32 +40,12 @@ const SelectAsset = () => {
   /* eslint-disable react/display-name */
   const coins = [
     {
-      value: 'BTC',
-      label: 'Bitcoin',
-      renderLabel: () => <TextWithIcon icon="btc">Bitcoin</TextWithIcon>,
+      value: 'ICX',
+      label: 'ICX',
+      renderLabel: () => <TextWithIcon icon="iconex">ICX</TextWithIcon>,
       renderItem: () => (
-        <Item icon={BTCIconSrc} symbol="BTC">
-          Bitcoin
-        </Item>
-      ),
-    },
-    {
-      value: 'BCH',
-      label: 'Bitcoin cash',
-      renderLabel: () => <TextWithIcon icon="bch">Bitcoin cash</TextWithIcon>,
-      renderItem: () => (
-        <Item icon={BCHIconSrc} symbol="BCH">
-          Bitcoin cash
-        </Item>
-      ),
-    },
-    {
-      value: 'ETH',
-      label: 'Etherum',
-      renderLabel: () => <TextWithIcon icon="eth">Etherum</TextWithIcon>,
-      renderItem: () => (
-        <Item icon={ETHIconSrc} symbol="ETH">
-          Etherum
+        <Item icon={iconexIcon} symbol="ICX">
+          ICON
         </Item>
       ),
     },
