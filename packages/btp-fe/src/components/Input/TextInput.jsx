@@ -19,7 +19,6 @@ export const StyledTextInput = styled(Input)`
   // Removing input background colour for Chrome autocomplete
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
     -webkit-text-fill-color: ${colors.grayText};
     -webkit-box-shadow: 0 0 0 50px ${colors.grayDark} inset;
