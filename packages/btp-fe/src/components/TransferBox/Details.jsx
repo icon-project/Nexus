@@ -47,6 +47,7 @@ const WalletBalance = styled.div`
 
     .wallet-name {
       margin-left: 13.17px;
+      text-transform: capitalize;
     }
   }
 
@@ -113,7 +114,7 @@ export const Details = memo(
   ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent, sendingInfo }) => {
     const { token, network } = sendingInfo;
     const {
-      account: { balance },
+      account: { balance, currentNetwork, wallet, unit },
     } = useSelect(({ account }) => ({
       account: account.selectAccountInfo,
     }));
@@ -152,11 +153,13 @@ export const Details = memo(
           <Text className="small label">Wallet balance</Text>
           <WalletBalance>
             <div className="left">
-              <Icon />
-              <Text className="medium wallet-name">Metamask</Text>
+              <Icon icon={wallet} />
+              <Text className="medium wallet-name">{wallet}</Text>
             </div>
             <div className="right">
-              <Text className="medium">3,53869714 ETH</Text>
+              <Text className="medium">
+                {balance.toLocaleString()} {unit}
+              </Text>
               <Text className="x-small">= $956.74</Text>
             </div>
           </WalletBalance>
@@ -167,7 +170,9 @@ export const Details = memo(
             <Text className="medium subtitle">Send</Text>
             <div className="sender">
               <Icon icon={token} size="s" />
-              <Text className="medium sender--name">{token} (Etherum mainnet)</Text>
+              <Text className="medium sender--name">
+                {token} ({currentNetwork})
+              </Text>
             </div>
           </div>
           <div className="to">
