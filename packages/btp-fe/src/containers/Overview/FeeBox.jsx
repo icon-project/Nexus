@@ -24,11 +24,11 @@ const Wrapper = styled.div`
   }
 
   .cumulative-amount {
-    margin-bottom: 12px;
+    margin-bottom: 2px;
   }
 
   .current-amount {
-    margin-bottom: 22px;
+    margin-bottom: 12px;
   }
 
   .asset-fee {
@@ -59,7 +59,7 @@ export const Feebox = ({ fee }) => {
           Total cumulative amount
         </TextWithInfo>
         <SubTitle className="medium bold">
-          {cumulativeAmount && cumulativeAmount.toLocaleString()}
+          {cumulativeAmount ? cumulativeAmount.toLocaleString() : 0}
         </SubTitle>
       </div>
       <div className="current-amount d-flex">
@@ -70,10 +70,10 @@ export const Feebox = ({ fee }) => {
           Total current amount of fee
         </TextWithInfo>
         <SubTitle className="medium bold">
-          {currentAmount && currentAmount.toLocaleString()}
+          {currentAmount ? currentAmount.toLocaleString() : 0}
         </SubTitle>
       </div>
-      <TextWithInfo tooltip="Amount of fee for each asset" className="asset-fee">
+      <TextWithInfo tooltip="Amount of fee for each asset" className="asset-fee medium-text">
         Asset fee
       </TextWithInfo>
       <AssetFeeTable assets={assets} />
