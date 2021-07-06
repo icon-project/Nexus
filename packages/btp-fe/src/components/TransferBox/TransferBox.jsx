@@ -31,6 +31,11 @@ export const TransferBox = () => {
   const [step, setStep] = useState(0);
   const [wasBack, setWasBack] = useState(false);
   const [tokenValue, setTokenValue] = useState('');
+  const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
+
+  const onSendingInfoChange = (info = {}) => {
+    setSendingInfo((sendingInfo) => ({ ...sendingInfo, ...info }));
+  };
 
   useEffect(() => {
     if (step !== 0) setWasBack(true);
@@ -53,7 +58,7 @@ export const TransferBox = () => {
           return (
             <form onSubmit={handleSubmit}>
               <div className={`container ${isCurrentStep(0) && 'active'}`}>
-                <TransferCard setStep={memoizedSetStep} />
+                <TransferCard setStep={memoizedSetStep} setSendingInfo={onSendingInfoChange} />
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>
                 <Details
@@ -63,6 +68,7 @@ export const TransferBox = () => {
                   setTokenValue={memoizedSetTokenValue}
                   initalInputDisplay={!wasBack}
                   isValidForm={valid}
+                  sendingInfo={sendingInfo}
                 />
               </div>
               <div className={`container ${isCurrentStep(2) && 'active'}`}>

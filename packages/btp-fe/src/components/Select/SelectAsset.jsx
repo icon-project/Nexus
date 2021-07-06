@@ -36,7 +36,7 @@ const Item = ({ icon, symbol, children }) => {
   );
 };
 
-const SelectAsset = () => {
+const SelectAsset = ({ onChange }) => {
   /* eslint-disable react/display-name */
   const coins = [
     {
@@ -51,6 +51,6 @@ const SelectAsset = () => {
     },
   ];
 
-  return <Select options={coins} />;
+  return <Select options={coins} onChange={onChange} name="token" />;
 };
 export default SelectAsset;

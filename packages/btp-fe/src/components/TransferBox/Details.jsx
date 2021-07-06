@@ -110,7 +110,8 @@ const Addresses = styled.div`
 const required = (value) => (value ? undefined : 'Required');
 
 export const Details = memo(
-  ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent }) => {
+  ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent, sendingInfo }) => {
+    const { token, network } = sendingInfo;
     const {
       account: { balance },
     } = useSelect(({ account }) => ({
@@ -127,7 +128,7 @@ export const Details = memo(
           validate={composeValidators(required, max)}
           render={({ input, meta }) => (
             <TokenInput
-              placeholder="0 ICX"
+              placeholder={`0 ${token}`}
               setTokenValue={setTokenValue}
               initalInputDisplay={initalInputDisplay}
               isCurrent={isCurrent}
@@ -144,7 +145,7 @@ export const Details = memo(
             name="recipient"
             validate={required}
             render={({ input, meta }) => (
-              <TextInput placeholder="Enter a ETH address" {...input} meta={meta} />
+              <TextInput placeholder={`Enter a ${network} address`} {...input} meta={meta} />
             )}
           />
 
@@ -165,13 +166,13 @@ export const Details = memo(
           <div className="send">
             <Text className="medium subtitle">Send</Text>
             <div className="sender">
-              <Icon icon="eth" size="s" />
-              <Text className="medium sender--name">ETH (Etherum mainnet)</Text>
+              <Icon icon={token} size="s" />
+              <Text className="medium sender--name">{token} (Etherum mainnet)</Text>
             </div>
           </div>
           <div className="to">
             <Text className="medium subtitle">To</Text>
-            <Text className="medium">Binance Smart Chain</Text>
+            <Text className="medium">{network}</Text>
           </div>
         </Addresses>
         <ControlButtons

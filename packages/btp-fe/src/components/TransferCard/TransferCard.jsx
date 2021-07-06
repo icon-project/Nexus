@@ -66,12 +66,21 @@ const CardStyled = styled(AntCard)`
     width: 100% !important;
   `}
 `;
-export const TransferCard = ({ setStep }) => {
+export const TransferCard = ({ setStep, setSendingInfo }) => {
   const { isConnected } = useSelect(({ account }) => ({
     isConnected: account.selectIsConnected,
   }));
 
-  const listNetwork = [{ value: 'ic', label: 'ICON blockchain' }];
+  const onChange = (values) => {
+    const {
+      target: { value, name },
+    } = values;
+    if (name) {
+      setSendingInfo({ [name]: value });
+    }
+  };
+
+  const listNetwork = [{ value: 'ICON blockchain', label: 'ICON blockchain' }];
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
       <h1>Transfer</h1>
@@ -81,13 +90,13 @@ export const TransferCard = ({ setStep }) => {
         </p>
 
         <div className="send">
-          Send <SelectAsset />
+          Send <SelectAsset onChange={onChange} />
         </div>
 
         <hr />
 
         <div className="to">
-          To <Select options={listNetwork} />
+          To <Select options={listNetwork} onChange={onChange} name="network" />
         </div>
 
         <Row className="button-section">
