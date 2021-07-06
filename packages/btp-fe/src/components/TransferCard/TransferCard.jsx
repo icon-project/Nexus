@@ -5,8 +5,6 @@ import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { media } from '../Styles/Media';
 
-import { useSelect } from '../../hooks/useRematch';
-
 import VectorIconSrc from 'assets/images/vector-icon.svg';
 
 const CardStyled = styled(AntCard)`
@@ -66,11 +64,7 @@ const CardStyled = styled(AntCard)`
     width: 100% !important;
   `}
 `;
-export const TransferCard = ({ setStep, setSendingInfo }) => {
-  const { isConnected } = useSelect(({ account }) => ({
-    isConnected: account.selectIsConnected,
-  }));
-
+export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
   const onChange = (values) => {
     const {
       target: { value, name },

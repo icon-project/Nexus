@@ -1,9 +1,9 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
 
-import { useDispatch } from '../../hooks/useRematch';
-import { transfer } from '../../connectors/ICONex/iconService';
-import { hashShortener } from '../../utils/app';
+import { useDispatch } from 'hooks/useRematch';
+import { transfer } from 'connectors/ICONex/iconService';
+import { hashShortener } from 'utils/app';
 
 import { Header, Text, SubTitle } from '../Typography';
 import { Icon } from '../Icon/Icon';
@@ -110,8 +110,10 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, values }) => {
+export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
   const { recipient, tokenAmount } = values;
+  const { token, network } = sendingInfo;
+  const { currentNetwork } = account;
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
     openModal,
@@ -141,9 +143,9 @@ export const Approval = memo(({ setStep, values }) => {
         <div className="send">
           <Text className="medium">Send</Text>
           <div className="sender">
-            <Icon icon="eth" size="s" />
-            <Text className="medium sender--alias">ETH</Text>
-            <Text className="small sender--name">Etherum Mainnet</Text>
+            <Icon icon={token} size="s" />
+            <Text className="medium sender--alias">{token}</Text>
+            <Text className="small sender--name">{currentNetwork}</Text>
           </div>
         </div>
         <div className="to">
@@ -151,7 +153,7 @@ export const Approval = memo(({ setStep, values }) => {
           <div className="receiver">
             <Icon icon="copy" size="s" />
             <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
-            <Text className="small receiver--name">Binance Smart Chain</Text>
+            <Text className="small receiver--name">{network}</Text>
           </div>
         </div>
         <div className="estimated-fee">
@@ -166,7 +168,7 @@ export const Approval = memo(({ setStep, values }) => {
 
       <Total>
         <SubTitle className="large bold">Total receive</SubTitle>
-        <SubTitle className="large bold">1.88 ETH</SubTitle>
+        <SubTitle className="large bold">1.88 {token}</SubTitle>
       </Total>
 
       <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />

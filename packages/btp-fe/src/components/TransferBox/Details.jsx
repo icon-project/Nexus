@@ -7,8 +7,7 @@ import { Icon } from '../Icon/Icon';
 import { Header, Text } from '../Typography';
 import { ControlButtons } from './ControlButtons';
 
-import { useSelect } from '../../hooks/useRematch';
-import { composeValidators, maxValue } from '../../utils/inputValidation';
+import { composeValidators, maxValue } from 'utils/inputValidation';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -111,13 +110,17 @@ const Addresses = styled.div`
 const required = (value) => (value ? undefined : 'Required');
 
 export const Details = memo(
-  ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent, sendingInfo }) => {
+  ({
+    setStep,
+    setTokenValue,
+    initalInputDisplay,
+    isValidForm,
+    isCurrent,
+    sendingInfo,
+    account,
+  }) => {
     const { token, network } = sendingInfo;
-    const {
-      account: { balance, currentNetwork, wallet, unit },
-    } = useSelect(({ account }) => ({
-      account: account.selectAccountInfo,
-    }));
+    const { balance, currentNetwork, wallet, unit } = account;
 
     const max = maxValue(balance, 'Insufficient balance');
 
