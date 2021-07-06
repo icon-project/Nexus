@@ -10,6 +10,7 @@ const TransferStyled = styled.div`
   .transfer-card {
     display: flex;
     justify-content: center;
+    padding-bottom: 43px;
   }
   .history-link {
     text-align: right;
