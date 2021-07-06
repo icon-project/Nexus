@@ -87,7 +87,7 @@ export const Table = ({
     if (loading) {
       myTimer = setTimeout(() => {
         if (loading) setIsLoading(true);
-      }, 300);
+      }, 500);
     } else {
       clearTimeout(myTimer);
       setIsLoading(false);

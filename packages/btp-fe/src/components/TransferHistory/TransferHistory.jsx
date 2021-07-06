@@ -62,17 +62,19 @@ const columns = [
   },
   {
     title: 'Status',
-    dataIndex: 'confirmed',
+    dataIndex: 'status',
     width: 160,
     render: (text) => {
-      const status = text ? 'success' : 'failed';
+      let status = 'Success';
       let color = '#5EF38C';
-      switch (status) {
-        case 'pending':
+      switch (text) {
+        case 0:
           color = '#FFBA49';
+          status = 'Pending';
           break;
-        case 'failed':
+        case -1:
           color = '#F05365';
+          status = 'Failed';
           break;
       }
       return <Tag color={color}>{status}</Tag>;
@@ -137,7 +139,7 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
     const getHistory = async () => {
       try {
         const transferData = await getTransferHistory(selectedPage);
-        const dataSource = transferData?.content?.transHistory.map((history, index) => {
+        const dataSource = transferData?.content?.map((history, index) => {
           return {
             ...history,
             key: index,
@@ -146,7 +148,7 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
         setHistorySource(dataSource);
         setIsFetching(false);
       } catch (error) {
-        handleError();
+        handleError(error);
       }
     };
     getHistory();
