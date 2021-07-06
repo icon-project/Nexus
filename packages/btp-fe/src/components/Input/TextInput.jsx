@@ -22,7 +22,11 @@ export const StyledTextInput = styled(Input)`
   &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
     -webkit-text-fill-color: ${colors.grayText};
-    transition: background-color 5000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0 50px ${colors.grayDark} inset;
+  }
+
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 50px ${colors.grayAccent} inset;
   }
 `;
 
