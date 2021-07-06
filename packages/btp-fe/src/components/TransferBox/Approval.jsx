@@ -1,9 +1,11 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { useDispatch } from 'hooks/useRematch';
 import { transfer } from 'connectors/ICONex/iconService';
 import { hashShortener } from 'utils/app';
+import { wallets } from 'utils/constants';
 
 import { Header, Text, SubTitle } from '../Typography';
 import { Icon } from '../Icon/Icon';
@@ -113,18 +115,25 @@ const Total = styled.div`
 export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
   const { recipient, tokenAmount } = values;
   const { token, network } = sendingInfo;
-  const { currentNetwork } = account;
+  const { currentNetwork, wallet } = account;
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
     openModal,
   }));
 
   const onApprove = () => {
-    openModal({
-      icon: 'loader',
-      desc: 'Waiting for confirmation in your wallet.',
-    });
-    transfer({ to: recipient, value: tokenAmount });
+    if (wallets.iconex === wallet) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      transfer({ to: recipient, value: tokenAmount });
+    } else {
+      openModal({
+        icon: 'exclamationPointIcon',
+        desc: `This action has not been implemented yet`,
+      });
+    }
   };
 
   return (
@@ -151,8 +160,12 @@ export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
         <div className="to">
           <Text className="medium">To</Text>
           <div className="receiver">
-            <Icon icon="copy" size="s" />
-            <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
+            <CopyToClipboard text={recipient}>
+              <div>
+                <Icon icon="copy" size="s" />
+                <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
+              </div>
+            </CopyToClipboard>
             <Text className="small receiver--name">{network}</Text>
           </div>
         </div>
