@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
+import { useTokenToUsd } from '../../hooks/useTokenToUsd';
+
 import { Input } from './Input';
 import { Text } from '../Typography';
 import { mediumBoldHeader } from '../Typography/Header';
@@ -53,11 +55,11 @@ export const TokenInput = ({
 }) => {
   const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
   const tokenInputRef = useRef();
-
+  const usdBalance = useTokenToUsd('icx', value);
   useEffect(() => {
     if (isCurrent) tokenInputRef.current.focus();
   }, [isCurrent]);
-
+  console.log('usdBalance', usdBalance);
   const toggleInput = () => {
     setShowInput(!showInput);
   };
@@ -66,6 +68,7 @@ export const TokenInput = ({
       <StyledTokenInput
         {...props}
         value={value}
+        min={0}
         type="number"
         onBlur={(e) => {
           onBlur(e);
@@ -83,8 +86,7 @@ export const TokenInput = ({
       >
         {value || 0} ICX
       </div>
-
-      <Text className="medium exchange">= $0.00 USD</Text>
+      <Text className="medium exchange">= ${usdBalance.toLocaleString()}</Text>
       {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
     </Wrapper>
   );
