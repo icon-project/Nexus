@@ -190,7 +190,15 @@ const FeeAuction = () => {
         <Header className="medium bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
-      {!keySearch || loading ? (
+      {!loading && keySearch && !filteredData.length > 0 ? (
+        <EmptySearch>
+          <img src={notFoundSearchIcon} alt="not found search" />
+          <Header className="x-small regular">
+            Sorry, no matching results found with this auction name
+          </Header>
+          <Text className="medium">Try again using more general search items</Text>
+        </EmptySearch>
+      ) : (
         <>
           {keySearch ? (
             <Text className="medium">
@@ -241,14 +249,6 @@ const FeeAuction = () => {
             })}
           />
         </>
-      ) : (
-        <EmptySearch>
-          <img src={notFoundSearchIcon} alt="not found search" />
-          <Header className="x-small regular">
-            Sorry, no matching results found with this auction name
-          </Header>
-          <Text className="medium">Try again using more general search items</Text>
-        </EmptySearch>
       )}
       {open && (
         <CreateBidModal
