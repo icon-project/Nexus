@@ -27,18 +27,45 @@ const auction = {
         [property]: payload,
       };
     },
-    setBids(state, bids = {}) {
-      return {
-        ...state,
-        bids,
-      };
-    },
   },
   effects: (dispatch) => ({
     async getAuctions() {
       try {
         const auctions = await getAuctions();
-        this.setAuctionState(['auctions', auctions.content || []]);
+        // this.setAuctionState(['auctions', auctions.content || []]);
+        this.setAuctionState([
+          'auctions',
+          [
+            {
+              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3',
+              name: 'd',
+              currentBidAmount: 100,
+              availableBidAmount: 150,
+              endTime: 1623825002306,
+            },
+            {
+              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_4',
+              name: 'c',
+              currentBidAmount: 101,
+              availableBidAmount: 150,
+              endTime: 1623825002306,
+            },
+            {
+              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_5',
+              name: 'b',
+              currentBidAmount: 102,
+              availableBidAmount: 150,
+              endTime: 1623825002306,
+            },
+            {
+              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_6',
+              name: 'a',
+              currentBidAmount: 103,
+              availableBidAmount: 150,
+              endTime: 1623825002306,
+            },
+          ],
+        ]);
         return auctions;
       } catch (error) {
         dispatch.modal.handleError();
@@ -83,7 +110,17 @@ const auction = {
   }),
   selectors: (slice) => ({
     selectAuctions() {
-      return slice((state) => state.auctions);
+      return slice((state) =>
+        state.auctions.map((d) => {
+          const { id, endTime, ...ots } = d;
+          return {
+            ...ots,
+            id,
+            shortedId: hashShortener(id),
+            endTime: dayjs(endTime).fromNow(true) + ' left',
+          };
+        }),
+      );
     },
     selectCurrentAuction() {
       return slice(({ currentAuction }) => {
