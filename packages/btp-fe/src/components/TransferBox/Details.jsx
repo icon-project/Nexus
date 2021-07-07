@@ -8,6 +8,7 @@ import { Header, Text } from '../Typography';
 import { ControlButtons } from './ControlButtons';
 
 import { composeValidators, maxValue } from 'utils/inputValidation';
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -121,6 +122,7 @@ export const Details = memo(
   }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet, unit } = account;
+    const usdTotalBalance = useTokenToUsd(unit, balance);
 
     const max = maxValue(balance, 'Insufficient balance');
 
@@ -163,7 +165,7 @@ export const Details = memo(
               <Text className="medium">
                 {balance.toLocaleString()} {unit}
               </Text>
-              <Text className="x-small">= $956.74</Text>
+              <Text className="x-small">= ${usdTotalBalance.toLocaleString()}</Text>
             </div>
           </WalletBalance>
         </div>

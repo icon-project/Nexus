@@ -3,6 +3,8 @@ import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { useDispatch } from 'hooks/useRematch';
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
+
 import { transfer } from 'connectors/ICONex/iconService';
 import { hashShortener } from 'utils/app';
 import { wallets } from 'utils/constants';
@@ -116,6 +118,7 @@ export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
   const { recipient, tokenAmount } = values;
   const { token, network } = sendingInfo;
   const { currentNetwork, wallet } = account;
+  const usdBalance = useTokenToUsd(token, tokenAmount);
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
     openModal,
@@ -143,7 +146,7 @@ export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
         <Text className="small sub-heading">You will send</Text>
         <div className="content">
           <Header className="medium bold send-token">{tokenAmount || 0} ICX</Header>
-          <Text className="medium">= $108,670.92</Text>
+          <Text className="medium">= ${usdBalance.toLocaleString()}</Text>
         </div>
       </SendToken>
 
