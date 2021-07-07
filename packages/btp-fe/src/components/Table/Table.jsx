@@ -29,9 +29,10 @@ const TableStyled = styled(antdTable)`
 
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
+    height: 48px;
     font-family: Poppins;
     border-bottom: 1px solid ${colors.grayLine};
-    padding: 13px 14px;
+    padding: 11.5px 14px;
   }
 
   .ant-table-thead,
