@@ -59,7 +59,7 @@ export const TokenInput = ({
   useEffect(() => {
     if (isCurrent) tokenInputRef.current.focus();
   }, [isCurrent]);
-
+  console.log('usdBalance', usdBalance);
   const toggleInput = () => {
     setShowInput(!showInput);
   };
@@ -86,7 +86,7 @@ export const TokenInput = ({
       >
         {value || 0} ICX
       </div>
-      <Text className="medium exchange">= ${usdBalance}</Text>
+      <Text className="medium exchange">= ${usdBalance.toLocaleString()}</Text>
       {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
     </Wrapper>
   );

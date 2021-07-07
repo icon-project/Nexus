@@ -10,7 +10,7 @@ function useTokenToUsd(unit, balance) {
       } else {
         try {
           const usdBalance = await tokenToUsd(unit, balance);
-          setUsdBalance(parseInt(usdBalance?.content[0]?.value));
+          setUsdBalance(parseFloat(usdBalance?.content[0]?.value));
         } catch (error) {
           console.log(error);
         }
