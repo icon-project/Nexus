@@ -72,7 +72,7 @@ export const Table = ({
   columns,
   loading,
   getItemsHandler,
-  sortOptions,
+  sortOptions = {},
   dataSource,
   ...rest
 }) => {
