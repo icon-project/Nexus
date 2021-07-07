@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
-import { tokenToUsd } from 'services/btpServices';
+import { useTokenToUsd } from '../../hooks/useTokenToUsd';
 
 import { Input } from './Input';
 import { Text } from '../Typography';
@@ -55,8 +55,7 @@ export const TokenInput = ({
 }) => {
   const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
   const tokenInputRef = useRef();
-  const [usdBalance, setUsdBalance] = useState(0);
-
+  const usdBalance = useTokenToUsd('icx', value);
   useEffect(() => {
     if (isCurrent) tokenInputRef.current.focus();
   }, [isCurrent]);
@@ -64,21 +63,6 @@ export const TokenInput = ({
   const toggleInput = () => {
     setShowInput(!showInput);
   };
-  useEffect(() => {
-    const getUsbalance = async () => {
-      if (!value || parseInt(value) < 1) {
-        setUsdBalance(0);
-      } else {
-        try {
-          const usdBalance = await tokenToUsd('icx', value);
-          setUsdBalance(usdBalance?.content[0]?.value);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    };
-    getUsbalance();
-  }, [value]);
   return (
     <Wrapper>
       <StyledTokenInput
