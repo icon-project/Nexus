@@ -143,6 +143,7 @@ function GovernancePage() {
           pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
+          hoverColor={colors.darkBG}
           bodyText={'md'}
         />
       </div>
