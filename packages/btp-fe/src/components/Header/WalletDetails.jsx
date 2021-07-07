@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
+import { useTokenToUsd } from '../../hooks/useTokenToUsd';
+
 import { Text, Header } from '../Typography';
 import { colors } from '../Styles/Colors';
 import { mediumBoldSubtitle } from '../Typography/SubTitle';
@@ -103,6 +105,7 @@ export const WalletDetails = ({
   onDisconnectWallet,
   onSwitchWallet,
 }) => {
+  const usdBalance = useTokenToUsd(unit, balance);
   return (
     <Wrapper>
       <Text className="medium network-name">{networkName}</Text>
@@ -111,7 +114,8 @@ export const WalletDetails = ({
         <Text className="medium dark-text">Balance</Text>
         <div className="right">
           <Header className="small bold">{`${balance} ${unit}`}</Header>
-          <Text className="small dark-text">= $98.22 USD</Text>
+
+          <Text className="small dark-text">= ${usdBalance.toLocaleString()}</Text>
         </div>
       </div>
       <div className="wallet-address">
