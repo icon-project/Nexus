@@ -8,6 +8,7 @@ import { Loader } from 'components/Loader';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
+import { stableSort, getComparator } from './natureSorting';
 
 const TableStyled = styled(antdTable)`
   width: 100%;
@@ -71,11 +72,14 @@ export const Table = ({
   columns,
   loading,
   getItemsHandler,
+  sortOptions,
+  dataSource,
   ...rest
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [current, setCurrent] = useState(1);
   const { totalItem, limit } = pagination;
+  const { order, orderBy } = sortOptions;
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -103,6 +107,7 @@ export const Table = ({
         bodyText={bodyText}
         hoverColor={hoverColor}
         columns={columns}
+        dataSource={order ? stableSort(dataSource, getComparator(order, orderBy)) : dataSource}
         loading={isLoading && { indicator: <Loader size="25px" borderSize="3px" /> }}
         pagination={false}
         {...rest}

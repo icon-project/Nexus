@@ -137,8 +137,7 @@ const FeeAuction = () => {
   const [open, setOpen] = useState(false);
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
-  const [sortBy, setSortBy] = useState({ property: 'name', sortBy: 'abc' });
-  console.log('🚀 ~ file: FeeAuction.jsx ~ line 158 ~ FeeAuction ~ sortBy', sortBy);
+  const [sortOptions, setSortOptions] = useState({ property: 'name', sortBy: 'abc' });
 
   const { auctions, availableAssets, fees } = useSelect(
     ({ auction: { selectAuctions, selectAvailableAssets, selectFees } }) => ({
@@ -182,7 +181,7 @@ const FeeAuction = () => {
       target: { value },
     } = values;
 
-    if (value) setSortBy(value);
+    if (value) setSortOptions(value);
   };
 
   return (
@@ -231,7 +230,7 @@ const FeeAuction = () => {
             rowKey="id"
             columns={columns}
             dataSource={filteredData}
-            sortBy={sortBy}
+            sortOptions={sortOptions}
             headerColor={colors.grayAccent}
             backgroundColor={colors.darkBG}
             bodyText={'md'}

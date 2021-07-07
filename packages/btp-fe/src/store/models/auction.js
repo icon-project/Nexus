@@ -60,7 +60,7 @@ const auction = {
             {
               id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_6',
               name: 'a',
-              currentBidAmount: 103,
+              currentBidAmount: 99,
               availableBidAmount: 150,
               endTime: 1623825002306,
             },
