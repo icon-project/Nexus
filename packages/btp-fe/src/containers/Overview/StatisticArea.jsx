@@ -53,12 +53,12 @@ const Wrapper = styled.div`
     .network-list {
       margin: 23px 0;
       padding: 0 15px;
-
       h3 {
         height: 40px;
-        padding: 0 12px;
+        padding: 4px 12px;
         display: flex;
         align-items: center;
+        border-radius: 4px;
 
         &:hover {
           background-color: #312f39;
@@ -120,7 +120,7 @@ export const StatisticArea = ({ data, networks }) => {
 
         <div className="network-list">
           {networks.slice(0, 3).map(({ pathLogo, name }) => (
-            <SubTitle className="small bold" key={name}>
+            <SubTitle className="medium bold" key={name}>
               <Icon
                 iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
                 width="24px"
