@@ -4,13 +4,13 @@ const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
 const { IconConverter } = require('icon-sdk-js');
 const { logger, pgPool } = require('../../common');
-const { ICX_NUMBER } = require('./constants');
+const { hexToIcxUnit } = require('../../common/util');
 
 const AUCTION_START_PROTOTYPE = 'AuctionStart(int,str,int,Address,int,int)';
 const AUCTION_ENDED_PROTOTYPE = 'AuctionEnded(int,str,Address,int,int,int)';
 const BID_INFO_PROTOTYPE = 'BidInfo(int,str,Address,int,Address,int)';
 
-const nanoid = customAlphabet('1234567890abcdef', 10);
+const nanoId = customAlphabet('1234567890abcdef', 10);
 
 // Create auction ID based on its address to make an unique ID for persistent.
 // Reason: FAS reset auction ID to 1 with new deployment.
@@ -28,7 +28,6 @@ async function createAuction(auction) {
   await pgPool.query(query, values);
 }
 
-// TODO: add winnerBidAmount
 async function updateEndedAuction(auction) {
   const query = 'UPDATE auctions SET tx_hash_ended=$2, winner_address=$3, winner_bid_amount=$4, updated_time=NOW() WHERE id=$1';
   const values = [auction.id, auction.txHash, auction.winnerAddress, auction.winnerBidAmount];
@@ -54,9 +53,9 @@ function getAuctionStartEvent(eventLogs) {
         const auctionStart = {
           id: IconConverter.toNumber(event.indexed[1]),
           tokenName: event.indexed[2],
-          tokenAmount: Math.floor(IconConverter.toNumber(event.indexed[3]) / ICX_NUMBER),
+          tokenAmount: hexToIcxUnit(event.indexed[3]),
           bidderAddress: event.data[0],
-          bidAmount: Math.floor(IconConverter.toNumber(event.data[1]) / ICX_NUMBER),
+          bidAmount: hexToIcxUnit(event.data[1]),
           endTime: Math.floor(IconConverter.toNumber(event.data[2]) / 1000) // in microsecond
         };
 
@@ -81,8 +80,8 @@ function getAuctionEndedEvent(eventLogs) {
           id: IconConverter.toNumber(event.indexed[1]),
           tokenName: event.indexed[2],
           winnerAddress: event.indexed[3],
-          winnerBidAmount: Math.floor(IconConverter.toNumber(event.data[1]) / ICX_NUMBER), // bidAmount
-          tokenAmount: Math.floor(IconConverter.toNumber(event.data[0]) / ICX_NUMBER),
+          winnerBidAmount: hexToIcxUnit(event.data[1]), // bidAmount
+          tokenAmount: hexToIcxUnit(event.data[0]),
           endTime: Math.floor(IconConverter.toNumber(event.data[2]) / 1000) // in microsecond
         };
 
@@ -107,9 +106,9 @@ function getBidInfoEvent(eventLogs) {
           auctionId: IconConverter.toNumber(event.indexed[1]),
           tokenName: event.indexed[2],
           currentBidderAddress: event.indexed[3],
-          currentBidAmount: Math.floor(IconConverter.toNumber(event.data[0]) / ICX_NUMBER),
+          currentBidAmount: hexToIcxUnit(event.data[0]),
           newBidderAddress: event.data[1],
-          newBidAmount: Math.floor(IconConverter.toNumber(event.data[2]) / ICX_NUMBER)
+          newBidAmount: hexToIcxUnit(event.data[2])
         };
 
         debug('Get a BidInfo %O', bidInfo);
@@ -165,7 +164,7 @@ async function handleAuctionEvents(txResult) {
     if (bidInfo) {
       const bid = {
         ...bidInfo,
-        id: await nanoid(),
+        id: await nanoId(),
         auctionId: createAuctionId(bidInfo.auctionId),
         txHash: txResult.txHash
       };

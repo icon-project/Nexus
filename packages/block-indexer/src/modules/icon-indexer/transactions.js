@@ -1,4 +1,5 @@
 'use strict';
+
 const { decode } = require('rlp');
 const { v4: uuidv4 } = require('uuid');
 const {
@@ -15,9 +16,10 @@ const {
   getCurrentTimestamp,
   hexToDecimal,
 } = require('../../common/util');
-const ICX_STEP = 10 ** 18;
+
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,str)';
+
 /**
  * Confirm TransferEnd event
  * @param {*} event
@@ -74,6 +76,7 @@ async function handleTransEvent(txResult, transaction) {
       const tokenName = assetTransferDetails[0].toString('utf8');
       const value = parseInt(assetTransferDetails[1].toString('hex'), 16) / ICX_STEP;
       const btpFee = parseInt(assetTransferDetails[2].toString('hex'), 16) / ICX_STEP;
+
       let transObj = {
         fromAddress: indexedData[1],
         tokenName: tokenName,

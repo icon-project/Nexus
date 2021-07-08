@@ -2,10 +2,9 @@
 
 const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
-const { IconConverter } = require('icon-sdk-js');
 const { logger, pgPool } = require('../../common');
-const { ICX_NUMBER } = require('./constants');
 const { getRegisteredTokens } = require('./fas');
+const { hexToIcxUnit } = require('../../common/util');
 
 const TRANSFER_EVENT_PROTOTYPE = 'Transfer(Address,Address,int,bytes)';
 const nanoid = customAlphabet('1234567890abcdef', 10);
@@ -19,7 +18,7 @@ function getTransferEvent(eventLogs) {
     for (const event of eventLogs) {
       if (TRANSFER_EVENT_PROTOTYPE === event.indexed[0] && process.env.FEE_AGGREGATION_SCORE_ADDRESS === event.indexed[2]) {
         const data = {
-          tokenAmount: Math.floor(IconConverter.toNumber(event.indexed[3]) / ICX_NUMBER)
+          tokenAmount: hexToIcxUnit(event.indexed[3])
         };
 
         debug('Get a Transfer event %O', data);

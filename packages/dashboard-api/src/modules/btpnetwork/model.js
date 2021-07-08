@@ -4,13 +4,12 @@ const IconService = require('icon-sdk-js');
 const { countNetwork, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
-const { logger, CURRENCIES } = require('../../common');
-const { exchangeToFiat } = require('../../common/util');
-const { HttpProvider, IconBuilder, IconConverter } = IconService;
+const { logger, CURRENCIES, hexToFixedAmount, exchangeToFiat, numberToFixedAmount } = require('../../common');
+const { HttpProvider, IconBuilder } = IconService;
 const { getTokenVolumeAllTime } = require('../networks/repository');
+
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
-const ICX_NUMBER = 10 ** 18;
 
 // Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
@@ -24,7 +23,7 @@ async function getAmountFeeAggregationSCORE() {
     for (let data of tokens) {
       logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
-      result.push({ name: data.name, value: Math.floor(IconConverter.toNumber(hexBalance) / ICX_NUMBER)});
+      result.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
     }
 
     return result;
@@ -98,7 +97,12 @@ async function getBondedVolumeByRelays() {
 }
 
 async function getAllTimeFee() {
-  return await getAllTimeFeeOfAssets();
+  const assets = await getAllTimeFeeOfAssets();
+
+  return assets.map(a => ({
+    name: a.name,
+    value: numberToFixedAmount(a.value)
+  }));
 }
 
 async function getMintedNetworks() {
