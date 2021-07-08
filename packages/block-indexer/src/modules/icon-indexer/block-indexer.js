@@ -20,7 +20,7 @@ async function runTransactionHandlers(transaction, txResult, block) {
   await handleTransEvent(txResult, transaction);
   await handleAuctionEvents(txResult);
   await handleTransferFeeEvents(txResult);
-
+  await handleMintEvent(txResult, transaction);
   // More transaction handlers go here.
 }
 
