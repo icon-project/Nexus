@@ -9,3 +9,4 @@ INSERT INTO public.relays(
 INSERT INTO public.relays(
 	id, rank, name, bonded_icx, server_status, total_transferred_tx, total_failed_tx, created_time, updated_time)
 	VALUES ('2c37741ffc', 3, 'Relay 3', 10450, 3, 101230, 210, NOW(), NOW());
+
