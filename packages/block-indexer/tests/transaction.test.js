@@ -83,7 +83,7 @@ describe('test for handle transation events', () => {
     expect(
       pool.query,
     ).toHaveBeenCalledWith(
-      'INSERT INTO transactions ("id", "from_address", "token_name", "serial_number", "value", "to_address", "block_height", "block_hash", "tx_hash", "block_time", "network_id", "btp_fee", "network_fee", "status", "create_at", "update_at", "delete_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',
+      'INSERT INTO transactions (\n      id, from_address, token_name, serial_number,\n      value, to_address, block_height, block_hash,\n      tx_hash, block_time, network_id, btp_fee,\n      network_fee, status, create_at, update_at,\n       delete_at)\n    VALUES (\n      $1, $2, $3, $4,\n      $5, $6, $7, $8,\n      $9, $10, $11, $12,\n      $13, $14, $15, $16,\n      $17)',
       [
         expect.anything(),
         'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',

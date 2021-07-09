@@ -10,35 +10,10 @@ const COIN_MARKET_CAP_URL =
 const COIN_MARKET_CAP_KEY =
   process.env.PRO_COIN_MARKETCAP_API_KEY || process.env.SANDBOX_COIN_MARKETCAP_API_KEY;
 
-function propsAsString(object) {
-  return Object.keys(object)
-    .map(function (key) {
-      return `"${object[key]}"`;
-    })
-    .join(', ');
-}
-
-function propsCountValueString(object) {
-  return Object.keys(object)
-    .map(function (key, index) {
-      return `$${index + 1}`;
-    })
-    .join(', ');
-}
-
-function sortValuesWithPropsOrdered(objectGetValue, orderPropsObject) {
-  return Object.keys(orderPropsObject).map(function (key) {
-    return objectGetValue[key];
-  });
-}
-
 function getCurrentTimestamp() {
   return Math.floor(new Date().getTime() / 1000);
 }
 
-function hexToDecimal(hex) {
-  return parseInt(hex.toString(16), 16);
-}
 /**
  * Get coin info
  * @reference https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyInfo
@@ -137,14 +112,10 @@ function numberToFixedAmount(value) {
 }
 
 module.exports = {
-  propsAsString,
-  propsCountValueString,
-  sortValuesWithPropsOrdered,
   getCurrentTimestamp,
-  hexToDecimal,
   getCoinInfo,
   exchangeToFiat,
   hexToFixedAmount,
   hexToIcxUnit,
-  numberToFixedAmount
+  numberToFixedAmount,
 };

@@ -2,20 +2,16 @@
 
 const { decode } = require('rlp');
 const { v4: uuidv4 } = require('uuid');
+const { IconConverter } = require('icon-sdk-js');
 const {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
   logger,
   TRANSACTION_STATUS,
+  ICX_LOOP_UNIT,
   pgPool,
 } = require('../../common');
-const {
-  sortValuesWithPropsOrdered,
-  propsAsString,
-  propsCountValueString,
-  getCurrentTimestamp,
-  hexToDecimal,
-} = require('../../common/util');
+const { getCurrentTimestamp } = require('../../common/util');
 
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,str)';
@@ -32,9 +28,9 @@ async function confirmTransfEnd(event, txInfo) {
    */
   let data = event.data;
   try {
-    let transaction = await getBySerialNumber(hexToDecimal(data[0]));
+    let transaction = await getBySerialNumber(IconConverter.toNumber(data[0]));
     let statusCode = transaction.status;
-    switch (hexToDecimal(data[1])) {
+    switch (IconConverter.toNumber(data[1])) {
       case 0:
         statusCode = TRANSACTION_STATUS.success;
         break;
@@ -74,13 +70,13 @@ async function handleTransEvent(txResult, transaction) {
       let data = event.data;
       const assetTransferDetails = decode(data[2])[0];
       const tokenName = assetTransferDetails[0].toString('utf8');
-      const value = parseInt(assetTransferDetails[1].toString('hex'), 16) / ICX_STEP;
-      const btpFee = parseInt(assetTransferDetails[2].toString('hex'), 16) / ICX_STEP;
+      const value = parseInt(assetTransferDetails[1].toString('hex'), 16) / ICX_LOOP_UNIT;
+      const btpFee = parseInt(assetTransferDetails[2].toString('hex'), 16) / ICX_LOOP_UNIT;
 
       let transObj = {
         fromAddress: indexedData[1],
         tokenName: tokenName,
-        serialNumber: hexToDecimal(data[1]),
+        serialNumber: IconConverter.toNumber(data[1]),
         value: value,
         toAddress: data[0],
         txHash: txResult.txHash,
@@ -91,7 +87,7 @@ async function handleTransEvent(txResult, transaction) {
         networkId: transaction.nid.c[0], // get network id
         btpFee: btpFee,
         // https://www.icondev.io/docs/step-estimation#transaction-fee
-        networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_STEP,
+        networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT,
       };
       await saveTransaction(transObj);
     } else if (event.indexed.find((item) => item.includes(TRANFER_END_PROTOTYPE))) {
@@ -124,12 +120,40 @@ function preSave(transfer) {
 async function saveTransaction(transaction) {
   try {
     preSave(transaction);
-    const insertDealer = `INSERT INTO ${TRANSACTION_TBL_NAME} (${propsAsString(
-      TRANSACTION_TBL,
-    )}) VALUES (${propsCountValueString(TRANSACTION_TBL)})`;
-    const insertDealerValues = sortValuesWithPropsOrdered(transaction, TRANSACTION_TBL);
-    await pgPool.query(insertDealer, insertDealerValues);
-    logger.info('SQL statement insert Transaction %0:', insertDealer, insertDealerValues);
+    const insertStatement = `INSERT INTO transactions (
+      ${TRANSACTION_TBL.id}, ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
+      ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress}, ${TRANSACTION_TBL.blockHeight}, ${TRANSACTION_TBL.blockHash},
+      ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
+      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.createAt}, ${TRANSACTION_TBL.updateAt},
+       ${TRANSACTION_TBL.deleteAt})
+    VALUES (
+      $1, $2, $3, $4,
+      $5, $6, $7, $8,
+      $9, $10, $11, $12,
+      $13, $14, $15, $16,
+      $17)`;
+    const insertValues = [
+      transaction.id,
+      transaction.fromAddress,
+      transaction.tokenName,
+      transaction.serialNumber,
+      transaction.value,
+      transaction.toAddress,
+      transaction.blockHeight,
+      transaction.blockHash,
+      transaction.txHash,
+      transaction.blockTime,
+      transaction.networkId,
+      transaction.btpFee,
+      transaction.networkFee,
+      transaction.status,
+      transaction.createAt,
+      transaction.updateAt,
+      transaction.deleteAt,
+    ];
+
+    await pgPool.query(insertStatement, insertValues);
+    logger.info('SQL statement insert Transaction %0:', insertStatement, insertValues);
   } catch (error) {
     logger.error('saveTransferStart Failed save transaction', { error });
   }
@@ -174,9 +198,10 @@ async function setTransactionConfirmed(transactions, txInfo, status) {
 async function getBySerialNumber(serialNumber) {
   let {
     rows,
-  } = await pgPool.query(`SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE serial_number = $1`, [
-    serialNumber,
-  ]);
+  } = await pgPool.query(
+    `SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.serialNumber} = $1`,
+    [serialNumber],
+  );
   return rows[0];
 }
 
