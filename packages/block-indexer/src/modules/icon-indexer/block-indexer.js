@@ -9,6 +9,7 @@ const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
 const { handleTransEvent } = require('./transactions');
 const { handleTransferFeeEvents } = require('./transfer-fee');
+const { handleMintEvents } = require('./mint-burn');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -20,7 +21,7 @@ async function runTransactionHandlers(transaction, txResult, block) {
   await handleTransEvent(txResult, transaction);
   await handleAuctionEvents(txResult);
   await handleTransferFeeEvents(txResult);
-  await handleMintEvent(txResult, transaction);
+  await handleMintEvents(txResult, transaction);
   // More transaction handlers go here.
 }
 
