@@ -46,6 +46,17 @@ const governance = {
     selectTotalRegistered() {
       return slice((state) => state.totalRegistered);
     },
+    selectTotalRewardFund() {
+      const getTotalRewardFund = (relays) => {
+        if (relays.length === 0) return 0;
+        const totalRewardFund = relays.reduce(
+          (total, relay) => total + (relay['monthlyReward'] || 0),
+          0,
+        );
+        return totalRewardFund.toFixed(2);
+      };
+      return slice((state) => getTotalRewardFund(state.relayCandidates));
+    },
   }),
 };
 
