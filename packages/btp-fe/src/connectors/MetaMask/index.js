@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
 import store from '../../store';
 import { wallets } from '../../utils/constants';
-import { METAMASK_LOCAL_ADDRESS } from '../constants';
+import { METAMASK_LOCAL_ADDRESS, allowedNetworkIDs } from '../constants';
+
+const { modal, account } = store.dispatch;
 
 const metamaskURL =
   'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
@@ -43,10 +45,30 @@ class Ethereum {
     return this.ethereum && this.ethereum.isConnected();
   }
 
+  isAllowedNetwork() {
+    if (!Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)) {
+      modal.openModal({
+        desc:
+          'The connected wallet is conflicted with your Source or Destination blockchain. Please change your blockchain option or reconnect a new wallet.',
+        button: {
+          text: 'Okay',
+          onClick: () => modal.setDisplay(false),
+        },
+      });
+
+      return false;
+    }
+    return true;
+  }
+
   async connectMetaMaskWallet() {
     try {
-      await this.getEthereum.request({ method: 'eth_requestAccounts' });
-      return true;
+      const isAllowedNetwork = this.isAllowedNetwork();
+
+      if (isAllowedNetwork) {
+        await this.getEthereum.request({ method: 'eth_requestAccounts' });
+        return true;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -61,38 +83,25 @@ class Ethereum {
     }
   }
 
-  getCurrentNetwork() {
-    switch (this.getEthereum.chainId) {
-      case '0x1':
-        return 'Mainnet';
-      case '0x3':
-        return 'Ropsten';
-      case '0x4':
-        return 'Rinkeby';
-      case '0x5':
-        return 'Goerli';
-      case '0x2a':
-        return 'Kovan';
-      default:
-        return '';
-    }
-  }
-
   async getEthereumAccounts() {
     try {
-      const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
-      const address = accounts[0];
-      localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
-      const balance = await this.getProvider.getBalance(address);
-      const currentNetwork = this.getCurrentNetwork();
+      const isAllowedNetwork = this.isAllowedNetwork();
 
-      store.dispatch.account.setAccountInfo({
-        address,
-        balance: ethers.utils.formatEther(balance),
-        wallet: wallets.metamask,
-        unit: 'ETH',
-        currentNetwork,
-      });
+      if (isAllowedNetwork) {
+        const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
+        const address = accounts[0];
+        localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
+        const balance = await this.getProvider.getBalance(address);
+        const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
+
+        account.setAccountInfo({
+          address,
+          balance: ethers.utils.formatEther(balance),
+          wallet: wallets.metamask,
+          unit: 'ETH',
+          currentNetwork,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
