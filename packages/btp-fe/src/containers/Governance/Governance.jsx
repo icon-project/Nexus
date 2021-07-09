@@ -105,9 +105,12 @@ const GovernanceStyled = styled.div`
 `;
 
 function GovernancePage() {
-  const { relayCandidates } = useSelect(({ governance: { selectRelayCandidates } }) => ({
-    relayCandidates: selectRelayCandidates,
-  }));
+  const { relayCandidates, totalRewardFund } = useSelect(
+    ({ governance: { selectRelayCandidates, selectTotalRewardFund } }) => ({
+      relayCandidates: selectRelayCandidates,
+      totalRewardFund: selectTotalRewardFund,
+    }),
+  );
 
   const { getRelayCandidates } = useDispatch(({ governance: { getRelayCandidates } }) => ({
     getRelayCandidates,
@@ -131,7 +134,7 @@ function GovernancePage() {
             <div className="vl"></div>
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REWARD FUND</Text>
-              <Text className="large bold total-value">1,742</Text>
+              <Text className="large bold total-value">{totalRewardFund}</Text>
               <UpDownPercent up sm percent="9.55%" />
             </div>
           </div>
