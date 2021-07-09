@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
-import { hashShortener } from 'utils/app';
 
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
@@ -136,24 +132,12 @@ const columns = [
   },
 ];
 
-const formatData = (data = []) => {
-  return data.map((d) => {
-    const { id, endTime, ...ots } = d;
-
-    return {
-      ...ots,
-      id,
-      shortedId: hashShortener(id),
-      endTime: dayjs(endTime).fromNow(true) + ' left',
-    };
-  });
-};
-
 const FeeAuction = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const { push } = useHistory();
   const [keySearch, setKeySearch] = useState('');
+  const [sortOptions, setSortOptions] = useState({ property: 'name', sortBy: 'abc' });
 
   const { auctions, availableAssets, fees } = useSelect(
     ({ auction: { selectAuctions, selectAvailableAssets, selectFees } }) => ({
@@ -192,13 +176,29 @@ const FeeAuction = () => {
 
   const isPlural = filteredData.length > 1;
 
+  const onSortByChange = (values) => {
+    const {
+      target: { value },
+    } = values;
+
+    if (value) setSortOptions(value);
+  };
+
   return (
     <Wrapper>
       <div className="search-group">
         <Header className="medium bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
-      {!keySearch || loading ? (
+      {!loading && keySearch && !filteredData.length > 0 ? (
+        <EmptySearch>
+          <img src={notFoundSearchIcon} alt="not found search" />
+          <Header className="x-small regular">
+            Sorry, no matching results found with this auction name
+          </Header>
+          <Text className="medium">Try again using more general search items</Text>
+        </EmptySearch>
+      ) : (
         <>
           {keySearch ? (
             <Text className="medium">
@@ -232,12 +232,13 @@ const FeeAuction = () => {
           )}
           <div className="filter-by">
             <SubTitle className="medium bold">Auction list</SubTitle>
-            <SortSelect />
+            <SortSelect onChange={onSortByChange} />
           </div>
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={formatData(filteredData)}
+            dataSource={filteredData}
+            sortOptions={sortOptions}
             headerColor={colors.grayAccent}
             backgroundColor={colors.darkBG}
             bodyText={'md'}
@@ -248,14 +249,6 @@ const FeeAuction = () => {
             })}
           />
         </>
-      ) : (
-        <EmptySearch>
-          <img src={notFoundSearchIcon} alt="not found search" />
-          <Header className="x-small regular">
-            Sorry, no matching results found with this auction name
-          </Header>
-          <Text className="medium">Try again using more general search items</Text>
-        </EmptySearch>
       )}
       {open && (
         <CreateBidModal

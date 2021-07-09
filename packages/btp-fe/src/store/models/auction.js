@@ -27,12 +27,6 @@ const auction = {
         [property]: payload,
       };
     },
-    setBids(state, bids = {}) {
-      return {
-        ...state,
-        bids,
-      };
-    },
   },
   effects: (dispatch) => ({
     async getAuctions() {
@@ -83,7 +77,17 @@ const auction = {
   }),
   selectors: (slice) => ({
     selectAuctions() {
-      return slice((state) => state.auctions);
+      return slice((state) =>
+        state.auctions.map((d) => {
+          const { id, endTime, ...ots } = d;
+          return {
+            ...ots,
+            id,
+            shortedId: hashShortener(id),
+            endTime: dayjs(endTime).fromNow(true) + ' left',
+          };
+        }),
+      );
     },
     selectCurrentAuction() {
       return slice(({ currentAuction }) => {
