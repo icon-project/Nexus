@@ -45,7 +45,7 @@ const txResult = {
     logsBloom: '0x0000000000000000800000200000...'
 };
 
-test('should return Transfer event from tx result', async () => {
+test('should return mint event from tx result', async () => {
     const event = getMintEvent(txResult, transaction);
 
     expect(event).toMatchObject({
