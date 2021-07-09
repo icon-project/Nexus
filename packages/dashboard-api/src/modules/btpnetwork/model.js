@@ -4,7 +4,7 @@ const IconService = require('icon-sdk-js');
 const { countNetwork, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
-const { logger, CURRENCIES, hexToFixedAmount, exchangeToFiat, numberToFixedAmount } = require('../../common');
+const { logger, CURRENCIES, hexToFixedAmount, hexToIcxUnit, exchangeToFiat, numberToFixedAmount } = require('../../common');
 const { HttpProvider, IconBuilder } = IconService;
 const { getTokenVolumeAllTime } = require('../networks/repository');
 
@@ -14,7 +14,8 @@ const iconService = new IconService(provider);
 // Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
   const callBuilder = new IconBuilder.CallBuilder();
-  let result = [];
+  let assets = [];
+  let totalUSD = 0;
 
   try {
     const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
@@ -23,10 +24,21 @@ async function getAmountFeeAggregationSCORE() {
     for (let data of tokens) {
       logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
-      result.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
+
+      if ('0x0' !== hexBalance) {
+        const amount = hexToIcxUnit(hexBalance);
+        const price = await exchangeToFiat(data.name, ['USD'], amount);
+        totalUSD += price ? price['USD'] : 0;
+      }
+
+      assets.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
     }
 
-    return result;
+    totalUSD = numberToFixedAmount(totalUSD);
+    return {
+      assets,
+      totalUSD
+    };
   } catch (error) {
     logger.error('getAmountFeeAggregationSCORE failed', { error });
     throw error;
@@ -97,12 +109,26 @@ async function getBondedVolumeByRelays() {
 }
 
 async function getAllTimeFee() {
+  let totalUSD = 0;
   const assets = await getAllTimeFeeOfAssets();
 
-  return assets.map(a => ({
+  for (let data of assets) {
+    if (0 !== data.value) {
+      let price = await exchangeToFiat(data.name, ['USD'], data.value);
+      totalUSD += price ? price['USD'] : 0;
+    }
+  }
+  totalUSD = numberToFixedAmount(totalUSD);
+
+  let feeAssets =  assets.map(a => ({
     name: a.name,
     value: numberToFixedAmount(a.value)
   }));
+
+  return {
+    feeAssets,
+    totalUSD
+  };
 }
 
 async function getMintedNetworks() {
