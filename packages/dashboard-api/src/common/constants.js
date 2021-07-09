@@ -41,6 +41,8 @@ const TRANSACTION_TBL = {
   deleteAt: 'delete_at',
 };
 
+const ICX_LOOP_UNIT = 10 ** 18;
+
 module.exports = {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
@@ -49,4 +51,5 @@ module.exports = {
   CURRENCY_IDs,
   CURRENCIES,
   COINs,
+  ICX_LOOP_UNIT
 };

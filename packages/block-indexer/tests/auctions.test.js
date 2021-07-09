@@ -47,8 +47,8 @@ const txResult = {
         'hx774ca45c762872ac6dd4780784e279ceb389dec9'
       ],
       data: [
-        '0x56bc75e2d63100000',
-        '0x63bf212b431ec0000',
+        '0x8e087d455911b400',
+        '0x6c6bb29f196746000',
         '0x5c3e8c457f50d'
       ]
     },
@@ -58,11 +58,11 @@ const txResult = {
         'AuctionStart(int,str,int,Address,int,int)',
         '0x1',
         'SampleToken020',
-        '0x56bc75e2d63100000'
+        '0x8e087d455911b400'
       ],
       data: [
         'hx774ca45c762872ac6dd4780784e279ceb389dec9',
-        '0x56bc75e2d63100000',
+        '0x5f68fb07608ec7d80',
         '0x5c4b6f8674b0e'
       ]
     },
@@ -75,9 +75,9 @@ const txResult = {
         'hx774ca45c762872ac6dd4780784e279ceb389dec9'
       ],
       data: [
-        '0x56bc75e2d63100000',
+        '0x5f68fb07608ec7d80',
         'hx774ca45c762872ac6dd4780784e279ceb389dec9',
-        '0x56bc75e2d63100000'
+        '0x6c6bb29f196746000'
       ]
     }
   ],
@@ -91,9 +91,9 @@ test('should return AuctionStart event from tx result', async () => {
   expect(auctionStart).toMatchObject({
     id: 1,
     tokenName: 'SampleToken020',
-    tokenAmount: 100,
+    tokenAmount: 10.23456789,
     bidderAddress: 'hx774ca45c762872ac6dd4780784e279ceb389dec9',
-    bidAmount: 100,
+    bidAmount: 110.00033344455,
     endTime: 1623665014164
   });
 });
@@ -106,8 +106,8 @@ test('should return AuctionEnded event from tx result', async () => {
     id: 1,
     tokenName: 'SampleToken020',
     winnerAddress: 'hx774ca45c762872ac6dd4780784e279ceb389dec9',
-    winnerBidAmount: 115,
-    tokenAmount: 100,
+    winnerBidAmount: 125.00055,
+    tokenAmount: 10.23456789,
     endTime: 1622779377480
   });
 });
@@ -120,8 +120,8 @@ test('should return BidInfo event from tx result', async () => {
     auctionId: 1,
     tokenName: 'SampleToken020',
     currentBidderAddress: 'hx774ca45c762872ac6dd4780784e279ceb389dec9',
-    currentBidAmount: 100,
+    currentBidAmount: 110.00033344455,
     newBidderAddress: 'hx774ca45c762872ac6dd4780784e279ceb389dec9',
-    newBidAmount: 100
+    newBidAmount: 125.00055
   });
 });

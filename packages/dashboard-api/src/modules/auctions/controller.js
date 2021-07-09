@@ -6,6 +6,8 @@ const model = require('./model');
 
 // Show the list of auctions currently in progress.
 // GET /auctions
+// curl http://localhost:8000/v1/auctions | jq
+// curl http://localhost:8000/v1/auctions?availableAssets=1 | jq
 async function getCurrentAuctions(request, response) {
   if (request.query.availableAssets) {
     const assets = await model.getAvailableAssetsToAuction();
@@ -27,6 +29,7 @@ async function getCurrentAuctions(request, response) {
 }
 
 // GET /auctions/:id
+// curl http://localhost:8000/v1/auctions/cx51291cbe0fff966b881d251b9414e54f5a02dac7_3 | jq
 async function getAuctionDetail(request, response) {
   const auctionId = request.params.id;
 
@@ -46,7 +49,7 @@ async function getAuctionDetail(request, response) {
 }
 
 // GET /auctions/:id/bids
-// curl http://localhost:8000/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids
+// curl http://localhost:8000/v1/auctions/cx51291cbe0fff966b881d251b9414e54f5a02dac7_1/bids
 // curl http://localhost:8000/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids?limit=5
 // curl http://localhost:8000/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids?limit=5&offset=0
 async function getBidHistory(request, response) {
@@ -88,7 +91,7 @@ async function getBidHistory(request, response) {
 }
 
 // POST /auctions
-// curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"Test2206", "tokenAmount": 10}'
+// curl -X POST http://localhost:8000/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"Sample2", "tokenAmount": 10.0906224229}'
 async function createNewAuction(request, response) {
   const schema = Joi.object({
     tokenName: Joi.string().required(),

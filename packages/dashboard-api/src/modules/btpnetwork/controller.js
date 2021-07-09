@@ -3,6 +3,7 @@
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
 
+// curl http://localhost:8000/v1/btpnetwork | jq
 async function getNetworkInfo(request, response) {
   const assets = await model.getAmountFeeAggregationSCORE();
   const totalNetworks = await model.getTotalNetworks();
@@ -41,7 +42,7 @@ async function getPriceConversion(request, response) {
   const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
 
   response.status(HttpStatus.OK).json({
-    content:  priceTokens,
+    content: priceTokens,
   });
 }
 

@@ -11,12 +11,12 @@ const txResult = {
     blockHash: '0x7ebbce88efc43e7a797f48fc45b8ae672e8eae4fc583a205db458014c98df6d6',
     eventLogs: [
       {
-        scoreAddress: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
+        scoreAddress: 'cx51291cbe0fff966b881d251b9414e54f5a02dac7',
         indexed: [
           'Transfer(Address,Address,int,bytes)',
           'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
-          'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e', // FAS address
-          '0x56bc75e2d63100000' // amount
+          'cx51291cbe0fff966b881d251b9414e54f5a02dac7', // FAS address
+          '0x8e087d455911b400' // amount
         ],
         data: [ '0x' ]
       }
@@ -28,6 +28,6 @@ test('should return Transfer event from tx result', async () => {
   const event = getTransferEvent(txResult.eventLogs);
 
   expect(event).toMatchObject({
-    tokenAmount: 100
+    tokenAmount: 10.23456789
   });
 });
