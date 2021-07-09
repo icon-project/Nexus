@@ -32,40 +32,7 @@ const auction = {
     async getAuctions() {
       try {
         const auctions = await getAuctions();
-        // this.setAuctionState(['auctions', auctions.content || []]);
-        this.setAuctionState([
-          'auctions',
-          [
-            {
-              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3',
-              name: 'd',
-              currentBidAmount: 100,
-              availableBidAmount: 150,
-              endTime: 1623825002306,
-            },
-            {
-              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_4',
-              name: 'c',
-              currentBidAmount: 101,
-              availableBidAmount: 150,
-              endTime: 1623825002306,
-            },
-            {
-              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_5',
-              name: 'b',
-              currentBidAmount: 102,
-              availableBidAmount: 150,
-              endTime: 1623825002306,
-            },
-            {
-              id: 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_6',
-              name: 'a',
-              currentBidAmount: 99,
-              availableBidAmount: 150,
-              endTime: 1623825002306,
-            },
-          ],
-        ]);
+        this.setAuctionState(['auctions', auctions.content || []]);
         return auctions;
       } catch (error) {
         dispatch.modal.handleError();
