@@ -16,6 +16,7 @@ async function getAmountFeeAggregationSCORE() {
   const callBuilder = new IconBuilder.CallBuilder();
   let assets = [];
   let totalUSD = 0;
+  let promises = [];
 
   try {
     const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
@@ -24,17 +25,18 @@ async function getAmountFeeAggregationSCORE() {
     for (let data of tokens) {
       logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
-
       if ('0x0' !== hexBalance) {
         const amount = hexToIcxUnit(hexBalance);
-        const price = await exchangeToFiat(data.name, ['USD'], amount);
-        totalUSD += price ? price['USD'] : 0;
+        promises.push(exchangeToFiat(data.name, ['USD'], amount));
       }
 
       assets.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
     }
 
+    let totalAssets = await Promise.all(promises);
+    totalAssets.forEach( (item) => {totalUSD += item['USD']});
     totalUSD = numberToFixedAmount(totalUSD);
+
     return {
       assets,
       totalUSD
@@ -110,19 +112,22 @@ async function getBondedVolumeByRelays() {
 
 async function getAllTimeFee() {
   let totalUSD = 0;
+  let promises = [];
   const assets = await getAllTimeFeeOfAssets();
 
-  for (let data of assets) {
-    if (0 !== data.value) {
-      let price = await exchangeToFiat(data.name, ['USD'], data.value);
-      totalUSD += price ? price['USD'] : 0;
+  for (let item of assets) {
+    if ( 0 !== item.value) {
+      promises.push(exchangeToFiat(item.name, ['USD'], item.value));
     }
   }
+  
+  let totalAssets = await Promise.all(promises);
+  totalAssets.forEach( (item) => {totalUSD += item['USD']});
   totalUSD = numberToFixedAmount(totalUSD);
 
-  let feeAssets =  assets.map(a => ({
-    name: a.name,
-    value: numberToFixedAmount(a.value)
+  let feeAssets =  assets.map(item => ({
+    name: item.name,
+    value: numberToFixedAmount(item.value)
   }));
 
   return {

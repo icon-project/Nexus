@@ -5,7 +5,7 @@ const model = require('./model');
 
 // curl http://localhost:8000/v1/btpnetwork | jq
 async function getNetworkInfo(request, response) {
-  const tokensFAS = await model.getAmountFeeAggregationSCORE();
+  const currentFeeAssets = await model.getAmountFeeAggregationSCORE();
   const totalNetworks = await model.getTotalNetworks();
   const totalTransactionAmount = await model.getTotalTransactionAmount();
   const totalTransactions = await model.getTotalTransaction();
@@ -18,8 +18,8 @@ async function getNetworkInfo(request, response) {
       bondedValue: bondedRelays,
       fee: {
         cumulativeAmount: allTimeFeeAssets.totalUSD,
-        currentAmount: tokensFAS.totalUSD,
-        assert: tokensFAS.assets,
+        currentAmount: currentFeeAssets.totalUSD,
+        assert: currentFeeAssets.assets,
         allTimeAmount: allTimeFeeAssets.feeAssets
       },
       totalNetworks,
