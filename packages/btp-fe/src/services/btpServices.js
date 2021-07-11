@@ -39,6 +39,11 @@ export const getNetwork = (id) => {
 export const getTransferHistory = (page) => {
   return fetchAPI(`/transactions?page=${page}`);
 };
+
+export const getTransferHistoryById = (id) => {
+  return fetchAPI(`/transactions/${id}`);
+};
+
 export const tokenToUsd = async (token, amount) => {
   return fetchAPI(`/btpnetwork/converter?token=${token}&amount=${amount}&convert_to=usd`);
 };
