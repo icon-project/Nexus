@@ -2,7 +2,7 @@
 
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
-const { logger } = require('./index');
+const logger = require('./logger');
 const { ICX_LOOP_UNIT } = require('./constants');
 
 const COIN_MARKET_CAP_URL =
