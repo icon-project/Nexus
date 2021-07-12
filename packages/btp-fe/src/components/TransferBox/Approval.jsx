@@ -1,9 +1,13 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { useDispatch } from '../../hooks/useRematch';
-import { transfer } from '../../connectors/ICONex/iconService';
-import { hashShortener } from '../../utils/app';
+import { useDispatch } from 'hooks/useRematch';
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
+
+import { transfer } from 'connectors/ICONex/iconService';
+import { hashShortener } from 'utils/app';
+import { wallets } from 'utils/constants';
 
 import { Header, Text, SubTitle } from '../Typography';
 import { Icon } from '../Icon/Icon';
@@ -110,19 +114,29 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, values }) => {
+export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
   const { recipient, tokenAmount } = values;
+  const { token, network } = sendingInfo;
+  const { currentNetwork, wallet } = account;
+  const usdBalance = useTokenToUsd(token, tokenAmount);
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
     openModal,
   }));
 
   const onApprove = () => {
-    openModal({
-      icon: 'loader',
-      desc: 'Waiting for confirmation in your wallet.',
-    });
-    transfer({ to: recipient, value: tokenAmount });
+    if (wallets.iconex === wallet) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      transfer({ to: recipient, value: tokenAmount });
+    } else {
+      openModal({
+        icon: 'exclamationPointIcon',
+        desc: `This action has not been implemented yet`,
+      });
+    }
   };
 
   return (
@@ -132,7 +146,7 @@ export const Approval = memo(({ setStep, values }) => {
         <Text className="small sub-heading">You will send</Text>
         <div className="content">
           <Header className="medium bold send-token">{tokenAmount || 0} ICX</Header>
-          <Text className="medium">= $108,670.92</Text>
+          <Text className="medium">= ${usdBalance.toLocaleString()}</Text>
         </div>
       </SendToken>
 
@@ -141,17 +155,21 @@ export const Approval = memo(({ setStep, values }) => {
         <div className="send">
           <Text className="medium">Send</Text>
           <div className="sender">
-            <Icon icon="eth" size="s" />
-            <Text className="medium sender--alias">ETH</Text>
-            <Text className="small sender--name">Etherum Mainnet</Text>
+            <Icon icon={token} size="s" />
+            <Text className="medium sender--alias">{token}</Text>
+            <Text className="small sender--name">{currentNetwork}</Text>
           </div>
         </div>
         <div className="to">
           <Text className="medium">To</Text>
           <div className="receiver">
-            <Icon icon="copy" size="s" />
-            <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
-            <Text className="small receiver--name">Binance Smart Chain</Text>
+            <CopyToClipboard text={recipient}>
+              <div>
+                <Icon icon="copy" size="s" />
+                <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
+              </div>
+            </CopyToClipboard>
+            <Text className="small receiver--name">{network}</Text>
           </div>
         </div>
         <div className="estimated-fee">
@@ -166,7 +184,7 @@ export const Approval = memo(({ setStep, values }) => {
 
       <Total>
         <SubTitle className="large bold">Total receive</SubTitle>
-        <SubTitle className="large bold">1.88 ETH</SubTitle>
+        <SubTitle className="large bold">1.88 {token}</SubTitle>
       </Total>
 
       <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />

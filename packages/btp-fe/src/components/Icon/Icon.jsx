@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import styled from 'styled-components/macro';
 
+import { wallets } from 'utils/constants';
+
 import metaMaskIcon from '../../assets/images/metal-mask.svg';
 import iconexIcon from '../../assets/images/icon-ex.svg';
 import ethIcon from '../../assets/images/eth-icon.svg';
@@ -26,10 +28,12 @@ const StyledIcon = styled.img`
   -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
 `;
 
-export const Icon = memo(({ icon = 'metaMask', width = '25.67px', size, iconURL }) => {
+export const Icon = memo(({ icon = 'metamask', width = '25.67px', size, iconURL }) => {
   const icons = {
-    metaMask: metaMaskIcon,
+    metamask: metaMaskIcon,
     iconex: iconexIcon,
+    ICX: iconexIcon,
+    [wallets.iconex]: iconexIcon,
     eth: ethIcon,
     copy: copyIcon,
     binance: binanceIcon,
