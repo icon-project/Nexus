@@ -45,10 +45,64 @@ const txResult = {
     logsBloom: '0x0000000000000000800000200000...'
 };
 
+const txResultBatch = {
+    status: 1,
+    to: 'cxf77ac976e382563402b10eb94f7fa3ad35cb983d', // token address
+    txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
+    txIndex: 0,
+    blockHeight: 98274,
+    blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
+    eventLogs: [
+        {
+            scoreAddress: 'cxf77ac976e382563402b10eb94f7fa3ad35cb983d',
+            indexed: [
+            'TransferBatch(Address,Address,Address,bytes,bytes)',//
+            'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',  // owner address
+            '0', //  When minting/creating tokens, the `_from` must be set to zero address.
+            'cx22da8f73382c8ad3c8dfee26f2f50b147ee6cd31' // _to address
+            ],
+            data: [ '0xabcd494635c9adc5dea0000000', '0xefa83494335c9adc5cab0000000' ] // ids and values
+        }
+    ],
+    logsBloom: '0x0000000000000000800000200000...'
+};
+
+// Test case for mint event
 test('should return mint event from tx result', async () => {
     const event = getMintEvent(txResult, transaction);
 
-    expect(event).toMatchObject({
-        tokenValue: 10
+    expect(event[0]).toMatchObject({
+        tokenValue: 10,
+        tokenName: 'tokenName',
+        txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
+        blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
+        blockHeight: 98274,
+        blockTime: 1625807568924,
+        networkId: 3,
+    });
+});
+
+// Test case for mintBatch event
+test('should return mintBatch event from tx result', async () => {
+    const event = getMintEvent(txResultBatch, transaction);
+
+    expect(event[0]).toMatchObject({
+        tokenValue: 100,
+        tokenName: 'tokenPol',
+        txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
+        blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
+        blockHeight: 98274,
+        blockTime: 1625807568924,
+        networkId: 3,
+    });
+
+    expect(event[1]).toMatchObject({
+        tokenValue: 200,
+        tokenName: 'tokenMoon',
+        txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
+        blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
+        blockHeight: 98274,
+        blockTime: 1625807568924,
+        networkId: 3,
     });
 });
