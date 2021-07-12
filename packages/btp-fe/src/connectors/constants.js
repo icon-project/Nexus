@@ -27,7 +27,7 @@ export const NETWORKS = {
     nid: localStorage.getItem('nid') || '0xc7c937',
   },
   cloud: {
-    name: 'Cloud',
+    name: 'Custom ICON node',
     endpoint: 'http://54.251.114.18:9082/api/v3',
     nid: 3,
   },

@@ -7,8 +7,8 @@ import { Icon } from '../Icon/Icon';
 import { Header, Text } from '../Typography';
 import { ControlButtons } from './ControlButtons';
 
-import { useSelect } from '../../hooks/useRematch';
-import { composeValidators, maxValue } from '../../utils/inputValidation';
+import { composeValidators, maxValue } from 'utils/inputValidation';
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -47,6 +47,7 @@ const WalletBalance = styled.div`
 
     .wallet-name {
       margin-left: 13.17px;
+      text-transform: capitalize;
     }
   }
 
@@ -110,12 +111,18 @@ const Addresses = styled.div`
 const required = (value) => (value ? undefined : 'Required');
 
 export const Details = memo(
-  ({ setStep, setTokenValue, initalInputDisplay, isValidForm, isCurrent }) => {
-    const {
-      account: { balance },
-    } = useSelect(({ account }) => ({
-      account: account.selectAccountInfo,
-    }));
+  ({
+    setStep,
+    setTokenValue,
+    initalInputDisplay,
+    isValidForm,
+    isCurrent,
+    sendingInfo,
+    account,
+  }) => {
+    const { token, network } = sendingInfo;
+    const { balance, currentNetwork, wallet, unit } = account;
+    const usdTotalBalance = useTokenToUsd(unit, balance);
 
     const max = maxValue(balance, 'Insufficient balance');
 
@@ -127,7 +134,7 @@ export const Details = memo(
           validate={composeValidators(required, max)}
           render={({ input, meta }) => (
             <TokenInput
-              placeholder="0 ICX"
+              placeholder={`0 ${token}`}
               setTokenValue={setTokenValue}
               initalInputDisplay={initalInputDisplay}
               isCurrent={isCurrent}
@@ -144,19 +151,21 @@ export const Details = memo(
             name="recipient"
             validate={required}
             render={({ input, meta }) => (
-              <TextInput placeholder="Enter a ETH address" {...input} meta={meta} />
+              <TextInput placeholder={`Enter a ${network} address`} {...input} meta={meta} />
             )}
           />
 
           <Text className="small label">Wallet balance</Text>
           <WalletBalance>
             <div className="left">
-              <Icon />
-              <Text className="medium wallet-name">Metamask</Text>
+              <Icon icon={wallet} />
+              <Text className="medium wallet-name">{wallet}</Text>
             </div>
             <div className="right">
-              <Text className="medium">3,53869714 ETH</Text>
-              <Text className="x-small">= $956.74</Text>
+              <Text className="medium">
+                {balance.toLocaleString()} {unit}
+              </Text>
+              <Text className="x-small">= ${usdTotalBalance.toLocaleString()}</Text>
             </div>
           </WalletBalance>
         </div>
@@ -165,13 +174,15 @@ export const Details = memo(
           <div className="send">
             <Text className="medium subtitle">Send</Text>
             <div className="sender">
-              <Icon icon="eth" size="s" />
-              <Text className="medium sender--name">ETH (Etherum mainnet)</Text>
+              <Icon icon={token} size="s" />
+              <Text className="medium sender--name">
+                {token} ({currentNetwork})
+              </Text>
             </div>
           </div>
           <div className="to">
             <Text className="medium subtitle">To</Text>
-            <Text className="medium">Binance Smart Chain</Text>
+            <Text className="medium">{network}</Text>
           </div>
         </Addresses>
         <ControlButtons
