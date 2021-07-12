@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
-import { TransferHistory } from 'components/TransferHistory';
 import { TransferBox } from 'components/TransferBox';
 import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
@@ -26,28 +25,17 @@ const TransferStyled = styled.div`
   }
 `;
 const Transfer = () => {
-  const [isOpenHistory, setIsOpenHistory] = useState(false);
-  const openTransferHistory = () => {
-    setIsOpenHistory(!isOpenHistory);
-  };
   return (
     <TransferStyled>
-      {isOpenHistory ? (
+      <NavLink to={`/transfer/history`}>
         <div className="history-container">
-          <TransferHistory setIsOpenHistory={setIsOpenHistory} />
+          <SubTitle className="small bold history-link">Transfer history</SubTitle>
         </div>
-      ) : (
-        <>
-          <div className="history-container">
-            <SubTitle className="small bold history-link" onClick={openTransferHistory}>
-              Transfer history
-            </SubTitle>
-          </div>
-          <div className="transfer-card">
-            <TransferBox />
-          </div>
-        </>
-      )}
+      </NavLink>
+
+      <div className="transfer-card">
+        <TransferBox />
+      </div>
     </TransferStyled>
   );
 };
