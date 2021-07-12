@@ -97,7 +97,11 @@ const NetworkStyled = styled.div`
     color: ${colors.tertiaryBase};
   }
   .network-name {
+    height: 20px;
     margin-bottom: 8px;
+  }
+  .ant-table-tbody > tr > td {
+    padding: 10px 14px 9px;
   }
 `;
 
