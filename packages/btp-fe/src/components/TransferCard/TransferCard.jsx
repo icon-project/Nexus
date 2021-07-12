@@ -5,8 +5,6 @@ import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { media } from '../Styles/Media';
 
-import { useSelect } from '../../hooks/useRematch';
-
 import VectorIconSrc from 'assets/images/vector-icon.svg';
 
 const CardStyled = styled(AntCard)`
@@ -66,16 +64,17 @@ const CardStyled = styled(AntCard)`
     width: 100% !important;
   `}
 `;
-export const TransferCard = ({ setStep }) => {
-  const { isConnected } = useSelect(({ account }) => ({
-    isConnected: account.selectIsConnected,
-  }));
+export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
+  const onChange = (values) => {
+    const {
+      target: { value, name },
+    } = values;
+    if (name) {
+      setSendingInfo({ [name]: value });
+    }
+  };
 
-  const listNetwork = [
-    { value: 'bsc', label: 'Binance Smart Chain' },
-    { value: 'ed', label: 'Edgeware' },
-    { value: 'ic', label: 'ICON blockchain' },
-  ];
+  const listNetwork = [{ value: 'ICON blockchain', label: 'ICON blockchain' }];
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
       <h1>Transfer</h1>
@@ -85,13 +84,13 @@ export const TransferCard = ({ setStep }) => {
         </p>
 
         <div className="send">
-          Send <SelectAsset />
+          Send <SelectAsset onChange={onChange} />
         </div>
 
         <hr />
 
         <div className="to">
-          To <Select options={listNetwork} />
+          To <Select options={listNetwork} onChange={onChange} name="network" />
         </div>
 
         <Row className="button-section">
