@@ -2,7 +2,7 @@
 
 const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
-const { logger, pgPool } = require('../../common');
+const { logger, pgPool, tokenToUsd } = require('../../common');
 const { getRegisteredTokens } = require('./fas');
 const { hexToIcxUnit } = require('../../common/util');
 
@@ -31,10 +31,22 @@ function getTransferEvent(eventLogs) {
 }
 
 async function saveTransferFee(fee) {
-  const query = 'INSERT INTO transfer_fees (id, tx_hash, token_name, token_amount, created_time) VALUES ($1, $2, $3, $4, NOW())';
-  const values = [fee.id, fee.txHash, fee.tokenName, fee.tokenAmount];
+  try {
+    const { rows } = await pgPool.query('SELECT total_fee_usd FROM transfer_fees ORDER BY created_time DESC LIMIT 1');
 
-  await pgPool.query(query, values);
+    if (0 === rows.length)
+      return false;
+
+    const totalFee = Number(rows[0].total_fee_usd);
+
+    const query = 'INSERT INTO transfer_fees (id, tx_hash, token_name, token_amount, token_amount_usd, total_fee_usd, created_time) VALUES ($1, $2, $3, $4, $5, $6, NOW())';
+    const values = [fee.id, fee.txHash, fee.tokenName, fee.tokenAmount, fee.tokenAmountUsd, fee.tokenAmountUsd + totalFee];
+
+    await pgPool.query(query, values);
+  } catch (error) {
+    logger.error(`saveTransferFee fails with tx_hash ${fee.txHash}`, { error });
+    throw error;
+  }
 }
 
 async function handleTransferFeeEvents(txResult) {
@@ -46,8 +58,11 @@ async function handleTransferFeeEvents(txResult) {
 
     if (event) {
       const token = getRegisteredTokens().get(txResult.to);
+      const tokenAmountUsd = await tokenToUsd(token.name, event.tokenAmount);
+
       const fee = {
         ...event,
+        tokenAmountUsd,
         id: await nanoid(),
         tokenName: token.name,
         txHash: txResult.txHash

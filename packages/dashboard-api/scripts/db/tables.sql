@@ -174,14 +174,17 @@ CREATE TABLE public.transactions (
 -- Name: transfer_fees; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.transfer_fees (
-    id character varying(10) NOT NULL,
-    token_name character varying(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS public.transfer_fees
+(
+    id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
     token_amount numeric NOT NULL,
-    tx_hash character varying(100) NOT NULL,
-    created_time timestamp without time zone NOT NULL
-);
-
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    total_fee_usd numeric NOT NULL,
+    token_amount_usd numeric NOT NULL,
+    CONSTRAINT transfer_fees_pkey PRIMARY KEY (id)
+)
 
 --
 -- TOC entry 2848 (class 2606 OID 16462)
@@ -278,4 +281,3 @@ ALTER TABLE ONLY public.transfer_fees
 --
 -- PostgreSQL database dump complete
 --
-
