@@ -12,6 +12,7 @@ async function getNetworkInfo(request, response) {
   const bondedRelays = await model.getBondedVolumeByRelays();
   const allTimeFeeAssets = await model.getAllTimeFee();
   const mintedNetworks = await model.getMintedNetworks();
+
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
@@ -29,6 +30,7 @@ async function getNetworkInfo(request, response) {
   });
 }
 
+// curl http://localhost:8000/v1/btpnetwork/converter?token=btc&amount=100&convert_to=usd | jq
 async function getPriceConversion(request, response) {
   if (!request.query.token || !request.query.amount || !request.query.convert_to) {
     return response.sendStatus(HttpStatus.BadRequest);
@@ -37,11 +39,10 @@ async function getPriceConversion(request, response) {
   const baseToken = request.query.token;
   const amount = parseInt(request.query.amount);
   const tokensToConvertTo = request.query.convert_to.split(',');
-
   const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
 
   response.status(HttpStatus.OK).json({
-    content: priceTokens,
+    content: priceTokens
   });
 }
 

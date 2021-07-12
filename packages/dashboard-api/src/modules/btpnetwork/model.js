@@ -120,7 +120,7 @@ async function getAllTimeFee() {
       promises.push(exchangeToFiat(item.name, ['USD'], item.value));
     }
   }
-  
+
   let totalAssets = await Promise.all(promises);
   totalAssets.forEach( (item) => {totalUSD += item['USD']});
   totalUSD = numberToFixedAmount(totalUSD);
@@ -165,12 +165,13 @@ async function getMintedNetworks() {
 async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
   let results = [];
 
-  for(let data of tokensToConvertTo) {
+  for (let data of tokensToConvertTo) {
     const price = await exchangeToFiat(baseToken, [data], amount);
     const tokenUpperCase = data.toUpperCase();
+
     results.push( {
       name: tokenUpperCase,
-      value: price[`${tokenUpperCase}`].toFixed(2)
+      value: price[`${tokenUpperCase}`] ? Number(price[`${tokenUpperCase}`].toFixed(2)) : 0
     });
   }
 
