@@ -220,7 +220,7 @@ async function getAvailableAssetsToAuction() {
     if (!auction) {
       const value = await getAvailableBalance(token.name);
 
-      if (value > 0) {
+      if (value && value >= process.env.MINIMUM_AUCTION_AMOUNT) {
         result.push({
           name: token.name,
           value

@@ -4,7 +4,7 @@ const IconService = require('icon-sdk-js');
 const { countNetwork, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
-const { logger, CURRENCIES, hexToFixedAmount, exchangeToFiat, numberToFixedAmount } = require('../../common');
+const { logger, CURRENCIES, hexToFixedAmount, hexToIcxUnit, exchangeToFiat, numberToFixedAmount } = require('../../common');
 const { HttpProvider, IconBuilder } = IconService;
 const { getTokenVolumeAllTime } = require('../networks/repository');
 
@@ -14,7 +14,9 @@ const iconService = new IconService(provider);
 // Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
   const callBuilder = new IconBuilder.CallBuilder();
-  let result = [];
+  let assets = [];
+  let totalUSD = 0;
+  let promises = [];
 
   try {
     const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
@@ -23,10 +25,22 @@ async function getAmountFeeAggregationSCORE() {
     for (let data of tokens) {
       logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
-      result.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
+      if ('0x0' !== hexBalance) {
+        const amount = hexToIcxUnit(hexBalance);
+        promises.push(exchangeToFiat(data.name, ['USD'], amount));
+      }
+
+      assets.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
     }
 
-    return result;
+    let totalAssets = await Promise.all(promises);
+    totalAssets.forEach( (item) => {totalUSD += item['USD']});
+    totalUSD = numberToFixedAmount(totalUSD);
+
+    return {
+      assets,
+      totalUSD
+    };
   } catch (error) {
     logger.error('getAmountFeeAggregationSCORE failed', { error });
     throw error;
@@ -97,12 +111,29 @@ async function getBondedVolumeByRelays() {
 }
 
 async function getAllTimeFee() {
+  let totalUSD = 0;
+  let promises = [];
   const assets = await getAllTimeFeeOfAssets();
 
-  return assets.map(a => ({
-    name: a.name,
-    value: numberToFixedAmount(a.value)
+  for (let item of assets) {
+    if ( 0 !== item.value) {
+      promises.push(exchangeToFiat(item.name, ['USD'], item.value));
+    }
+  }
+  
+  let totalAssets = await Promise.all(promises);
+  totalAssets.forEach( (item) => {totalUSD += item['USD']});
+  totalUSD = numberToFixedAmount(totalUSD);
+
+  let feeAssets =  assets.map(item => ({
+    name: item.name,
+    value: numberToFixedAmount(item.value)
   }));
+
+  return {
+    feeAssets,
+    totalUSD
+  };
 }
 
 async function getMintedNetworks() {
