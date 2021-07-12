@@ -23,6 +23,17 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr;
     max-height: 100vh;
   `};
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #57565a;
+  }
 `;
 
 const NetworkWrapper = styled.div`
