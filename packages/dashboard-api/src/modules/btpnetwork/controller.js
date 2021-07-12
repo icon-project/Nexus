@@ -5,23 +5,22 @@ const model = require('./model');
 
 // curl http://localhost:8000/v1/btpnetwork | jq
 async function getNetworkInfo(request, response) {
-  const assets = await model.getAmountFeeAggregationSCORE();
+  const currentFeeAssets = await model.getAmountFeeAggregationSCORE();
   const totalNetworks = await model.getTotalNetworks();
   const totalTransactionAmount = await model.getTotalTransactionAmount();
   const totalTransactions = await model.getTotalTransaction();
   const bondedRelays = await model.getBondedVolumeByRelays();
   const allTimeFeeAssets = await model.getAllTimeFee();
   const mintedNetworks = await model.getMintedNetworks();
-
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
       bondedValue: bondedRelays,
       fee: {
-        cumulativeAmount: 100000, // TODO: total tokens ever had in FeeAggregationSCORE
-        currentAmount: 500, // TODO: total amount of tokens valid in FeeAggregationSCORE
-        assets,
-        allTimeAmount: allTimeFeeAssets
+        cumulativeAmount: allTimeFeeAssets.totalUSD,
+        currentAmount: currentFeeAssets.totalUSD,
+        assert: currentFeeAssets.assets,
+        allTimeAmount: allTimeFeeAssets.feeAssets
       },
       totalNetworks,
       totalTransactions,
