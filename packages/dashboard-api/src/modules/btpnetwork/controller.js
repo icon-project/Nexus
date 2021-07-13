@@ -20,7 +20,7 @@ async function getNetworkInfo(request, response) {
       fee: {
         cumulativeAmount: allTimeFeeAssets.totalUSD,
         currentAmount: currentFeeAssets.totalUSD,
-        assert: currentFeeAssets.assets,
+        assets: currentFeeAssets.assets,
         allTimeAmount: allTimeFeeAssets.feeAssets
       },
       totalNetworks,

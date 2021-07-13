@@ -155,7 +155,7 @@ async function getMintedNetworks() {
     results.push({
       networkId: data.id,
       networkName: data.name,
-      mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
+      mintedVolume: mapTokensVolume.has(data.id)? numberToFixedAmount(mapTokensVolume.get(data.id)) : 0
     });
   }
 
