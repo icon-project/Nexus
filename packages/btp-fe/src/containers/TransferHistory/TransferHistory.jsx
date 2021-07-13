@@ -22,18 +22,11 @@ import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
+
   .select-asset-container {
     margin-bottom: 34px;
   }
-  .details-column {
-    width: 448px;
-  }
-  .time-column {
-    width: 148px;
-  }
-  .amount-column {
-    width: 268;
-  }
+
   ${media.md`
     .ant-table-content {
       overflow-x: auto;
@@ -46,12 +39,13 @@ const columns = [
   {
     title: 'Details',
     dataIndex: 'txHash',
-    render: (text) => <div className="details-column">{text}</div>,
+    width: '480px',
   },
   {
     title: 'Time',
     dataIndex: 'blockTime',
     render: (blockTime) => <div className="time-column">{dayjs(blockTime / 1000).fromNow()}</div>,
+    width: '180px',
   },
   {
     title: 'Amount',
@@ -59,11 +53,11 @@ const columns = [
     render: (text, dataSource) => (
       <div className="amount-column">{text + ' ' + dataSource.tokenName}</div>
     ),
+    width: '300px',
   },
   {
     title: 'Status',
     dataIndex: 'status',
-    width: 160,
     render: (text) => {
       let status = 'Success';
       let color = '#5EF38C';
@@ -79,6 +73,7 @@ const columns = [
       }
       return <Tag color={color}>{status}</Tag>;
     },
+    width: '160px',
   },
 ];
 
