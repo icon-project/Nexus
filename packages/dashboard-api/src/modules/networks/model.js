@@ -8,7 +8,7 @@ const {
   getVolumeToken24hByNid,
   getVolumeTokenAllTimeByNid,
 } = require('./repository');
-const { exchangeToFiat } = require('../../common/util');
+const { exchangeToFiat, numberToFixedAmount } = require('../../common/util');
 
 async function getListNetworkConnectedIcon() {
   try {
@@ -30,18 +30,18 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
     for (let data of tokensVolume24h) {
       if (data.networkId == networkInfo.id) {
         let fiat = await exchangeToFiat(data.tokenName, ['USD'], parseInt(data.tokenVolume));
-        USD24h += fiat.USD;
+        USD24h += fiat.USD ? fiat.USD : 0;
       }
     }
 
     for (let data of tokensVolumeAllTime) {
       if (data.networkId == networkInfo.id) {
         let fiat = await exchangeToFiat(data.tokenName, ['USD'], parseInt(data.tokenVolume));
-        USDAllTime += fiat.USD;
+        USDAllTime += fiat.USD ? fiat.USD : 0;
       }
     }
-    networkInfo.usd24h = USD24h;
-    networkInfo.usdAllTime = USDAllTime;
+    networkInfo.usd24h = numberToFixedAmount(USD24h);
+    networkInfo.usdAllTime = numberToFixedAmount(USDAllTime);
   }
   return networks;
 }
@@ -79,18 +79,18 @@ async function getNetworkById(networkId) {
     if (token24h > 0) {
       let fiat24h = await exchangeToFiat(name, ['USD'], token24h);
       let fiatAllTime = await exchangeToFiat(name, ['USD'], tokenAllTime);
-      USD24h = fiat24h.USD;
+      USD24h = fiat24h.USD ? fiat24h.USD: 0;
       USDAllTime = fiatAllTime.USD;
     } else if (tokenAllTime > 0) {
       let fiatAllTime = await exchangeToFiat(name, ['USD'], tokenAllTime);
-      USDAllTime = fiatAllTime.USD;
+      USDAllTime = fiatAllTime.USD ? fiatAllTime.USD : 0;
     }
     result.push({
       nameToken: name,
-      volume24h: token24h,
-      volume24hUSD: USD24h,
-      volumeAllTime: tokenAllTime,
-      volumeAlTimeUSD: USDAllTime,
+      volume24h: numberToFixedAmount(token24h),
+      volume24hUSD: numberToFixedAmount(USD24h),
+      volumeAllTime: numberToFixedAmount(tokenAllTime),
+      volumeAlTimeUSD: numberToFixedAmount(USDAllTime),
     });
   }
   return result;
