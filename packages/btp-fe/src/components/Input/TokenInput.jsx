@@ -56,9 +56,11 @@ export const TokenInput = ({
   const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
   const tokenInputRef = useRef();
   const usdBalance = useTokenToUsd('icx', value);
+
   useEffect(() => {
     if (isCurrent) tokenInputRef.current.focus();
   }, [isCurrent]);
+
   const toggleInput = () => {
     setShowInput(!showInput);
   };

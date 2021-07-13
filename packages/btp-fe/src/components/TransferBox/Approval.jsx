@@ -4,6 +4,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { useDispatch } from 'hooks/useRematch';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
+import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
 import { transfer } from 'connectors/ICONex/iconService';
 import { hashShortener } from 'utils/app';
@@ -114,11 +115,17 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, values, sendingInfo, account }) => {
+export const Approval = memo(({ setStep, values, sendingInfo, account, form, setWasBack }) => {
   const { recipient, tokenAmount } = values;
   const { token, network } = sendingInfo;
   const { currentNetwork, wallet } = account;
   const usdBalance = useTokenToUsd(token, tokenAmount);
+
+  useListenForSuccessTransaction(() => {
+    setStep(0);
+    form.restart();
+    setWasBack(false);
+  });
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
     openModal,

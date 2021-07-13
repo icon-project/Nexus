@@ -53,9 +53,7 @@ export const TransferBox = () => {
   const memoizedSetStep = useCallback((param) => setStep(param), [setStep]);
   const memoizedSetTokenValue = useCallback((param) => setTokenValue(param), [setTokenValue]);
 
-  const onSubmit = (values) => {
-    console.log('🚀 ~ file: TransferBox.jsx ~ line 29 ~ onSubmit ~ values', values);
-  };
+  const onSubmit = () => {};
 
   const isCurrentStep = (s) => s === step;
 
@@ -63,7 +61,7 @@ export const TransferBox = () => {
     <Wrapper>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, values, valid }) => {
+        render={({ handleSubmit, values, valid, form }) => {
           return (
             <form onSubmit={handleSubmit}>
               <div className={`container ${isCurrentStep(0) && 'active'}`}>
@@ -91,6 +89,8 @@ export const TransferBox = () => {
                   values={values}
                   sendingInfo={sendingInfo}
                   account={account}
+                  form={form}
+                  setWasBack={setWasBack}
                 />
               </div>
             </form>
