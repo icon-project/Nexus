@@ -19,6 +19,10 @@ export const signingActions = {
   bid: 'bid',
 };
 
+export const allowedNetworkIDs = {
+  metamask: { '0x507': 'Moonbase Alpha', '0x4': 'Rinkeby' },
+};
+
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   dev: {
