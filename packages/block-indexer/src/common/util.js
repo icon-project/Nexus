@@ -1,7 +1,9 @@
 'use strict';
 
+const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const { ICX_LOOP_UNIT } = require('./constants');
+const { logger } = require('./logger');
 
 function getCurrentTimestamp() {
   return Math.floor(new Date().getTime() / 1000);
@@ -21,8 +23,29 @@ function hexToFixedAmount(value) {
   return Number(icx.toFixed(process.env.ASSET_FIXED_NUMBER));
 }
 
+async function tokenToUsd(name, value) {
+  try {
+    const result = await axios.get(process.env.DASHBOARD_API_URL + '/btpnetwork/converter', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      params: {
+        token: name,
+        amount: value,
+        convert_to: 'usd'
+      }
+    });
+
+    return 200 === result.status ? result.data.content[0].value : 0;
+  } catch (error) {
+    logger.error(`Fails to conver ${name} to USD`, { error });
+    return 0;
+  }
+}
+
 module.exports = {
   getCurrentTimestamp,
   hexToFixedAmount,
   hexToIcxUnit,
+  tokenToUsd
 };
