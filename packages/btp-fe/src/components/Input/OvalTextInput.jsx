@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export const OvalTextInput = ({ icon, props }) => {
+export const OvalTextInput = ({ icon, ...props }) => {
   return (
     <Wrapper>
       <TextInput placeholder="Search auction by name" {...props} icon={icon} />

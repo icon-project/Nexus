@@ -9,6 +9,8 @@ import { TransferCard } from '../TransferCard';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
+import { useSelect } from 'hooks/useRematch';
+
 const Wrapper = styled.div`
   width: 480px;
   background-color: ${colors.grayBG};
@@ -31,6 +33,18 @@ export const TransferBox = () => {
   const [step, setStep] = useState(0);
   const [wasBack, setWasBack] = useState(false);
   const [tokenValue, setTokenValue] = useState('');
+  const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
+
+  const { isConnected, account } = useSelect(
+    ({ account: { selectIsConnected, selectAccountInfo } }) => ({
+      isConnected: selectIsConnected,
+      account: selectAccountInfo,
+    }),
+  );
+
+  const onSendingInfoChange = (info = {}) => {
+    setSendingInfo((sendingInfo) => ({ ...sendingInfo, ...info }));
+  };
 
   useEffect(() => {
     if (step !== 0) setWasBack(true);
@@ -53,7 +67,11 @@ export const TransferBox = () => {
           return (
             <form onSubmit={handleSubmit}>
               <div className={`container ${isCurrentStep(0) && 'active'}`}>
-                <TransferCard setStep={memoizedSetStep} />
+                <TransferCard
+                  setStep={memoizedSetStep}
+                  setSendingInfo={onSendingInfoChange}
+                  isConnected={isConnected}
+                />
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>
                 <Details
@@ -63,10 +81,17 @@ export const TransferBox = () => {
                   setTokenValue={memoizedSetTokenValue}
                   initalInputDisplay={!wasBack}
                   isValidForm={valid}
+                  sendingInfo={sendingInfo}
+                  account={account}
                 />
               </div>
               <div className={`container ${isCurrentStep(2) && 'active'}`}>
-                <Approval setStep={memoizedSetStep} values={values} />
+                <Approval
+                  setStep={memoizedSetStep}
+                  values={values}
+                  sendingInfo={sendingInfo}
+                  account={account}
+                />
               </div>
             </form>
           );

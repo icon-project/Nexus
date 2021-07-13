@@ -59,7 +59,6 @@ export const TokenInput = ({
   useEffect(() => {
     if (isCurrent) tokenInputRef.current.focus();
   }, [isCurrent]);
-  console.log('usdBalance', usdBalance);
   const toggleInput = () => {
     setShowInput(!showInput);
   };

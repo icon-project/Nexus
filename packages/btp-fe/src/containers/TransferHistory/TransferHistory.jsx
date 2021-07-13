@@ -8,15 +8,15 @@ import { useDispatch } from 'hooks/useRematch';
 
 import { getTransferHistory } from 'services/btpServices';
 
-import { Table } from '../Table';
-import { Tag } from '../Tag';
-import { SelectAsset } from '../Select';
+import { Table } from '../../components/Table';
+import { Tag } from '../../components/Tag';
+import { SelectAsset } from '../../components/Select';
 import { HistoryDetails } from './HistoryDetails';
-import { BackButton } from '../Button/BackButton';
+import { BackButton } from '../../components/Button/BackButton';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
-import { Text } from '../Typography';
+import { colors } from '../../components/Styles/Colors';
+import { media } from '../../components/Styles/Media';
+import { Text } from '../../components/Typography';
 
 import VectorSrc from 'assets/images/vector.svg';
 
@@ -83,9 +83,9 @@ const columns = [
 ];
 
 const TransferHistoryStyled = styled.div`
-  margin-top: 36px;
-  margin-bottom: 43px;
-
+  padding-top: 36px;
+  margin-left: auto;
+  margin-right: auto;
   color: ${colors.grayText};
   width: 1120px;
 
@@ -126,7 +126,7 @@ const TransferHistoryStyled = styled.div`
   `};
 `;
 
-export const TransferHistory = ({ setIsOpenHistory }) => {
+const TransferHistory = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [selectedPage, setSelectedPage] = useState(0);
@@ -160,7 +160,7 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
   return (
     <TransferHistoryStyled>
       <Row>
-        <BackButton onClick={() => setIsOpenHistory(false)}>Transfer history</BackButton>
+        <BackButton>Transfer history</BackButton>
       </Row>
       <Row className="control-group">
         <Text className="medium">Viewing transfer history for</Text>
@@ -189,3 +189,5 @@ export const TransferHistory = ({ setIsOpenHistory }) => {
     </TransferHistoryStyled>
   );
 };
+
+export default TransferHistory;

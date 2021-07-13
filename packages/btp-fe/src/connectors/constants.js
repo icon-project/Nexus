@@ -19,6 +19,10 @@ export const signingActions = {
   bid: 'bid',
 };
 
+export const allowedNetworkIDs = {
+  metamask: { '0x507': 'Moonbase Alpha', '0x4': 'Rinkeby' },
+};
+
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   dev: {
@@ -27,7 +31,7 @@ export const NETWORKS = {
     nid: localStorage.getItem('nid') || '0xc7c937',
   },
   cloud: {
-    name: 'Cloud',
+    name: 'Custom ICON node',
     endpoint: 'http://54.251.114.18:9082/api/v3',
     nid: 3,
   },
