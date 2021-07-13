@@ -34,7 +34,7 @@ async function getAmountFeeAggregationSCORE() {
     }
 
     let totalAssets = await Promise.all(promises);
-    totalAssets.forEach( (item) => {totalUSD += item['USD'] ? item['USD'] : 0});
+    totalAssets.forEach( (item) => {totalUSD += item['USD'] ? item['USD'] : 0;});
     totalUSD = numberToFixedAmount(totalUSD);
 
     return {
@@ -122,7 +122,7 @@ async function getAllTimeFee() {
   }
 
   let totalAssets = await Promise.all(promises);
-  totalAssets.forEach( (item) => {totalUSD += item['USD'] ? item['USD'] : 0});
+  totalAssets.forEach( (item) => {totalUSD += item['USD'] ? item['USD'] : 0;});
   totalUSD = numberToFixedAmount(totalUSD);
 
   let feeAssets =  assets.map(item => ({
