@@ -26,7 +26,7 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-const roundToTwo = (num) => {
+export const roundToTwo = (num) => {
   return +(Math.round(num + 'e+2') + 'e-2');
 };
 
