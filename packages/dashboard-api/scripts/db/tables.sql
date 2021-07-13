@@ -165,7 +165,8 @@ CREATE TABLE public.transactions (
     block_time bigint,
     btp_fee numeric(100,100),
     network_fee numeric(100,100),
-    status integer DEFAULT 0
+    status integer DEFAULT 0,
+    total_volume numeric(100,6) NOT NULL DEFAULT 0
 );
 
 

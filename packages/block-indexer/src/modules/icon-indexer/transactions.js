@@ -89,6 +89,7 @@ async function handleTransEvent(txResult, transaction) {
         // https://www.icondev.io/docs/step-estimation#transaction-fee
         networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT,
       };
+      await calculateTotalVolume(transObj);
       await saveTransaction(transObj);
     } else if (event.indexed.find((item) => item.includes(TRANFER_END_PROTOTYPE))) {
       confirmTransfEnd(event, {
@@ -97,6 +98,18 @@ async function handleTransEvent(txResult, transaction) {
         blockHash: txResult.blockHash,
       });
     }
+  }
+}
+
+async function calculateTotalVolume(newTransaction) {
+  newTransaction.totalVolume = 0;
+  try {
+    let transaction = await getLatestTransaction(newTransaction.tokenName);
+    newTransaction.totalVolume = Number(transaction.totalVolume) + newTransaction.value;
+  } catch (error) {
+    logger.error('"calculateTotalVolume" failed to calculate total volume of transaction', {
+      error,
+    });
   }
 }
 
@@ -124,8 +137,8 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.id}, ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress}, ${TRANSACTION_TBL.blockHeight}, ${TRANSACTION_TBL.blockHash},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
-      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.createAt}, ${TRANSACTION_TBL.updateAt},
-       ${TRANSACTION_TBL.deleteAt})
+      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
+      ${TRANSACTION_TBL.updateAt}, ${TRANSACTION_TBL.deleteAt})
     VALUES (
       $1, $2, $3, $4,
       $5, $6, $7, $8,
@@ -147,6 +160,7 @@ async function saveTransaction(transaction) {
       transaction.btpFee,
       transaction.networkFee,
       transaction.status,
+      transaction.totalVolume,
       transaction.createAt,
       transaction.updateAt,
       transaction.deleteAt,
@@ -205,9 +219,20 @@ async function getBySerialNumber(serialNumber) {
   return rows[0];
 }
 
+async function getLatestTransaction(tokenName) {
+  let {
+    rows,
+  } = await pgPool.query(
+    `SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.tokenName} = $1 ORDER BY ${TRANSACTION_TBL.updateAt} DESC LIMIT 1`,
+    [tokenName],
+  );
+  return rows[0];
+}
+
 module.exports = {
   saveTransaction,
   getBySerialNumber,
   setTransactionConfirmed,
   handleTransEvent,
+  getLatestTransaction,
 };
