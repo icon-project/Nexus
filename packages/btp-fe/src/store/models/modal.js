@@ -1,3 +1,5 @@
+import { wallets } from 'utils/constants';
+
 const modal = {
   name: 'modal',
   state: {
@@ -28,6 +30,24 @@ const modal = {
         icon: 'xIcon',
         desc: (error && error.message) || error || 'Something went wrong!',
       });
+    },
+    isICONexWalletConnected(_, rootState) {
+      const {
+        account: { wallet },
+      } = rootState;
+
+      if (wallet !== wallets.iconex) {
+        this.openModal({
+          icon: 'exclamationPointIcon',
+          desc: 'You must connect to your ICONex wallet first',
+          button: {
+            text: 'Okay',
+            onClick: () => this.setDisplay(false),
+          },
+        });
+        return false;
+      }
+      return true;
     },
   }),
 
