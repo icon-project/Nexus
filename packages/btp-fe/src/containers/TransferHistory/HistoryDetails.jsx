@@ -1,12 +1,17 @@
 /* eslint-disable react/display-name */
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import { Tag } from '../../components/Tag';
 import { Icon } from '../../components/Icon/Icon';
-import { Table } from '../../components/Table';
+import { Loader } from '../../components/Loader';
 import { Modal } from '../../components/NotificationModal';
 
+import { getTransferHistoryById } from 'services/btpServices';
 import { hashShortener } from '../../utils/app';
 
 import { Text } from '../../components/Typography';
@@ -20,6 +25,7 @@ const StyledHistoryDetails = styled.div`
   top: 0;
   left: 0;
   .history-details {
+    width: 100%;
     height: fit-content;
     background: ${colors.grayBG};
     border-radius: 4px;
@@ -69,53 +75,64 @@ const StyledHistoryDetails = styled.div`
     }
   `};
 `;
-const columns = [
-  {
-    title: '#',
-    dataIndex: 'key',
-  },
-  {
-    title: 'Transaction hash',
-    dataIndex: 'hash',
-    render: (text) => (
-      <Text>
-        <span className="copy-address">{text}</span>(BVP)
-      </Text>
-    ),
-  },
-  {
-    title: 'From',
-    dataIndex: 'from',
-    render: (text) => (
-      <Text>
-        <span className="copy-address">{text}</span>(BVP)
-      </Text>
-    ),
-  },
-  {
-    title: 'To',
-    dataIndex: 'to',
-    render: (text) => (
-      <Text>
-        <span className="copy-address">{text}</span>(BVP)
-      </Text>
-    ),
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: 160,
-    render: (text) => <Tag color={getColor(text)}>{text}</Tag>,
-  },
-  {
-    title: 'Block',
-    dataIndex: 'block',
-  },
-];
-const getColor = (status) => {
-  if (status === 'pending') return colors.warningState;
-  if (status === 'success') return colors.successState;
-  if (status === 'failed') return colors.errorState;
+// const columns = [
+//   {
+//     title: '#',
+//     dataIndex: 'key',
+//   },
+//   {
+//     title: 'Transaction hash',
+//     dataIndex: 'hash',
+//     render: (text) => (
+//       <Text>
+//         <span className="copy-address">{text}</span>(BVP)
+//       </Text>
+//     ),
+//   },
+//   {
+//     title: 'From',
+//     dataIndex: 'from',
+//     render: (text) => (
+//       <Text>
+//         <span className="copy-address">{text}</span>(BVP)
+//       </Text>
+//     ),
+//   },
+//   {
+//     title: 'To',
+//     dataIndex: 'to',
+//     render: (text) => (
+//       <Text>
+//         <span className="copy-address">{text}</span>(BVP)
+//       </Text>
+//     ),
+//   },
+//   {
+//     title: 'Status',
+//     dataIndex: 'status',
+//     width: 160,
+//     render: (text) => <Tag color={getColor(text)}>{text}</Tag>,
+//   },
+//   {
+//     title: 'Block',
+//     dataIndex: 'block',
+//   },
+// ];
+const getStatus = (statusCode) => {
+  let color = colors.successState;
+  let text = 'Success';
+  if (statusCode === 0) {
+    color = colors.warningState;
+    text = 'Pending';
+  } else if (statusCode === -1) {
+    color = colors.errorState;
+    text = 'Failed';
+  }
+
+  return {
+    color,
+    text,
+  };
 };
 const CopyAddress = ({ text }) => {
   return (
@@ -127,57 +144,67 @@ const CopyAddress = ({ text }) => {
     </CopyToClipboard>
   );
 };
-export const HistoryDetails = ({ details, onClose }) => {
-  const dataSource = [];
-  for (let i = 1; i < 4; i++) {
-    dataSource.push({
-      key: i,
-      hash: '0xA7AE...2107',
-      from: '0xA7AE...2107',
-      to: '0x5E67...16D3',
-      status: details.status,
-      block: 12411916,
-    });
-  }
+export const HistoryDetails = ({ id, onClose }) => {
+  const [details, setDetails] = useState({});
+  const [isFetching, setIsFetching] = useState(true);
+  console.log(isFetching);
+  useEffect(() => {
+    const getTransactionDetails = async () => {
+      try {
+        const transferData = await getTransferHistoryById(id);
+        setDetails(transferData.content);
+        setIsFetching(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTransactionDetails();
+  }, [id]);
   return (
-    <Modal display title="Transfer details" width="auto" setDisplay={() => onClose()}>
+    <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
-        <div className="history-details">
-          <div className="content">
-            <Text className="medium">Transaction hash</Text>
-            <Text className="medium">
-              <CopyAddress text={details.details} />
-            </Text>
-          </div>
-          <div className="content">
-            <Text className="medium">Amount</Text>
-            <Text className="medium">{details.amount}</Text>
-          </div>
-          <div className="content">
-            <Text className="medium">Status</Text>
-            <Tag color={getColor(details.status)}>{details.status}</Tag>
-          </div>
-          <div className="content">
-            <Text className="medium">Time</Text>
-            <Text className="medium">
-              55 seconds ago <span className="hide-in-mobile">(May-11-2021 07:52:44 AM +UTC)</span>
-            </Text>
-          </div>
-          <div className="content">
-            <Text className="medium">From</Text>
-            <Text className="medium">
-              <span className="hide-in-mobile">(Binance Smart Chain) </span>
-              <CopyAddress text={'0x42A5sabfSDFS4fsdfsdsdfsdf$b3Df'} />
-            </Text>
-          </div>
-          <div className="content">
-            <Text className="medium">To</Text>
-            <Text className="medium">
-              <span className="hide-in-mobile">(Edgeware) </span>
-              <CopyAddress text={'0x3C53asCCSDDSasfsf432434323242323DSFDSF5C5e'} />
-            </Text>
-          </div>
-          <div className="internal-trx">
+        {isFetching ? (
+          <Loader size={'24px'} borderSize={'2px'} />
+        ) : (
+          <div className="history-details">
+            <div className="content">
+              <Text className="medium">Transaction hash</Text>
+              <Text className="medium">
+                <CopyAddress text={details.txHash} />
+              </Text>
+            </div>
+            <div className="content">
+              <Text className="medium">Amount</Text>
+              <Text className="medium">{details.value}</Text>
+            </div>
+            <div className="content">
+              <Text className="medium">Status</Text>
+              <Tag color={getStatus(details.status).color}>{getStatus(details.status).text}</Tag>
+            </div>
+            <div className="content">
+              <Text className="medium">Time</Text>
+              <Text className="medium">
+                {dayjs(details.blockTime / 1000).fromNow()}{' '}
+                <span className="hide-in-mobile">
+                  ({dayjs(details.blockTime / 1000).format('MMM-DD-YYYY hh:mm:ss A Z')})
+                </span>
+              </Text>
+            </div>
+            <div className="content">
+              <Text className="medium">From</Text>
+              <Text className="medium">
+                <span className="hide-in-mobile">(Binance Smart Chain) </span>
+                <CopyAddress text={details.fromAddress} />
+              </Text>
+            </div>
+            <div className="content">
+              <Text className="medium">To</Text>
+              <Text className="medium">
+                <span className="hide-in-mobile">(Edgeware) </span>
+                <CopyAddress text={details.toAddress} />
+              </Text>
+            </div>
+            {/* <div className="internal-trx">
             <Text className="medium">Internal transactions</Text>
           </div>
           <div className="content">
@@ -185,20 +212,21 @@ export const HistoryDetails = ({ details, onClose }) => {
               headerColor={colors.grayBG}
               backgroundColor={colors.grayBG}
               columns={columns}
-              dataSource={dataSource}
+              dataSource={[]}
               pagination={false}
               hoverColor={colors.grayBG}
             />
+          </div> */}
+            <div className="content">
+              <Text className="medium">Network fee</Text>
+              <Text className="medium">{details.networkFee}</Text>
+            </div>
+            <div className="content btp-fee">
+              <Text className="medium">BTP fee</Text>
+              <Text className="medium">{details.bptFee}</Text>
+            </div>
           </div>
-          <div className="content">
-            <Text className="medium">Network fee</Text>
-            <Text className="medium">0.010094175 Ether ($39.78)</Text>
-          </div>
-          <div className="content btp-fee">
-            <Text className="medium">BTP fee</Text>
-            <Text className="medium">0.000000480675 Ether</Text>
-          </div>
-        </div>
+        )}
       </StyledHistoryDetails>
     </Modal>
   );
