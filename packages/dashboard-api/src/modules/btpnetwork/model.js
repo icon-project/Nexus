@@ -34,7 +34,7 @@ async function getAmountFeeAggregationSCORE() {
     }
 
     let totalAssets = await Promise.all(promises);
-    totalAssets.forEach( (item) => {totalUSD += item['USD']});
+    totalAssets.forEach( (item) => {totalUSD += item['USD'] ? item['USD'] : 0;});
     totalUSD = numberToFixedAmount(totalUSD);
 
     return {
@@ -84,7 +84,7 @@ async function getTotalTransactionAmount() {
       promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], parseInt(item.tokenVolume)));
     }
     const results = await Promise.all(promises);
-    results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
+    results.forEach((item) => (totalUSD += item[CURRENCIES.USD] ? item[CURRENCIES.USD] : 0));
     return totalUSD || 0;
   } catch (error) {
     logger.error('getTotalTransactionAmount failed', { error });
@@ -122,7 +122,7 @@ async function getAllTimeFee() {
   }
 
   let totalAssets = await Promise.all(promises);
-  totalAssets.forEach( (item) => {totalUSD += item['USD']});
+  totalAssets.forEach( (item) => {totalUSD += item['USD'] ? item['USD'] : 0;});
   totalUSD = numberToFixedAmount(totalUSD);
 
   let feeAssets =  assets.map(item => ({
@@ -144,7 +144,7 @@ async function getMintedNetworks() {
 
   for (let token of mintedTokens) {
     let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
-    let volume = fiat.USD;
+    let volume = fiat.USD ? fiat.USD : 0;
     if (mapTokensVolume.has(token.networkId)) {
       volume += mapTokensVolume.get(token.networkId);
     }
@@ -155,7 +155,7 @@ async function getMintedNetworks() {
     results.push({
       networkId: data.id,
       networkName: data.name,
-      mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
+      mintedVolume: mapTokensVolume.has(data.id)? numberToFixedAmount(mapTokensVolume.get(data.id)) : 0
     });
   }
 
