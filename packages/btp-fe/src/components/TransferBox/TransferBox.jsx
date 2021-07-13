@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components/macro';
 import { Form } from 'react-final-form';
 
@@ -31,7 +31,6 @@ const Wrapper = styled.div`
 
 export const TransferBox = () => {
   const [step, setStep] = useState(0);
-  const [wasBack, setWasBack] = useState(false);
   const [tokenValue, setTokenValue] = useState('');
   const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
 
@@ -45,10 +44,6 @@ export const TransferBox = () => {
   const onSendingInfoChange = (info = {}) => {
     setSendingInfo((sendingInfo) => ({ ...sendingInfo, ...info }));
   };
-
-  useEffect(() => {
-    if (step !== 0) setWasBack(true);
-  }, [step]);
 
   const memoizedSetStep = useCallback((param) => setStep(param), [setStep]);
   const memoizedSetTokenValue = useCallback((param) => setTokenValue(param), [setTokenValue]);
@@ -77,7 +72,6 @@ export const TransferBox = () => {
                   setStep={memoizedSetStep}
                   tokenValue={tokenValue}
                   setTokenValue={memoizedSetTokenValue}
-                  initalInputDisplay={!wasBack}
                   isValidForm={valid}
                   sendingInfo={sendingInfo}
                   account={account}
@@ -90,7 +84,6 @@ export const TransferBox = () => {
                   sendingInfo={sendingInfo}
                   account={account}
                   form={form}
-                  setWasBack={setWasBack}
                 />
               </div>
             </form>

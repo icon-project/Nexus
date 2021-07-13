@@ -115,7 +115,7 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, values, sendingInfo, account, form, setWasBack }) => {
+export const Approval = memo(({ setStep, values, sendingInfo, account, form }) => {
   const { recipient, tokenAmount } = values;
   const { token, network } = sendingInfo;
   const { currentNetwork, wallet } = account;
@@ -124,7 +124,6 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, set
   useListenForSuccessTransaction(() => {
     setStep(0);
     form.restart();
-    setWasBack(false);
   });
 
   const { openModal } = useDispatch(({ modal: { openModal } }) => ({
