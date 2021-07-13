@@ -11,6 +11,7 @@ const { serialize } = IconUtil;
 import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE, signingActions } from '../constants';
 import { requestSigning } from './events';
 import Request from './utils';
+import store from '../../store';
 
 const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
@@ -83,6 +84,10 @@ export const transfer = (tx) => {
 export const signTx = (transaction = {}, options = {}) => {
   const { from = loggedInAddress, to, value } = transaction;
   const { method, params, builder } = options;
+
+  if (!store.dispatch.modal.isICONexWalletConnected()) {
+    return;
+  }
 
   const txBuilder = builder || new IcxTransactionBuilder();
 
