@@ -50,8 +50,8 @@ const columns = [
   },
   {
     title: 'Time',
-    dataIndex: 'updateAt',
-    render: (updateAt) => <div className="time-column">{dayjs(updateAt).fromNow()}</div>,
+    dataIndex: 'blockTime',
+    render: (blockTime) => <div className="time-column">{dayjs(blockTime / 1000).fromNow()}</div>,
   },
   {
     title: 'Amount',
@@ -184,10 +184,7 @@ const TransferHistory = () => {
         loading={isFetching}
       />
       {showDetails && (
-        <HistoryDetails
-          details={selectedRow}
-          onClose={() => setShowDetails(false)}
-        ></HistoryDetails>
+        <HistoryDetails id={selectedRow.id} onClose={() => setShowDetails(false)}></HistoryDetails>
       )}
     </TransferHistoryStyled>
   );
