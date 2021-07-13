@@ -44,15 +44,13 @@ const columns = [
   {
     title: 'Time',
     dataIndex: 'blockTime',
-    render: (blockTime) => <div className="time-column">{dayjs(blockTime / 1000).fromNow()}</div>,
+    render: (blockTime) => dayjs(blockTime / 1000).fromNow(),
     width: '180px',
   },
   {
     title: 'Amount',
     dataIndex: 'value',
-    render: (text, dataSource) => (
-      <div className="amount-column">{text + ' ' + dataSource.tokenName}</div>
-    ),
+    render: (text, dataSource) => text + ' ' + dataSource.tokenName,
     width: '300px',
   },
   {
