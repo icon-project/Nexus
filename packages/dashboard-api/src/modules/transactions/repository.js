@@ -72,7 +72,43 @@ async function getTransactionById(id) {
     throw error;
   }
 }
+/**
+ * Get total transaction volume all time or total transaction volume of 24h ago
+ * @param {*} is24hAgo true/false default false
+ * @param {*} sortBy DESC/ASC default DESC
+ */
+async function getTotalTransactionVolume(is24hAgo = false, sortBy = 'DESC') {
+  try {
+    let query = `SELECT DISTINCT ON (${TRANSACTION_TBL.tokenName}) ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.updateAt}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.networkId}
+    FROM ${TRANSACTION_TBL_NAME}
+    WHERE ${TRANSACTION_TBL.status} = 1 `;
+    const orderBy = ` ORDER BY ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.updateAt} ${sortBy}`;
+
+    if (is24hAgo) {
+      const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
+      query += ` AND ${TRANSACTION_TBL.blockTime} >= ${at24hAgo} ` + orderBy;
+    } else {
+      query += orderBy;
+    }
+
+    const { rows } = await pgPool.query(query);
+    let result = [];
+    for (let data of rows) {
+      result.push({
+        networkId: data.network_id,
+        tokenName: data.token_name,
+        totalVolume: data.total_volume,
+      });
+    }
+    return result;
+  } catch (error) {
+    logger.error('getTokenVolumeAllTime fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   getTransactions,
   getTransactionById,
+  getTotalTransactionVolume,
 };
