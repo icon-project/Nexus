@@ -56,6 +56,7 @@ class Ethereum {
         },
       });
 
+      account.resetAccountInfo();
       return false;
     }
     return true;
