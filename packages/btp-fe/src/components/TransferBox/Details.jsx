@@ -138,6 +138,7 @@ export const Details = memo(
               setTokenValue={setTokenValue}
               initalInputDisplay={initalInputDisplay}
               isCurrent={isCurrent}
+              token={token}
               {...input}
               meta={meta}
             />

@@ -34,7 +34,7 @@ export const Icon = memo(({ icon = 'metamask', width = '25.67px', size, iconURL 
     iconex: iconexIcon,
     ICX: iconexIcon,
     [wallets.iconex]: iconexIcon,
-    eth: ethIcon,
+    ETH: ethIcon,
     copy: copyIcon,
     binance: binanceIcon,
     edgeware: edgewareIcon,
