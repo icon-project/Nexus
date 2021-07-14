@@ -16,3 +16,13 @@ WHERE transfer_fees.id=b.id
 
 ALTER TABLE transactions
   ADD total_volume numeric(100,6) NOT NULL DEFAULT 0,
+
+-- Issue #33
+
+ALTER TABLE networks
+DROP COLUMN delete_at,
+ADD COLUMN native_token character varying(100);
+
+ALTER TABLE networks
+ALTER COLUMN create_at SET DATA TYPE timestamp without time zone USING to_timestamp(create_at),
+ALTER COLUMN update_at SET DATA TYPE timestamp without time zone USING to_timestamp(update_at);
