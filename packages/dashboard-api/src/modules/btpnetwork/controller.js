@@ -43,7 +43,7 @@ async function getPriceConversion(request, response) {
   }
 
   const baseToken = request.query.token;
-  const amount = parseInt(request.query.amount);
+  const amount = parseFloat(request.query.amount);
   const tokensToConvertTo = request.query.convert_to.split(',');
   const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
 
