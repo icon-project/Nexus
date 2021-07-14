@@ -110,7 +110,7 @@ async function getTotalTransactionAmount(is24hAgo) {
     }
 
     for (let item of tokenTransAmount) {
-      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], parseInt(item.totalVolume)));
+      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], Number(item.totalVolume)));
     }
     const results = await Promise.all(promises);
     results.forEach((item) => (totalUSD += item[CURRENCIES.USD] ? item[CURRENCIES.USD] : 0));
