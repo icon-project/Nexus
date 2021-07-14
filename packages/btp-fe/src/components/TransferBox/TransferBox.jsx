@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components/macro';
 import { Form } from 'react-final-form';
 
@@ -31,7 +31,6 @@ const Wrapper = styled.div`
 
 export const TransferBox = () => {
   const [step, setStep] = useState(0);
-  const [wasBack, setWasBack] = useState(false);
   const [tokenValue, setTokenValue] = useState('');
   const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
 
@@ -46,16 +45,10 @@ export const TransferBox = () => {
     setSendingInfo((sendingInfo) => ({ ...sendingInfo, ...info }));
   };
 
-  useEffect(() => {
-    if (step !== 0) setWasBack(true);
-  }, [step]);
-
   const memoizedSetStep = useCallback((param) => setStep(param), [setStep]);
   const memoizedSetTokenValue = useCallback((param) => setTokenValue(param), [setTokenValue]);
 
-  const onSubmit = (values) => {
-    console.log('🚀 ~ file: TransferBox.jsx ~ line 29 ~ onSubmit ~ values', values);
-  };
+  const onSubmit = () => {};
 
   const isCurrentStep = (s) => s === step;
 
@@ -63,7 +56,7 @@ export const TransferBox = () => {
     <Wrapper>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, values, valid }) => {
+        render={({ handleSubmit, values, valid, form }) => {
           return (
             <form onSubmit={handleSubmit}>
               <div className={`container ${isCurrentStep(0) && 'active'}`}>
@@ -79,7 +72,6 @@ export const TransferBox = () => {
                   setStep={memoizedSetStep}
                   tokenValue={tokenValue}
                   setTokenValue={memoizedSetTokenValue}
-                  initalInputDisplay={!wasBack}
                   isValidForm={valid}
                   sendingInfo={sendingInfo}
                   account={account}
@@ -91,6 +83,7 @@ export const TransferBox = () => {
                   values={values}
                   sendingInfo={sendingInfo}
                   account={account}
+                  form={form}
                 />
               </div>
             </form>
