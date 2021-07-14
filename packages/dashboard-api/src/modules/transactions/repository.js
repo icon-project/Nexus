@@ -6,6 +6,7 @@ const {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
   numberToFixedAmount,
+  NETWORK_TBL_NAME,
 } = require('../../common');
 
 async function getTransactions(page = 0, limit = 20, from, to) {
@@ -40,7 +41,10 @@ async function getTransactions(page = 0, limit = 20, from, to) {
 
 async function getTransactionById(id) {
   let transaction = {};
-  const query = `SELECT * FROM ${TRANSACTION_TBL_NAME} WHERE id = $1`;
+  const query = `SELECT  ${TRANSACTION_TBL_NAME}.*, name, native_token FROM ${TRANSACTION_TBL_NAME}
+                    INNER JOIN ${NETWORK_TBL_NAME}
+                      ON ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.networkId} = ${NETWORK_TBL_NAME}.id
+                    WHERE ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.id} = $1 `;
 
   try {
     const { rows } = await pgPool.query(query, [id]);
@@ -64,6 +68,8 @@ async function getTransactionById(id) {
         blockTime: Number(row.block_time),
         bptFee: numberToFixedAmount(Number(row.btp_fee) || 0),
         networkFee: numberToFixedAmount(Number(row.network_fee) || 0),
+        networkNameSrc: row.name,
+        nativeToken: row.native_token,
       };
     }
     return transaction;
