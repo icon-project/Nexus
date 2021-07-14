@@ -29,14 +29,14 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
     let USDAllTime = 0;
     for (let data of tokensVolume24h) {
       if (data.networkId == networkInfo.id) {
-        let fiat = await exchangeToFiat(data.tokenName, ['USD'], parseFloat(data.tokenVolume));
+        let fiat = await exchangeToFiat(data.tokenName, ['USD'], Number(data.tokenVolume));
         USD24h += fiat.USD ? fiat.USD : 0;
       }
     }
 
     for (let data of tokensVolumeAllTime) {
       if (data.networkId == networkInfo.id) {
-        let fiat = await exchangeToFiat(data.tokenName, ['USD'], parseFloat(data.tokenVolume));
+        let fiat = await exchangeToFiat(data.tokenName, ['USD'], Number(data.tokenVolume));
         USDAllTime += fiat.USD ? fiat.USD : 0;
       }
     }
