@@ -21,7 +21,8 @@ async function getCurrentFee(request, response) {
 
     response.status(HttpStatus.OK).json({
       content: {
-        assets: [...result.assets]
+        assets: [...result.assets],
+        totalFeeInUsd: result.totalUSD
       }
     });
   }
