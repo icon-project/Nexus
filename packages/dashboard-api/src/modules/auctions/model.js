@@ -4,12 +4,11 @@ const fs = require('fs');
 const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider, IconBuilder, IconConverter, IconAmount, IconWallet, SignedTransaction } = require('icon-sdk-js');
-const { logger } = require('../../common');
+const { logger, hexToFixedAmount, numberToFixedAmount } = require('../../common');
 const { getAuctionById, getBidByAuctionId, getTopBidder } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
-const ICX_NUMBER = 10 ** 18;
 
 // Ref: block-indexer/src/modules/icon-indexer/auctions.js
 function createAuctionId(id) {
@@ -45,9 +44,9 @@ async function getAvailableBalance(name) {
 
   try {
     const balance = await iconService.call(txObject).execute();
-    const value = Math.floor(IconConverter.toNumber(balance) / ICX_NUMBER);
-    debug(`Current balance ${name}: %s %d`, balance, value);
+    const value = hexToFixedAmount(balance);
 
+    debug(`Current balance ${name}: %s %d`, balance, value);
     return value;
   } catch (error) {
     logger.error(`getAvailableBalance failed ${name}`, { error });
@@ -75,8 +74,8 @@ async function getCurrentAuctions() {
         auctions.push({
           id: createAuctionId(IconConverter.toNumber(auction._id)),
           name: token.name,
-          currentBidAmount: Math.floor(IconConverter.toNumber(auction._bidAmount) / ICX_NUMBER),
-          availableBidAmount: Math.floor(IconConverter.toNumber(auction._tokenAmount) / ICX_NUMBER),
+          currentBidAmount: hexToFixedAmount(auction._bidAmount),
+          availableBidAmount: hexToFixedAmount(auction._tokenAmount),
           endTime: Math.floor(IconConverter.toNumber(auction._endTime) / 1000) // _endTime in microsecond
         });
       }
@@ -96,12 +95,13 @@ async function getAuctionDetail(auctionId) {
     return null;
 
   const bid = await getTopBidder(auctionId);
+  const currentBidAmount = bid ? bid.newBidAmount : auction.bidAmount;
 
   return {
     name: auction.tokenName,
     topBidder: bid ? bid.newBidder : auction.bidder,
-    currentBidAmount: bid ? bid.newBidAmount : auction.bidAmount,
-    availableBidAmount: auction.tokenAmount,
+    currentBidAmount: numberToFixedAmount(currentBidAmount),
+    availableBidAmount: numberToFixedAmount(auction.tokenAmount),
     createdTime: auction.createdTime,
     endTime: auction.endTime
   };
@@ -220,7 +220,7 @@ async function getAvailableAssetsToAuction() {
     if (!auction) {
       const value = await getAvailableBalance(token.name);
 
-      if (value > 0) {
+      if (value && value >= process.env.MINIMUM_AUCTION_AMOUNT) {
         result.push({
           name: token.name,
           value
@@ -250,7 +250,7 @@ async function getBidHistory(auctionId, limit, offset) {
     items: result.items.map(b => ({
       id: b.id,
       bidder: b.newBidder,
-      amount: b.newBidAmount,
+      amount: numberToFixedAmount(b.newBidAmount),
       createdTime: b.createdTime
     })),
     pagination: {

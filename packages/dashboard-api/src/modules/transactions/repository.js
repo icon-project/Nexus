@@ -1,34 +1,32 @@
 'use strict';
 
-const { logger, pgPool, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+const {
+  logger,
+  pgPool,
+  TRANSACTION_TBL_NAME,
+  TRANSACTION_TBL,
+  numberToFixedAmount,
+} = require('../../common');
 
 async function getTransactions(page = 0, limit = 20, from, to) {
   let offset = page * limit;
   const query = `SELECT * FROM ${TRANSACTION_TBL_NAME}
                     WHERE ${TRANSACTION_TBL.fromAddress} ~ $1
                        AND ${TRANSACTION_TBL.toAddress} ~ $2
+                       AND ${TRANSACTION_TBL.deleteAt} = $5
                     LIMIT $3 OFFSET $4`;
 
   try {
-    const { rows } = await pgPool.query(query, [from, to, limit, offset]);
+    const { rows } = await pgPool.query(query, [from, to, limit, offset, 0]);
     const transactions = [];
     if (rows.length > 0) {
       for (const row of rows) {
         transactions.push({
           id: row.id,
-          serialNumber: row.serial_number,
           tokenName: row.token_name,
-          value: Number(row.value),
-          toAddress: row.to_address,
-          fromAddress: row.from_address,
-          blockHeight: row.block_height,
-          blockHash: row.block_hash,
+          value: numberToFixedAmount(Number(row.value)),
           txHash: row.tx_hash,
           status: row.status,
-          createAt: Number(row.create_at),
-          updateAt: Number(row.update_at),
-          deleteAt: Number(row.delete_at),
-          networkId: row.network_id,
           blockTime: Number(row.block_time),
         });
       }
@@ -39,7 +37,6 @@ async function getTransactions(page = 0, limit = 20, from, to) {
     throw error;
   }
 }
-
 
 async function getTransactionById(id) {
   let transaction = {};
@@ -53,7 +50,7 @@ async function getTransactionById(id) {
         id: row.id,
         serialNumber: row.serial_number,
         tokenName: row.token_name,
-        value: Number(row.value),
+        value: numberToFixedAmount(Number(row.value)),
         toAddress: row.to_address,
         fromAddress: row.from_address,
         blockHeight: row.block_height,
@@ -65,8 +62,8 @@ async function getTransactionById(id) {
         deleteAt: Number(row.delete_at),
         networkId: row.network_id,
         blockTime: Number(row.block_time),
-        bptFee: Number(row.btp_fee) || 0,
-        networkFee: Number(row.network_fee) || 0,
+        bptFee: numberToFixedAmount(Number(row.btp_fee) || 0),
+        networkFee: numberToFixedAmount(Number(row.network_fee) || 0),
       };
     }
     return transaction;
@@ -75,7 +72,43 @@ async function getTransactionById(id) {
     throw error;
   }
 }
+/**
+ * Get total transaction volume all time or total transaction volume of 24h ago
+ * @param {*} is24hAgo true/false default false
+ * @param {*} sortBy DESC/ASC default DESC
+ */
+async function getTotalTransactionVolume(is24hAgo = false, sortBy = 'DESC') {
+  try {
+    let query = `SELECT DISTINCT ON (${TRANSACTION_TBL.tokenName}) ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.updateAt}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.networkId}
+    FROM ${TRANSACTION_TBL_NAME}
+    WHERE ${TRANSACTION_TBL.status} = 1 `;
+    const orderBy = ` ORDER BY ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.updateAt} ${sortBy}`;
+
+    if (is24hAgo) {
+      const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
+      query += ` AND ${TRANSACTION_TBL.blockTime} >= ${at24hAgo} ` + orderBy;
+    } else {
+      query += orderBy;
+    }
+
+    const { rows } = await pgPool.query(query);
+    let result = [];
+    for (let data of rows) {
+      result.push({
+        networkId: data.network_id,
+        tokenName: data.token_name,
+        totalVolume: data.total_volume,
+      });
+    }
+    return result;
+  } catch (error) {
+    logger.error('getTokenVolumeAllTime fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   getTransactions,
-  getTransactionById
+  getTransactionById,
+  getTotalTransactionVolume,
 };

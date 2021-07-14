@@ -1,21 +1,34 @@
 'use strict';
 
 const IconService = require('icon-sdk-js');
-const { countNetwork, countTransaction, getAllTimeFeeOfAssets, getVolumeMintedNetworks } = require('./repository');
+const {
+  countNetwork,
+  countTransaction,
+  getAllTimeFeeOfAssets,
+  getVolumeMintedNetworks,
+} = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
-const { logger, CURRENCIES } = require('../../common');
-const { exchangeToFiat } = require('../../common/util');
-const { HttpProvider, IconBuilder, IconConverter } = IconService;
-const { getTokenVolumeAllTime } = require('../networks/repository');
+const {
+  logger,
+  CURRENCIES,
+  hexToFixedAmount,
+  hexToIcxUnit,
+  exchangeToFiat,
+  numberToFixedAmount,
+} = require('../../common');
+const { HttpProvider, IconBuilder } = IconService;
+const { getTotalTransactionVolume } = require('../transactions/repository');
+
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
-const ICX_NUMBER = 10 ** 18;
 
 // Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
   const callBuilder = new IconBuilder.CallBuilder();
-  let result = [];
+  let assets = [];
+  let totalUSD = 0;
+  let promises = [];
 
   try {
     const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
@@ -24,10 +37,24 @@ async function getAmountFeeAggregationSCORE() {
     for (let data of tokens) {
       logger.debug(`getAmountFeeAggregationSCORE token: ${data.name}, address: ${data.address}`);
       let hexBalance = await getAvailableBalance(data.name);
-      result.push({ name: data.name, value: Math.floor(IconConverter.toNumber(hexBalance) / ICX_NUMBER)});
+      if ('0x0' !== hexBalance) {
+        const amount = hexToIcxUnit(hexBalance);
+        promises.push(exchangeToFiat(data.name, ['USD'], amount));
+      }
+
+      assets.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
     }
 
-    return result;
+    let totalAssets = await Promise.all(promises);
+    totalAssets.forEach((item) => {
+      totalUSD += item['USD'] ? item['USD'] : 0;
+    });
+    totalUSD = numberToFixedAmount(totalUSD);
+
+    return {
+      assets,
+      totalUSD,
+    };
   } catch (error) {
     logger.error('getAmountFeeAggregationSCORE failed', { error });
     throw error;
@@ -45,7 +72,9 @@ async function getAvailableBalance(tokenName) {
 
   try {
     const availableBalance = await iconService.call(call).execute();
-    logger.debug(`getAvailableBalance tokeName: ${tokenName}, availableBalance: ${availableBalance}`);
+    logger.debug(
+      `getAvailableBalance tokeName: ${tokenName}, availableBalance: ${availableBalance}`,
+    );
     return availableBalance;
   } catch (error) {
     logger.error('getAvailableBalance failed', { error });
@@ -62,16 +91,29 @@ async function getTotalNetworks() {
   }
 }
 
-async function getTotalTransactionAmount() {
+async function calculateVolumePercents() {
+  let totalVolume = await getTotalTransactionAmount(false);
+  let totalVolume24hAgo = (await getTotalTransactionAmount(true)) || 1;
+  return +((totalVolume * 100) / totalVolume24hAgo).toFixed(2);
+}
+
+async function getTotalTransactionAmount(is24hAgo) {
   try {
-    let tokenTransAmount = await getTokenVolumeAllTime();
+    let tokenTransAmount = [];
     let totalUSD = 0;
     let promises = [];
+
+    if (is24hAgo) {
+      tokenTransAmount = await getTotalTransactionVolume(true, 'ASC');
+    } else {
+      tokenTransAmount = await getTotalTransactionVolume(false, 'DESC');
+    }
+
     for (let item of tokenTransAmount) {
-      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], parseInt(item.tokenVolume)));
+      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], Number(item.totalVolume)));
     }
     const results = await Promise.all(promises);
-    results.forEach((item) => (totalUSD += item[CURRENCIES.USD]));
+    results.forEach((item) => (totalUSD += item[CURRENCIES.USD] ? item[CURRENCIES.USD] : 0));
     return totalUSD || 0;
   } catch (error) {
     logger.error('getTotalTransactionAmount failed', { error });
@@ -98,7 +140,31 @@ async function getBondedVolumeByRelays() {
 }
 
 async function getAllTimeFee() {
-  return await getAllTimeFeeOfAssets();
+  let totalUSD = 0;
+  let promises = [];
+  const assets = await getAllTimeFeeOfAssets();
+
+  for (let item of assets) {
+    if (0 !== item.value) {
+      promises.push(exchangeToFiat(item.name, ['USD'], item.value));
+    }
+  }
+
+  let totalAssets = await Promise.all(promises);
+  totalAssets.forEach((item) => {
+    totalUSD += item['USD'] ? item['USD'] : 0;
+  });
+  totalUSD = numberToFixedAmount(totalUSD);
+
+  let feeAssets = assets.map((item) => ({
+    name: item.name,
+    value: numberToFixedAmount(item.value),
+  }));
+
+  return {
+    feeAssets,
+    totalUSD,
+  };
 }
 
 async function getMintedNetworks() {
@@ -109,7 +175,7 @@ async function getMintedNetworks() {
 
   for (let token of mintedTokens) {
     let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
-    let volume = fiat.USD;
+    let volume = fiat.USD ? fiat.USD : 0;
     if (mapTokensVolume.has(token.networkId)) {
       volume += mapTokensVolume.get(token.networkId);
     }
@@ -120,7 +186,9 @@ async function getMintedNetworks() {
     results.push({
       networkId: data.id,
       networkName: data.name,
-      mintedVolume: mapTokensVolume.has(data.id)? mapTokensVolume.get(data.id) : 0
+      mintedVolume: mapTokensVolume.has(data.id)
+        ? numberToFixedAmount(mapTokensVolume.get(data.id))
+        : 0,
     });
   }
 
@@ -130,12 +198,13 @@ async function getMintedNetworks() {
 async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
   let results = [];
 
-  for(let data of tokensToConvertTo) {
+  for (let data of tokensToConvertTo) {
     const price = await exchangeToFiat(baseToken, [data], amount);
     const tokenUpperCase = data.toUpperCase();
-    results.push( {
+
+    results.push({
       name: tokenUpperCase,
-      value: price[`${tokenUpperCase}`].toFixed(2)
+      value: price[`${tokenUpperCase}`] ? Number(price[`${tokenUpperCase}`].toFixed(2)) : 0,
     });
   }
 
@@ -150,5 +219,6 @@ module.exports = {
   getBondedVolumeByRelays,
   getAllTimeFee,
   getMintedNetworks,
-  getTokensPriceConversion
+  getTokensPriceConversion,
+  calculateVolumePercents,
 };

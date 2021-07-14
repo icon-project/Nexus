@@ -8,11 +8,13 @@ const httpProvider = new HttpProvider('http://localhost:9082/api/v3');
 const iconService = new IconService(httpProvider);
 
 // FAS 1.0.4
-const fasAddress = 'cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e';
-const tokenName = 'SampleToken1406';
+const fasAddress = 'cx51291cbe0fff966b881d251b9414e54f5a02dac7';
+const tokenName = 'Sample2';
 
-//        000000000000000000
-
+//       1000000000000000000 = 1 ICX
+//           567000000000000
+//          8086000000000000
+//            20210000000000
 // 1000000000000000000000000
 //      15000000000000000000 =   15 ICX
 //    1088990666912500000000 = 1088 ICX
@@ -90,15 +92,19 @@ function sleep(ms) {
 }
 
 async function testBid() {
-  bid('./wallet1.json', 100);
+  bid('./wallet1.json', 100.0025);
   await sleep(30 * 1000);
-  bid('./wallet2.json', 110);
+  bid('./wallet2.json', 115.873593);
   await sleep(30 * 1000);
-  bid('./wallet3.json', 130);
+  bid('./wallet3.json', 130.858);
   await sleep(30 * 1000);
-  bid('./wallet1.json', 150);
+  bid('./wallet1.json', 152.456789);
   await sleep(30 * 1000);
-  bid('./wallet2.json', 170);
+  bid('./wallet2.json', 170.000787);
+}
+
+async function endBid() {
+  bid('./wallet3.json', 100.858);
 }
 
 async function getDefaultStepCost() {
@@ -116,15 +122,26 @@ async function getDefaultStepCost() {
   return IconConverter.toBigNumber(stepCosts.default).times(2);
 }
 
-// transfer();
-
-(async () => {
+function testConverter() {
   // const defaultStep = await getDefaultStepCost();
   // console.log(defaultStep);
   // testBid();
   // bid('./wallet2.json', 100); // end current auction
-  console.log('toLoop:', IconConverter.toHex(IconAmount.of(10, IconAmount.Unit.ICX).toLoop()));
-  console.log('toBigNumber:', IconConverter.toHex(IconConverter.toBigNumber(10)));
+
+  console.log(IconAmount.Unit.LOOP);
+  console.log(IconAmount.of(10.25, IconAmount.Unit.ICX));
+  console.log('convertUnit:', IconAmount.of(10.25, IconAmount.Unit.ICX).convertUnit(IconAmount.Unit.LOOP));
+  console.log('toLoop:', IconAmount.of(10.25, IconAmount.Unit.ICX).toLoop());
+  console.log('toLoop hex:', IconConverter.toHex(IconAmount.of(10.23456789, IconAmount.Unit.ICX).toLoop()));
+  console.log('toLoop hex:', IconConverter.toHex(IconAmount.of(110.00033344455, IconAmount.Unit.ICX).toLoop()));
+  console.log('toLoop hex:', IconConverter.toHex(IconAmount.of(125.00055, IconAmount.Unit.ICX).toLoop()));
+  console.log('toBigNumber:', IconConverter.toBigNumber(10));
+  console.log('toBigNumber hex:', IconConverter.toHex(IconConverter.toBigNumber(10)));
+}
+
+(async () => {
+  // testBid();
+  endBid();
 })();
 
 /*

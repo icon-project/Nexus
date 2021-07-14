@@ -1,7 +1,7 @@
 const TRANSACTION_STATUS = {
   success: 1,
   failed: -1,
-  pending: 0
+  pending: 0,
 };
 
 const TRANSACTION_TBL_NAME = 'transactions';
@@ -21,14 +21,17 @@ const TRANSACTION_TBL = {
   btpFee: 'btp_fee',
   networkFee: 'network_fee',
   status: 'status',
+  totalVolume: 'total_volume',
   createAt: 'create_at',
   updateAt: 'update_at',
-  deleteAt: 'delete_at'
+  deleteAt: 'delete_at',
 };
+
+const ICX_LOOP_UNIT = 10 ** 18;
 
 module.exports = {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
-  TRANSACTION_STATUS
+  TRANSACTION_STATUS,
+  ICX_LOOP_UNIT,
 };
-

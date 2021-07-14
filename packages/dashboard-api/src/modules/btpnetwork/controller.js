@@ -3,8 +3,14 @@
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
 
+// curl http://localhost:8000/v1/btpnetwork | jq
 async function getNetworkInfo(request, response) {
-  const assets = await model.getAmountFeeAggregationSCORE();
+  let last24hChange;
+  if (request.query.availableAmountLast24h == 1) {
+    last24hChange = await model.calculateVolumePercents();
+  }
+
+  const currentFeeAssets = await model.getAmountFeeAggregationSCORE();
   const totalNetworks = await model.getTotalNetworks();
   const totalTransactionAmount = await model.getTotalTransactionAmount();
   const totalTransactions = await model.getTotalTransaction();
@@ -15,37 +21,38 @@ async function getNetworkInfo(request, response) {
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
+      last24hChange,
       bondedValue: bondedRelays,
       fee: {
-        cumulativeAmount: 100000, // TODO: total tokens ever had in FeeAggregationSCORE
-        currentAmount: 500, // TODO: total amount of tokens valid in FeeAggregationSCORE
-        assets,
-        allTimeAmount: allTimeFeeAssets
+        cumulativeAmount: allTimeFeeAssets.totalUSD,
+        currentAmount: currentFeeAssets.totalUSD,
+        assets: currentFeeAssets.assets,
+        allTimeAmount: allTimeFeeAssets.feeAssets,
       },
       totalNetworks,
       totalTransactions,
-      minted: mintedNetworks
-    }
+      minted: mintedNetworks,
+    },
   });
 }
 
+// curl http://localhost:8000/v1/btpnetwork/converter?token=btc&amount=100&convert_to=usd | jq
 async function getPriceConversion(request, response) {
   if (!request.query.token || !request.query.amount || !request.query.convert_to) {
     return response.sendStatus(HttpStatus.BadRequest);
   }
 
   const baseToken = request.query.token;
-  const amount = parseInt(request.query.amount);
+  const amount = parseFloat(request.query.amount);
   const tokensToConvertTo = request.query.convert_to.split(',');
-
   const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
 
   response.status(HttpStatus.OK).json({
-    content:  priceTokens,
+    content: priceTokens,
   });
 }
 
 module.exports = {
   getNetworkInfo,
-  getPriceConversion
+  getPriceConversion,
 };

@@ -36,10 +36,13 @@ const TRANSACTION_TBL = {
   blockTime: 'block_time',
   btpFee: 'btp_fee',
   networkFee: 'network_fee',
+  totalVolume: 'total_volume',
   createAt: 'create_at',
   updateAt: 'update_at',
   deleteAt: 'delete_at',
 };
+
+const ICX_LOOP_UNIT = 10 ** 18;
 
 module.exports = {
   TRANSACTION_TBL_NAME,
@@ -49,4 +52,5 @@ module.exports = {
   CURRENCY_IDs,
   CURRENCIES,
   COINs,
+  ICX_LOOP_UNIT,
 };
