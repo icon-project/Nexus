@@ -88,9 +88,7 @@ CREATE TABLE public.minted_tokens (
     tx_hash character varying(100),
     block_hash character varying(100),
     block_height bigint,
-    create_at integer,
-    update_at integer,
-    delete_at integer
+    create_at timestamp without time zone NOT NULL
 );
 
 
@@ -119,9 +117,8 @@ CREATE TABLE public.networks (
     url character varying(100),
     mint_fee numeric,
     burn_fee numeric,
-    create_at integer,
-    update_at integer,
-    delete_at integer
+    create_at timestamp without time zone NOT NULL,
+    update_at timestamp without time zone NOT NULL
 );
 
 
