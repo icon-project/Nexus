@@ -1,6 +1,6 @@
 'use strict';
 
-const { countTotalRelay, getRelayDetailList } = require('./repository');
+const { countTotalRelay, getRelayDetailList, getRegisteredRelayChange } = require('./repository');
 
 async function getTotalRelay() {
   return await countTotalRelay();
@@ -16,8 +16,16 @@ async function getRelayList() {
   return relays;
 }
 
+async function getRegisteredChangeLast24h() {
+  const result = await getRegisteredRelayChange(24 * 60 * 60 * 1000);
+
+  if (result) {
+    return result.currentCount - result.comparedCount;
+  }
+}
 
 module.exports = {
   getTotalRelay,
   getRelayList,
+  getRegisteredChangeLast24h
 };

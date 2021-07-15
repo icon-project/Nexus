@@ -127,10 +127,10 @@ CREATE TABLE public.networks (
 
 --
 -- TOC entry 204 (class 1259 OID 16499)
--- Name: relays; Type: TABLE; Schema: public; Owner: -
+-- Name: relay_candidates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.relays (
+CREATE TABLE public.relay_candidates (
     id character varying(100) NOT NULL,
     rank numeric NOT NULL,
     name character varying(50) NOT NULL,
@@ -138,8 +138,11 @@ CREATE TABLE public.relays (
     server_status numeric NOT NULL,
     total_transferred_tx numeric NOT NULL,
     total_failed_tx numeric NOT NULL,
+    total_active integer NOT NULL,
+    registered_time timestamp without time zone NOT NULL,
+    unregistered_time timestamp without time zone,
     created_time timestamp without time zone NOT NULL,
-    updated_time timestamp without time zone NOT NULL
+    updated_time timestamp without time zone
 );
 
 
@@ -243,11 +246,11 @@ ALTER TABLE ONLY public.networks
 
 --
 -- TOC entry 2854 (class 2606 OID 16506)
--- Name: relays relays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: relay_candidates relay_candidates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.relays
-    ADD CONSTRAINT relays_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.relay_candidates
+    ADD CONSTRAINT relay_candidates_pkey PRIMARY KEY (id);
 
 
 --
