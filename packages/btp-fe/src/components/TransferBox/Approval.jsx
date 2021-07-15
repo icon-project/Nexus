@@ -7,6 +7,7 @@ import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
 import { transfer } from 'connectors/ICONex/iconService';
+import { EthereumInstance } from 'connectors/MetaMask';
 import { hashShortener } from 'utils/app';
 import { wallets } from 'utils/constants';
 
@@ -118,7 +119,7 @@ const Total = styled.div`
 export const Approval = memo(({ setStep, values, sendingInfo, account, form }) => {
   const { recipient, tokenAmount } = values;
   const { token, network } = sendingInfo;
-  const { currentNetwork, wallet } = account;
+  const { currentNetwork, wallet, unit } = account;
   const usdBalance = useTokenToUsd(token, tokenAmount);
 
   useListenForSuccessTransaction(() => {
@@ -137,6 +138,12 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form }) =
         desc: 'Waiting for confirmation in your wallet.',
       });
       transfer({ to: recipient, value: tokenAmount });
+    } else if (wallets.metamask === wallet) {
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+      EthereumInstance.tranferToken(recipient, tokenAmount);
     } else {
       openModal({
         icon: 'exclamationPointIcon',
@@ -151,7 +158,9 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form }) =
       <SendToken>
         <Text className="small sub-heading">You will send</Text>
         <div className="content">
-          <Header className="medium bold send-token">{tokenAmount || 0} ICX</Header>
+          <Header className="medium bold send-token">
+            {tokenAmount || 0} {unit}
+          </Header>
           <Text className="medium">= ${usdBalance.toLocaleString()}</Text>
         </div>
       </SendToken>
