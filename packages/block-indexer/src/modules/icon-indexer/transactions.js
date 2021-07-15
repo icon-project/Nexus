@@ -11,7 +11,6 @@ const {
   ICX_LOOP_UNIT,
   pgPool,
 } = require('../../common');
-const { getCurrentTimestamp } = require('../../common/util');
 
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,str)';
@@ -105,7 +104,7 @@ async function calculateTotalVolume(newTransaction) {
   newTransaction.totalVolume = 0;
   try {
     let transaction = await getLatestTransaction(newTransaction.tokenName);
-    newTransaction.totalVolume = Number(transaction.totalVolume) + newTransaction.value;
+    newTransaction.totalVolume = Number(transaction.totalVolume) + newTransaction.value || 0;
   } catch (error) {
     logger.error('"calculateTotalVolume" failed to calculate total volume of transaction', {
       error,
@@ -120,9 +119,7 @@ async function calculateTotalVolume(newTransaction) {
 function preSave(transfer) {
   if (!transfer.id) {
     transfer.id = uuidv4();
-    transfer.createAt = getCurrentTimestamp();
   }
-  transfer.updateAt = getCurrentTimestamp();
   transfer.deleteAt = 0;
 }
 
@@ -143,8 +140,8 @@ async function saveTransaction(transaction) {
       $1, $2, $3, $4,
       $5, $6, $7, $8,
       $9, $10, $11, $12,
-      $13, $14, $15, $16,
-      $17)`;
+      $13, $14, NOW(), NOW(),
+      $15)`;
     const insertValues = [
       transaction.id,
       transaction.fromAddress,
@@ -161,8 +158,6 @@ async function saveTransaction(transaction) {
       transaction.networkFee,
       transaction.status,
       transaction.totalVolume,
-      transaction.createAt,
-      transaction.updateAt,
       transaction.deleteAt,
     ];
 
@@ -191,7 +186,8 @@ async function setTransactionConfirmed(transactions, txInfo, status) {
           ${TRANSACTION_TBL.status} = $1,
           ${TRANSACTION_TBL.blockHash} = $2,
           ${TRANSACTION_TBL.blockHeight} = $3,
-          ${TRANSACTION_TBL.txHash} = $4
+          ${TRANSACTION_TBL.txHash} = $4,
+          ${TRANSACTION_TBL.updateAt} = NOW(),
         WHERE ${TRANSACTION_TBL.id} = $5`,
         [status, txInfo.blockHash, txInfo.blockHeight, txInfo.txHash, transt.id],
       );
