@@ -73,7 +73,10 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
     }
   };
 
-  const listNetwork = [{ value: 'ICON blockchain', label: 'ICON blockchain' }];
+  const listNetwork = [
+    { value: 'ICON blockchain', label: 'ICON blockchain' },
+    { value: 'Moonbase Alpha', label: 'Moonbase Alpha' },
+  ];
   return (
     <CardStyled bordered={false} style={{ width: 480 }}>
       <h1>Transfer</h1>
