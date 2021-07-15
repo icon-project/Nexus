@@ -10,10 +10,6 @@ const COIN_MARKET_CAP_URL =
 const COIN_MARKET_CAP_KEY =
   process.env.PRO_COIN_MARKETCAP_API_KEY || process.env.SANDBOX_COIN_MARKETCAP_API_KEY;
 
-function getCurrentTimestamp() {
-  return Math.floor(new Date().getTime() / 1000);
-}
-
 /**
  * Get coin info
  * @reference https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyInfo
@@ -112,7 +108,6 @@ function numberToFixedAmount(value) {
 }
 
 module.exports = {
-  getCurrentTimestamp,
   getCoinInfo,
   exchangeToFiat,
   hexToFixedAmount,

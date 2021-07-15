@@ -12,11 +12,13 @@ async function getTransHistory(request, response) {
   let limit = Number(request.query.limit) || 20;
 
   let transHistory = await model.getTrans(page, limit, from, to);
+  let total = await model.getTotalTransaction();
 
   if (!transHistory) return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
     content: [...transHistory],
+    total,
   });
 }
 
@@ -33,11 +35,11 @@ async function getTransaction(request, response) {
   if (!trans) return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
-    content: { ...trans, internalTransactions: [] }
+    content: { ...trans, internalTransactions: [] },
   });
 }
 
 module.exports = {
   getTransHistory,
-  getTransaction
+  getTransaction,
 };

@@ -79,11 +79,11 @@ describe('test for handle transation events', () => {
   test('should transfer and confirm event from tx result', async () => {
     pool.query.mockResolvedValue({ rows: [{ status: 0 }], rowCount: 1 });
     await Transaction.handleTransEvent(txResult, transaction);
-    expect(pool.query).toBeCalledTimes(2);
+    expect(pool.query).toBeCalledTimes(3);
     expect(
       pool.query,
     ).toHaveBeenCalledWith(
-      'INSERT INTO transactions (\n      id, from_address, token_name, serial_number,\n      value, to_address, block_height, block_hash,\n      tx_hash, block_time, network_id, btp_fee,\n      network_fee, status, create_at, update_at,\n       delete_at)\n    VALUES (\n      $1, $2, $3, $4,\n      $5, $6, $7, $8,\n      $9, $10, $11, $12,\n      $13, $14, $15, $16,\n      $17)',
+      'INSERT INTO transactions (\n      id, from_address, token_name, serial_number,\n      value, to_address, block_height, block_hash,\n      tx_hash, block_time, network_id, btp_fee,\n      network_fee, status, total_volume, create_at,\n      update_at, delete_at)\n    VALUES (\n      $1, $2, $3, $4,\n      $5, $6, $7, $8,\n      $9, $10, $11, $12,\n      $13, $14, NOW(), NOW(),\n      $15)',
       [
         expect.anything(),
         'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
@@ -99,8 +99,7 @@ describe('test for handle transation events', () => {
         0,
         0.0093075375,
         0,
-        expect.anything(),
-        expect.anything(),
+        0,
         0,
       ],
     );
