@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { logger, pgPool } = require('../../common');
+const { logger, pgPool, tokenToUsd } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
 const { hexToIcxUnit, getCurrentTimestamp } = require('../../common/util');
 
@@ -10,12 +10,12 @@ const TRANSFER_BATCH_PROTOTYPE  = 'TransferBatch(Address,Address,Address,bytes,b
 
 // TODOs: will be decode token id from eventlog to get name of token
 function getTokenNameById(id) {
-  return 'tokenName';
+  return 'NEAR';
 }
 
 // TODOs: will be decode token ids and token values from bytes data
 function getTokensInfo(ids, values) {
-  return [{name: 'tokenPol', value: 100}, {name: 'tokenMoon', value: 200}];
+  return [{name: 'DOT', value: 100}, {name: 'BNB', value: 200}];
 }
 
 async function handleMintEvents(txResult, transaction) {
@@ -23,7 +23,7 @@ async function handleMintEvents(txResult, transaction) {
     return false;
 
   try {
-    const mintObj =  getMintEvent(txResult, transaction);
+    const mintObj = await getMintEvent(txResult, transaction);
     await saveMintToken(mintObj);
 
   } catch (error) {
@@ -32,17 +32,19 @@ async function handleMintEvents(txResult, transaction) {
   }
 }
 
-function getMintEvent(txResult, transaction) {
+async function getMintEvent(txResult, transaction) {
   try {
     let results = [];
     for (let event of txResult.eventLogs) {
       if (TRANSFER_SINGLE_PROTOTYPE === event.indexed[0] && '0' === event.indexed[2]) {
         let name = getTokenNameById(event.data[0]);
         let value = hexToIcxUnit(event.data[1]);
+        let valueUSD = await tokenToUsd(name, value);
 
         results.push({
           tokenName: name,
           tokenValue: value,
+          tokenValueUSD: valueUSD,
           txHash: txResult.txHash,
           blockHash: txResult.blockHash,
           blockHeight: txResult.blockHeight,
@@ -56,9 +58,12 @@ function getMintEvent(txResult, transaction) {
         let tokens = getTokensInfo(event.data[0], event.data[1]);
 
         for (let item of tokens) {
+          let valueUSD = await tokenToUsd(item.name, item.value);
+          
           results.push({
             tokenName: item.name,
             tokenValue: item.value,
+            tokenValueUSD: valueUSD,
             txHash: txResult.txHash,
             blockHash: txResult.blockHash,
             blockHeight: txResult.blockHeight,
@@ -79,8 +84,16 @@ function getMintEvent(txResult, transaction) {
 async function saveMintToken(mintObj) {
   try {
     preSave(mintObj);
-    const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, block_time, block_height, block_hash, tx_hash, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())';
-    const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash];
+
+    const { rows } = await pgPool.query(`SELECT total_amount_usd FROM minted_tokens WHERE network_id = ${mintObj.networkId} ORDER BY create_at DESC LIMIT 1`);
+
+    if (0 === rows.length)
+      return false;
+
+    const totalAmountUSD = rows[0].total_amount_usd + mintObj.tokenValueUSD;
+
+    const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_amount_usd, block_time, block_height, block_hash, tx_hash, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
+    const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, totalAmountUSD, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash];
 
     await pgPool.query(query, values);
   } catch (error) {
