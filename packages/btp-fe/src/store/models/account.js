@@ -1,10 +1,11 @@
-import { ADDRESS_LOCAL_STORAGE, METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
+import { ADDRESS_LOCAL_STORAGE, METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
+import { roundNumber } from 'utils/app';
 
 const initState = {
   unit: '',
   wallet: '',
   address: '',
-  balance: 0, // TODO: calculating based on BigInt
+  balance: 0,
   cancelConfirmation: false,
   currentNetwork: '',
 };
@@ -29,7 +30,7 @@ const account = {
   },
   selectors: (slice) => ({
     selectAccountInfo() {
-      return slice((state) => state);
+      return slice((state) => ({ ...state, balance: roundNumber(state.balance, 4) }));
     },
     selectIsConnected() {
       return slice((state) => !!state.address);
