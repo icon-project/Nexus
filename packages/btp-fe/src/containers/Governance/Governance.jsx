@@ -129,13 +129,13 @@ function GovernancePage() {
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REGISTERED</Text>
               <Text className="large bold total-value">{relayCandidates.length}</Text>
-              <UpDownPercent up={false} sm percent="32%" />
+              <UpDownPercent up={false} percent="32%" />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REWARD FUND</Text>
               <Text className="large bold total-value">{totalRewardFund}</Text>
-              <UpDownPercent up sm percent="9.55%" />
+              <UpDownPercent up percent="9.55%" />
             </div>
           </div>
         </div>

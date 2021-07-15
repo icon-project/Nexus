@@ -23,6 +23,10 @@ export const smallBoldHeader = css`
 export const Header = styled.h3`
   ${normalHeader}
 
+  &.inline {
+    display: inline-block;
+  }
+
   &.x-small {
     font-size: 21px;
     line-height: 28px;
