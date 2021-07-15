@@ -22,6 +22,7 @@ import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
+  overflow-x: auto;
 
   .select-asset-container {
     margin-bottom: 34px;
@@ -81,6 +82,7 @@ const TransferHistoryStyled = styled.div`
   margin-right: auto;
   color: ${colors.grayText};
   width: 1120px;
+  max-width: 100%;
 
   .control-group {
     align-items: center;
