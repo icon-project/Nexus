@@ -220,9 +220,10 @@ async function getPercentsMintVolumeLast24h() {
   const totalVolumeMintedCurrently = await getTotalUSDMinted();
   const totalVolumeMintedLast24h = await getTotalUSDMintedLast24h();
 
-  let percentage = (((totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h));
-
-  return Number((percentage * 100).toFixed(2));
+  if (totalVolumeMintedCurrently && totalVolumeMintedCurrently) {
+    let percentage = (((totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h));
+    return Number((percentage * 100).toFixed(2));
+  }
 }
 
 module.exports = {
