@@ -17,14 +17,20 @@ const Wrapper = styled(Text)`
   span {
     font-size: ${({ sm }) => sm && '12px'};
     display: inline-block;
+
+    &.label {
+      color: ${colors.graySubText};
+      margin-left: 6px;
+    }
   }
 `;
 
 export const UpDownPercent = memo(({ percent = '9.55%', up = true, sm = false }) => {
   return (
-    <Wrapper up={up} sm={sm} className="small">
+    <Wrapper up={up} sm={sm} className="small percent">
       <img src={up ? upIcon : downIcon} alt="icon" />
       <span>{percent}</span>
+      <span className="label">in 24h</span>
     </Wrapper>
   );
 });
