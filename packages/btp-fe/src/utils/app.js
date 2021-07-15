@@ -26,8 +26,8 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-const roundToTwo = (num) => {
-  return +(Math.round(num + 'e+2') + 'e-2');
+export const roundNumber = (num, digit = 2) => {
+  return +(Math.round(num + `e+${digit}`) + `e-${digit}`);
 };
 
 const shortenNumber = (num) => {
@@ -36,11 +36,11 @@ const shortenNumber = (num) => {
   const { length } = num;
   switch (true) {
     case length > 12:
-      return roundToTwo(num / 1000000000000).toLocaleString() + ' T';
+      return roundNumber(num / 1000000000000).toLocaleString() + ' T';
     case length > 9:
-      return roundToTwo(num / 1000000000).toLocaleString() + ' B';
+      return roundNumber(num / 1000000000).toLocaleString() + ' B';
     case length > 6:
-      return roundToTwo(num / 1000000).toLocaleString() + ' M';
+      return roundNumber(num / 1000000).toLocaleString() + ' M';
     default:
       return (+num).toLocaleString();
   }

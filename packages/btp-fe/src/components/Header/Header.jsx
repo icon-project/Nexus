@@ -8,24 +8,20 @@ import { WalletDetails } from './WalletDetails';
 import { Modal } from '../NotificationModal';
 import { PrimaryButton, HamburgerButton } from '../Button';
 
-import { useDispatch, useSelect } from '../../hooks/useRematch';
-import {
-  requestAddress,
-  isICONexInstalled,
-  checkICONexInstalled,
-} from '../../connectors/ICONex/events';
-import { wallets } from '../../utils/constants';
-import { METAMASK_LOCAL_ADDRESS } from '../../connectors/constants';
-import { EthereumInstance } from '../../connectors/MetaMask';
+import { useDispatch, useSelect } from 'hooks/useRematch';
+import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
+import { wallets } from 'utils/constants';
+import { METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
+import { EthereumInstance } from 'connectors/MetaMask';
 
 import { Header as Heading, SubTitle, Text } from '../Typography';
 import { smallBoldSubtitle } from '../Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
-import defaultAvatar from '../../assets/images/avatar.svg';
-import MetaMask from '../../assets/images/metal-mask.svg';
-import ICONex from '../../assets/images/icon-ex.svg';
+import defaultAvatar from 'assets/images/avatar.svg';
+import MetaMask from 'assets/images/metal-mask.svg';
+import ICONex from 'assets/images/icon-ex.svg';
 
 const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
 

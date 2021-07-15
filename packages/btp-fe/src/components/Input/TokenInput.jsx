@@ -45,24 +45,18 @@ const StyledTokenInput = styled(Input)`
   text-align: center;
 `;
 
-export const TokenInput = ({
-  initalInputDisplay,
-  isCurrent,
-  value,
-  token,
-  onBlur = () => {},
-  meta = {},
-  ...props
-}) => {
-  const [showInput, setShowInput] = useState(initalInputDisplay === false ? false : true);
+export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = {}, ...props }) => {
+  const [showInput, setShowInput] = useState(true);
   const tokenInputRef = useRef();
   const usdBalance = useTokenToUsd(token, value);
+
   useEffect(() => {
-    if (isCurrent) tokenInputRef.current.focus();
-  }, [isCurrent]);
-  const toggleInput = () => {
-    setShowInput(!showInput);
-  };
+    if (isCurrent) {
+      tokenInputRef.current.focus();
+      setShowInput(true);
+    }
+  }, [isCurrent, setShowInput]);
+
   return (
     <Wrapper>
       <StyledTokenInput
@@ -72,7 +66,7 @@ export const TokenInput = ({
         type="number"
         onBlur={(e) => {
           onBlur(e);
-          toggleInput();
+          setShowInput(false);
         }}
         ref={tokenInputRef}
       />
@@ -80,7 +74,7 @@ export const TokenInput = ({
       <div
         className={`token-label ${!showInput && 'active'}`}
         onClick={() => {
-          toggleInput();
+          setShowInput(true);
           tokenInputRef.current.focus();
         }}
       >
