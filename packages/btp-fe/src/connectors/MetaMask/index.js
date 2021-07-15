@@ -46,7 +46,10 @@ class Ethereum {
   }
 
   isAllowedNetwork() {
-    if (!Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)) {
+    if (
+      this.ethereum.chainId &&
+      !Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)
+    ) {
       modal.openModal({
         desc:
           'The connected wallet is conflicted with your Source or Destination blockchain. Please change your blockchain option or reconnect a new wallet.',
@@ -105,6 +108,57 @@ class Ethereum {
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+  async tranferToken(to, value) {
+    const transactionParameters = {
+      nonce: '0x00', // ignored by MetaMask
+      to: to, // Required except during contract publications.
+      from: this.ethereum.selectedAddress, // must match user's active address.
+      value: ethers.utils.parseEther(value)._hex, // Only required to send ether to the recipient from the initiating external account.
+      chainId: this.ethereum.selectedAddress.chainId, // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+    };
+
+    // txHash is a hex string
+    // As with any RPC call, it may throw an error
+    try {
+      const txHash = await this.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [transactionParameters],
+      });
+      if (txHash) {
+        modal.openModal({
+          icon: 'checkIcon',
+          desc: 'Your transaction was submitted successfully.',
+          button: {
+            text: 'Continue transfer',
+            onClick: () => modal.setDisplay(false),
+          },
+        });
+      }
+      return txHash;
+    } catch (error) {
+      if (error.code === 4001) {
+        modal.openModal({
+          icon: 'exclamationPointIcon',
+          desc: 'Transaction rejected.',
+          button: {
+            text: 'Dissmiss',
+            onClick: () => modal.setDisplay(false),
+          },
+        });
+        return;
+      } else {
+        modal.openModal({
+          icon: 'xIcon',
+          desc: error.message,
+          button: {
+            text: 'Back to transfer',
+            onClick: () => modal.setDisplay(false),
+          },
+        });
+        return;
+      }
     }
   }
 }

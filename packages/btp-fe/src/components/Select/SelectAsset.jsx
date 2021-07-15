@@ -6,6 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import Select from './Select';
 
 import iconexIcon from 'assets/images/icon-ex.svg';
+import ethIcon from 'assets/images/eth-icon.svg';
 
 const StyledItem = styled.div`
   display: flex;
@@ -46,6 +47,16 @@ const SelectAsset = ({ onChange }) => {
       renderItem: () => (
         <Item icon={iconexIcon} symbol="ICX">
           ICON
+        </Item>
+      ),
+    },
+    {
+      value: 'ETH',
+      label: 'ETH',
+      renderLabel: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
+      renderItem: () => (
+        <Item icon={ethIcon} symbol="ETH">
+          Ethereum
         </Item>
       ),
     },
