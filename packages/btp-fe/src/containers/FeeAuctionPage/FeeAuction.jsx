@@ -139,13 +139,15 @@ const FeeAuction = () => {
   const [keySearch, setKeySearch] = useState('');
   const [sortOptions, setSortOptions] = useState({ property: 'name', sortBy: 'abc' });
 
-  const { auctions, availableAssets, fees } = useSelect(
-    ({ auction: { selectAuctions, selectAvailableAssets, selectFees } }) => ({
-      auctions: selectAuctions,
-      availableAssets: selectAvailableAssets,
-      fees: selectFees,
-    }),
-  );
+  const {
+    auctions,
+    availableAssets,
+    fees: { assets, totalFeeInUsd },
+  } = useSelect(({ auction: { selectAuctions, selectAvailableAssets, selectFees } }) => ({
+    auctions: selectAuctions,
+    availableAssets: selectAvailableAssets,
+    fees: selectFees,
+  }));
   const [filteredData, setFilteredData] = useState(auctions);
 
   const { getAuctions, getAvailableAssets, getFees, openModal } = useDispatch(
@@ -211,13 +213,13 @@ const FeeAuction = () => {
                 <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">
                   TOTAL AVAILABLE BID AMOUNT
                 </TextWithInfo>
-                <Header className="large bold">$ 1,049</Header>
+                <Header className="large bold">$ {totalFeeInUsd.toLocaleString()}</Header>
               </div>
 
               <div className="divider"></div>
 
               <div className="table-container">
-                <AmountOfBidTable fees={fees} />
+                <AmountOfBidTable fees={assets} />
               </div>
               <div className="divider"></div>
 
