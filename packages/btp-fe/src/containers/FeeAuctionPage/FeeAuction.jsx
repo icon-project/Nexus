@@ -4,6 +4,7 @@ import styled from 'styled-components/macro';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 
+import { UpDownPercent } from 'components/UpDownPercent';
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { SortSelect } from 'components/Select';
@@ -38,8 +39,11 @@ const Wrapper = styled.div`
     margin-bottom: 42px;
 
     .amount-of-bid {
-      margin-right: 60px;
-      max-width: 255px;
+      width: 310px;
+
+      .percent {
+        margin-left: 9.67px;
+      }
     }
 
     .divider {
@@ -50,7 +54,7 @@ const Wrapper = styled.div`
 
     .table-container {
       margin: 0 63px;
-      width: 40.64%;
+      width: 43%;
       display: flex;
       align-items: center;
     }
@@ -209,9 +213,10 @@ const FeeAuction = () => {
             <div className="total-available">
               <div className="amount-of-bid">
                 <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">
-                  TOTAL AVAILABLE BID AMOUNT
+                  TOTAL FEE AVAILABLE FOR AUCTION
                 </TextWithInfo>
-                <Header className="large bold">$ 1,049</Header>
+                <Header className="large bold inline">$ 1,049</Header>
+                <UpDownPercent up={false} percent="3.18%" />
               </div>
 
               <div className="divider"></div>
