@@ -1,5 +1,5 @@
 import { ADDRESS_LOCAL_STORAGE, METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
-import { roundToTwo } from 'utils/app';
+import { roundNumber } from 'utils/app';
 
 const initState = {
   unit: '',
@@ -30,7 +30,7 @@ const account = {
   },
   selectors: (slice) => ({
     selectAccountInfo() {
-      return slice((state) => ({ ...state, balance: roundToTwo(state.balance) }));
+      return slice((state) => ({ ...state, balance: roundNumber(state.balance, 4) }));
     },
     selectIsConnected() {
       return slice((state) => !!state.address);
