@@ -22,18 +22,12 @@ import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
   margin-top: 34px;
+  overflow-x: auto;
+
   .select-asset-container {
     margin-bottom: 34px;
   }
-  .details-column {
-    width: 448px;
-  }
-  .time-column {
-    width: 148px;
-  }
-  .amount-column {
-    width: 268;
-  }
+
   ${media.md`
     .ant-table-content {
       overflow-x: auto;
@@ -46,24 +40,23 @@ const columns = [
   {
     title: 'Details',
     dataIndex: 'txHash',
-    render: (text) => <div className="details-column">{text}</div>,
+    width: '480px',
   },
   {
     title: 'Time',
     dataIndex: 'blockTime',
-    render: (blockTime) => <div className="time-column">{dayjs(blockTime / 1000).fromNow()}</div>,
+    render: (blockTime) => dayjs(blockTime / 1000).fromNow(),
+    width: '180px',
   },
   {
     title: 'Amount',
     dataIndex: 'value',
-    render: (text, dataSource) => (
-      <div className="amount-column">{text + ' ' + dataSource.tokenName}</div>
-    ),
+    render: (text, dataSource) => text + ' ' + dataSource.tokenName,
+    width: '300px',
   },
   {
     title: 'Status',
     dataIndex: 'status',
-    width: 160,
     render: (text) => {
       let status = 'Success';
       let color = '#5EF38C';
@@ -79,6 +72,7 @@ const columns = [
       }
       return <Tag color={color}>{status}</Tag>;
     },
+    width: '160px',
   },
 ];
 
@@ -88,6 +82,7 @@ const TransferHistoryStyled = styled.div`
   margin-right: auto;
   color: ${colors.grayText};
   width: 1120px;
+  max-width: 100%;
 
   .control-group {
     align-items: center;

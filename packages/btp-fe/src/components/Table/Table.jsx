@@ -35,6 +35,7 @@ const TableStyled = styled(antdTable)`
     border: none;
     border-bottom: 1px solid ${colors.grayLine};
     padding: 11.5px 14px;
+    word-break: break-all;
   }
 
   .ant-table-thead,
