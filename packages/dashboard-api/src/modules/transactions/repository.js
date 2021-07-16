@@ -112,9 +112,18 @@ async function getTotalTransactionVolume(is24hAgo = false, sortBy = 'DESC') {
     throw error;
   }
 }
+async function countAllTransaction() {
+  const {
+    rows: [result],
+  } = await pgPool.query(
+    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.deleteAt} = 0`,
+  );
+  return Number(result.count) || 0;
+}
 
 module.exports = {
   getTransactions,
   getTransactionById,
   getTotalTransactionVolume,
+  countAllTransaction,
 };

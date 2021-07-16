@@ -3,7 +3,7 @@
 const { logger, pgPool } = require('../../common');
 
 async function countTotalRelay() {
-  const query = 'SELECT COUNT(*) FROM relays';
+  const query = 'SELECT COUNT(*) FROM relay_candidates WHERE unregistered_time IS NULL';
 
   try {
     const { rows } = await pgPool.query(query);
@@ -15,7 +15,7 @@ async function countTotalRelay() {
 }
 
 async function getRelayDetailList() {
-  const query = 'SELECT * FROM relays';
+  const query = 'SELECT * FROM relay_candidates WHERE unregistered_time IS NULL';
 
   try {
     const { rows } = await pgPool.query(query);
@@ -46,7 +46,7 @@ async function getRelayDetailList() {
 }
 
 async function getTotalBondedRelays() {
-  const query = 'SELECT sum(bonded_icx) FROM relays';
+  const query = 'SELECT SUM(bonded_icx) FROM relay_candidates WHERE unregistered_time IS NULL';
 
   try {
     const {
@@ -59,7 +59,7 @@ async function getTotalBondedRelays() {
   }
 }
 async function getById(id) {
-  const query = 'SELECT * FROM relays WHERE id = $1 LIMIT 1';
+  const query = 'SELECT * FROM relay_candidates WHERE id = $1';
 
   try {
     const { rows } = await pgPool.query(query, [id]);
@@ -83,9 +83,42 @@ async function getById(id) {
   }
 }
 
+// timeRange in milliseconds
+async function getRegisteredRelayChange(timeRange) {
+  try {
+    let result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates ORDER BY registered_time DESC LIMIT 1');
+
+    if (0 === result.rows.length)
+      return null;
+
+    const currentCount = Number(result.rows[0].total_active);
+    const currentTime = new Date(result.rows[0].registered_time);
+    const compareToTime = new Date(currentTime.getTime() - timeRange);
+
+    result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates WHERE registered_time <= $1 ORDER BY registered_time DESC LIMIT 1', [compareToTime.toISOString()]);
+
+    if (0 === result.rows.length)
+      return null;
+
+    const comparedCount = Number(result.rows[0].total_active);
+    const comparedTime = new Date(result.rows[0].registered_time);
+
+    return {
+      currentCount,
+      currentTime,
+      comparedCount,
+      comparedTime
+    };
+  } catch (error) {
+    logger.error(`getRegisteredRelayChange fails`, { error });
+    throw error;
+  }
+}
+
 module.exports = {
   countTotalRelay,
   getRelayDetailList,
   getTotalBondedRelays,
   getById,
+  getRegisteredRelayChange
 };

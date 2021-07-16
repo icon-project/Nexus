@@ -1,10 +1,14 @@
 'use strict';
 
 const { getNetworkById } = require('../networks/repository');
-const { getTransactions, getTransactionById } = require('./repository');
+const { getTransactions, getTransactionById, countAllTransaction } = require('./repository');
 
 async function getTrans(page, limit, from, to) {
   return getTransactions(page, limit, from, to);
+}
+
+async function getTotalTransaction() {
+  return countAllTransaction();
 }
 
 async function getTransById(id) {
@@ -25,4 +29,5 @@ async function getTransById(id) {
 module.exports = {
   getTrans,
   getTransById,
+  getTotalTransaction,
 };

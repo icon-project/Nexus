@@ -16,7 +16,7 @@ WHERE transfer_fees.id=b.id
 -- Issue #167
 ALTER TABLE transactions
   ADD total_volume numeric NOT NULL DEFAULT 0
-  
+
 -- Issue #33
 
 ALTER TABLE networks
@@ -34,3 +34,9 @@ DROP COLUMN delete_at,
 DROP COLUMN update_at,
 ADD COLUMN total_amount_usd numeric NOT NULL DEFAULT 0,
 ALTER COLUMN create_at SET DATA TYPE timestamp without time zone USING to_timestamp(create_at);
+
+-- Issue #153
+ALTER TABLE transactions
+ALTER COLUMN create_at SET DATA TYPE timestamp without time zone USING to_timestamp(create_at),
+ALTER COLUMN update_at SET DATA TYPE timestamp without time zone USING to_timestamp(update_at);
+
