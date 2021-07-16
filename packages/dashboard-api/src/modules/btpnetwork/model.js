@@ -224,6 +224,8 @@ async function getPercentsMintVolumeLast24h() {
     let percentage = (((totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h));
     return Number((percentage * 100).toFixed(2));
   }
+
+  return 0;
 }
 
 module.exports = {

@@ -69,11 +69,12 @@ const txResultBatch = {
 
 // Test case for mint event
 test('should return mint event from tx result', async () => {
-    const event = getMintEvent(txResult, transaction);
+    const event = await getMintEvent(txResult, transaction);
 
     expect(event[0]).toMatchObject({
         tokenValue: 10,
-        tokenName: 'tokenName',
+        tokenValueUSD: 19.8,
+        tokenName: 'NEAR',
         txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
         blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
         blockHeight: 98274,
@@ -84,11 +85,12 @@ test('should return mint event from tx result', async () => {
 
 // Test case for mintBatch event
 test('should return mintBatch event from tx result', async () => {
-    const event = getMintEvent(txResultBatch, transaction);
+    const event = await getMintEvent(txResultBatch, transaction);
 
     expect(event[0]).toMatchObject({
         tokenValue: 100,
-        tokenName: 'tokenPol',
+        tokenValueUSD: 1329.91,
+        tokenName: 'DOT',
         txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
         blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
         blockHeight: 98274,
@@ -98,7 +100,8 @@ test('should return mintBatch event from tx result', async () => {
 
     expect(event[1]).toMatchObject({
         tokenValue: 200,
-        tokenName: 'tokenMoon',
+        tokenValueUSD: 64146.7,
+        tokenName: 'BNB',
         txHash: '0x9cb5c3551f1f593edb325a87937d51da56e61a48bfc285e4f2951e74c9fbdecf',
         blockHash: '0x5a9512b284eb02feaa835651f7a6df99672835ec1a6bc846400e61f41a13faa6',
         blockHeight: 98274,
