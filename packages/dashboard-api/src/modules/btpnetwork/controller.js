@@ -10,6 +10,11 @@ async function getNetworkInfo(request, response) {
     last24hChange = await model.calculateVolumePercents();
   }
 
+  let mintVolumeLast24hChange;
+  if (request.query.mintLast24h === 'true') {
+    mintVolumeLast24hChange = await model.getPercentsMintVolumeLast24h();
+  }
+
   const currentFeeAssets = await model.getAmountFeeAggregationSCORE();
   const totalNetworks = await model.getTotalNetworks();
   const totalTransactionAmount = await model.getTotalTransactionAmount();
@@ -32,6 +37,7 @@ async function getNetworkInfo(request, response) {
       totalNetworks,
       totalTransactions,
       minted: mintedNetworks,
+      mintVolumeLast24hChange
     },
   });
 }

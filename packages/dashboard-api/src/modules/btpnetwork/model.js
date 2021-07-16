@@ -6,6 +6,8 @@ const {
   countTransaction,
   getAllTimeFeeOfAssets,
   getVolumeMintedNetworks,
+  getTotalUSDMinted,
+  getTotalUSDMintedLast24h,
 } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
@@ -214,6 +216,18 @@ async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
   return results;
 }
 
+async function getPercentsMintVolumeLast24h() {
+  const totalVolumeMintedCurrently = await getTotalUSDMinted();
+  const totalVolumeMintedLast24h = await getTotalUSDMintedLast24h();
+
+  if (totalVolumeMintedCurrently && totalVolumeMintedCurrently) {
+    let percentage = (((totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h));
+    return Number((percentage * 100).toFixed(2));
+  }
+
+  return 0;
+}
+
 module.exports = {
   getAmountFeeAggregationSCORE,
   getTotalNetworks,
@@ -224,4 +238,5 @@ module.exports = {
   getMintedNetworks,
   getTokensPriceConversion,
   calculateVolumePercents,
+  getPercentsMintVolumeLast24h
 };

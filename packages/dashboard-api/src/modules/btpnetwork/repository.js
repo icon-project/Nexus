@@ -73,10 +73,42 @@ async function getVolumeMintedNetworks() {
   }
 }
 
+async function getTotalUSDMinted() {
+  try {
+    const result = await pgPool.query('SELECT total_amount_usd FROM minted_tokens ORDER BY create_at DESC LIMIT 1');
+
+    if (0 === result.rows.length)
+      return null;
+
+    return Number(result.rows[0].total_amount_usd);
+  } catch (error) {
+    logger.error('getTotalUSDMinted fails', { error });
+    throw error;
+  }
+}
+
+async function getTotalUSDMintedLast24h() {
+  try {
+    const at24hAgo = new Date(new Date().getTime()  - (24 * 60 * 60 * 1000)); // millisecond 
+
+    const result = await pgPool.query('SELECT total_amount_usd FROM minted_tokens WHERE create_at <= $1 ORDER BY create_at DESC LIMIT 1',[at24hAgo.toISOString()]);
+
+    if (0 === result.rows.length)
+      return null;
+
+    return Number(result.rows[0].total_amount_usd);
+  } catch (error) {
+    logger.error('getTotalUSDMintedLast24h fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   countNetwork,
   sumTransactionAmount,
   countTransaction,
   getAllTimeFeeOfAssets,
-  getVolumeMintedNetworks
+  getVolumeMintedNetworks,
+  getTotalUSDMinted,
+  getTotalUSDMintedLast24h
 };
