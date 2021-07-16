@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Row } from 'antd';
 import dayjs from 'dayjs';
@@ -124,30 +124,30 @@ const TransferHistoryStyled = styled.div`
 const TransferHistory = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
-  const [selectedPage, setSelectedPage] = useState(0);
   const [historySource, setHistorySource] = useState([]);
+  const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 }); // BE hard-coded 20 items/page
   const [isFetching, setIsFetching] = useState(true);
   const { handleError } = useDispatch(({ modal: { handleError } }) => ({
     handleError,
   }));
-  useEffect(() => {
-    const getHistory = async () => {
-      try {
-        const transferData = await getTransferHistory(selectedPage);
-        const dataSource = transferData?.content?.map((history, index) => {
-          return {
-            ...history,
-            key: index,
-          };
-        });
-        setHistorySource(dataSource);
-        setIsFetching(false);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-    getHistory();
-  }, [handleError, selectedPage]);
+
+  const fetchDataHandler = async (page) => {
+    try {
+      const transferData = (await getTransferHistory(page - 1)) || {};
+      const dataSource = transferData?.content?.map((history, index) => {
+        return {
+          ...history,
+          key: index,
+        };
+      });
+      setHistorySource(dataSource);
+      setPagination((pagination) => ({ ...pagination, totalItem: transferData.total || 0 }));
+      setIsFetching(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   const onClickDetail = (detail) => {
     setSelectedRow(detail);
     setShowDetails(true);
@@ -174,9 +174,9 @@ const TransferHistory = () => {
         onRow={(r) => ({
           onClick: () => onClickDetail(r),
         })}
-        pagination
-        onChange={(pagination) => setSelectedPage(pagination.current - 1)}
+        pagination={pagination}
         loading={isFetching}
+        getItemsHandler={(page) => () => fetchDataHandler(page)}
       />
       {showDetails && (
         <HistoryDetails id={selectedRow.id} onClose={() => setShowDetails(false)}></HistoryDetails>
