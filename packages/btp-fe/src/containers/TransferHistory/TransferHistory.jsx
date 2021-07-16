@@ -51,7 +51,7 @@ const columns = [
   {
     title: 'Amount',
     dataIndex: 'value',
-    render: (text, dataSource) => text + ' ' + dataSource.tokenName,
+    render: (text, dataSource) => text + ' ' + dataSource.tokenName?.toUpperCase(),
     width: '300px',
   },
   {
