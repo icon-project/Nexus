@@ -37,8 +37,8 @@ export const getNetwork = (id) => {
 };
 
 // transactions?page=<page>&limit=<limit>&from=<network_id>&to=<network_id> / default limit: 20
-export const getTransferHistory = (page) => {
-  return fetchAPI(`/transactions?page=${page}`);
+export const getTransferHistory = (page, limit = 20) => {
+  return fetchAPI(`/transactions?page=${page}&limit=${limit}`);
 };
 
 export const getTransferHistoryById = (id) => {

@@ -133,7 +133,7 @@ const TransferHistory = () => {
 
   const fetchDataHandler = async (page) => {
     try {
-      const transferData = (await getTransferHistory(page - 1)) || {};
+      const transferData = (await getTransferHistory(page - 1, pagination.limit)) || {};
       const dataSource = transferData?.content?.map((history, index) => {
         return {
           ...history,
