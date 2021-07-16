@@ -16,7 +16,7 @@ const auction = {
     auctions: [],
     currentAuction: {},
     availableAssets: [],
-    fees: [],
+    fees: { assets: [], totalFeeInUsd: 0 },
     bids: {},
   },
   reducers: {
@@ -68,7 +68,7 @@ const auction = {
     async getFees() {
       try {
         const fees = await getFeeAssets();
-        this.setAuctionState(['fees', fees.content.assets]);
+        this.setAuctionState(['fees', fees.content]);
         return fees;
       } catch (error) {
         dispatch.modal.handleError();
