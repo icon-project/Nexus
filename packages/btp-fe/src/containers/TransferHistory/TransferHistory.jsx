@@ -125,7 +125,7 @@ const TransferHistory = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [historySource, setHistorySource] = useState([]);
-  const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 }); // BE hard-coded 20 items/page
+  const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
   const { handleError } = useDispatch(({ modal: { handleError } }) => ({
     handleError,

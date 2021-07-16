@@ -36,6 +36,7 @@ export const getNetwork = (id) => {
   return fetchAPI(`/networks/${id}`);
 };
 
+// transactions?page=<page>&limit=<limit>&from=<network_id>&to=<network_id> / default limit: 20
 export const getTransferHistory = (page) => {
   return fetchAPI(`/transactions?page=${page}`);
 };
