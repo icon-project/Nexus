@@ -118,7 +118,7 @@ export const Table = ({
         {children}
       </TableStyled>
 
-      {totalItem && limit < totalItem && (
+      {totalItem && limit < totalItem ? (
         <Pagination
           pageSize={limit}
           onChange={(page) => {
@@ -130,6 +130,8 @@ export const Table = ({
           showSizeChanger={false}
           showLessItems
         />
+      ) : (
+        ''
       )}
     </>
   );
