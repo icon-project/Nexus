@@ -5,6 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
 
 import { Tag } from '../../components/Tag';
 import { Icon } from '../../components/Icon/Icon';
@@ -147,7 +148,6 @@ const CopyAddress = ({ text }) => {
 export const HistoryDetails = ({ id, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
-  console.log(isFetching);
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
@@ -160,6 +160,7 @@ export const HistoryDetails = ({ id, onClose }) => {
     };
     getTransactionDetails();
   }, [id]);
+  const tokenPrice = useTokenToUsd(details.tokenName, 1);
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -175,7 +176,10 @@ export const HistoryDetails = ({ id, onClose }) => {
             </div>
             <div className="content">
               <Text className="medium">Amount</Text>
-              <Text className="medium">{details.value}</Text>
+              <Text className="medium">
+                {details.value} {details.tokenName} (= $
+                {(tokenPrice * details.value)?.toLocaleString()})
+              </Text>
             </div>
             <div className="content">
               <Text className="medium">Status</Text>
@@ -193,14 +197,14 @@ export const HistoryDetails = ({ id, onClose }) => {
             <div className="content">
               <Text className="medium">From</Text>
               <Text className="medium">
-                <span className="hide-in-mobile">(Binance Smart Chain) </span>
+                <span className="hide-in-mobile">({details.networkNameSrc || 'Unknown'}) </span>
                 <CopyAddress text={details.fromAddress} />
               </Text>
             </div>
             <div className="content">
               <Text className="medium">To</Text>
               <Text className="medium">
-                <span className="hide-in-mobile">(Edgeware) </span>
+                <span className="hide-in-mobile">({details.networkNameDst || 'Unknown'}) </span>
                 <CopyAddress text={details.toAddress} />
               </Text>
             </div>
@@ -219,11 +223,16 @@ export const HistoryDetails = ({ id, onClose }) => {
           </div> */}
             <div className="content">
               <Text className="medium">Network fee</Text>
-              <Text className="medium">{details.networkFee}</Text>
+              <Text className="medium">
+                {details.networkFee} {details.tokenName} ( $
+                {(tokenPrice * details.networkFee)?.toLocaleString()})
+              </Text>
             </div>
             <div className="content btp-fee">
               <Text className="medium">BTP fee</Text>
-              <Text className="medium">{details.bptFee}</Text>
+              <Text className="medium">
+                {details.bptFee} {details.nativeToken}
+              </Text>
             </div>
           </div>
         )}
