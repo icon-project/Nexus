@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
@@ -75,9 +74,7 @@ const NetWork = ({ detail = {} }) => {
 
   return (
     <NetworkWrapper>
-      <TextWithIcon icon={nameToken} width="24px" className="uppercase">
-        {nameToken}
-      </TextWithIcon>
+      <Text className="medium uppercase">{nameToken}</Text>
       <div className="all-time">
         <Text className="small">All time</Text>
         <div className="values">
