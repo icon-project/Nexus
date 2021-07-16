@@ -45,10 +45,10 @@ const StyledTokenInput = styled(Input)`
   text-align: center;
 `;
 
-export const TokenInput = ({ isCurrent, value, onBlur = () => {}, meta = {}, ...props }) => {
+export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = {}, ...props }) => {
   const [showInput, setShowInput] = useState(true);
   const tokenInputRef = useRef();
-  const usdBalance = useTokenToUsd('icx', value);
+  const usdBalance = useTokenToUsd(token, value);
 
   useEffect(() => {
     if (isCurrent) {
@@ -78,7 +78,7 @@ export const TokenInput = ({ isCurrent, value, onBlur = () => {}, meta = {}, ...
           tokenInputRef.current.focus();
         }}
       >
-        {value || 0} ICX
+        {value} {token}
       </div>
       <Text className="medium exchange">= ${usdBalance.toLocaleString()}</Text>
       {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}

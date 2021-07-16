@@ -1,7 +1,6 @@
 import styled from 'styled-components/macro';
 
 import { Header, SubTitle, Link } from 'components/Typography';
-import { UpDownPercent } from 'components/UpDownPercent';
 import { Icon } from 'components/Icon';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { Feebox } from './FeeBox';
@@ -92,7 +91,6 @@ export const StatisticArea = ({ data, networks }) => {
           <Header className="small bold value" title={bondedValue}>
             {shortenNumber(bondedValue)}
           </Header>
-          <UpDownPercent up percent="12.22%" />
         </div>
         <div className="box transaction">
           <TextWithInfo tooltip="Total number of transactions on the BTP Network">
@@ -101,7 +99,6 @@ export const StatisticArea = ({ data, networks }) => {
           <Header className="small bold value" title={totalTransactions}>
             {shortenNumber(totalTransactions)}
           </Header>
-          <UpDownPercent up percent="12.22%" />
         </div>
       </div>
 
