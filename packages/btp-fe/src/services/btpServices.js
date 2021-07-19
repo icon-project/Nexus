@@ -1,19 +1,23 @@
 import { fetchAPI } from 'utils/fetch';
 
+const baseAuctionURL = '/auctions';
+const baseRelayURL = '/relays';
+const baseBTPNetwork = '/btpnetwork';
+
 export const getAuctions = () => {
-  return fetchAPI('/auctions');
+  return fetchAPI(baseAuctionURL);
 };
 
 export const getAuctionDetails = (auctionId) => {
-  return fetchAPI(`/auctions/${auctionId}`);
+  return fetchAPI(`${baseAuctionURL}/${auctionId}`);
 };
 
 export const getAuctionBids = (auctionId, offset, limit = 10) => {
-  return fetchAPI(`/auctions/${auctionId}/bids?limit=${limit}&offset=${offset}`);
+  return fetchAPI(`${baseAuctionURL}/${auctionId}/bids?limit=${limit}&offset=${offset}`);
 };
 
 export const getAvailableAssets = () => {
-  return fetchAPI(`/auctions/?availableAssets=1`);
+  return fetchAPI(`${baseAuctionURL}/?availableAssets=1`);
 };
 
 export const getFeeAssets = () => {
@@ -21,15 +25,15 @@ export const getFeeAssets = () => {
 };
 
 export const getRelayCandidates = () => {
-  return fetchAPI(`/relays`);
+  return fetchAPI(baseRelayURL);
 };
 
 export const getRegisteredRelayCandidate = () => {
-  return fetchAPI(`/relays?style=count`);
+  return fetchAPI(`${baseRelayURL}?style=count`);
 };
 
 export const getRegisteredRelayLast24h = () => {
-  return fetchAPI(`/relays?style=registeredLast24h`);
+  return fetchAPI(`${baseRelayURL}?style=registeredLast24h`);
 };
 
 export const getConnectedNetworks = () => {
@@ -50,5 +54,5 @@ export const getTransferHistoryById = (id) => {
 };
 
 export const tokenToUsd = async (token, amount) => {
-  return fetchAPI(`/btpnetwork/converter?token=${token}&amount=${amount}&convert_to=usd`);
+  return fetchAPI(`${baseBTPNetwork}/converter?token=${token}&amount=${amount}&convert_to=usd`);
 };

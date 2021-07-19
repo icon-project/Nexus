@@ -50,7 +50,8 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const ChartArea = ({ volume = 0 }) => {
+export const ChartArea = ({ data }) => {
+  const { volume, last24hChange } = data;
   const { networks } = useSelect(({ app: { selectConnectedNetworks } }) => ({
     networks: selectConnectedNetworks,
   }));
@@ -62,7 +63,7 @@ export const ChartArea = ({ volume = 0 }) => {
       <div className="chart">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
         <Header className="medium bold">
-          ${volume.toLocaleString()} <UpDownPercent percent="9.55%" />
+          ${volume.toLocaleString()} <UpDownPercent percent={last24hChange} />
         </Header>
         <ChartBox chartId="volume" networks={networks} />
       </div>

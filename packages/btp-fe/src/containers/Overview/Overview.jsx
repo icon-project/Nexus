@@ -39,7 +39,7 @@ const Overview = () => {
 
   return (
     <Wrapper>
-      <ChartArea volume={content.volume || 0} />
+      <ChartArea data={content} />
       <StatisticArea data={content} networks={networks} />
     </Wrapper>
   );

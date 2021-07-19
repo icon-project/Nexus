@@ -30,7 +30,7 @@ export const UpDownPercent = memo(({ percent = 0, sm = false }) => {
   return (
     <Wrapper up={isUp} sm={sm} className="small percent">
       <img src={isUp ? upIcon : downIcon} alt="icon" />
-      <span>{percent}%</span>
+      <span>{Math.abs(percent)}%</span>
       <span className="label">in 24h</span>
     </Wrapper>
   );

@@ -7,20 +7,22 @@ const app = {
         minted: [],
       },
     },
+    volumeChangeLast24h: 0,
   },
   reducers: {
-    setAppInfo(state, payload) {
+    setAppState(state, prop = []) {
+      const [property, payload] = prop;
       return {
         ...state,
-        appInfo: payload,
+        [property]: payload,
       };
     },
   },
   effects: (dispatch) => ({
     async getAppInfo() {
       try {
-        const appInfo = await fetchAPI('/btpnetwork');
-        this.setAppInfo(appInfo || {});
+        const appInfo = await fetchAPI('/btpnetwork?availableAmountLast24h=1');
+        this.setAppState(['appInfo', appInfo || {}]);
         return appInfo;
       } catch (error) {
         dispatch.modal.handleError();
