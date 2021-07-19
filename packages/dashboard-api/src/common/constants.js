@@ -20,6 +20,7 @@ const COINs = {
 
 const TRANSACTION_TBL_NAME = 'transactions';
 const NETWORK_TBL_NAME = 'networks';
+const RELAY_REWARD_TBL_NAME = 'relay_rewards';
 
 const TRANSACTION_TBL = {
   id: 'id',
@@ -42,6 +43,14 @@ const TRANSACTION_TBL = {
   deleteAt: 'delete_at',
 };
 
+const RELAY_REWARD_TBL = {
+  id: 'id',
+  relayIdd: 'relay_id',
+  rewardValue: 'reward_value',
+  createdTime: 'created_time',
+  updatedTime: 'updated_time',
+};
+
 const ICX_LOOP_UNIT = 10 ** 18;
 
 module.exports = {
@@ -49,6 +58,8 @@ module.exports = {
   TRANSACTION_TBL,
   RESULT_CODE,
   NETWORK_TBL_NAME,
+  RELAY_REWARD_TBL_NAME,
+  RELAY_REWARD_TBL,
   CURRENCY_IDs,
   CURRENCIES,
   COINs,

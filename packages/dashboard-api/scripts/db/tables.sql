@@ -142,6 +142,19 @@ CREATE TABLE public.relay_candidates (
     updated_time timestamp without time zone
 );
 
+--
+-- TOC entry 209 (class 1259 OID 16666)
+-- Name: relay_rewards; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.relay_rewards (
+    id character varying(100) NOT NULL,
+    relay_id character varying(100) NOT NULL,
+    reward_value numeric NOT NULL,
+    updated_time timestamp without time zone
+    created_time timestamp without time zone NOT NULL,
+);
+
 
 --
 -- TOC entry 200 (class 1259 OID 16385)
@@ -276,6 +289,21 @@ ALTER TABLE ONLY public.transactions
 ALTER TABLE ONLY public.transfer_fees
     ADD CONSTRAINT transfer_fees_pkey PRIMARY KEY (id);
 
+--
+-- TOC entry 2838 (class 2606 OID 16673)
+-- Name: relay_rewards relay_rewards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.relay_rewards
+    ADD CONSTRAINT relay_rewards_pkey PRIMARY KEY (id);
+
+--
+-- TOC entry 2839 (class 2606 OID 16674)
+-- Name: relay_rewards relay_rewards_relay_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.relay_rewards
+    ADD CONSTRAINT relay_rewards_relay_id_fkey FOREIGN KEY (relay_id) REFERENCES public.relay_candidates(id);
 
 -- Completed on 2021-07-08 06:56:41 UTC
 

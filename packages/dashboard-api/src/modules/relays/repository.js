@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger, pgPool } = require('../../common');
+const { logger, pgPool, RELAY_REWARD_TBL } = require('../../common');
 
 async function countTotalRelay() {
   const query = 'SELECT COUNT(*) FROM relay_candidates WHERE unregistered_time IS NULL';
@@ -15,7 +15,10 @@ async function countTotalRelay() {
 }
 
 async function getRelayDetailList() {
-  const query = 'SELECT * FROM relay_candidates WHERE unregistered_time IS NULL';
+  const query = `SELECT relay_candidates.*, sum(reward_value) as monthly_reward FROM relay_candidates
+                    INNER JOIN relay_rewards ON relay_candidates.id = relay_rewards.relay_id
+                  WHERE unregistered_time IS NULL
+                  GROUP BY (relay_candidates.id)`;
 
   try {
     const { rows } = await pgPool.query(query);
@@ -32,6 +35,7 @@ async function getRelayDetailList() {
           serverStatus: Number(row.server_status),
           transferredTransactions: Number(row.total_transferred_tx),
           failedTransactions: Number(row.total_failed_tx),
+          monthlyReward: Number(row.monthly_reward),
         });
       }
 
@@ -39,6 +43,34 @@ async function getRelayDetailList() {
     }
   } catch (error) {
     logger.error('getRelayList fails', { error });
+    throw error;
+  }
+
+  return [];
+}
+async function getRelayReward24hAgo() {
+  const time24hAgo = new Date(new Date().getTime() - 86400000);
+  const query = `SELECT relay_candidates.id, name, sum(reward_value) as monthly_reward FROM relay_candidates
+                    INNER JOIN relay_rewards ON relay_candidates.id = relay_rewards.relay_id
+                  WHERE unregistered_time IS NULL AND relay_rewards.created_time >= $1
+                  GROUP BY (relay_candidates.id)`;
+  try {
+    const { rows } = await pgPool.query(query, [time24hAgo.toISOString()]);
+
+    if (rows.length > 0) {
+      const relays = [];
+
+      for (const row of rows) {
+        relays.push({
+          id: row.id,
+          name: row.name,
+          monthlyReward: Number(row.monthly_reward),
+        });
+      }
+      return relays;
+    }
+  } catch (error) {
+    logger.error('getRelayReward24hAgo fails', { error });
     throw error;
   }
 
@@ -58,6 +90,7 @@ async function getTotalBondedRelays() {
     throw err;
   }
 }
+
 async function getById(id) {
   const query = 'SELECT * FROM relay_candidates WHERE id = $1';
 
@@ -86,10 +119,11 @@ async function getById(id) {
 // timeRange in milliseconds
 async function getRegisteredRelayChange(timeRange) {
   try {
-    let result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates ORDER BY registered_time DESC LIMIT 1');
+    let result = await pgPool.query(
+      'SELECT total_active, registered_time FROM relay_candidates ORDER BY registered_time DESC LIMIT 1',
+    );
 
-    if (0 === result.rows.length)
-      return null;
+    if (0 === result.rows.length) return null;
 
     const currentCount = Number(result.rows[0].total_active);
     const currentTime = new Date(result.rows[0].registered_time);
@@ -97,8 +131,7 @@ async function getRegisteredRelayChange(timeRange) {
 
     result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates WHERE registered_time <= $1 ORDER BY registered_time DESC LIMIT 1', [timeToCompare.toISOString()]);
 
-    if (0 === result.rows.length)
-      return null;
+    if (0 === result.rows.length) return null;
 
     const comparedCount = Number(result.rows[0].total_active);
     const comparedTime = new Date(result.rows[0].registered_time);
@@ -107,10 +140,10 @@ async function getRegisteredRelayChange(timeRange) {
       currentCount,
       currentTime,
       comparedCount,
-      comparedTime
+      comparedTime,
     };
   } catch (error) {
-    logger.error(`getRegisteredRelayChange fails`, { error });
+    logger.error('getRegisteredRelayChange fails', { error });
     throw error;
   }
 }
@@ -120,5 +153,6 @@ module.exports = {
   getRelayDetailList,
   getTotalBondedRelays,
   getById,
-  getRegisteredRelayChange
+  getRegisteredRelayChange,
+  getRelayReward24hAgo,
 };

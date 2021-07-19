@@ -40,3 +40,17 @@ ALTER TABLE transactions
 ALTER COLUMN create_at SET DATA TYPE timestamp without time zone USING to_timestamp(create_at),
 ALTER COLUMN update_at SET DATA TYPE timestamp without time zone USING to_timestamp(update_at);
 
+-- Issue #170
+CREATE TABLE public.relay_rewards (
+    created_time timestamp without time zone NOT NULL,
+    id character varying(100) NOT NULL,
+    relay_id character varying(100) NOT NULL,
+    reward_value numeric NOT NULL,
+    update_time timestamp without time zone
+);
+
+ALTER TABLE ONLY public.relay_rewards
+    ADD CONSTRAINT relay_rewards_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.relay_rewards
+    ADD CONSTRAINT relay_rewards_relay_id_fkey FOREIGN KEY (relay_id) REFERENCES public.relay_candidates(id);
