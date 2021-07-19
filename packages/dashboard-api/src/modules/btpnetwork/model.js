@@ -52,13 +52,13 @@ async function getAmountFeeAggregationSCORE() {
     let totalAssets = await Promise.all(promises);
     let totalUSD = 0;
 
-    totalAssets.forEach(item => {
+    totalAssets.forEach((item) => {
       totalUSD += item['USD'] ? item['USD'] : 0;
     });
 
     return {
       assets,
-      totalUSD: Number(totalUSD.toFixed(2))
+      totalUSD: Number(totalUSD.toFixed(2)),
     };
   } catch (error) {
     logger.error('getAmountFeeAggregationSCORE failed', { error });
@@ -98,8 +98,8 @@ async function getTotalNetworks() {
 
 async function calculateVolumePercents() {
   let totalVolume = await getTotalTransactionAmount(false);
-  let totalVolume24hAgo = (await getTotalTransactionAmount(true)) || 1;
-  return +((totalVolume * 100) / totalVolume24hAgo).toFixed(2);
+  let totalVolume24hAgo = await getTotalTransactionAmount(true);
+  return +(((totalVolume - totalVolume24hAgo) / totalVolume) * 100).toFixed(2);
 }
 
 async function getTotalTransactionAmount(is24hAgo) {
@@ -221,7 +221,8 @@ async function getPercentsMintVolumeLast24h() {
   const totalVolumeMintedLast24h = await getTotalUSDMintedLast24h();
 
   if (totalVolumeMintedCurrently && totalVolumeMintedCurrently) {
-    let percentage = (((totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h));
+    let percentage =
+      (totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h;
     return Number((percentage * 100).toFixed(2));
   }
 
@@ -238,5 +239,5 @@ module.exports = {
   getMintedNetworks,
   getTokensPriceConversion,
   calculateVolumePercents,
-  getPercentsMintVolumeLast24h
+  getPercentsMintVolumeLast24h,
 };

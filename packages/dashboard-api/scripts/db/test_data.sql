@@ -22,3 +22,9 @@ INSERT INTO public.relay_candidates(
 	id, rank, name, bonded_icx, server_status, total_transferred_tx, total_failed_tx,
 	total_active, registered_time, created_time)
 	VALUES ('2c37741ffe', 5, 'Relay 5', 1010, 5, 1234, 567, 5, NOW(), NOW());
+
+INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000', '2c37741ffa', 100, '2021-07-13 15:16:36');
+INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc001', '2c37741ffb', 200, '2021-07-13 15:16:36');
+INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc002', '2c37741ffc', 300, '2021-07-13 15:16:36');
+INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc003', '2c37741ffd', 400, '2021-07-13 15:16:36');
+INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc004', '2c37741ffa', 500, '2021-07-13 15:16:36');

@@ -41,9 +41,16 @@ async function getTotalRelay(request, response) {
 // GET /relays
 async function getRelayDetailList(request, response) {
   const relays = await model.getRelayList();
+  let rewardLast24h;
+
+  if (request.query.rewardLast24h == 1) {
+    let relays24hAgo = await model.getRelayList24hAgo();
+    rewardLast24h = model.calculateReward24hChanged(relays, relays24hAgo);
+  }
 
   return response.status(HttpStatus.OK).json({
     content: [...relays],
+    rewardLast24h,
   });
 }
 
@@ -53,11 +60,11 @@ async function getRegisteredRelayChange(request, response) {
 
   response.status(HttpStatus.OK).json({
     content: {
-      last24hChange
-    }
+      last24hChange,
+    },
   });
 }
 
 module.exports = {
-  getRelayList
+  getRelayList,
 };
