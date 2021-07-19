@@ -1,22 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components';
 import { Row } from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
-import { useDispatch } from 'hooks/useRematch';
 
 import { getTransferHistory } from 'services/btpServices';
 
-import { Table } from '../../components/Table';
-import { Tag } from '../../components/Tag';
-import { SelectAsset } from '../../components/Select';
+import { Table } from 'components/Table';
+import { Tag } from 'components/Tag';
+import { SelectWithBorder } from 'components/Select';
 import { HistoryDetails } from './HistoryDetails';
-import { BackButton } from '../../components/Button/BackButton';
+import { BackButton } from 'components/Button/BackButton';
 
-import { colors } from '../../components/Styles/Colors';
-import { media } from '../../components/Styles/Media';
-import { Text } from '../../components/Typography';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
+import { TextWithIcon } from 'components/TextWithIcon';
+import { Text } from 'components/Typography';
 
 import VectorSrc from 'assets/images/vector.svg';
 
@@ -86,7 +87,7 @@ const TransferHistoryStyled = styled.div`
 
   .control-group {
     align-items: center;
-    margin-top: 31px;
+    margin-top: 60px;
 
     p.medium {
       margin-right: 8px;
@@ -95,17 +96,27 @@ const TransferHistoryStyled = styled.div`
       display: flex;
 
       .exchange-icon {
-        margin: 0 32.83px 0 35.83px;
+        margin: 22px 32px 0 32px;
+      }
+      .select-asset {
+        margin-right: 128px;
+      }
+      .select-network {
+        display: flex;
       }
     }
   }
 
-  ${media.md`
+  ${media.xl`
     width: 100%;
-
+    .select-asset {
+        margin-right: auto !important;
+        margin-bottom: 8px;
+    }
     .control-group {
       flex-direction: column;
-      align-items: center;
+      align-items: start;
+      margin-left: 24px;
     }
     .selector-group {
       margin-top: 20px;
@@ -114,10 +125,25 @@ const TransferHistoryStyled = styled.div`
 
       .exchange-icon {
         width: 15px;
-        transform: rotate(90deg);
+        margin: 22px 18px 0 18px !important;
         margin: 20px 0;
       }
+      
     }
+    
+  `};
+
+  ${media.md`
+      .control-group {
+        align-items: center;
+      }
+      .exchange-icon {
+        transform: rotate(90deg);
+      }
+      .select-network {
+        display: contents !important;
+      }
+
   `};
 `;
 
@@ -127,9 +153,65 @@ const TransferHistory = () => {
   const [historySource, setHistorySource] = useState([]);
   const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
-  const { handleError } = useDispatch(({ modal: { handleError } }) => ({
-    handleError,
+  const { handleError, getNetworks } = useDispatch(
+    ({ modal: { handleError }, network: { getNetworks } }) => ({
+      handleError,
+      getNetworks,
+    }),
+  );
+  const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
+    networks: selectNetwotks,
   }));
+
+  useEffect(() => {
+    getNetworks();
+  }, [getNetworks]);
+
+  const assets = [
+    {
+      value: 'All',
+      label: 'All assets',
+      renderLabel: () => <Text className="medium">All assets</Text>,
+      renderItem: () => <Text className="medium">All assets</Text>,
+    },
+    {
+      value: 'ICX',
+      label: 'ICX',
+      renderLabel: () => <TextWithIcon icon="iconex">ICX</TextWithIcon>,
+      renderItem: () => <TextWithIcon icon="iconex">ICX</TextWithIcon>,
+    },
+    {
+      value: 'ETH',
+      label: 'ETH',
+      renderLabel: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
+      renderItem: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
+    },
+  ];
+
+  let networkOptions = [
+    {
+      value: 'All',
+      label: 'All networks',
+      renderLabel: () => <Text className="medium">All networks</Text>,
+      renderItem: () => <Text className="medium">All networks</Text>,
+    },
+  ];
+  networks.forEach((network) => {
+    networkOptions.push({
+      value: network.name,
+      label: network.name,
+      renderLabel: () => (
+        <TextWithIcon iconURL={process.env.REACT_APP_BTP_ENDPOINT + network.pathLogo.substring(1)}>
+          {network.name}
+        </TextWithIcon>
+      ),
+      renderItem: () => (
+        <TextWithIcon iconURL={process.env.REACT_APP_BTP_ENDPOINT + network.pathLogo.substring(1)}>
+          {network.name}
+        </TextWithIcon>
+      ),
+    });
+  });
 
   const fetchDataHandler = async (page) => {
     try {
@@ -158,11 +240,15 @@ const TransferHistory = () => {
         <BackButton>Transfer history</BackButton>
       </Row>
       <Row className="control-group">
-        <Text className="medium">Viewing transfer history for</Text>
         <div className="selector-group">
-          <SelectAsset className="select-asset" />
-          <img className="exchange-icon" src={VectorSrc} />
-          <SelectAsset className="select-asset" />
+          <div className="select-asset">
+            <SelectWithBorder label="Assets type" options={assets} />
+          </div>
+          <div className="select-network">
+            <SelectWithBorder label="Sending from" width="326px" options={networkOptions} />
+            <img className="exchange-icon" src={VectorSrc} />
+            <SelectWithBorder label="To" width="326px" options={networkOptions} />
+          </div>
         </div>
       </Row>
       <TableStyled
