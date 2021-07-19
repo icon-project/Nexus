@@ -67,7 +67,7 @@ const tabs = {
   asset: 'asset',
 };
 
-export const ChartBox = ({ chartId, networks, setValueMint }) => {
+export const ChartBox = ({ chartId, networks = {}, setValueMint }) => {
   const [currentTab, setCurrentTab] = useState(tabs.history);
   const connectedNetworks = Object.values(networks);
 
