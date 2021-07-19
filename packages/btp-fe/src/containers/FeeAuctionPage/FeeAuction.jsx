@@ -147,28 +147,45 @@ const FeeAuction = () => {
     auctions,
     availableAssets,
     fees: { assets, totalFeeInUsd },
-  } = useSelect(({ auction: { selectAuctions, selectAvailableAssets, selectFees } }) => ({
-    auctions: selectAuctions,
-    availableAssets: selectAvailableAssets,
-    fees: selectFees,
-  }));
+    availableAmountLast24h,
+  } = useSelect(
+    ({
+      auction: { selectAuctions, selectAvailableAssets, selectFees, selectAvailableAmountLast24h },
+    }) => ({
+      auctions: selectAuctions,
+      availableAssets: selectAvailableAssets,
+      fees: selectFees,
+      availableAmountLast24h: selectAvailableAmountLast24h,
+    }),
+  );
   const [filteredData, setFilteredData] = useState(auctions);
 
-  const { getAuctions, getAvailableAssets, getFees, openModal } = useDispatch(
-    ({ auction: { getAuctions, getAvailableAssets, getFees }, modal: { openModal } }) => ({
+  const {
+    getAuctions,
+    getAvailableAssets,
+    getFees,
+    openModal,
+    getAvailableAssetsLast24h,
+  } = useDispatch(
+    ({
+      auction: { getAuctions, getAvailableAssets, getFees, getAvailableAssetsLast24h },
+      modal: { openModal },
+    }) => ({
       getAuctions,
       getAvailableAssets,
       openModal,
       getFees,
+      getAvailableAssetsLast24h,
     }),
   );
 
   useEffect(() => {
     getFees();
+    getAvailableAssetsLast24h();
     getAuctions().then(() => {
       setLoading(false);
     });
-  }, [getAuctions, getFees]);
+  }, [getAuctions, getFees, getAvailableAssetsLast24h]);
 
   useEffect(() => {
     if (keySearch) {
@@ -218,7 +235,7 @@ const FeeAuction = () => {
                   TOTAL FEE AVAILABLE FOR AUCTION
                 </TextWithInfo>
                 <Header className="large bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
-                <UpDownPercent up={false} percent={3.18} />
+                <UpDownPercent percent={availableAmountLast24h} />
               </div>
 
               <div className="divider"></div>
