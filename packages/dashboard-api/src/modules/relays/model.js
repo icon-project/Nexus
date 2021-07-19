@@ -18,10 +18,7 @@ async function getRelayList() {
 
 async function getRegisteredChangeLast24h() {
   const result = await getRegisteredRelayChange(24 * 60 * 60 * 1000);
-
-  if (result) {
-    return result.currentCount - result.comparedCount;
-  }
+  return result ? result.currentCount - result.comparedCount : 0;
 }
 
 module.exports = {

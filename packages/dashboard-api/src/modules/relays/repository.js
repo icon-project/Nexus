@@ -93,9 +93,9 @@ async function getRegisteredRelayChange(timeRange) {
 
     const currentCount = Number(result.rows[0].total_active);
     const currentTime = new Date(result.rows[0].registered_time);
-    const compareToTime = new Date(currentTime.getTime() - timeRange);
+    const timeToCompare = new Date(currentTime.getTime() - timeRange);
 
-    result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates WHERE registered_time <= $1 ORDER BY registered_time DESC LIMIT 1', [compareToTime.toISOString()]);
+    result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates WHERE registered_time <= $1 ORDER BY registered_time DESC LIMIT 1', [timeToCompare.toISOString()]);
 
     if (0 === result.rows.length)
       return null;

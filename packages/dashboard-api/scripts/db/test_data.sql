@@ -17,3 +17,8 @@ INSERT INTO public.relay_candidates(
 	id, rank, name, bonded_icx, server_status, total_transferred_tx, total_failed_tx,
 	total_active, registered_time, created_time)
 	VALUES ('2c37741ffd', 4, 'Relay 4', 1010, 4, 1234, 567, 4, NOW(), NOW());
+
+INSERT INTO public.relay_candidates(
+	id, rank, name, bonded_icx, server_status, total_transferred_tx, total_failed_tx,
+	total_active, registered_time, created_time)
+	VALUES ('2c37741ffe', 5, 'Relay 5', 1010, 5, 1234, 567, 5, NOW(), NOW());
