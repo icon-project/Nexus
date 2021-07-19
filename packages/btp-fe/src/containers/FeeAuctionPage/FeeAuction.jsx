@@ -218,7 +218,7 @@ const FeeAuction = () => {
                   TOTAL FEE AVAILABLE FOR AUCTION
                 </TextWithInfo>
                 <Header className="large bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
-                <UpDownPercent up={false} percent="3.18%" />
+                <UpDownPercent up={false} percent={3.18} />
               </div>
 
               <div className="divider"></div>

@@ -51,7 +51,7 @@ const Wrapper = styled.div`
 `;
 
 export const ChartArea = ({ data }) => {
-  const { volume, last24hChange } = data;
+  const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
   const { networks } = useSelect(({ app: { selectConnectedNetworks } }) => ({
     networks: selectConnectedNetworks,
   }));
@@ -80,7 +80,7 @@ export const ChartArea = ({ data }) => {
             ? valueMint
             : connectedNetworks[0]?.mintedVolume || 0
           ).toLocaleString()}{' '}
-          <UpDownPercent up percent="9.55%" />
+          <UpDownPercent percent={mintVolumeLast24hChange} />
         </Header>
         <ChartBox chartId="mint" networks={networks} setValueMint={setValueMint} />
       </div>
