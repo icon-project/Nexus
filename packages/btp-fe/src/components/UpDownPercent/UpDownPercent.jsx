@@ -25,11 +25,12 @@ const Wrapper = styled(Text)`
   }
 `;
 
-export const UpDownPercent = memo(({ percent = '9.55%', up = true, sm = false }) => {
+export const UpDownPercent = memo(({ percent = 0, sm = false }) => {
+  const isUp = percent >= 0;
   return (
-    <Wrapper up={up} sm={sm} className="small percent">
-      <img src={up ? upIcon : downIcon} alt="icon" />
-      <span>{percent}</span>
+    <Wrapper up={isUp} sm={sm} className="small percent">
+      <img src={isUp ? upIcon : downIcon} alt="icon" />
+      <span>{percent}%</span>
       <span className="label">in 24h</span>
     </Wrapper>
   );

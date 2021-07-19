@@ -28,6 +28,10 @@ export const getRegisteredRelayCandidate = () => {
   return fetchAPI(`/relays?style=count`);
 };
 
+export const getRegisteredRelayLast24h = () => {
+  return fetchAPI(`/relays?style=registeredLast24h`);
+};
+
 export const getConnectedNetworks = () => {
   return fetchAPI(`/networks`);
 };
