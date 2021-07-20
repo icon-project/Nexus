@@ -1,21 +1,16 @@
-import { getRelayCandidates, getRegisteredRelayCandidate } from 'services/btpServices';
+import { getRelayCandidates, getRegisteredRelayLast24h } from 'services/btpServices';
 
 const governance = {
   state: {
     relayCandidates: [],
-    totalRegistered: '',
+    totalRegisteredLast24h: 0,
   },
   reducers: {
-    setRelayCandidates(state, relayCandidates = []) {
+    setGovernanceState(state, prop = []) {
+      const [property, payload] = prop;
       return {
         ...state,
-        relayCandidates,
-      };
-    },
-    setTotalRegistered(state, totalRegistered = '') {
-      return {
-        ...state,
-        totalRegistered,
+        [property]: payload,
       };
     },
   },
@@ -23,17 +18,19 @@ const governance = {
     async getRelayCandidates() {
       try {
         const relayCandidates = await getRelayCandidates();
-        this.setRelayCandidates(relayCandidates.content || []);
+        this.setGovernanceState(['relayCandidates', relayCandidates.content || []]);
         return relayCandidates;
       } catch (error) {
         dispatch.modal.handleError();
       }
     },
-    async getTotalRegistered() {
+    async getRegisteredRelayLast24h() {
       try {
-        const totalRegistered = await getRegisteredRelayCandidate();
-        this.setTotalRegistered(totalRegistered.content.count || '');
-        return totalRegistered;
+        const totalRegisteredLast24h = await getRegisteredRelayLast24h();
+        this.setGovernanceState([
+          'totalRegisteredLast24h',
+          totalRegisteredLast24h?.content.last24hChange || 0,
+        ]);
       } catch (error) {
         dispatch.modal.handleError();
       }
@@ -43,8 +40,8 @@ const governance = {
     selectRelayCandidates() {
       return slice((state) => state.relayCandidates);
     },
-    selectTotalRegistered() {
-      return slice((state) => state.totalRegistered);
+    selectRegisteredRelayLast24h() {
+      return slice((state) => state.totalRegisteredLast24h);
     },
     selectTotalRewardFund() {
       const getTotalRewardFund = (relays) => {

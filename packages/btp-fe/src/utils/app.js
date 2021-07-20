@@ -32,8 +32,8 @@ export const roundNumber = (num, digit = 2) => {
 
 const shortenNumber = (num) => {
   if (num === undefined) return 0;
-  num = (num + '').split('.')[0];
-  const { length } = num;
+  const intNum = (num + '').split('.')[0];
+  const { length } = intNum;
   switch (true) {
     case length > 12:
       return roundNumber(num / 1000000000000).toLocaleString() + ' T';

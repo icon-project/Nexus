@@ -7,6 +7,7 @@ import {
   getAuctions,
   getAuctionDetails,
   getAvailableAssets,
+  getAvailableAmountLast24h,
   getFeeAssets,
   getAuctionBids,
 } from 'services/btpServices';
@@ -18,6 +19,7 @@ const auction = {
     availableAssets: [],
     fees: { assets: [], totalFeeInUsd: 0 },
     bids: {},
+    availableAmountLast24h: 0,
   },
   reducers: {
     setAuctionState(state, prop = []) {
@@ -60,9 +62,19 @@ const auction = {
       try {
         const availableAssets = await getAvailableAssets();
         this.setAuctionState(['availableAssets', availableAssets.content]);
-        return availableAssets;
       } catch (error) {
-        console.log(error);
+        dispatch.modal.handleError();
+      }
+    },
+    async getAvailableAssetsLast24h() {
+      try {
+        const availableAmountLast24h = await getAvailableAmountLast24h();
+        this.setAuctionState([
+          'availableAmountLast24h',
+          availableAmountLast24h?.content.last24hChange,
+        ]);
+      } catch (error) {
+        dispatch.modal.handleError();
       }
     },
     async getFees() {
@@ -120,6 +132,9 @@ const auction = {
     },
     selectPagination() {
       return slice((state) => state.bids.metadata?.pagination || {});
+    },
+    selectAvailableAmountLast24h() {
+      return slice((state) => state.availableAmountLast24h);
     },
   }),
 };
