@@ -6,8 +6,8 @@ const {
   countTransaction,
   getAllTimeFeeOfAssets,
   getVolumeMintedNetworks,
-  getTotalUSDMinted,
-  getTotalUSDMintedLast24h,
+  getLatestTokensMinted,
+  getTotalTokensMintedLast24h,
 } = require('./repository');
 const { getTotalBondedRelays } = require('../relays/repository');
 const { getNetworkInfo } = require('../networks/repository');
@@ -217,16 +217,43 @@ async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
 }
 
 async function getPercentsMintVolumeLast24h() {
-  const totalVolumeMintedCurrently = await getTotalUSDMinted();
-  const totalVolumeMintedLast24h = await getTotalUSDMintedLast24h();
+  const tokensCurrently = await getLatestTokensMinted();
+  const tokensLast24h = await getTotalTokensMintedLast24h();
 
-  if (totalVolumeMintedCurrently && totalVolumeMintedCurrently) {
-    let percentage =
-      (totalVolumeMintedCurrently - totalVolumeMintedLast24h) / totalVolumeMintedLast24h;
-    return Number((percentage * 100).toFixed(2));
+  if (tokensCurrently && tokensLast24h) {
+    try {
+      const totalUSD = await exchangeTokensToUSD(tokensCurrently);
+      const last24hUSD = await exchangeTokensToUSD(tokensLast24h);
+
+      if (0 === last24hUSD)
+        return 0;
+
+      let percentage = (totalUSD - last24hUSD) / last24hUSD;
+
+      return Number((percentage * 100).toFixed(2));
+    } catch (error) {
+      logger.error('Fails to convert tokens to usd', { error });
+      return 0;
+    }
+  }
+  return 0;
+}
+
+async function exchangeTokensToUSD(tokens) {
+  let promises = [];
+  let totalUSD = 0;
+
+  for (let item of tokens) {
+    promises.push(exchangeToFiat(item.tokenName, ['USD'], item.tokenAmount));
   }
 
-  return 0;
+  let totalAssets = await Promise.all(promises);
+
+  totalAssets.forEach((item) => {
+    totalUSD += item['USD'] ? item['USD'] : 0;
+  });
+
+  return totalUSD;
 }
 
 module.exports = {

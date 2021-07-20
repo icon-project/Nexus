@@ -73,30 +73,41 @@ async function getVolumeMintedNetworks() {
   }
 }
 
-async function getTotalUSDMinted() {
+async function getLatestTokensMinted() {
   try {
-    const result = await pgPool.query('SELECT total_amount_usd FROM minted_tokens ORDER BY create_at DESC LIMIT 1');
+    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
+      FROM minted_tokens
+      ORDER BY token_name, create_at DESC`);
 
-    if (0 === result.rows.length)
+    if (0 === results.rows.length)
       return null;
 
-    return Number(result.rows[0].total_amount_usd);
+    return results.rows.map(row => ({
+      tokenName: row.token_name,
+      tokenAmount: row.total_token_amount,
+    }));
   } catch (error) {
     logger.error('getTotalUSDMinted fails', { error });
     throw error;
   }
 }
 
-async function getTotalUSDMintedLast24h() {
+async function getTotalTokensMintedLast24h() {
   try {
-    const at24hAgo = new Date(new Date().getTime()  - (24 * 60 * 60 * 1000)); // millisecond 
+    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond 
 
-    const result = await pgPool.query('SELECT total_amount_usd FROM minted_tokens WHERE create_at <= $1 ORDER BY create_at DESC LIMIT 1',[at24hAgo.toISOString()]);
+    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
+    FROM minted_tokens
+    WHERE create_at <= $1
+    ORDER BY token_name, create_at DESC`, [at24hAgo.toISOString()]);
 
-    if (0 === result.rows.length)
+    if (0 === results.rows.length)
       return null;
 
-    return Number(result.rows[0].total_amount_usd);
+    return results.rows.map(row => ({
+      tokenName: row.token_name,
+      tokenAmount: row.total_token_amount,
+    }));
   } catch (error) {
     logger.error('getTotalUSDMintedLast24h fails', { error });
     throw error;
@@ -109,6 +120,6 @@ module.exports = {
   countTransaction,
   getAllTimeFeeOfAssets,
   getVolumeMintedNetworks,
-  getTotalUSDMinted,
-  getTotalUSDMintedLast24h
+  getLatestTokensMinted,
+  getTotalTokensMintedLast24h
 };

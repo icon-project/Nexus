@@ -84,6 +84,7 @@ CREATE TABLE public.minted_tokens (
     network_id character varying(100),
     token_name character varying(100),
     token_value numeric,
+    total_token_amount numeric NOT NULL,
     block_time bigint,
     tx_hash character varying(100),
     block_hash character varying(100),
