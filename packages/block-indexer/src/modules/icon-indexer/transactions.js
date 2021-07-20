@@ -88,7 +88,13 @@ async function handleTransEvent(txResult, transaction) {
         // https://www.icondev.io/docs/step-estimation#transaction-fee
         networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT,
       };
-      await calculateTotalVolume(transObj);
+
+      // calculating total volume when the system has a new transaction
+      let latestTransaction = await getLatestTransactionByToken(transObj.tokenName);
+      const totalVolume = calculateTotalVolume(transObj, latestTransaction);
+
+      transObj.totalVolume = totalVolume;
+
       await saveTransaction(transObj);
     } else if (event.indexed.find((item) => item.includes(TRANFER_END_PROTOTYPE))) {
       confirmTransfEnd(event, {
@@ -100,16 +106,14 @@ async function handleTransEvent(txResult, transaction) {
   }
 }
 
-async function calculateTotalVolume(newTransaction) {
-  newTransaction.totalVolume = 0;
-  try {
-    let transaction = await getLatestTransaction(newTransaction.tokenName);
-    newTransaction.totalVolume = Number(transaction.totalVolume) + newTransaction.value || 0;
-  } catch (error) {
-    logger.error('"calculateTotalVolume" failed to calculate total volume of transaction', {
-      error,
-    });
+function calculateTotalVolume(newTransaction, latestTransaction) {
+  let totalVolume = newTransaction.value || 0;
+  if (!latestTransaction) {
+    return totalVolume;
   }
+  totalVolume = Number(latestTransaction.totalVolume) + newTransaction.value || 0;
+
+  return totalVolume;
 }
 
 /**
@@ -215,14 +219,21 @@ async function getBySerialNumber(serialNumber) {
   return rows[0];
 }
 
-async function getLatestTransaction(tokenName) {
-  let {
-    rows,
-  } = await pgPool.query(
-    `SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.tokenName} = $1 ORDER BY ${TRANSACTION_TBL.updateAt} DESC LIMIT 1`,
-    [tokenName],
-  );
-  return rows[0];
+async function getLatestTransactionByToken(tokenName) {
+  try {
+    let {
+      rows,
+    } = await pgPool.query(
+      `SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.tokenName} = $1 ORDER BY ${TRANSACTION_TBL.updateAt} DESC LIMIT 1`,
+      [tokenName],
+    );
+    return rows[0];
+  } catch (error) {
+    logger.error(
+      `getLatestTransactionByToken Failed to get transaction result with token ${tokenName}`,
+      { error },
+    );
+  }
 }
 
 module.exports = {
@@ -230,5 +241,5 @@ module.exports = {
   getBySerialNumber,
   setTransactionConfirmed,
   handleTransEvent,
-  getLatestTransaction,
+  getLatestTransactionByToken,
 };
