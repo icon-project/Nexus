@@ -9,17 +9,31 @@ const {
   NETWORK_TBL_NAME,
 } = require('../../common');
 
-async function getTransactions(page = 0, limit = 20, from, to) {
+async function getTransactions(page = 0, limit = 20, from, to, assestName) {
   let offset = page * limit;
-  const query = `SELECT * FROM ${TRANSACTION_TBL_NAME}
-                    WHERE ${TRANSACTION_TBL.fromAddress} ~ $1
-                       AND ${TRANSACTION_TBL.toAddress} ~ $2
-                       AND ${TRANSACTION_TBL.deleteAt} = $5
-                    LIMIT $3 OFFSET $4`;
+  let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME}
+                    WHERE ${TRANSACTION_TBL.deleteAt} = $1 `;
+  const limitOffset = ' LIMIT $2 OFFSET $3';
+  let params = [0, limit, offset];
 
+  if (from) {
+    query += `AND ${TRANSACTION_TBL.fromAddress} ~ $${params.length + 1} `;
+    params.push(from);
+  }
+  if (to) {
+    query += `AND ${TRANSACTION_TBL.toAddress} ~ $${params.length + 1} `;
+    params.push(to);
+  }
+  if (assestName) {
+    query += `AND ${TRANSACTION_TBL.tokenName} ILIKE $${params.length + 1} `;
+    params.push(assestName);
+  }
+
+  query += limitOffset;
   try {
-    const { rows } = await pgPool.query(query, [from, to, limit, offset, 0]);
+    const { rows } = await pgPool.query(query, params);
     const transactions = [];
+    let total = 0;
     if (rows.length > 0) {
       for (const row of rows) {
         transactions.push({
@@ -30,9 +44,10 @@ async function getTransactions(page = 0, limit = 20, from, to) {
           status: row.status,
           blockTime: Number(row.block_time),
         });
+        total = row.total;
       }
     }
-    return transactions;
+    return { transactions, total: Number(total) };
   } catch (error) {
     logger.error('getHistories fails', { error });
     throw error;
