@@ -105,20 +105,27 @@ const GovernanceStyled = styled.div`
 `;
 
 function GovernancePage() {
-  const { relayCandidates, totalRewardFund } = useSelect(
-    ({ governance: { selectRelayCandidates, selectTotalRewardFund } }) => ({
+  const { relayCandidates, totalRewardFund, registeredRelayLast24h } = useSelect(
+    ({
+      governance: { selectRelayCandidates, selectTotalRewardFund, selectRegisteredRelayLast24h },
+    }) => ({
       relayCandidates: selectRelayCandidates,
       totalRewardFund: selectTotalRewardFund,
+      registeredRelayLast24h: selectRegisteredRelayLast24h,
     }),
   );
 
-  const { getRelayCandidates } = useDispatch(({ governance: { getRelayCandidates } }) => ({
-    getRelayCandidates,
-  }));
+  const { getRelayCandidates, getRegisteredRelayLast24h } = useDispatch(
+    ({ governance: { getRelayCandidates, getRegisteredRelayLast24h } }) => ({
+      getRelayCandidates,
+      getRegisteredRelayLast24h,
+    }),
+  );
 
   useEffect(() => {
     getRelayCandidates();
-  }, [getRelayCandidates]);
+    getRegisteredRelayLast24h();
+  }, [getRelayCandidates, getRegisteredRelayLast24h]);
 
   return (
     <GovernanceStyled>
@@ -129,13 +136,13 @@ function GovernancePage() {
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REGISTERED</Text>
               <Text className="large bold total-value">{relayCandidates.length}</Text>
-              <UpDownPercent up={false} percent="32%" />
+              <UpDownPercent percent={registeredRelayLast24h} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REWARD FUND</Text>
               <Text className="large bold total-value">{totalRewardFund}</Text>
-              <UpDownPercent up percent="9.55%" />
+              <UpDownPercent percent={9.55} />
             </div>
           </div>
         </div>
