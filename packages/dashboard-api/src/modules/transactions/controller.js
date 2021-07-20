@@ -8,17 +8,17 @@ const model = require('./model');
 async function getTransHistory(request, response) {
   let from = request.query.from || '';
   let to = request.query.to || '';
+  let assetName = request.query.assetName || '';
   let page = Number(request.query.page) || 0;
   let limit = Number(request.query.limit) || 20;
 
-  let transHistory = await model.getTrans(page, limit, from, to);
-  let total = await model.getTotalTransaction();
+  let transHistory = await model.getTrans(page, limit, from, to, assetName);
 
   if (!transHistory) return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
-    content: [...transHistory],
-    total,
+    content: [...transHistory.transactions],
+    total: transHistory.total,
   });
 }
 
