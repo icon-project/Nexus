@@ -41,8 +41,8 @@ const Wrapper = styled.div`
     .amount-of-bid {
       width: 310px;
 
-      .percent {
-        margin-left: 9.67px;
+      > h3.large {
+        margin-right: 9.67px;
       }
     }
 

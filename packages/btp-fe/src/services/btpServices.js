@@ -20,12 +20,12 @@ export const getAvailableAssets = () => {
   return fetchAPI(`${baseAuctionURL}/?availableAssets=1`);
 };
 
-export const getAvailableAmountLast24h = () => {
-  return fetchAPI(`${baseAuctionURL}/?availableAmountLast24h=1`);
-};
-
 export const getFeeAssets = () => {
   return fetchAPI(`/fees`);
+};
+
+export const getAvailableAmountLast24h = () => {
+  return fetchAPI(`/fees/?availableAmountLast24h=1`);
 };
 
 export const getRelayCandidates = () => {

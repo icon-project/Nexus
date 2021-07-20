@@ -68,10 +68,10 @@ const auction = {
     },
     async getAvailableAssetsLast24h() {
       try {
-        const availableAssetsLast24h = await getAvailableAmountLast24h();
+        const availableAmountLast24h = await getAvailableAmountLast24h();
         this.setAuctionState([
           'availableAmountLast24h',
-          availableAssetsLast24h?.content.last24hChange,
+          availableAmountLast24h?.content.last24hChange,
         ]);
       } catch (error) {
         dispatch.modal.handleError();
