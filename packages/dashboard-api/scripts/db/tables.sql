@@ -194,9 +194,8 @@ CREATE TABLE IF NOT EXISTS public.transfer_fees
     token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
     token_amount numeric NOT NULL,
     tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    total_token_amount numeric NOT NULL,
     created_time timestamp without time zone NOT NULL,
-    total_fee_usd numeric NOT NULL,
-    token_amount_usd numeric NOT NULL,
     CONSTRAINT transfer_fees_pkey PRIMARY KEY (id)
 )
 
