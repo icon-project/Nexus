@@ -128,22 +128,19 @@ const TransferHistoryStyled = styled.div`
         margin: 22px 18px 0 18px !important;
         margin: 20px 0;
       }
-      
     }
-    
   `};
 
   ${media.md`
-      .control-group {
-        align-items: center;
-      }
-      .exchange-icon {
-        transform: rotate(90deg);
-      }
-      .select-network {
-        display: contents !important;
-      }
-
+    .control-group {
+      align-items: center;
+    }
+    .exchange-icon {
+      transform: rotate(90deg);
+    }
+    .select-network {
+      display: contents !important;
+    }
   `};
 `;
 
