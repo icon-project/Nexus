@@ -1,10 +1,12 @@
 {
-  "apps": [{
-    "name": "dashboard-api",
-    "script": "./index.js",
-    "cwd": "/home/ubuntu/deploy/btp-be/packages/dashboard-api",
-    "env": {
-      "NODE_ENV": "production"
+  "apps": [
+    {
+      "name": "dashboard-api",
+      "script": "./index.js",
+      "cwd": "/home/ubuntu/deploy/btp-dashboard/packages/dashboard-api",
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
-  }]
+  ]
 }
