@@ -82,10 +82,7 @@ async function saveMintToken(mintObj) {
 
     const { rows } = await pgPool.query(`SELECT total_token_amount FROM minted_tokens WHERE token_name = ${mintObj.tokenName} ORDER BY create_at DESC LIMIT 1`);
 
-    if (0 === rows.length)
-      return false;
-
-    const totalTokenAmount = rows[0].total_token_amount + mintObj.tokenValue;
+    const totalTokenAmount = rows[0] ? (rows[0].total_token_amount + mintObj.tokenValue) : 0;
 
     const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
     const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash];

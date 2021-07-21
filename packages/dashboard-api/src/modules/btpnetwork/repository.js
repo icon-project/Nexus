@@ -75,9 +75,12 @@ async function getVolumeMintedNetworks() {
 
 async function getLatestTokensMinted() {
   try {
-    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
+    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond 
+
+    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount  
       FROM minted_tokens
-      ORDER BY token_name, create_at DESC`);
+      WHERE create_at > $1
+      ORDER BY token_name, create_at DESC`, [at24hAgo.toISOString()]);
 
     if (0 === results.rows.length)
       return null;
@@ -95,7 +98,6 @@ async function getLatestTokensMinted() {
 async function getTotalTokensMintedLast24h() {
   try {
     const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond 
-
     let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
     FROM minted_tokens
     WHERE create_at <= $1
