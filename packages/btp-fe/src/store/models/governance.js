@@ -4,7 +4,7 @@ const governance = {
   state: {
     relayCandidates: {
       content: [],
-      rewardLast24h: 0,
+      rewardChanged30Days: 0,
     },
     totalRegisteredLast24h: 0,
   },
@@ -43,8 +43,8 @@ const governance = {
     selectRelayCandidates() {
       return slice((state) => state.relayCandidates.content);
     },
-    selectRewardLast24h() {
-      return slice((state) => state.relayCandidates.rewardLast24h);
+    selectRewardLast30Days() {
+      return slice((state) => state.relayCandidates.rewardChanged30Days);
     },
     selectRegisteredRelayLast24h() {
       return slice((state) => state.totalRegisteredLast24h);

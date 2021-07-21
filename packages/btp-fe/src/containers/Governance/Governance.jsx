@@ -105,19 +105,19 @@ const GovernanceStyled = styled.div`
 `;
 
 function GovernancePage() {
-  const { relayCandidates, totalRewardFund, registeredRelayLast24h, rewardLast24h } = useSelect(
+  const { relayCandidates, totalRewardFund, registeredRelayLast24h, rewardLast30Days } = useSelect(
     ({
       governance: {
         selectRelayCandidates,
         selectTotalRewardFund,
         selectRegisteredRelayLast24h,
-        selectRewardLast24h,
+        selectRewardLast30Days,
       },
     }) => ({
       relayCandidates: selectRelayCandidates,
       totalRewardFund: selectTotalRewardFund,
       registeredRelayLast24h: selectRegisteredRelayLast24h,
-      rewardLast24h: selectRewardLast24h,
+      rewardLast30Days: selectRewardLast30Days,
     }),
   );
 
@@ -148,7 +148,7 @@ function GovernancePage() {
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REWARD FUND</Text>
               <Text className="large bold total-value">{totalRewardFund}</Text>
-              <UpDownPercent percent={rewardLast24h} />
+              <UpDownPercent percent={rewardLast30Days} label="past 30 days" />
             </div>
           </div>
         </div>

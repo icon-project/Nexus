@@ -29,7 +29,7 @@ export const getAvailableAmountLast24h = () => {
 };
 
 export const getRelayCandidates = () => {
-  return fetchAPI(baseRelayURL + '?style=list&rewardLast24h=1');
+  return fetchAPI(baseRelayURL + '?style=list&rewardLast30Days=1');
 };
 
 export const getRegisteredRelayCandidate = () => {
