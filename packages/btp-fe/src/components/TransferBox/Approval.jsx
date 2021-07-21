@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -6,7 +6,7 @@ import { useDispatch } from 'hooks/useRematch';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { transfer } from 'connectors/ICONex/iconService';
+import { transfer, getBTPfee } from 'connectors/ICONex/iconService';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { hashShortener } from 'utils/app';
 import { wallets } from 'utils/constants';
@@ -117,10 +117,18 @@ const Total = styled.div`
 `;
 
 export const Approval = memo(({ setStep, values, sendingInfo, account, form }) => {
+  const [BTPFee, setBTPFee] = useState(0);
   const { recipient, tokenAmount } = values;
   const { token, network } = sendingInfo;
   const { currentNetwork, wallet, unit } = account;
   const usdBalance = useTokenToUsd(token, tokenAmount);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    getBTPfee().then((result) => {
+      setBTPFee((result / 10000) * tokenAmount);
+    });
+  }, []);
 
   useListenForSuccessTransaction(() => {
     setStep(0);
@@ -193,13 +201,15 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form }) =
         </div>
         <div className="transfer-fee">
           <Text className="medium">BTP transfer fee</Text>
-          <Text className="medium bright">0.02</Text>
+          <Text className="medium bright">{BTPFee}</Text>
         </div>
       </Details>
 
       <Total>
         <SubTitle className="large bold">Total receive</SubTitle>
-        <SubTitle className="large bold">1.88 {token}</SubTitle>
+        <SubTitle className="large bold">
+          {tokenAmount - BTPFee} {token}
+        </SubTitle>
       </Total>
 
       <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />

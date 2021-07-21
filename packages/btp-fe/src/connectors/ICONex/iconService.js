@@ -129,7 +129,7 @@ export const getBTPfee = async () => {
       to: 'cxd42ef4864c64f0cd793018e06eed190b46492a1c', // BSH address
       dataType: 'call',
       data: {
-        method: 'getFeeRate',
+        method: 'getFeeRate', // lasted function is feeRatio
       },
     });
 

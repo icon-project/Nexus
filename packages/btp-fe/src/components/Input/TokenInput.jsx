@@ -78,7 +78,7 @@ export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = 
           tokenInputRef.current.focus();
         }}
       >
-        {value} {token}
+        {value || 0} {token}
       </div>
       <Text className="medium exchange">= ${usdBalance.toLocaleString()}</Text>
       {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
