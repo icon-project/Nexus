@@ -4,7 +4,7 @@ const {
   countTotalRelay,
   getRelayDetailList,
   getRegisteredRelayChange,
-  getRelayReward24hAgo,
+  getRelayReward30DaysAgo,
 } = require('./repository');
 
 async function getTotalRelay() {
@@ -16,16 +16,16 @@ async function getRelayList() {
   return relays;
 }
 
-async function getRelayList24hAgo() {
-  let relays = await getRelayReward24hAgo();
+async function getRelayList30DaysAgo() {
+  let relays = await getRelayReward30DaysAgo();
   return relays;
 }
 
-function calculateReward24hChanged(currentRelays = [], relays24hAgo = []) {
-  let totalReward24hAgo = relays24hAgo.reduce((sum, item) => (sum += item.monthlyReward), 0);
+function calculateReward30DaysChanged(currentRelays = [], relays30DaysAgo = []) {
+  let totalReward30DaysAgo = relays30DaysAgo.reduce((sum, item) => (sum += item.monthlyReward), 0);
   let totalReward = currentRelays.reduce((sum, item) => (sum += item.monthlyReward), 0);
 
-  return totalReward - totalReward24hAgo;
+  return totalReward - totalReward30DaysAgo;
 }
 
 async function getRegisteredChangeLast24h() {
@@ -37,6 +37,6 @@ module.exports = {
   getTotalRelay,
   getRelayList,
   getRegisteredChangeLast24h,
-  calculateReward24hChanged,
-  getRelayList24hAgo,
+  calculateReward30DaysChanged,
+  getRelayList30DaysAgo,
 };

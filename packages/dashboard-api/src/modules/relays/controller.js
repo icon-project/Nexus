@@ -41,16 +41,16 @@ async function getTotalRelay(request, response) {
 // GET /relays
 async function getRelayDetailList(request, response) {
   const relays = await model.getRelayList();
-  let rewardLast24h;
+  let rewardChanged30Days;
 
-  if (request.query.rewardLast24h == 1) {
-    let relays24hAgo = await model.getRelayList24hAgo();
-    rewardLast24h = model.calculateReward24hChanged(relays, relays24hAgo);
+  if (request.query.rewardLast30Days == 1) {
+    let relays30DaysAgo = await model.getRelayList30DaysAgo();
+    rewardChanged30Days = model.calculateReward30DaysChanged(relays, relays30DaysAgo);
   }
 
   return response.status(HttpStatus.OK).json({
     content: [...relays],
-    rewardLast24h,
+    rewardChanged30Days,
   });
 }
 
