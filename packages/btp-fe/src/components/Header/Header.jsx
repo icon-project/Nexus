@@ -10,6 +10,7 @@ import { PrimaryButton, HamburgerButton } from '../Button';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
+import { getBTPfee } from 'connectors/ICONex/iconService';
 import { wallets } from 'utils/constants';
 import { METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
@@ -177,6 +178,7 @@ const Header = ({ userStatus = defaultUser }) => {
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
+    getBTPfee();
     if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
       EthereumInstance.getEthereumAccounts();
     }
