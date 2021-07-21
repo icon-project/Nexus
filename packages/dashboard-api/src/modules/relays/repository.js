@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger, pgPool, RELAY_REWARD_TBL } = require('../../common');
+const { logger, pgPool } = require('../../common');
 
 async function countTotalRelay() {
   const query = 'SELECT COUNT(*) FROM relay_candidates WHERE unregistered_time IS NULL';
@@ -48,11 +48,11 @@ async function getRelayDetailList() {
 
   return [];
 }
-async function getRelayReward24hAgo() {
-  const time24hAgo = new Date(new Date().getTime() - 86400000);
+async function getRelayReward30DaysAgo() {
+  const time24hAgo = new Date(new Date().getTime() - 86400000 * 30);
   const query = `SELECT relay_candidates.id, name, sum(reward_value) as monthly_reward FROM relay_candidates
                     INNER JOIN relay_rewards ON relay_candidates.id = relay_rewards.relay_id
-                  WHERE unregistered_time IS NULL AND relay_rewards.created_time >= $1
+                  WHERE unregistered_time IS NULL AND relay_rewards.created_time <= $1
                   GROUP BY (relay_candidates.id)`;
   try {
     const { rows } = await pgPool.query(query, [time24hAgo.toISOString()]);
@@ -129,7 +129,10 @@ async function getRegisteredRelayChange(timeRange) {
     const currentTime = new Date(result.rows[0].registered_time);
     const timeToCompare = new Date(currentTime.getTime() - timeRange);
 
-    result = await pgPool.query('SELECT total_active, registered_time FROM relay_candidates WHERE registered_time <= $1 ORDER BY registered_time DESC LIMIT 1', [timeToCompare.toISOString()]);
+    result = await pgPool.query(
+      'SELECT total_active, registered_time FROM relay_candidates WHERE registered_time <= $1 ORDER BY registered_time DESC LIMIT 1',
+      [timeToCompare.toISOString()],
+    );
 
     if (0 === result.rows.length) return null;
 
@@ -154,5 +157,5 @@ module.exports = {
   getTotalBondedRelays,
   getById,
   getRegisteredRelayChange,
-  getRelayReward24hAgo,
+  getRelayReward30DaysAgo,
 };
