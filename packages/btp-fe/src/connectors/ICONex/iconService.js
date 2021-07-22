@@ -116,3 +116,27 @@ export const signTx = (transaction = {}, options = {}) => {
     hash: transactionHash,
   });
 };
+
+/**
+ * Returns BTP fee
+ * @return {string} unit: 1/10000
+ * ref: https://github.com/icon-project/btp/blob/iconloop/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L40
+ */
+export const getBTPfee = async () => {
+  try {
+    const requestId = IconUtil.getCurrentTime();
+    const request = new Request(requestId, 'icx_call', {
+      to: 'cxd42ef4864c64f0cd793018e06eed190b46492a1c', // BSH address
+      dataType: 'call',
+      data: {
+        method: 'getFeeRate', // lasted function is feeRatio
+      },
+    });
+
+    const result = await httpProvider.request(request).execute();
+    return result;
+  } catch (err) {
+    console.log('err', err);
+    return 0;
+  }
+};
