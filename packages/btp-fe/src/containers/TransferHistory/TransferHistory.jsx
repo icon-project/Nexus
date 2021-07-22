@@ -148,7 +148,7 @@ const TransferHistory = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [historySource, setHistorySource] = useState([]);
-  const [pagination, setPagination] = useState({ totalItem: 0, limit: 2 });
+  const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
   const [assetName, setAssetName] = useState('');
   const [from, setFrom] = useState('');
