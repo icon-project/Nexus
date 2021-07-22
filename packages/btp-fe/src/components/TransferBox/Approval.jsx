@@ -116,19 +116,20 @@ const Total = styled.div`
   justify-content: space-between;
 `;
 
-export const Approval = memo(({ setStep, values, sendingInfo, account, form }) => {
+export const Approval = memo(({ setStep, values, sendingInfo, account, form, isCurrent }) => {
   const [BTPFee, setBTPFee] = useState(0);
-  const { recipient, tokenAmount } = values;
+  const { recipient, tokenAmount = 0 } = values;
   const { token, network } = sendingInfo;
   const { currentNetwork, wallet, unit } = account;
   const usdBalance = useTokenToUsd(token, tokenAmount);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    getBTPfee().then((result) => {
-      setBTPFee((result / 10000) * tokenAmount);
-    });
-  }, []);
+    if (isCurrent)
+      getBTPfee().then((result) => {
+        setBTPFee((result / 10000) * tokenAmount);
+      });
+  }, [isCurrent]);
 
   useListenForSuccessTransaction(() => {
     setStep(0);

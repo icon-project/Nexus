@@ -136,6 +136,7 @@ export const getBTPfee = async () => {
     const result = await httpProvider.request(request).execute();
     return result;
   } catch (err) {
-    throw new Error(err.message);
+    console.log('err', err);
+    return 0;
   }
 };
