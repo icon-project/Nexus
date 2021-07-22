@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 
 import { ChartArea } from './ChartArea';
 import { StatisticArea } from './StatisticArea';
+import { Loader } from 'components/Loader';
 import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
@@ -16,7 +17,14 @@ const Wrapper = styled.div`
   `}
 `;
 
+const LoadingPage = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 24px;
+`;
+
 const Overview = () => {
+  const [loading, setLoading] = useState(true);
   const {
     app: { content = {} },
     networks,
@@ -33,15 +41,27 @@ const Overview = () => {
   );
 
   useEffect(() => {
-    getAppInfo();
-    getNetworks();
+    const fetchingData = async () => {
+      await getAppInfo();
+      await getNetworks();
+      setLoading(false);
+    };
+    fetchingData();
   }, [getAppInfo, getNetworks]);
 
   return (
-    <Wrapper>
-      <ChartArea data={content} />
-      <StatisticArea data={content} networks={networks} />
-    </Wrapper>
+    <>
+      {loading ? (
+        <LoadingPage>
+          <Loader size="20px" borderSize="3px" />
+        </LoadingPage>
+      ) : (
+        <Wrapper>
+          <ChartArea data={content} />
+          <StatisticArea data={content} networks={networks} />
+        </Wrapper>
+      )}
+    </>
   );
 };
 
