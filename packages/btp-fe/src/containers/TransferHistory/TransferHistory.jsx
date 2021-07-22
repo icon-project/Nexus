@@ -150,6 +150,10 @@ const TransferHistory = () => {
   const [historySource, setHistorySource] = useState([]);
   const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
+  const [assetName, setAssetName] = useState('');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+
   const { handleError, getNetworks } = useDispatch(
     ({ modal: { handleError }, network: { getNetworks } }) => ({
       handleError,
@@ -166,7 +170,7 @@ const TransferHistory = () => {
 
   const assets = [
     {
-      value: 'All',
+      value: '',
       label: 'All assets',
       renderLabel: () => <Text className="medium">All assets</Text>,
       renderItem: () => <Text className="medium">All assets</Text>,
@@ -187,7 +191,7 @@ const TransferHistory = () => {
 
   let networkOptions = [
     {
-      value: 'All',
+      value: '',
       label: 'All networks',
       renderLabel: () => <Text className="medium">All networks</Text>,
       renderItem: () => <Text className="medium">All networks</Text>,
@@ -195,7 +199,7 @@ const TransferHistory = () => {
   ];
   networks.forEach((network) => {
     networkOptions.push({
-      value: network.name,
+      value: network.id,
       label: network.name,
       renderLabel: () => (
         <TextWithIcon iconURL={process.env.REACT_APP_BTP_ENDPOINT + network.pathLogo.substring(1)}>
@@ -210,9 +214,10 @@ const TransferHistory = () => {
     });
   });
 
-  const fetchDataHandler = async (page) => {
+  const fetchDataHandler = async (page, assetName, from, to) => {
     try {
-      const transferData = (await getTransferHistory(page - 1, pagination.limit)) || {};
+      const transferData =
+        (await getTransferHistory(page - 1, pagination.limit, assetName, from, to)) || {};
       const dataSource = transferData?.content?.map((history, index) => {
         return {
           ...history,
@@ -239,12 +244,35 @@ const TransferHistory = () => {
       <Row className="control-group">
         <div className="selector-group">
           <div className="select-asset">
-            <SelectWithBorder label="Assets type" options={assets} />
+            <SelectWithBorder
+              onChange={(e) => {
+                setAssetName(e.target.value);
+                fetchDataHandler(1, e.target.value, from, to);
+              }}
+              label="Assets type"
+              options={assets}
+            />
           </div>
           <div className="select-network">
-            <SelectWithBorder label="Sending from" width="326px" options={networkOptions} />
+            <SelectWithBorder
+              onChange={(e) => {
+                setFrom(e.target.value);
+                fetchDataHandler(1, assetName, e.target.value, to);
+              }}
+              label="Sending from"
+              width="326px"
+              options={networkOptions}
+            />
             <img className="exchange-icon" src={VectorSrc} />
-            <SelectWithBorder label="To" width="326px" options={networkOptions} />
+            <SelectWithBorder
+              onChange={(e) => {
+                setTo(e.target.value);
+                fetchDataHandler(1, assetName, from, e.target.value);
+              }}
+              label="To"
+              width="326px"
+              options={networkOptions}
+            />
           </div>
         </div>
       </Row>
@@ -259,7 +287,7 @@ const TransferHistory = () => {
         })}
         pagination={pagination}
         loading={isFetching}
-        getItemsHandler={(page) => () => fetchDataHandler(page)}
+        getItemsHandler={(page) => () => fetchDataHandler(page, assetName, from, to)}
       />
       {showDetails && (
         <HistoryDetails id={selectedRow.id} onClose={() => setShowDetails(false)}></HistoryDetails>
