@@ -27,7 +27,7 @@ const Wrapper = styled.p`
   `}
 `;
 
-export const Link = ({ children, props, to, className, block = true, center }) => {
+export const Link = ({ children, to, className, block = true, center, ...props }) => {
   return (
     <Wrapper block={block} center={center}>
       <RouterLink to={to} {...props} className={className}>

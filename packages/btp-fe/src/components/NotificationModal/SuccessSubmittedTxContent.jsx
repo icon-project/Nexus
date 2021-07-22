@@ -3,6 +3,7 @@ import { Link, Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 
 import arrowIcon from 'assets/images/blue-up-arrow.svg';
+import { useDispatch } from 'hooks/useRematch';
 
 const Wrapper = styled.div`
   text-align: center;
@@ -21,10 +22,20 @@ const Wrapper = styled.div`
 `;
 
 export const SuccessSubmittedTxContent = () => {
+  const { setDisplay } = useDispatch(({ modal: { setDisplay } }) => ({
+    setDisplay,
+  }));
   return (
     <Wrapper>
       <Text className="medium">Your transaction was submitted successfully.</Text>
-      <Link className="small bold" to="/transfer/history" center>
+      <Link
+        className="small bold"
+        to="/transfer/history"
+        center
+        onClick={() => {
+          setDisplay(false);
+        }}
+      >
         View on history <img src={arrowIcon} alt="icon" />
       </Link>
     </Wrapper>
