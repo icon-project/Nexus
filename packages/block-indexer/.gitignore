@@ -8,3 +8,5 @@ coverage
 dist
 logs
 node_modules
+
+__pycache__
