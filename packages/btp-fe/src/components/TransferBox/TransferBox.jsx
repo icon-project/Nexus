@@ -79,6 +79,7 @@ export const TransferBox = () => {
               </div>
               <div className={`container ${isCurrentStep(2) && 'active'}`}>
                 <Approval
+                  isCurrent={isCurrentStep(2)}
                   setStep={memoizedSetStep}
                   values={values}
                   sendingInfo={sendingInfo}
