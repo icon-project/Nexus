@@ -25,13 +25,13 @@ const Wrapper = styled(Text)`
   }
 `;
 
-export const UpDownPercent = memo(({ percent = 0, sm = false }) => {
+export const UpDownPercent = memo(({ percent = 0, sm = false, label = 'in 24h' }) => {
   const isUp = percent >= 0;
   return (
     <Wrapper up={isUp} sm={sm} className="small percent">
       <img src={isUp ? upIcon : downIcon} alt="icon" />
       <span>{Math.abs(percent)}%</span>
-      <span className="label">in 24h</span>
+      <span className="label">{label}</span>
     </Wrapper>
   );
 });

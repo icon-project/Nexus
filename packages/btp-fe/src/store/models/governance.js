@@ -2,7 +2,10 @@ import { getRelayCandidates, getRegisteredRelayLast24h } from 'services/btpServi
 
 const governance = {
   state: {
-    relayCandidates: [],
+    relayCandidates: {
+      content: [],
+      rewardChanged30Days: 0,
+    },
     totalRegisteredLast24h: 0,
   },
   reducers: {
@@ -18,7 +21,7 @@ const governance = {
     async getRelayCandidates() {
       try {
         const relayCandidates = await getRelayCandidates();
-        this.setGovernanceState(['relayCandidates', relayCandidates.content || []]);
+        this.setGovernanceState(['relayCandidates', relayCandidates || {}]);
         return relayCandidates;
       } catch (error) {
         dispatch.modal.handleError();
@@ -38,7 +41,10 @@ const governance = {
   }),
   selectors: (slice) => ({
     selectRelayCandidates() {
-      return slice((state) => state.relayCandidates);
+      return slice((state) => state.relayCandidates.content);
+    },
+    selectRewardLast30Days() {
+      return slice((state) => state.relayCandidates.rewardChanged30Days);
     },
     selectRegisteredRelayLast24h() {
       return slice((state) => state.totalRegisteredLast24h);
@@ -52,7 +58,7 @@ const governance = {
         );
         return totalRewardFund.toFixed(2);
       };
-      return slice((state) => getTotalRewardFund(state.relayCandidates));
+      return slice((state) => getTotalRewardFund(state.relayCandidates.content));
     },
   }),
 };
