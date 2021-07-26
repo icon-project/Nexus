@@ -1,14 +1,18 @@
 import styled from 'styled-components/macro';
+import { Link } from 'react-router-dom';
 
 import { Header, SubTitle } from 'components/Typography';
+import { smallBoldSubtitle } from 'components/Typography/SubTitle';
 import { Icon } from 'components/Icon';
 import { TextWithInfo } from 'components/TextWithInfo';
+import { PrimaryButton } from 'components/Button';
 import { Feebox } from './FeeBox';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
 import { shortenNumber } from 'utils/app';
+import tokenBg from 'assets/images/token-promotion.svg';
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,17 +20,16 @@ const Wrapper = styled.div`
 
   .box {
     padding: 27px 32px;
-    border-radius: 4px;
     background-color: ${colors.brandSecondaryBase};
   }
 
-  .transaction {
+  > .transaction {
     display: flex;
     flex-direction: column;
     width: 24.1%;
 
-    .value-bonded,
-    .transaction {
+    > .value-bonded,
+    > .transaction {
       width: 100%;
       height: 150px;
       margin-bottom: 24px;
@@ -36,16 +39,16 @@ const Wrapper = styled.div`
       }
     }
 
-    .networks {
+    > .networks {
       width: 100%;
       height: 315px;
       padding: 0 !important;
 
-      .amount-of-networks {
+      > .amount-of-networks {
         padding: 23px 32px 0;
       }
 
-      .network-list {
+      > .network-list {
         padding: 27px 8px;
 
         h3 {
@@ -67,13 +70,30 @@ const Wrapper = styled.div`
     }
   }
 
-  .promotion {
+  > .promotion {
     width: 24.1%;
+    text-align: center;
+    padding: 50px 32px 0;
+    border-radius: 4px;
+    background: ${colors.brandSecondaryBase} bottom / contain no-repeat url('${tokenBg}');
+
+    > h3.bold {
+      margin-bottom: 12px;
+    }
+
+    > h3.small {
+      margin-bottom: 27px;
+    }
+
+    .start-to-transfer {
+      padding: 0;
+      ${smallBoldSubtitle};
+    }
   }
 
   ${media.xl`
     flex-direction: column;
-    .transaction, .fee, .networks {
+    > .transaction, > .fee, > .networks {
       width: 100%;
       margin-bottom: 24px;
     }
@@ -130,7 +150,15 @@ export const StatisticArea = ({ data, networks }) => {
 
       <Feebox fee={fee} />
 
-      <div className="promotion box"> abc</div>
+      <div className="promotion">
+        <Header className="x-small bold">Transfer your token to many networks</Header>
+        <SubTitle className="small">More than 30+ cryptocurrencies for swap and auction</SubTitle>
+        <Link to="/transfer">
+          <PrimaryButton width={161} height={44} className="start-to-transfer">
+            Start to transfer
+          </PrimaryButton>
+        </Link>
+      </div>
     </Wrapper>
   );
 };
