@@ -12,11 +12,12 @@ const Wrapper = styled.div`
   a.small {
     color: ${colors.tertiaryBase};
     margin-top: 14px;
-    margin-right: 12px;
+    display: inline-block;
 
     > img {
       width: 12.27px;
       height: 12.27px;
+      margin-left: 12px;
     }
   }
 `;
@@ -36,7 +37,8 @@ export const SuccessSubmittedTxContent = () => {
           setDisplay(false);
         }}
       >
-        View on history <img src={arrowIcon} alt="icon" />
+        View on history
+        <img src={arrowIcon} alt="icon" />
       </Link>
     </Wrapper>
   );
