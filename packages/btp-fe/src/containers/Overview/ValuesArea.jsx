@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from 'styled-components/macro';
 import { useSelect } from 'hooks/useRematch';
 
@@ -50,11 +49,9 @@ const Wrapper = styled.div`
 
 export const ValuesArea = ({ data }) => {
   const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
-  const { networks } = useSelect(({ app: { selectConnectedNetworks } }) => ({
-    networks: selectConnectedNetworks,
+  const { valueMint } = useSelect(({ app: { selectValueMint } }) => ({
+    valueMint: selectValueMint,
   }));
-  const connectedNetworks = networks ? Object.values(networks) : {};
-  const [valueMint] = useState(null);
 
   return (
     <Wrapper>
@@ -70,13 +67,7 @@ export const ValuesArea = ({ data }) => {
         >
           VALUE MINT
         </TextWithInfo>
-        <Header className="medium bold">
-          $
-          {(valueMint !== null
-            ? valueMint
-            : connectedNetworks[0]?.mintedVolume || 0
-          ).toLocaleString()}{' '}
-        </Header>
+        <Header className="medium bold">${valueMint.toLocaleString()} </Header>
         <UpDownPercent percent={mintVolumeLast24hChange} />
       </div>
     </Wrapper>

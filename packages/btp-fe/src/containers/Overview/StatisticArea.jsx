@@ -73,7 +73,7 @@ const Wrapper = styled.div`
   > .promotion {
     width: 22.9%;
     text-align: center;
-    padding: 50px 32px 0;
+    padding: 50px 32px;
     border-radius: 4px;
     background: ${colors.brandSecondaryBase} bottom / contain no-repeat url('${tokenBg}');
 
@@ -93,7 +93,7 @@ const Wrapper = styled.div`
 
   ${media.xl`
     flex-direction: column;
-    > .transaction, > .fee, > .networks {
+    > .transaction, > .fee, > .networks, > .promotion {
       width: 100%;
       margin-bottom: 24px;
     }
