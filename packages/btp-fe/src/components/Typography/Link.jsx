@@ -4,6 +4,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.p`
+  > a.medium {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 1px;
+    color: ${colors.tertiaryBase};
+  }
+
   > a.x-small {
     font-size: 12px;
     font-weight: 600;
@@ -25,6 +32,9 @@ const Wrapper = styled.p`
     ${!block ? 'display: inline-block;' : ''}
     ${center ? 'text-align: center;' : ''}
   `}
+  > a.bold {
+    font-weight: 600;
+  }
 `;
 
 export const Link = ({ children, to, className, block = true, center, ...props }) => {
