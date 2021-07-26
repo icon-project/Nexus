@@ -10,6 +10,7 @@ const Wrapper = styled.p`
     letter-spacing: 1px;
     color: ${colors.tertiaryBase};
   }
+
   > a.x-small {
     font-size: 12px;
     font-weight: 600;
@@ -17,6 +18,16 @@ const Wrapper = styled.p`
     letter-spacing: 0.75px;
     color: ${colors.tertiaryBase};
   }
+
+  > a.small {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  > a.bold {
+    font-weight: 600;
+  }
+
   ${({ block, center }) => `
     ${!block ? 'display: inline-block;' : ''}
     ${center ? 'text-align: center;' : ''}
@@ -26,7 +37,7 @@ const Wrapper = styled.p`
   }
 `;
 
-export const Link = ({ children, props, to, className, block = true, center }) => {
+export const Link = ({ children, to, className, block = true, center, ...props }) => {
   return (
     <Wrapper block={block} center={center}>
       <RouterLink to={to} {...props} className={className}>
