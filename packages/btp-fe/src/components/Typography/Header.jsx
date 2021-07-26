@@ -4,6 +4,7 @@ import { colors } from '../Styles/Colors';
 const normalHeader = css`
   letter-spacing: 1px;
   color: ${colors.grayText};
+  font-weight: 400;
 `;
 
 export const mediumBoldHeader = css`

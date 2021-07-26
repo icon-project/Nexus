@@ -1,37 +1,56 @@
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 
-import { Result, Button } from 'antd';
+import { Link, Header } from 'components/Typography';
+import { media } from 'components/Styles/Media';
+
+import notFoundSrc from 'assets/images/not-found.svg';
+import backArrow from 'assets/images/blue-back-arrow.svg';
 
 const NotFoundPageWrapper = styled.div`
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  text-align: center;
+  padding: 80px 0;
+
+  > .not-found-img {
+    width: 500px;
+    height: 500px;
+  }
+
+  > h3 {
+    color: white;
+    margin: 10px 0 34px;
+  }
+
+  .icon {
+    margin-right: 15.5px;
+    width: 8px;
+    height: 14px;
+  }
+
+  ${media.smallDesktop`
+    padding: 0;
+  `};
+
+  ${media.md`
+    > .not-found-img {
+      width: 300px;
+      height: 300px;
+    }
+  `};
 `;
 
-const NotFoundPage = ({ history }) => {
+const NotFoundPage = () => {
   return (
     <NotFoundPageWrapper>
       <Helmet>
         <title>Page Not Found</title>
       </Helmet>
-      <Result
-        status="404"
-        title="404"
-        subTitle="Sorry, the page you visited does not exist."
-        extra={
-          <Button
-            onClick={() => {
-              history.push(`/`);
-            }}
-            type="primary"
-          >
-            Back Home
-          </Button>
-        }
-      />
+      <img className="not-found-img" src={notFoundSrc} />
+      <Header className="x-small">Something’s missing</Header>
+      <Link className="medium bold" to="/overview">
+        <img width="8px" height="14px" className="icon" src={backArrow} />
+        Go back to Home
+      </Link>
     </NotFoundPageWrapper>
   );
 };
