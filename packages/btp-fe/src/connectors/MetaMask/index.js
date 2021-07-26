@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
-import store from '../../store';
-import { wallets } from '../../utils/constants';
+import store from 'store';
+import { wallets } from 'utils/constants';
 import { METAMASK_LOCAL_ADDRESS, allowedNetworkIDs } from '../constants';
+
+import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 const { modal, account } = store.dispatch;
 
@@ -129,7 +131,7 @@ class Ethereum {
       if (txHash) {
         modal.openModal({
           icon: 'checkIcon',
-          desc: 'Your transaction was submitted successfully.',
+          children: <SuccessSubmittedTxContent />,
           button: {
             text: 'Continue transfer',
             onClick: () => modal.setDisplay(false),

@@ -1,9 +1,11 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
+import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
+
 import { getBalance, sendTransaction, getTxResult } from './iconService';
 import { requestHasAddress } from './events';
 
-import store from '../../store';
-import { wallets, SUCCESS_TRANSACTION } from '../../utils/constants';
+import store from 'store';
+import { wallets, SUCCESS_TRANSACTION } from 'utils/constants';
 import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork, signingActions } from '../constants';
 
 const { modal, account } = store.dispatch;
@@ -66,7 +68,7 @@ const eventHandler = async (event) => {
                 case signingActions.transfer:
                   modal.openModal({
                     icon: 'checkIcon',
-                    desc: 'Your transaction was submitted successfully.',
+                    children: <SuccessSubmittedTxContent />,
                     button: {
                       text: 'Continue transfer',
                       onClick: () => modal.setDisplay(false),
