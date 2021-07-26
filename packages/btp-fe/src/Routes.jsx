@@ -10,6 +10,8 @@ import Overview from 'containers/Overview';
 import FeeAuctionPage from 'containers/FeeAuctionPage';
 import FeeAuctionDetails from 'containers/FeeAuctionDetails';
 
+import { ModalWrapper } from 'components/NotificationModal';
+
 function Routes() {
   return (
     <BrowserRouter>
@@ -25,6 +27,7 @@ function Routes() {
           <Route path="/auction/:id" exact component={FeeAuctionDetails} />
           <Route path="*" component={NotFoundPage} />
         </Switch>
+        <ModalWrapper />
       </Layout>
     </BrowserRouter>
   );
