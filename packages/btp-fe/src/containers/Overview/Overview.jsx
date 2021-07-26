@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 
-import { ChartArea } from './ChartArea';
+import { ValuesArea } from './ValuesArea';
 import { StatisticArea } from './StatisticArea';
 import { media } from 'components/Styles/Media';
 
@@ -39,7 +39,7 @@ const Overview = () => {
 
   return (
     <Wrapper>
-      <ChartArea data={content} />
+      <ValuesArea data={content} />
       <StatisticArea data={content} networks={networks} />
     </Wrapper>
   );

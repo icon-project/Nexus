@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components/macro';
 import { useSelect } from 'hooks/useRematch';
 
-import { ChartBox } from './ChartBox';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { Header } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
@@ -10,34 +9,33 @@ import { UpDownPercent } from 'components/UpDownPercent';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
+import bgImg from 'assets/images/many-lines.svg';
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 24px;
 
-  .chart {
+  > .value {
     width: 48.9%;
-    height: 548px;
+    height: 169px;
     padding: 32px;
-    background-color: ${colors.brandSecondaryBase};
+    background: ${colors.brandSecondaryBase} right / contain no-repeat url('${bgImg}');
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    ${media.sm`
-      height: 595px;
-    `}
-  }
-  ${media.xl`
-    .chart {
-      height: fit-content;
+
+    > p.small {
+      margin-top: 12px;
     }
-  `};
+  }
 
   ${media.xl`
     flex-direction: column;
 
-    .chart {
+    > .value {
       width: 100%;
+      height: fit-content;
 
       &:first-child{
         margin-bottom: 24px;
@@ -50,24 +48,22 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const ChartArea = ({ data }) => {
+export const ValuesArea = ({ data }) => {
   const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
   const { networks } = useSelect(({ app: { selectConnectedNetworks } }) => ({
     networks: selectConnectedNetworks,
   }));
   const connectedNetworks = networks ? Object.values(networks) : {};
-  const [valueMint, setValueMint] = useState(null);
+  const [valueMint] = useState(null);
 
   return (
     <Wrapper>
-      <div className="chart">
+      <div className="value">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
-        <Header className="medium bold">
-          ${volume.toLocaleString()} <UpDownPercent percent={last24hChange} />
-        </Header>
-        <ChartBox chartId="volume" networks={networks} />
+        <Header className="medium bold">${volume.toLocaleString()}</Header>
+        <UpDownPercent percent={last24hChange} />
       </div>
-      <div className="chart">
+      <div className="value">
         <TextWithInfo
           tooltip="Total value (TVL) of all digital assets currently minted on each blockchain by BTP in $"
           width={300}
@@ -80,9 +76,8 @@ export const ChartArea = ({ data }) => {
             ? valueMint
             : connectedNetworks[0]?.mintedVolume || 0
           ).toLocaleString()}{' '}
-          <UpDownPercent percent={mintVolumeLast24hChange} />
         </Header>
-        <ChartBox chartId="mint" networks={networks} setValueMint={setValueMint} />
+        <UpDownPercent percent={mintVolumeLast24hChange} />
       </div>
     </Wrapper>
   );
