@@ -1,56 +1,82 @@
+/* eslint-disable */
 import styled from 'styled-components/macro';
 
-import { HorizontalScrollContainer } from 'components/HorizontalScrollContainer';
-import { smallText } from 'components/Typography/Text';
+import { smallText, Text } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
 
 import { shortenNumber } from 'utils/app';
+import arrowDownIcon from 'assets/images/arrow-icon.svg';
 
-const Table = styled.table`
-  th,
-  td {
-    text-align: center;
-    padding: 14px 20px;
-    ${smallText};
+const Wapper = styled.div`
+  position: relative;
 
-    img {
-      margin-right: 4px;
+  > .table-container {
+    max-height: 451px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > table {
+      width: 100%;
+      ${smallText};
+
+      th:nth-child(2),
+      td:nth-child(2) {
+        text-align: right;
+        padding-right: 18px;
+      }
+
+      th,
+      td {
+        padding: 10px 0;
+        border-bottom: solid 1px ${colors.grayLine};
+      }
     }
   }
 
-  th {
-    text-transform: uppercase;
-  }
+  > .scroll-to-view {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 
-  tbody {
-    border-top: solid 1px ${colors.grayLine};
-    border-bottom: solid 1px ${colors.grayLine};
+    > img {
+      margin-right: 7px;
+    }
   }
 `;
 
 export const AssetFeeTable = ({ assets }) => {
   return (
-    <HorizontalScrollContainer>
-      <Table>
-        <thead>
-          <tr>
-            <th></th>
-            {assets.map(({ name }, idx) => (
-              <th key={idx}>{name}</th>
+    <Wapper>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Fee</th>
+            </tr>
+          </thead>
+          <tbody>
+            {assets.map(({ name, value }, idx) => (
+              <tr key={idx}>
+                <td>{name.toUpperCase()}</td>
+                <td>{shortenNumber(value)}</td>
+              </tr>
             ))}
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Fee</td>
-            {assets.map(({ value }, idx) => (
-              <td key={idx}>{shortenNumber(value)}</td>
-            ))}
-            <td style={{ width: '100%' }}></td>
-          </tr>
-        </tbody>
-      </Table>
-    </HorizontalScrollContainer>
+          </tbody>
+        </table>
+      </div>
+      {assets.length > 10 && (
+        <Text className="x-small scroll-to-view">
+          <img src={arrowDownIcon} alt="icon" />
+          Scroll to view more asset fee
+        </Text>
+      )}
+    </Wapper>
   );
 };

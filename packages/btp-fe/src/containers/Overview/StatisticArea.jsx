@@ -26,13 +26,13 @@ const Wrapper = styled.div`
   > .transaction {
     display: flex;
     flex-direction: column;
-    width: 24.1%;
+    width: 22.9%;
 
     > .value-bonded,
     > .transaction {
       width: 100%;
       height: 150px;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
 
       .value {
         margin-bottom: 7px;
@@ -45,7 +45,7 @@ const Wrapper = styled.div`
       padding: 0 !important;
 
       > .amount-of-networks {
-        padding: 23px 32px 0;
+        padding: 23px 15.67px 0 32px;
       }
 
       > .network-list {
@@ -71,7 +71,7 @@ const Wrapper = styled.div`
   }
 
   > .promotion {
-    width: 24.1%;
+    width: 22.9%;
     text-align: center;
     padding: 50px 32px 0;
     border-radius: 4px;
