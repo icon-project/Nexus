@@ -6,37 +6,36 @@ import { media } from 'components/Styles/Media';
 
 import notFoundSrc from 'assets/images/not-found.svg';
 import backArrow from 'assets/images/blue-back-arrow.svg';
+
 const NotFoundPageWrapper = styled.div`
-  min-height: 100vh;
-  width: 100%;
-  display: block;
   text-align: center;
-  .not-found-img {
-    padding-top: 80px;
+  padding: 80px 0;
+
+  > .not-found-img {
+    width: 500px;
+    height: 500px;
   }
-  h3 {
-    font-weight: 400;
+
+  > h3 {
     color: white;
-    margin-bottom: 34px;
-    margin-top: 10px;
+    margin: 10px 0 34px;
   }
-  a.medium {
-    img {
-      margin-right: 15.5px;
-    }
+
+  .icon {
+    margin-right: 15.5px;
+    width: 8px;
+    height: 14px;
   }
+
   ${media.smallDesktop`
-  .not-found-img {
-    padding-top: 0;
-    width: 400px;
-    height: 400px;
-  }
+    padding: 0;
   `};
+
   ${media.md`
-  .not-found-img {
-    width: 300px;
-    height: 300px;
-  }
+    > .not-found-img {
+      width: 300px;
+      height: 300px;
+    }
   `};
 `;
 
@@ -46,10 +45,10 @@ const NotFoundPage = () => {
       <Helmet>
         <title>Page Not Found</title>
       </Helmet>
-      <img className="not-found-img" width="500px" height="500px" src={notFoundSrc} />
+      <img className="not-found-img" src={notFoundSrc} />
       <Header className="x-small">Something’s missing</Header>
       <Link className="medium bold" to="/overview">
-        <img width="8px" height="14px" src={backArrow} />
+        <img width="8px" height="14px" className="icon" src={backArrow} />
         Go back to Home
       </Link>
     </NotFoundPageWrapper>
