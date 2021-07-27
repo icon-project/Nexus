@@ -20,6 +20,7 @@ const Wrapper = styled.div`
 
   .box {
     padding: 27px 32px;
+    border-radius: 4px;
     background-color: ${colors.brandSecondaryBase};
   }
 
