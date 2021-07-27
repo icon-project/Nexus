@@ -33,17 +33,17 @@ const columns = [
   {
     title: 'Bidder',
     dataIndex: 'bidder',
-    width: '36.88%',
+    width: '236px',
   },
   {
     title: 'Amount (ICX)',
     dataIndex: 'amount',
-    width: '24.38%',
+    width: '156px',
   },
   {
     title: 'Time',
     dataIndex: 'createdTime',
-    width: '38.74%',
+    width: '248px',
   },
 ];
 

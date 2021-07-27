@@ -1,9 +1,0 @@
-{{#if wantLoadable}}
-import loadable from 'utils/loadable';
-
-export default loadable(() => import('./{{#if customName}}{{properCase customName}}{{else}}{{properCase name}}{{/if}}'));
-{{else}}
-import {{#if customName}}{{properCase customName}}{{else}}{{properCase name}}{{/if}} from './{{#if customName}}{{properCase customName}}{{else}}{{properCase name}}{{/if}}';
-
-export default {{#if customName}}{{properCase customName}}{{else}}{{properCase name}}{{/if}};
-{{/if}}

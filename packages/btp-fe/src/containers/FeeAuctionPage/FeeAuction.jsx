@@ -68,8 +68,6 @@ const Wrapper = styled.div`
   }
 
   ${media.md`
-    padding: 52px 16px 31px;
-
     .search-group {
       flex-direction: column;
     }
@@ -84,6 +82,10 @@ const Wrapper = styled.div`
       .table-container {
         width: 90%;
         margin: 24px auto;
+      }
+
+      .amount-of-bid {
+        width: 100%;
       }
     }
   `};
@@ -117,22 +119,27 @@ const columns = [
   {
     title: 'Auction ID',
     dataIndex: 'shortedId',
+    width: '140px',
   },
   {
     title: 'Auction name',
     dataIndex: 'name',
+    width: '170px',
   },
   {
     title: 'Bid amount',
     dataIndex: 'availableBidAmount',
+    width: '170px',
   },
   {
     title: 'Current highest bid (ICX)',
     dataIndex: 'currentBidAmount',
+    width: '224px',
   },
   {
     title: 'Expiration',
     dataIndex: 'endTime',
+    width: '224px',
   },
 ];
 

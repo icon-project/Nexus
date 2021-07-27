@@ -33,6 +33,7 @@ const columns = [
     title: '#',
     dataIndex: 'index',
     render: (text, record, index) => index + 1,
+    width: '64px',
   },
   {
     title: 'Network',
@@ -42,24 +43,29 @@ const columns = [
         iconUrl={process.env.REACT_APP_BTP_ENDPOINT + record.pathLogo.substring(1)}
         name={text}
         url={record.url}
-      ></Network>
+      />
     ),
+    width: '288px',
   },
   {
     title: 'Volume (24hr)',
     dataIndex: 'usd24h',
+    width: '256px',
   },
   {
     title: 'Volume (All time)',
     dataIndex: 'usdAllTime',
+    width: '256px',
   },
   {
     title: 'Mint fee',
     dataIndex: 'mintFee',
+    width: '128px',
   },
   {
     title: 'Burn fee',
     dataIndex: 'burnFee',
+    width: '128px',
   },
 ];
 
