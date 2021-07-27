@@ -132,15 +132,30 @@ const TransferHistoryStyled = styled.div`
   `};
 
   ${media.md`
-    .control-group {
+    > .control-group {
       align-items: center;
+      margin: 20px 0 0;
+
+      .select-asset {
+        margin: 0 0 30px !important;
+      }
+
+      .select-network {
+        flex-direction: column;
+        width: 100%;
+
+        > .exchange-icon {
+          display: none;
+        }
+
+        button {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+      }
     }
-    .exchange-icon {
-      transform: rotate(90deg);
-    }
-    .select-network {
-      display: contents !important;
-    }
+    
+  
   `};
 `;
 

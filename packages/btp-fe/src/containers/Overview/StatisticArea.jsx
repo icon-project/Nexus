@@ -73,6 +73,8 @@ const Wrapper = styled.div`
 
   > .promotion {
     width: 22.9%;
+    min-height: 650px;
+
     text-align: center;
     padding: 50px 32px;
     border-radius: 4px;
@@ -126,10 +128,7 @@ export const StatisticArea = ({ data, networks }) => {
 
         <div className="networks box">
           <div className="amount-of-networks">
-            <TextWithInfo
-              tooltip="Total number of transactions on the BTP Network"
-              direction="bottom"
-            >
+            <TextWithInfo tooltip="Total number of transactions on the BTP Network">
               NETWORKS CONNECTED
             </TextWithInfo>
             <Header className="small bold value">{totalNetworks}</Header>
