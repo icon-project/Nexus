@@ -130,10 +130,7 @@ export const StatisticArea = ({ data, networks }) => {
 
         <div className="networks box">
           <div className="amount-of-networks">
-            <TextWithInfo
-              tooltip="Total number of transactions on the BTP Network"
-              direction="bottom"
-            >
+            <TextWithInfo tooltip="Total number of transactions on the BTP Network">
               NETWORKS CONNECTED
             </TextWithInfo>
             <Header className="small bold value">{totalNetworks}</Header>
