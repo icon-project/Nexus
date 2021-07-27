@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 import { colors } from '../Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 const normalHeader = css`
   letter-spacing: 1px;
@@ -51,4 +52,11 @@ export const Header = styled.h3`
   &.bold {
     font-weight: 600;
   }
+
+  ${media.md`
+    &.medium {
+      font-size: 25px;
+      line-height: 36px;
+    }
+  `};
 `;
