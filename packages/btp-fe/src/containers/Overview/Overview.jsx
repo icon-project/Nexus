@@ -20,8 +20,8 @@ const Overview = () => {
   const {
     app: { content = {} },
     networks,
-  } = useSelect(({ app, network: { selectNetwotks } }) => ({
-    app: app.selectAppInfo,
+  } = useSelect(({ app: { selectAppInfo }, network: { selectNetwotks } }) => ({
+    app: selectAppInfo,
     networks: selectNetwotks,
   }));
 

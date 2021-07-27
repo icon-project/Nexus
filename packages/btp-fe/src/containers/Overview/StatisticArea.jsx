@@ -90,6 +90,10 @@ const Wrapper = styled.div`
       padding: 0;
       ${smallBoldSubtitle};
     }
+
+    ${media.md`
+      min-height: 620px;
+    `}
   }
 
   ${media.xl`
