@@ -95,7 +95,7 @@ const GovernanceStyled = styled.div`
     .heading-area {
       display: block;
     }
-    
+
     .total {
       margin: 0px 0 24px 20px;
       flex-direction: column;
