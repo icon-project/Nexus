@@ -11,7 +11,7 @@ const StyledLayout = styled(AtndLayout)`
     min-height: calc(100vh - 80px); // minus header height
   }
 
-  ${media.md`
+  ${media.smallDesktop`
     > main {
       padding: 0 16px;
     }

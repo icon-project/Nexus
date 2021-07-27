@@ -73,6 +73,8 @@ const Wrapper = styled.div`
 
   > .promotion {
     width: 22.9%;
+    min-height: 650px;
+
     text-align: center;
     padding: 50px 32px;
     border-radius: 4px;
@@ -90,10 +92,6 @@ const Wrapper = styled.div`
       padding: 0;
       ${smallBoldSubtitle};
     }
-
-    ${media.md`
-      min-height: 620px;
-    `}
   }
 
   ${media.xl`
