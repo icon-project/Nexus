@@ -33,14 +33,11 @@ const app = {
     selectAppInfo() {
       return slice((state) => state.appInfo);
     },
-    selectConnectedNetworks() {
+    selectValueMint() {
       return slice((state) => {
         return state.appInfo?.content?.minted.reduce(
-          (accumulator, { networkId, networkName, mintedVolume }) => ({
-            ...accumulator,
-            [networkId]: { name: networkName, value: networkId, mintedVolume },
-          }),
-          {},
+          (accumulator, { mintedVolume }) => accumulator + mintedVolume,
+          0,
         );
       });
     },
