@@ -7680,11 +7680,6 @@ faker@5.4.0:
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.4.0.tgz#f18e55993c6887918182b003d163df14daeb3011"
   integrity sha512-Y9n/Ky/xZx/Bj8DePvXspUYRtHl/rGQytoIT5LaxmNwSe3wWyOeOXb3lT6Dpipq240PVpeFaGKzScz/5fvff2g==
 
-fancy-canvas@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/fancy-canvas/-/fancy-canvas-0.2.2.tgz#33fd4976724169a1eda5015f515a2a1302d1ec91"
-  integrity sha512-50qi8xA0QkHbjmb8h7XQ6k2fvD7y/yMfiUw9YTarJ7rWrq6o5/3CCXPouYk+XSLASvvxtjyiQLRBFt3qkE3oyA==
-
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
@@ -10532,13 +10527,6 @@ liftoff@^2.5.0:
     object.map "^1.0.0"
     rechoir "^0.6.2"
     resolve "^1.1.7"
-
-lightweight-charts@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/lightweight-charts/-/lightweight-charts-3.3.0.tgz#cbaafe8977ac342d45e847e12eb5c7b36007358a"
-  integrity sha512-W5jeBrXcHG8eHnIQ0L2CB9TLkrrsjNPlQq5SICPO8PnJ3dJ8jZkLCAwemZ7Ym7ZGCfKCz6ow1EPbyzNYxblnkw==
-  dependencies:
-    fancy-canvas "0.2.2"
 
 lines-and-columns@^1.1.6:
   version "1.1.6"
@@ -13735,11 +13723,6 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
-
-react-minimal-pie-chart@8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/react-minimal-pie-chart/-/react-minimal-pie-chart-8.2.0.tgz#22b53af2363f040d818331721658dfa7a1ea847a"
-  integrity sha512-RhrHzprJt3KfBe4L3sE0Ha6fj4kYcwQtesQgscnld9Umf64+nZnxxInycnbimKsbIjxJONv77JIZp+qRbJD+bA==
 
 react-popper-tooltip@^3.1.1:
   version "3.1.1"
