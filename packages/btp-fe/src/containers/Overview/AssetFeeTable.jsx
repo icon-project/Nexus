@@ -1,4 +1,3 @@
-/* eslint-disable */
 import styled from 'styled-components/macro';
 
 import { smallText, Text } from 'components/Typography/Text';
@@ -24,16 +23,15 @@ const Wapper = styled.div`
       width: 100%;
       ${smallText};
 
-      th:nth-child(2),
-      td:nth-child(2) {
-        text-align: right;
-        padding-right: 18px;
-      }
-
       th,
       td {
         padding: 10px 0;
         border-bottom: solid 1px ${colors.grayLine};
+
+        &:nth-child(2) {
+          text-align: right;
+          padding-right: 18px;
+        }
       }
     }
   }
