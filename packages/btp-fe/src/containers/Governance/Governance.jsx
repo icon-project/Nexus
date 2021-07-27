@@ -16,26 +16,32 @@ const columns = [
   {
     title: '#',
     dataIndex: 'rank',
+    width: '64px',
   },
   {
     title: 'Name',
     dataIndex: 'name',
+    width: '282px',
   },
   {
     title: 'Bonded ICX',
     dataIndex: 'bondedICX',
+    width: '241px',
   },
   {
     title: 'Server status',
     dataIndex: 'serverStatus',
+    width: '132px',
   },
   {
     title: 'Transferred transaction',
     dataIndex: 'transferredTransactions',
+    width: '214px',
   },
   {
     title: 'Failed transaction',
     dataIndex: 'failedTransactions',
+    width: '214px',
   },
 ];
 
@@ -84,24 +90,26 @@ const GovernanceStyled = styled.div`
     display: inline-block;
     margin-right: 9.33px;
   }
+
   ${media.md`
-  .heading-area {
-    display: block;
-  }
-  .total {
-    margin: 0px 0 24px 20px;
-    .large {
-        font-size: 32px;
+    .heading-area {
+      display: block;
     }
-  }
-  .total-text {
-    font-size: 12px;
-  }
-  .vl {
-    margin-left: 24px;
-    margin-right: 24px;
-  }
-    `}
+    
+    .total {
+      margin: 0px 0 24px 20px;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .large {
+          font-size: 32px;
+      }
+
+      .vl {
+        display: none;
+      }
+    }
+  `}
 `;
 
 function GovernancePage() {
