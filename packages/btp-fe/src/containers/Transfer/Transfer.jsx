@@ -26,7 +26,7 @@ const Transfer = () => {
   return (
     <TransferStyled>
       <NavLink to={`/transfer/history`}>
-        <SubTitle className="sm bold history-link" color={colors.tertiaryBase}>
+        <SubTitle className="sm bold" color={colors.tertiaryBase}>
           Transfer history
         </SubTitle>
       </NavLink>
