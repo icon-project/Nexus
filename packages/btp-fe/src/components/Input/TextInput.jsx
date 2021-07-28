@@ -1,10 +1,10 @@
 import styled from 'styled-components/macro';
 import { Input } from './Input';
 import { colors } from '../Styles/Colors';
-import { mediumText, Text } from 'components/Typography/Text';
+import { TextMixin, Text } from 'components/Typography/Text';
 
 export const StyledTextInput = styled(Input)`
-  ${mediumText};
+  ${TextMixin.md};
 
   padding: 20px 16px;
   background-color: ${colors.grayDark};
@@ -37,7 +37,7 @@ export const TextInput = ({ children, meta = {}, ...props }) => {
       <StyledTextInput {...props} hasError={hasError}>
         {children}
       </StyledTextInput>
-      {hasError && <Text className="x-small err-msg">{meta.error}</Text>}
+      {hasError && <Text className="xs err-msg">{meta.error}</Text>}
     </>
   );
 };

@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 
 import { Header, SubTitle } from 'components/Typography';
-import { smallBoldSubtitle } from 'components/Typography/SubTitle';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { Icon } from 'components/Icon';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { PrimaryButton } from 'components/Button';
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
       height: 150px;
       margin-bottom: 32px;
 
-      .value {
+      .header-text {
         margin-bottom: 7px;
       }
     }
@@ -52,7 +52,7 @@ const Wrapper = styled.div`
       > .network-list {
         padding: 27px 8px;
 
-        h3 {
+        .subtitle-text {
           height: 40px;
           padding: 4px 12px;
           display: flex;
@@ -80,17 +80,17 @@ const Wrapper = styled.div`
     border-radius: 4px;
     background: ${colors.brandSecondaryBase} bottom / contain no-repeat url('${tokenBg}');
 
-    > h3.bold {
+    > .header-text {
       margin-bottom: 12px;
     }
 
-    > h3.small {
+    > .subtitle-text {
       margin-bottom: 27px;
     }
 
     .start-to-transfer {
       padding: 0;
-      ${smallBoldSubtitle};
+      ${SubTitleMixin.smBold};
     }
   }
 
@@ -112,7 +112,7 @@ export const StatisticArea = ({ data, networks }) => {
           <TextWithInfo tooltip="Total collective value bonded by Relays">
             VALUE BONDED
           </TextWithInfo>
-          <Header className="small bold value" title={bondedValue}>
+          <Header className="sm bold" title={bondedValue}>
             {shortenNumber(bondedValue)}
           </Header>
         </div>
@@ -121,7 +121,7 @@ export const StatisticArea = ({ data, networks }) => {
           <TextWithInfo tooltip="Total number of transactions on the BTP Network">
             TRANSACTIONS
           </TextWithInfo>
-          <Header className="small bold value" title={totalTransactions}>
+          <Header className="sm bold" title={totalTransactions}>
             {shortenNumber(totalTransactions)}
           </Header>
         </div>
@@ -131,12 +131,12 @@ export const StatisticArea = ({ data, networks }) => {
             <TextWithInfo tooltip="Total number of transactions on the BTP Network">
               NETWORKS CONNECTED
             </TextWithInfo>
-            <Header className="small bold value">{totalNetworks}</Header>
+            <Header className="sm bold">{totalNetworks}</Header>
           </div>
 
           <div className="network-list">
             {networks.map(({ pathLogo, name }) => (
-              <SubTitle className="medium bold" key={name}>
+              <SubTitle className="md bold" key={name}>
                 <Icon
                   iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
                   width="24px"
@@ -151,8 +151,8 @@ export const StatisticArea = ({ data, networks }) => {
       <Feebox fee={fee} />
 
       <div className="promotion">
-        <Header className="x-small bold">Transfer your token to many networks</Header>
-        <SubTitle className="small">More than 30+ cryptocurrencies for swap and auction</SubTitle>
+        <Header className="xs bold">Transfer your token to many networks</Header>
+        <SubTitle className="sm">More than 30+ cryptocurrencies for swap and auction</SubTitle>
         <Link to="/transfer">
           <PrimaryButton width={161} height={44} className="start-to-transfer">
             Start to transfer

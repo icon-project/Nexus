@@ -1,6 +1,6 @@
 import { colors } from 'components/Styles/Colors';
 import styled from 'styled-components/macro';
-import { smallText } from 'components/Typography/Text';
+import { TextMixin } from 'components/Typography/Text';
 import tooltipArrow from 'assets/images/tooltip-arrow.svg';
 
 const Wrapper = styled.div`
@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   width: ${({ width }) => `${width}px`};
   z-index: 101;
   div {
-    ${smallText}
+    ${TextMixin.sm}
     word-break: break-word;
     color: ${colors.grayText};
     &:last-child {

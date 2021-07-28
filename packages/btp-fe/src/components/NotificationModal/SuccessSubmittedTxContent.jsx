@@ -28,7 +28,7 @@ export const SuccessSubmittedTxContent = () => {
   }));
   return (
     <Wrapper>
-      <Text className="medium">Your transaction was submitted successfully.</Text>
+      <Text className="md">Your transaction was submitted successfully.</Text>
       <Link
         className="small bold"
         to="/transfer/history"

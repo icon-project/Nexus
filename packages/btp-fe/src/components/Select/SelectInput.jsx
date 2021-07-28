@@ -18,7 +18,7 @@ const StyledSelect = styled(Select)`
     height: 10px;
   }
 
-  & > p.medium {
+  & > .plain-text.md {
     text-transform: uppercase;
   }
 
@@ -34,7 +34,7 @@ export const SelectInput = ({ meta = {}, ...props }) => {
   return (
     <>
       <StyledSelect {...props} meta={meta} customeArrow={filledDownArrow} hasError={hasError} />
-      {hasError && <Text className="x-small err-msg">{meta.error}</Text>}
+      {hasError && <Text className="xs err-msg">{meta.error}</Text>}
     </>
   );
 };

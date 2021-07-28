@@ -16,7 +16,7 @@ import { METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 import { Header as Heading, SubTitle, Text } from '../Typography';
-import { smallBoldSubtitle } from '../Typography/SubTitle';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
@@ -40,14 +40,10 @@ const StyledHeader = styled(Layout.Header)`
 
   .left-side {
     min-width: 175px;
-
-    h3 {
-      color: ${primaryBrandLight};
-    }
   }
 
   .right-side {
-    ${smallBoldSubtitle};
+    ${SubTitleMixin.smBold};
 
     flex: 1;
     display: flex;
@@ -79,7 +75,7 @@ const StyledHeader = styled(Layout.Header)`
   }
 
   .connect-to-wallet-btn {
-    ${smallBoldSubtitle};
+    ${SubTitleMixin.smBold};
     height: 44px;
     min-width: 170px;
     border-radius: 100px;
@@ -301,7 +297,9 @@ const Header = ({ userStatus = defaultUser }) => {
         </>
       )}
       <div className="left-side">
-        <Heading className="x-small bold">BTP Dashboard</Heading>
+        <Heading className="xs bold" color={primaryBrandLight}>
+          BTP Dashboard
+        </Heading>
       </div>
       <HamburgerButton
         className={`menu-icon ${showMenu && 'active'}`}
@@ -311,7 +309,7 @@ const Header = ({ userStatus = defaultUser }) => {
         <Nav setShowMenu={setShowMenu} />
         {address ? (
           <div className="account-info">
-            <SubTitle className="small">{currentNetwork}</SubTitle>
+            <SubTitle className="sm">{currentNetwork}</SubTitle>
             <Avatar
               className="user-avatar"
               src={userStatus.avatar}
@@ -319,8 +317,8 @@ const Header = ({ userStatus = defaultUser }) => {
               onClick={onAvatarClicked}
             />
             <span className="wallet-info">
-              <Text className="x-small address">{shortedAddress}</Text>
-              <SubTitle className="medium bold">
+              <Text className="sm address">{shortedAddress}</Text>
+              <SubTitle className="md bold">
                 {balance} {unit}
               </SubTitle>
             </span>

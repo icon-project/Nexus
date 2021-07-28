@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   width: 480px;
   background-color: ${colors.grayBG};
   padding: 23px 0 0;
+  text-align: initial;
 
   .container {
     display: none;

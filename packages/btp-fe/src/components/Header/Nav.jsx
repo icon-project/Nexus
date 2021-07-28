@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import { smallBoldSubtitle } from '../Typography/SubTitle';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -21,7 +21,7 @@ const NavStyled = styled.ul`
     }
 
     .nav-link {
-      ${smallBoldSubtitle}
+      ${SubTitleMixin.smBold};
       color: ${colors.brandSecondaryBG};
       background-color: transparent;
 

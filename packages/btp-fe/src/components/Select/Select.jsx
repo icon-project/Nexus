@@ -130,7 +130,7 @@ const Select = ({
       ) : selectedValue.renderLabel ? (
         selectedValue.renderLabel()
       ) : (
-        <Text className="medium">{selectedValue.label || selectedValue.name || 'No options'}</Text>
+        <Text className="md">{selectedValue.label || selectedValue.name || 'No options'}</Text>
       )}
 
       {isOpenSelect && (
@@ -151,7 +151,7 @@ const Select = ({
                     : ''
                 }`}
               >
-                {renderItem ? renderItem() : <Text className="small">{label || name}</Text>}
+                {renderItem ? renderItem() : <Text className="sm">{label || name}</Text>}
               </li>
             );
           })}

@@ -6,31 +6,28 @@ import { Text } from 'components/Typography';
 const StyledSelect = styled(Select)`
   width: ${({ width }) => width || '256px'};
   height: 44px;
+
+  margin-top: 8px;
   justify-content: space-between;
   border: 1px solid ${colors.grayLine};
   padding: 10px 16px;
   background-color: transparent !important;
+
   img {
     width: 24px;
   }
+
   ul {
     width: 90%;
   }
 `;
 
-const Wrapper = styled.div`
-  display: block;
-  .label {
-    margin-bottom: 8px;
-  }
-`;
-
 const SelectWithBorder = ({ width, label, ...props }) => {
   return (
-    <Wrapper>
-      <Text className="small label">{label}</Text>
+    <div>
+      <Text className="sm">{label}</Text>
       <StyledSelect width={width} {...props} />
-    </Wrapper>
+    </div>
   );
 };
 export default SelectWithBorder;

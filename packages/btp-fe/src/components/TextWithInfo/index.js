@@ -8,6 +8,7 @@ const StyledHeading = styled(SubTitle)`
   color: ${colors.grayScaleSubText};
   display: inline-flex;
   margin-bottom: 10px;
+
   img {
     padding-left: 8.67px;
   }
