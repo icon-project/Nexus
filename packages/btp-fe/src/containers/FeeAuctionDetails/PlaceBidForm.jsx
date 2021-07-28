@@ -21,7 +21,7 @@ const Form = styled.form`
   }
 
   .plain-text.xs {
-    color: ${colors.graySubText} !important;
+    color: ${colors.graySubText};
     margin-bottom: 9px;
 
     span {

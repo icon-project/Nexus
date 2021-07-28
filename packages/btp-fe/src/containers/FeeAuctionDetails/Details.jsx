@@ -13,7 +13,7 @@ const Info = styled.div`
 
   .plain-text.xs {
     margin-bottom: 7px;
-    color: ${colors.grayScaleSubText} !important;
+    color: ${colors.grayScaleSubText};
   }
 
   ${media.md`

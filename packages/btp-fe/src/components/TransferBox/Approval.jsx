@@ -54,7 +54,7 @@ const Details = styled.div`
     justify-content: space-between;
 
     & > .plain-text.md {
-      color: ${colors.graySubText} !important;
+      color: ${colors.graySubText};
     }
 
     & > .plain-text.bright {

@@ -4,7 +4,10 @@ import { colors } from 'components/Styles/Colors';
 
 export const StyledText = styled.p`
   ${normal};
-  color: ${({ $color }) => $color} !important;
+
+  &.& {
+    color: ${({ $color }) => $color};
+  }
 
   &.xs {
     ${xs};

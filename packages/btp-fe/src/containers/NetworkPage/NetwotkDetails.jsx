@@ -51,7 +51,7 @@ const NetworkWrapper = styled.div`
 
     .plain-text.xs {
       margin-top: 5px;
-      color: ${colors.grayScaleSubText} !important;
+      color: ${colors.grayScaleSubText};
     }
 
     .values {
