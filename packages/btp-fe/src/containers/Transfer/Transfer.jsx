@@ -17,7 +17,7 @@ const TransferStyled = styled.div`
     padding-bottom: 43px;
   }
 
-  .subtitle-text {
+  a > .subtitle-text {
     display: inline-block;
     margin: 0 auto 19px;
   }

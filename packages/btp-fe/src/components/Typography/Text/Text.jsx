@@ -3,7 +3,8 @@ import { normal, sm, xs, md, lg } from './mixins';
 import { colors } from 'components/Styles/Colors';
 
 export const StyledText = styled.p`
-  ${normal}
+  ${normal};
+  color: ${({ $color }) => $color} !important;
 
   &.xs {
     ${xs};

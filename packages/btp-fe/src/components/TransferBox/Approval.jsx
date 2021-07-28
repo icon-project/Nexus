@@ -28,15 +28,11 @@ const SendToken = styled.div`
   padding: 0 32px;
   margin-bottom: 20px;
 
-  .sub-heading {
-    color: ${colors.graySubText};
-    margin-bottom: 9px;
-  }
-
   .content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 9px;
 
     .send-token {
       max-width: 280px;
@@ -57,11 +53,11 @@ const Details = styled.div`
     display: flex;
     justify-content: space-between;
 
-    & > p.medium {
-      color: ${colors.graySubText};
+    & > .plain-text.md {
+      color: ${colors.graySubText} !important;
     }
 
-    & > p.bright {
+    & > .plain-text.bright {
       color: ${colors.grayText};
     }
   }
@@ -165,44 +161,46 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, isC
     <Wrapper>
       <Header className="sm bold heading">Fee & Confirmation</Header>
       <SendToken>
-        <Text className="sm sub-heading">You will send</Text>
+        <Text className="sm" color={colors.graySubText}>
+          You will send
+        </Text>
         <div className="content">
           <Header className="md bold send-token">
             {tokenAmount || 0} {unit}
           </Header>
-          <Text className="medium">= ${usdBalance.toLocaleString()}</Text>
+          <Text className="md">= ${usdBalance.toLocaleString()}</Text>
         </div>
       </SendToken>
 
       <Details>
         <SubTitle className="lg">Details</SubTitle>
         <div className="send">
-          <Text className="medium">Send</Text>
+          <Text className="md">Send</Text>
           <div className="sender">
             <Icon icon={token} size="s" />
-            <Text className="medium sender--alias">{token}</Text>
-            <Text className="small sender--name">{currentNetwork}</Text>
+            <Text className="md sender--alias">{token}</Text>
+            <Text className="sm sender--name">{currentNetwork}</Text>
           </div>
         </div>
         <div className="to">
-          <Text className="medium">To</Text>
+          <Text className="md">To</Text>
           <div className="receiver">
             <CopyToClipboard text={recipient}>
               <div>
                 <Icon icon="copy" size="s" />
-                <Text className="medium receiver--address">{hashShortener(recipient || '')}</Text>
+                <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
               </div>
             </CopyToClipboard>
-            <Text className="small receiver--name">{network}</Text>
+            <Text className="sm receiver--name">{network}</Text>
           </div>
         </div>
         <div className="estimated-fee">
-          <Text className="medium">Estimated network fee</Text>
-          <Text className="medium bright">0.1</Text>
+          <Text className="md">Estimated network fee</Text>
+          <Text className="md bright">0.1</Text>
         </div>
         <div className="transfer-fee">
-          <Text className="medium">BTP transfer fee</Text>
-          <Text className="medium bright">{BTPFee}</Text>
+          <Text className="md">BTP transfer fee</Text>
+          <Text className="md bright">{BTPFee}</Text>
         </div>
       </Details>
 

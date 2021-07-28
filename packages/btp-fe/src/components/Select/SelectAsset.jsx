@@ -19,7 +19,7 @@ const StyledItem = styled.div`
     margin-right: 12px;
   }
 
-  .plan-text.xs {
+  .plain-text.xs {
     color: ${colors.grayScaleSubText};
     margin-top: 4px;
   }
