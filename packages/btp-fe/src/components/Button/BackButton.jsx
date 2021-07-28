@@ -25,7 +25,7 @@ export const BackButton = ({ children, onClick }) => {
 
   return (
     <StyledBackButton type="button" onClick={onClick || goBack}>
-      <Header className="medium bold">{children}</Header>
+      <Header className="md bold">{children}</Header>
     </StyledBackButton>
   );
 };

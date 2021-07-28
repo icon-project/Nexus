@@ -1,8 +1,8 @@
 import styled from 'styled-components/macro';
 
 import { HorizontalScrollContainer } from 'components/HorizontalScrollContainer';
-import { smallBoldText } from 'components/Typography/Text';
-import { smallBoldHeader } from 'components/Typography/Header';
+import { TextMixin } from 'components/Typography/Text';
+import { HeaderMixin } from 'components/Typography/Header';
 import { colors } from 'components/Styles/Colors';
 
 import { shortenNumber } from 'utils/app';
@@ -11,7 +11,7 @@ const Table = styled.table`
   flex: 1;
   th,
   td {
-    ${smallBoldText};
+    ${TextMixin.smBold};
     text-align: left;
     padding: 1.5px 20px;
     color: ${colors.grayScaleSubText};
@@ -19,7 +19,7 @@ const Table = styled.table`
   }
 
   td {
-    ${smallBoldHeader};
+    ${HeaderMixin.smBold};
   }
 `;
 

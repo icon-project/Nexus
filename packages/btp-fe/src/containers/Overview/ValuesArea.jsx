@@ -40,7 +40,7 @@ const Wrapper = styled.div`
         margin-bottom: 24px;
       }
 
-      h3 {
+      .header-text {
         word-break: break-all;
       }
     }
@@ -57,7 +57,7 @@ export const ValuesArea = ({ data }) => {
     <Wrapper>
       <div className="value">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
-        <Header className="medium bold">${volume.toLocaleString()}</Header>
+        <Header className="md bold">${volume.toLocaleString()}</Header>
         <UpDownPercent percent={last24hChange} />
       </div>
       <div className="value">
@@ -67,7 +67,7 @@ export const ValuesArea = ({ data }) => {
         >
           VALUE MINT
         </TextWithInfo>
-        <Header className="medium bold">${valueMint.toLocaleString()} </Header>
+        <Header className="md bold">${valueMint.toLocaleString()} </Header>
         <UpDownPercent percent={mintVolumeLast24hChange} />
       </div>
     </Wrapper>

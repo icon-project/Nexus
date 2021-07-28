@@ -16,8 +16,7 @@ const NotFoundPageWrapper = styled.div`
     height: 500px;
   }
 
-  > h3 {
-    color: white;
+  > .header-text {
     margin: 10px 0 34px;
   }
 
@@ -46,7 +45,9 @@ const NotFoundPage = () => {
         <title>Page Not Found</title>
       </Helmet>
       <img className="not-found-img" src={notFoundSrc} />
-      <Header className="x-small">Something’s missing</Header>
+      <Header className="xs" color="white">
+        Something’s missing
+      </Header>
       <Link className="medium bold" to="/overview">
         <img width="8px" height="14px" className="icon" src={backArrow} />
         Go back to Home

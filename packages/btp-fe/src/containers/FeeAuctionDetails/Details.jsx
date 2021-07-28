@@ -11,7 +11,7 @@ const Info = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-row-gap: 23px;
 
-  .x-small {
+  .plain-text.xs {
     margin-bottom: 7px;
     color: ${colors.grayScaleSubText};
   }
@@ -53,34 +53,34 @@ export const Details = ({ auction, auctionId, pagination, bids, getBids }) => {
     <>
       <Info>
         <div>
-          <Text className="x-small">Created date</Text>
-          <Text className="medium">{createdTime}</Text>
+          <Text className="xs">Created date</Text>
+          <Text className="md">{createdTime}</Text>
         </div>
         <div>
-          <Text className="x-small">Expiration date</Text>
-          <Text className="medium">{endTime}</Text>
+          <Text className="xs">Expiration date</Text>
+          <Text className="md">{endTime}</Text>
         </div>
         <div>
-          <Text className="x-small">Available bid amount</Text>
-          <Text className="medium">{availableBidAmount} ICX</Text>
+          <Text className="xs">Available bid amount</Text>
+          <Text className="md">{availableBidAmount} ICX</Text>
         </div>
         <div>
-          <Text className="x-small">Current highest bid</Text>
-          <Text className="medium">{currentBidAmount} ICX</Text>
+          <Text className="xs">Current highest bid</Text>
+          <Text className="md">{currentBidAmount} ICX</Text>
         </div>
         <div>
-          <Text className="x-small">Next accepted bid</Text>
-          <Text className="medium">
+          <Text className="xs">Next accepted bid</Text>
+          <Text className="md">
             {currentBidAmount && currentBidAmount + currentBidAmount * 0.1} ICX
           </Text>
         </div>
         <div>
-          <Text className="x-small">Top bidder</Text>
-          <Text className="medium">{topBidder}</Text>
+          <Text className="xs">Top bidder</Text>
+          <Text className="md">{topBidder}</Text>
         </div>
       </Info>
 
-      <SubTitle className="medium bold">Bid history</SubTitle>
+      <SubTitle className="md bold">Bid history</SubTitle>
       <StyledTable
         rowKey="id"
         columns={columns}
