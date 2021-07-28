@@ -26,7 +26,7 @@ const StyledSubTitle = styled.h4`
 
 export const SubTitle = ({ children, className, color = colors.grayText }) => {
   return (
-    <StyledSubTitle className={`header-text ${className}`} $color={color}>
+    <StyledSubTitle className={`subtitle-text ${className}`} $color={color}>
       {children}
     </StyledSubTitle>
   );
