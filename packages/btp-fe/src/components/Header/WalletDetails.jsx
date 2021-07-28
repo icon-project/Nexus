@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
-import { useTokenToUsd } from '../../hooks/useTokenToUsd';
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
 
-import { Text, Header } from '../Typography';
-import { colors } from '../Styles/Colors';
-import { mediumBoldSubtitle } from '../Typography/SubTitle';
-import { media } from '../Styles/Media';
+import { Text, Header } from 'components/Typography';
+import { colors } from 'components/Styles/Colors';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
+import { media } from 'components/Styles/Media';
 
-import copyIcon from '../../assets/images/copy-icon.svg';
+import copyIcon from 'assets/images/copy-icon.svg';
 
 const { primaryBrandLight, primaryBrandBase, tertiaryBase, grayScaleSubText } = colors;
 
@@ -64,7 +64,7 @@ const Wrapper = styled.div`
     justify-content: space-between;
 
     .btn {
-      ${mediumBoldSubtitle};
+      ${SubTitleMixin.mdBold};
       width: 192px;
       height: 64px;
       border-radius: 4px;

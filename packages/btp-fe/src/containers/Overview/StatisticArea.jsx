@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 
 import { Header, SubTitle } from 'components/Typography';
-import { smallBoldSubtitle } from 'components/Typography/SubTitle';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { Icon } from 'components/Icon';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { PrimaryButton } from 'components/Button';
@@ -90,7 +90,7 @@ const Wrapper = styled.div`
 
     .start-to-transfer {
       padding: 0;
-      ${smallBoldSubtitle};
+      ${SubTitleMixin.smBold};
     }
   }
 

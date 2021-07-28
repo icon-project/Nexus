@@ -16,7 +16,7 @@ import { METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 import { Header as Heading, SubTitle, Text } from '../Typography';
-import { smallBoldSubtitle } from '../Typography/SubTitle';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
@@ -47,7 +47,7 @@ const StyledHeader = styled(Layout.Header)`
   }
 
   .right-side {
-    ${smallBoldSubtitle};
+    ${SubTitleMixin.smBold};
 
     flex: 1;
     display: flex;
@@ -79,7 +79,7 @@ const StyledHeader = styled(Layout.Header)`
   }
 
   .connect-to-wallet-btn {
-    ${smallBoldSubtitle};
+    ${SubTitleMixin.smBold};
     height: 44px;
     min-width: 170px;
     border-radius: 100px;
