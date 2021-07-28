@@ -163,11 +163,11 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, isC
 
   return (
     <Wrapper>
-      <Header className="small bold heading">Fee & Confirmation</Header>
+      <Header className="sm bold heading">Fee & Confirmation</Header>
       <SendToken>
-        <Text className="small sub-heading">You will send</Text>
+        <Text className="sm sub-heading">You will send</Text>
         <div className="content">
-          <Header className="medium bold send-token">
+          <Header className="md bold send-token">
             {tokenAmount || 0} {unit}
           </Header>
           <Text className="medium">= ${usdBalance.toLocaleString()}</Text>

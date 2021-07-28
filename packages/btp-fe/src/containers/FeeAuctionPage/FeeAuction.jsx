@@ -38,10 +38,10 @@ const Wrapper = styled.div`
     align-items: center;
     margin-bottom: 42px;
 
-    .amount-of-bid {
+    > .amount-of-bid {
       width: 310px;
 
-      > h3.large {
+      > .header-text.lg {
         margin-right: 9.67px;
       }
     }
@@ -217,15 +217,13 @@ const FeeAuction = () => {
   return (
     <Wrapper>
       <div className="search-group">
-        <Header className="medium bold">Fee auction</Header>
+        <Header className="md bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
       {!loading && keySearch && !filteredData.length > 0 ? (
         <EmptySearch>
           <img src={notFoundSearchIcon} alt="not found search" />
-          <Header className="x-small regular">
-            Sorry, no matching results found with this auction name
-          </Header>
+          <Header className="xs">Sorry, no matching results found with this auction name</Header>
           <Text className="medium">Try again using more general search items</Text>
         </EmptySearch>
       ) : (
@@ -241,7 +239,7 @@ const FeeAuction = () => {
                 <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">
                   TOTAL FEE AVAILABLE FOR AUCTION
                 </TextWithInfo>
-                <Header className="large bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
+                <Header className="lg bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
                 <UpDownPercent percent={availableAmountLast24h} />
               </div>
 

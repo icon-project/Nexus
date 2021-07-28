@@ -2,11 +2,10 @@ import styled from 'styled-components/macro';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
-import { sm, xs, md, lg } from './mixins';
+import { normal, sm, xs, md, lg } from './mixins';
 
 const StyledHeader = styled.h3`
-  letter-spacing: 1px;
-  font-weight: 400;
+  ${normal};
   color: ${({ $color }) => $color};
 
   &.inline {

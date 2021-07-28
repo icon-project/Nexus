@@ -82,7 +82,7 @@ const NetworkStyled = styled.div`
     `}
     }
   }
-  .heading {
+  .header-text {
     padding: 48px 0 50px 0;
     ${media.md`
       padding: 20px 0 20px 20px;
@@ -132,7 +132,7 @@ function NetworkPage() {
   return (
     <NetworkStyled>
       <div className="content">
-        <Header className="medium bold heading">Networks</Header>
+        <Header className="md bold">Networks</Header>
         <Table
           rowKey="id"
           loading={loading && networks.length === 0}

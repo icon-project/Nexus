@@ -57,7 +57,7 @@ const GovernanceStyled = styled.div`
     `}
     }
   }
-  .heading {
+  .header-text {
     padding: 48px 0 50px 0;
     ${media.md`
       padding: 20px 0 20px 20px;
@@ -145,7 +145,7 @@ function GovernancePage() {
     <GovernanceStyled>
       <div className="content">
         <div className="heading-area">
-          <Header className="medium bold heading">Governance</Header>
+          <Header className="md bold">Governance</Header>
           <div className="total">
             <div className="total-wrapper">
               <Text className="small bold total-text">TOTAL REGISTERED</Text>

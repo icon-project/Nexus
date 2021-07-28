@@ -113,7 +113,7 @@ export const WalletDetails = ({
       <div className="wallet-balance">
         <Text className="medium dark-text">Balance</Text>
         <div className="right">
-          <Header className="small bold">{`${balance} ${unit}`}</Header>
+          <Header className="sm bold">{`${balance} ${unit}`}</Header>
 
           <Text className="small dark-text">= ${usdBalance.toLocaleString()}</Text>
         </div>

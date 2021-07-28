@@ -128,7 +128,7 @@ export const Details = memo(
 
     return (
       <Wrapper>
-        <Header className="small bold heading">Transfer</Header>
+        <Header className="sm bold heading">Transfer</Header>
         <Field
           name="tokenAmount"
           validate={composeValidators(required, max)}
