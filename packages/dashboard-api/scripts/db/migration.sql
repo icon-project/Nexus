@@ -51,3 +51,36 @@ ALTER TABLE ONLY public.relay_rewards
 
 ALTER TABLE ONLY public.relay_rewards
     ADD CONSTRAINT relay_rewards_relay_id_fkey FOREIGN KEY (relay_id) REFERENCES public.relay_candidates(id);
+
+-- Issue #226
+
+CREATE TABLE IF NOT EXISTS public.token_prices
+(
+    cmc_id integer NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    price numeric NOT NULL,
+    active integer NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    updated_time timestamp without time zone NOT NULL,
+    CONSTRAINT token_prices_pkey PRIMARY KEY (cmc_id),
+    CONSTRAINT name_unique UNIQUE (name)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.token_prices
+    OWNER to postgres;
+
+-- test data
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (1, 'BTC', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (1027, 'ETH', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (52, 'DEV', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (0, 'NONE', 1, 1, NOW(), NOW());

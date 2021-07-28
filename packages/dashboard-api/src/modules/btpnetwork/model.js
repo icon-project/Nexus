@@ -16,7 +16,7 @@ const {
   CURRENCIES,
   hexToFixedAmount,
   hexToIcxUnit,
-  exchangeToFiat,
+  tokenToUsd,
   numberToFixedAmount,
 } = require('../../common');
 
@@ -45,16 +45,14 @@ async function getAmountFeeAggregationSCORE() {
 
       if ('0x0' !== hexBalance) {
         const amount = hexToIcxUnit(hexBalance);
-        promises.push(exchangeToFiat(data.name, ['USD'], amount));
+        promises.push(tokenToUsd(data.name, amount));
       }
     }
 
     let totalAssets = await Promise.all(promises);
     let totalUSD = 0;
 
-    totalAssets.forEach((item) => {
-      totalUSD += item['USD'] ? item['USD'] : 0;
-    });
+    totalAssets.forEach(item => totalUSD += item);
 
     return {
       assets,
@@ -115,11 +113,12 @@ async function getTotalTransactionAmount(is24hAgo) {
     }
 
     for (let item of tokenTransAmount) {
-      promises.push(exchangeToFiat(item.tokenName, [CURRENCIES.USD], Number(item.totalVolume)));
+      promises.push(tokenToUsd(item.tokenName, Number(item.totalVolume)));
     }
+
     const results = await Promise.all(promises);
-    results.forEach((item) => (totalUSD += item[CURRENCIES.USD] ? item[CURRENCIES.USD] : 0));
-    return totalUSD || 0;
+    results.forEach(item => totalUSD += item);
+    return totalUSD;
   } catch (error) {
     logger.error('getTotalTransactionAmount failed', { error });
     throw error;
@@ -151,7 +150,7 @@ async function getAllTimeFee() {
 
   for (let item of assets) {
     if (0 !== item.value) {
-      promises.push(exchangeToFiat(item.name, ['USD'], item.value));
+      promises.push(tokenToUsd(item.name, item.value));
     }
   }
 
@@ -179,8 +178,8 @@ async function getMintedNetworks() {
   let mapTokensVolume = new Map();
 
   for (let token of mintedTokens) {
-    let fiat = await exchangeToFiat(token.tokenName, ['USD'], token.tokenVolume);
-    let volume = fiat.USD ? fiat.USD : 0;
+    let volume = await tokenToUsd(token.tokenName, token.tokenVolume);
+
     if (mapTokensVolume.has(token.networkId)) {
       volume += mapTokensVolume.get(token.networkId);
     }
@@ -194,22 +193,6 @@ async function getMintedNetworks() {
       mintedVolume: mapTokensVolume.has(data.id)
         ? numberToFixedAmount(mapTokensVolume.get(data.id))
         : 0,
-    });
-  }
-
-  return results;
-}
-
-async function getTokensPriceConversion(baseToken, amount, tokensToConvertTo) {
-  let results = [];
-
-  for (let data of tokensToConvertTo) {
-    const price = await exchangeToFiat(baseToken, [data], amount);
-    const tokenUpperCase = data.toUpperCase();
-
-    results.push({
-      name: tokenUpperCase,
-      value: price[`${tokenUpperCase}`] ? Number(price[`${tokenUpperCase}`].toFixed(2)) : 0,
     });
   }
 
@@ -237,7 +220,6 @@ module.exports = {
   getBondedVolumeByRelays,
   getAllTimeFee,
   getMintedNetworks,
-  getTokensPriceConversion,
   calculateVolumePercents,
   getPercentsMintVolumeLast24h,
 };

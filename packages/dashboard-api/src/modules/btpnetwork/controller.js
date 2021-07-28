@@ -2,6 +2,7 @@
 
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
+const { tokenToUsd } = require('../../common');
 
 // curl http://localhost:8000/v1/btpnetwork | jq
 async function getNetworkInfo(request, response) {
@@ -44,21 +45,21 @@ async function getNetworkInfo(request, response) {
 
 // curl http://localhost:8000/v1/btpnetwork/converter?token=btc&amount=100&convert_to=usd | jq
 async function getPriceConversion(request, response) {
-  if (!request.query.token || !request.query.amount || !request.query.convert_to) {
+  if (!request.query.token || !request.query.amount || !request.query.convert_to)
     return response.sendStatus(HttpStatus.BadRequest);
-  }
 
-  const baseToken = request.query.token;
-  const amount = parseFloat(request.query.amount);
-  const tokensToConvertTo = request.query.convert_to.split(',');
-  const priceTokens = await model.getTokensPriceConversion(baseToken, amount, tokensToConvertTo);
+  if (Number.isNaN(Number(request.query.amount)))
+    return response.sendStatus(HttpStatus.BadRequest);
 
   response.status(HttpStatus.OK).json({
-    content: priceTokens,
+    content: [{
+      name: 'USD',
+      value: await tokenToUsd(request.query.token, Number(request.query.amount))
+    }]
   });
 }
 
 module.exports = {
   getNetworkInfo,
-  getPriceConversion,
+  getPriceConversion
 };

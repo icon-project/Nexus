@@ -309,3 +309,24 @@ ALTER TABLE ONLY public.relay_rewards
 --
 -- PostgreSQL database dump complete
 --
+
+-- Table: public.token_prices
+
+-- DROP TABLE public.token_prices;
+
+CREATE TABLE IF NOT EXISTS public.token_prices
+(
+    cmc_id integer NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    price numeric NOT NULL,
+    active integer NOT NULL,
+    created_time timestamp without time zone NOT NULL,
+    updated_time timestamp without time zone NOT NULL,
+    CONSTRAINT token_prices_pkey PRIMARY KEY (cmc_id),
+    CONSTRAINT name_unique UNIQUE (name)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.token_prices
+    OWNER to postgres;

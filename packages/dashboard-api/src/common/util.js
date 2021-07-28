@@ -1,91 +1,9 @@
 'use strict';
 
-const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const logger = require('./logger');
+const pool = require('./postgresql');
 const { ICX_LOOP_UNIT } = require('./constants');
-
-const COIN_MARKET_CAP_URL =
-  process.env.PRO_COIN_MARKETCAP_API_URL || process.env.SANDBOX_COIN_MARKETCAP_API_URL;
-const COIN_MARKET_CAP_KEY =
-  process.env.PRO_COIN_MARKETCAP_API_KEY || process.env.SANDBOX_COIN_MARKETCAP_API_KEY;
-
-/**
- * Get coin info
- * @reference https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyInfo
- * @param {*} coins array of coin names Ex: ['BTC','ICX']
- */
-async function getCoinInfo(coins) {
-  let coinNames = '';
-  if (Array.isArray(coins)) {
-    coinNames = coins.join(',');
-  }
-
-  try {
-    let { data } = await axios.get(
-      `${COIN_MARKET_CAP_URL}/cryptocurrency/info?symbol=${coinNames}`,
-      {
-        headers: {
-          'X-CMC_PRO_API_KEY': COIN_MARKET_CAP_KEY,
-        },
-      },
-    );
-    if (data.status.error_code != 0) {
-      logger.error('API call error:', data.status.error_message);
-    }
-    return data.data || {};
-  } catch (error) {
-    logger.error('API call error:', error.message);
-    return {};
-  }
-}
-
-/**
- * Exchange coin to fiats
- * @reference https://coinmarketcap.com/api/documentation/v1/#operation/getV1ToolsPriceconversion
- * @param {*} coinName coin name Ex: 'ICX'
- * @param {*} fiatNames fiat names Ex: ['USD','LTC','GBP']
- * @param {*} amount amount of coin Ex: 10000
- * @returns {*}
- * {
- *  GBP: 100000.0000,
- *  USD: 11234.12314,
- *  LTC: 1313123.123123,
- * }
- */
-async function exchangeToFiat(coinName, fiatNames, amount) {
-  let prices = {};
-
-  let fiatString = fiatNames.join(',');
-
-  coinName = coinName.toUpperCase();
-  const coinInfo = (await getCoinInfo([coinName]))[coinName];
-
-  try {
-    let { data } = await axios.get(
-      `${COIN_MARKET_CAP_URL}/tools/price-conversion?amount=${amount}&convert=${fiatString}&id=${coinInfo.id}`,
-      {
-        headers: {
-          'X-CMC_PRO_API_KEY': COIN_MARKET_CAP_KEY,
-        },
-      },
-    );
-    if (data.status.error_code != 0) {
-      logger.error('API call error:', data.status.error_message);
-    }
-
-    if (data.data) {
-      let pricingInfos = data.data[coinInfo.id] ? data.data[coinInfo.id].quote : data.data.quote;
-      for (const key in pricingInfos) {
-        prices[key] = pricingInfos[key].price;
-      }
-    }
-    return prices;
-  } catch (error) {
-    logger.error('API call error:', error.message);
-    return {};
-  }
-}
 
 // Input: 0x1CBA2C95A76000
 // Output: 0.00002021
@@ -107,10 +25,27 @@ function numberToFixedAmount(value) {
   return Number(value.toFixed(process.env.ASSET_FIXED_NUMBER));
 }
 
+async function tokenToUsd(name, value) {
+  const query = 'SELECT price FROM token_prices WHERE UPPER(name)=$1';
+
+  try {
+    const { rows } = await pool.query(query, [name.toUpperCase()]);
+
+    if (rows[0]) {
+      const price = Number(rows[0].price);
+      const result = value * price;
+      return Number(result.toFixed(2));
+    }
+  } catch (error) {
+    logger.error(`tokenToUsd fails to convert ${value} ${name}`, { error });
+  }
+
+  return 0;
+}
+
 module.exports = {
-  getCoinInfo,
-  exchangeToFiat,
   hexToFixedAmount,
   hexToIcxUnit,
   numberToFixedAmount,
+  tokenToUsd
 };

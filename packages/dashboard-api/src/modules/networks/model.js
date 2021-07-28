@@ -8,7 +8,7 @@ const {
   getVolumeToken24hByNid,
   getVolumeTokenAllTimeByNid,
 } = require('./repository');
-const { exchangeToFiat, numberToFixedAmount } = require('../../common/util');
+const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 const IconService = require('icon-sdk-js');
 const { HttpProvider, IconBuilder } = IconService;
 
@@ -17,7 +17,7 @@ const iconService = new IconService(provider);
 
 const Web3 = require('web3');
 
-const { abiBSHScore } = require('../../../scripts/bsh_score.json');  
+const { abiBSHScore } = require('../../../scripts/bsh_score.json');
 
 // Provider
 const providerRPC = {
@@ -31,7 +31,7 @@ async function getTokensRegisteredMoonbeam() {
 
   try {
     const listTokens = await BSHContract.methods.coinNames().call();
-    
+
     return listTokens;
   } catch (error) {
     logger.error('getTokensRegisteredMoonbeam failed', { error });
@@ -45,7 +45,7 @@ async function getListTokensRegisteredIcon() {
 
   try {
     const listTokens = await iconService.call(call).execute();
-    
+
     return listTokens;
   } catch (error) {
     logger.error('getListTokensRegisteredIcon failed', { error });
@@ -72,15 +72,15 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
     let USDAllTime = 0;
     for (let data of tokensVolume24h) {
       if (data.networkId == networkInfo.id) {
-        let fiat = await exchangeToFiat(data.tokenName, ['USD'], Number(data.tokenVolume));
-        USD24h += fiat.USD ? fiat.USD : 0;
+        let fiat = await tokenToUsd(data.tokenName, Number(data.tokenVolume));
+        USD24h += fiat;
       }
     }
 
     for (let data of tokensVolumeAllTime) {
       if (data.networkId == networkInfo.id) {
-        let fiat = await exchangeToFiat(data.tokenName, ['USD'], Number(data.tokenVolume));
-        USDAllTime += fiat.USD ? fiat.USD : 0;
+        let fiat = await tokenToUsd(data.tokenName, Number(data.tokenVolume));
+        USDAllTime += fiat;
       }
     }
     networkInfo.usd24h = numberToFixedAmount(USD24h);
@@ -112,6 +112,7 @@ async function getListTokenRegisteredNetwork(networkId) {
 async function getNetworkById(networkId) {
   const tokens = await getListTokenRegisteredNetwork(networkId);
   let result = [];
+
   for (let name of tokens) {
     //getVolumeToken24hByNid, getVolumeTokenAllTimeByNid
     const token24h = await getVolumeToken24hByNid(name, networkId);
@@ -119,15 +120,14 @@ async function getNetworkById(networkId) {
 
     let USD24h = 0;
     let USDAllTime = 0;
+
     if (token24h > 0) {
-      let fiat24h = await exchangeToFiat(name, ['USD'], token24h);
-      let fiatAllTime = await exchangeToFiat(name, ['USD'], tokenAllTime);
-      USD24h = fiat24h.USD ? fiat24h.USD: 0;
-      USDAllTime = fiatAllTime.USD;
+      USD24h = await tokenToUsd(name, token24h);
+      USDAllTime = await tokenToUsd(name, tokenAllTime);
     } else if (tokenAllTime > 0) {
-      let fiatAllTime = await exchangeToFiat(name, ['USD'], tokenAllTime);
-      USDAllTime = fiatAllTime.USD ? fiatAllTime.USD : 0;
+      USDAllTime = await tokenToUsd(name, tokenAllTime);
     }
+
     result.push({
       nameToken: name,
       volume24h: numberToFixedAmount(token24h),
