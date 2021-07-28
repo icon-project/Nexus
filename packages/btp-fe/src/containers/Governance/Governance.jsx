@@ -101,7 +101,7 @@ const GovernanceStyled = styled.div`
       flex-direction: column;
       align-items: flex-start;
 
-      .large {
+      .lg {
           font-size: 32px;
       }
 
@@ -148,14 +148,14 @@ function GovernancePage() {
           <Header className="md bold">Governance</Header>
           <div className="total">
             <div className="total-wrapper">
-              <Text className="small bold total-text">TOTAL REGISTERED</Text>
-              <Text className="large bold total-value">{relayCandidates.length}</Text>
+              <Text className="sm bold total-text">TOTAL REGISTERED</Text>
+              <Text className="lg bold total-value">{relayCandidates.length}</Text>
               <UpDownPercent percent={registeredRelayLast24h} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
-              <Text className="small bold total-text">TOTAL REWARD FUND</Text>
-              <Text className="large bold total-value">{totalRewardFund}</Text>
+              <Text className="sm bold total-text">TOTAL REWARD FUND</Text>
+              <Text className="lg bold total-value">{totalRewardFund}</Text>
               <UpDownPercent percent={rewardLast30Days} label="past 30 days" />
             </div>
           </div>

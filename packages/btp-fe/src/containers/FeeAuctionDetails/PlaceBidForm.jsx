@@ -20,8 +20,8 @@ const Form = styled.form`
     margin-bottom: 22px;
   }
 
-  p.x-small {
-    color: ${colors.graySubText};
+  .plain-text.xs {
+    color: ${colors.graySubText} !important;
     margin-bottom: 9px;
 
     span {
@@ -76,15 +76,15 @@ export const PlaceBidForm = memo(({ currentBidAmount, auctionName }) => {
             }}
           >
             <Header className="xs bold">Place a new bid</Header>
-            <Text className="x-small">
+            <Text className="xs">
               Minimum bid: <span>100 ICX</span>
             </Text>
-            <Text className="x-small">
+            <Text className="xs">
               Minimum incremental bid: <span>10%</span> higher than the current bid
             </Text>
 
             <div className="input-group">
-              <Text className="small">New bid</Text>
+              <Text className="sm">New bid</Text>
               <Field
                 name="bidAmount"
                 validate={composeValidators(

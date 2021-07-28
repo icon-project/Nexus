@@ -49,9 +49,9 @@ const NetworkWrapper = styled.div`
     display: flex;
     justify-content: space-between;
 
-    .x-small {
+    .plain-text.xs {
       margin-top: 5px;
-      color: ${colors.grayScaleSubText};
+      color: ${colors.grayScaleSubText} !important;
     }
 
     .values {
@@ -74,26 +74,26 @@ const NetWork = ({ detail = {} }) => {
 
   return (
     <NetworkWrapper>
-      <Text className="medium uppercase">{nameToken}</Text>
+      <Text className="md uppercase">{nameToken}</Text>
       <div className="all-time">
-        <Text className="small">All time</Text>
+        <Text className="sm">All time</Text>
         <div className="values">
-          <Text className="small uppercase">
+          <Text className="sm uppercase">
             {shortenNumber(volumeAllTime)} {nameToken}
           </Text>
-          <Text className="x-small">= ${(volumeAlTimeUSD + '').toLocaleString()}</Text>
+          <Text className="xs">= ${(volumeAlTimeUSD + '').toLocaleString()}</Text>
         </div>
       </div>
 
       <div className="devider"></div>
 
       <div className="one-day">
-        <Text className="small">24 hour</Text>
+        <Text className="sm">24 hour</Text>
         <div className="values">
-          <Text className="small uppercase">
+          <Text className="sm uppercase">
             {shortenNumber(volume24h)} {nameToken}
           </Text>
-          <Text className="x-small">= ${(volume24hUSD + '').toLocaleString()}</Text>
+          <Text className="xs">= ${(volume24hUSD + '').toLocaleString()}</Text>
         </div>
       </div>
     </NetworkWrapper>

@@ -70,7 +70,7 @@ export const AssetFeeTable = ({ assets }) => {
         </table>
       </div>
       {assets.length > 10 && (
-        <Text className="x-small scroll-to-view">
+        <Text className="xs scroll-to-view">
           <img src={arrowDownIcon} alt="icon" />
           Scroll to view more asset fee
         </Text>

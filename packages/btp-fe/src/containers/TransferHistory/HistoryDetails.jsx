@@ -169,25 +169,25 @@ export const HistoryDetails = ({ id, onClose }) => {
         ) : (
           <div className="history-details">
             <div className="content">
-              <Text className="medium">Transaction hash</Text>
-              <Text className="medium">
+              <Text className="md">Transaction hash</Text>
+              <Text className="md">
                 <CopyAddress text={details.txHash} />
               </Text>
             </div>
             <div className="content">
-              <Text className="medium">Amount</Text>
-              <Text className="medium">
+              <Text className="md">Amount</Text>
+              <Text className="md">
                 {details.value} {details.tokenName} (= $
                 {(tokenPrice * details.value)?.toLocaleString()})
               </Text>
             </div>
             <div className="content">
-              <Text className="medium">Status</Text>
+              <Text className="md">Status</Text>
               <Tag color={getStatus(details.status).color}>{getStatus(details.status).text}</Tag>
             </div>
             <div className="content">
-              <Text className="medium">Time</Text>
-              <Text className="medium">
+              <Text className="md">Time</Text>
+              <Text className="md">
                 {dayjs(details.blockTime / 1000).fromNow()}{' '}
                 <span className="hide-in-mobile">
                   ({dayjs(details.blockTime / 1000).format('MMM-DD-YYYY hh:mm:ss A Z')})
@@ -195,21 +195,21 @@ export const HistoryDetails = ({ id, onClose }) => {
               </Text>
             </div>
             <div className="content">
-              <Text className="medium">From</Text>
-              <Text className="medium">
+              <Text className="md">From</Text>
+              <Text className="md">
                 <span className="hide-in-mobile">({details.networkNameSrc || 'Unknown'}) </span>
                 <CopyAddress text={details.fromAddress} />
               </Text>
             </div>
             <div className="content">
-              <Text className="medium">To</Text>
-              <Text className="medium">
+              <Text className="md">To</Text>
+              <Text className="md">
                 <span className="hide-in-mobile">({details.networkNameDst || 'Unknown'}) </span>
                 <CopyAddress text={details.toAddress} />
               </Text>
             </div>
             {/* <div className="internal-trx">
-            <Text className="medium">Internal transactions</Text>
+            <Text className="md">Internal transactions</Text>
           </div>
           <div className="content">
             <Table
@@ -222,15 +222,15 @@ export const HistoryDetails = ({ id, onClose }) => {
             />
           </div> */}
             <div className="content">
-              <Text className="medium">Network fee</Text>
-              <Text className="medium">
+              <Text className="md">Network fee</Text>
+              <Text className="md">
                 {details.networkFee} {details.tokenName} ( $
                 {(tokenPrice * details.networkFee)?.toLocaleString()})
               </Text>
             </div>
             <div className="content btp-fee">
-              <Text className="medium">BTP fee</Text>
-              <Text className="medium">
+              <Text className="md">BTP fee</Text>
+              <Text className="md">
                 {details.bptFee} {details.nativeToken}
               </Text>
             </div>

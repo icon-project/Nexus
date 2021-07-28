@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   margin: auto;
   padding: 52px 0 31px;
 
-  & > p.medium {
+  & > .plain-text.md {
     margin-bottom: 36px;
   }
 
@@ -109,8 +109,7 @@ const EmptySearch = styled.div`
     margin-bottom: 53.42px;
   }
 
-  & > p.medium {
-    color: ${colors.graySubText};
+  & > .plain-text {
     margin-top: 20px;
   }
 `;
@@ -224,12 +223,14 @@ const FeeAuction = () => {
         <EmptySearch>
           <img src={notFoundSearchIcon} alt="not found search" />
           <Header className="xs">Sorry, no matching results found with this auction name</Header>
-          <Text className="medium">Try again using more general search items</Text>
+          <Text className="md" color={colors.graySubText}>
+            Try again using more general search items
+          </Text>
         </EmptySearch>
       ) : (
         <>
           {keySearch ? (
-            <Text className="medium">
+            <Text className="md">
               There’{isPlural ? 're' : 's'} {filteredData.length} result{isPlural ? 's' : ''} for{' '}
               {keySearch}
             </Text>

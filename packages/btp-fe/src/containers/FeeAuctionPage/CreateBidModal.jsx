@@ -20,7 +20,7 @@ const Form = styled.form`
   .input-field {
     margin-bottom: 32px;
 
-    p.small {
+    .plain-text.sm {
       margin-bottom: 6px;
     }
   }
@@ -63,7 +63,7 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, o
             <Form onSubmit={handleSubmit}>
               <div className="input-group">
                 <div className="input-field">
-                  <Text className="small">Asset type</Text>
+                  <Text className="sm">Asset type</Text>
                   <Field
                     name="auctionName"
                     validate={required}
@@ -79,7 +79,7 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, o
                 </div>
 
                 <div className="input-field">
-                  <Text className="small">Bid amount</Text>
+                  <Text className="sm">Bid amount</Text>
                   <Field
                     name="bidAmount"
                     validate={minValue(100, 'Minimum bid is 100 ICX. Please input again')}
