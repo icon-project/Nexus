@@ -7,17 +7,17 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 
-import { Tag } from '../../components/Tag';
-import { Icon } from '../../components/Icon/Icon';
-import { Loader } from '../../components/Loader';
-import { Modal } from '../../components/NotificationModal';
+import { Tag } from 'components/Tag';
+import { Icon } from 'components/Icon/Icon';
+import { Loader } from 'components/Loader';
+import { Modal } from 'components/NotificationModal';
 
 import { getTransferHistoryById } from 'services/btpServices';
-import { hashShortener } from '../../utils/app';
+import { hashShortener } from 'utils/app';
 
-import { Text } from '../../components/Typography';
-import { colors } from '../../components/Styles/Colors';
-import { media } from '../../components/Styles/Media';
+import { Text } from 'components/Typography';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 const StyledHistoryDetails = styled.div`
   width: 100%;
