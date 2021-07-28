@@ -34,6 +34,7 @@ export const NETWORKS = {
     name: 'Custom ICON node',
     endpoint: 'http://54.251.114.18:9082/api/v3',
     nid: 3,
+    BSHAddress: 'cxd42ef4864c64f0cd793018e06eed190b46492a1c', // used to get the BTP fee from getBTPfee()
   },
   yeouido: {
     name: 'Yeouido Testnet',
