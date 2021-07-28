@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 import { AssetFeeTable } from './AssetFeeTable';
 import { TextWithInfo } from 'components/TextWithInfo';
-import { mediumText } from 'components/Typography/Text';
+import { TextMixin } from 'components/Typography/Text';
 import { SubTitle } from 'components/Typography';
 
 import { colors } from 'components/Styles/Colors';
@@ -19,8 +19,7 @@ const Wrapper = styled.div`
   }
 
   .medium-text {
-    color: ${colors.grayText};
-    ${mediumText};
+    ${TextMixin.md};
   }
 
   .cumulative-amount {

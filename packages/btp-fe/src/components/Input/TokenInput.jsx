@@ -16,10 +16,6 @@ const Wrapper = styled.div`
   margin: 0 auto;
   position: relative;
 
-  .exchange {
-    text-align: center;
-  }
-
   .token-label {
     ${HeaderMixin.mdBold}
     background-color: ${colors.grayBG};
@@ -80,8 +76,8 @@ export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = 
       >
         {value || 0} {token}
       </div>
-      <Text className="medium exchange">= ${usdBalance.toLocaleString()}</Text>
-      {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
+      <Text className="md center">= ${usdBalance.toLocaleString()}</Text>
+      {meta.error && meta.touched && <Text className="xs err-msg">{meta.error}</Text>}
     </Wrapper>
   );
 };

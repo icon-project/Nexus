@@ -1,7 +1,7 @@
 import { css } from 'styled-components/macro';
 import { colors } from 'components/Styles/Colors';
 
-const normal = css`
+export const normal = css`
   font-weight: 400;
   letter-spacing: 0.75px;
   color: ${colors.grayText};
@@ -13,11 +13,13 @@ export const xs = css`
 `;
 
 export const sm = css`
+  ${normal};
   font-size: 14px;
   line-height: 20px;
 `;
 
 export const md = css`
+  ${normal};
   font-size: 16px;
   line-height: 24px;
 `;

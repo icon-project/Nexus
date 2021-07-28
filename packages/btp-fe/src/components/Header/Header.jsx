@@ -317,7 +317,7 @@ const Header = ({ userStatus = defaultUser }) => {
               onClick={onAvatarClicked}
             />
             <span className="wallet-info">
-              <Text className="x-small address">{shortedAddress}</Text>
+              <Text className="sm address">{shortedAddress}</Text>
               <SubTitle className="md bold">
                 {balance} {unit}
               </SubTitle>

@@ -108,24 +108,24 @@ export const WalletDetails = ({
   const usdBalance = useTokenToUsd(unit, balance);
   return (
     <Wrapper>
-      <Text className="medium network-name">{networkName}</Text>
+      <Text className="md network-name">{networkName}</Text>
       <Avatar className="user-avatar" src={userAvatar} size={120} />
       <div className="wallet-balance">
-        <Text className="medium dark-text">Balance</Text>
+        <Text className="md dark-text">Balance</Text>
         <div className="right">
           <Header className="sm bold">{`${balance} ${unit}`}</Header>
 
-          <Text className="small dark-text">= ${usdBalance.toLocaleString()}</Text>
+          <Text className="sm dark-text">= ${usdBalance.toLocaleString()}</Text>
         </div>
       </div>
       <div className="wallet-address">
-        <Text className="medium dark-text">Wallet Address</Text>
+        <Text className="md dark-text">Wallet Address</Text>
         <div className="right">
-          <Text title={address} className="medium address">
+          <Text title={address} className="md address">
             {shortedAddress}
           </Text>
           <CopyToClipboard text={address}>
-            <Text className="x-small bold copy-address">
+            <Text className="xs bold copy-address">
               <img src={copyIcon} />
               Copy address
             </Text>

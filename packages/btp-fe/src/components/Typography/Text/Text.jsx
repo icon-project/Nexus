@@ -24,6 +24,10 @@ export const StyledText = styled.p`
   &.bold {
     font-weight: 600;
   }
+
+  &.center {
+    text-align: center;
+  }
 `;
 
 export const Text = ({ children, className, color = colors.grayText }) => {

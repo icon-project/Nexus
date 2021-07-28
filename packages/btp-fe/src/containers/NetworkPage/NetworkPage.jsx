@@ -8,7 +8,7 @@ import { Modal } from 'components/NotificationModal';
 import { NetwotkDetails } from './NetwotkDetails';
 
 import { colors } from 'components/Styles/Colors';
-import { smallText } from 'components/Typography/Text';
+import { TextMixin } from 'components/Typography/Text';
 import { media } from 'components/Styles/Media';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
@@ -99,7 +99,7 @@ const NetworkStyled = styled.div`
     -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
   }
   .url {
-    ${smallText}
+    ${TextMixin.sm};
     color: ${colors.tertiaryBase};
   }
   .network-name {
