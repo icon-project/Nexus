@@ -19,7 +19,7 @@ const StyledItem = styled.div`
     margin-right: 12px;
   }
 
-  p.x-small {
+  .plain-text.xs {
     color: ${colors.grayScaleSubText};
     margin-top: 4px;
   }
@@ -30,8 +30,8 @@ const Item = ({ icon, symbol, children }) => {
     <StyledItem>
       <img src={icon} alt="icon" />
       <div className="info">
-        <Text className="medium">{symbol}</Text>
-        <Text className="x-small">{children}</Text>
+        <Text className="md">{symbol}</Text>
+        <Text className="xs">{children}</Text>
       </div>
     </StyledItem>
   );

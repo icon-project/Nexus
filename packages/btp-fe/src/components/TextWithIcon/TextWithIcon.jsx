@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { Icon } from 'components/Icon';
-import { mediumText } from 'components/Typography/Text';
+import { TextMixin } from 'components/Typography/Text';
 
 const Wrapper = styled.h4`
-  ${mediumText};
+  ${TextMixin.md};
   margin-bottom: 0;
 
   &.uppercase {

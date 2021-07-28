@@ -60,7 +60,7 @@ export const WalletSelector = ({
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
       <Avatar src={wallet[type].icon} size={30} />
-      <Text className="medium wallet-title">
+      <Text className="md wallet-title">
         {!isInstalled && !isCheckingInstalled && 'Install '}
         {wallet[type].title}
       </Text>

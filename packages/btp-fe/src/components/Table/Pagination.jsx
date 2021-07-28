@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Pagination as AntdPagination } from 'antd';
-import { smallBoldSubtitle } from 'components/Typography/SubTitle';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from 'components/Styles/Colors';
 
 import prevIcon from 'assets/images/prev-icon.svg';
@@ -51,7 +51,8 @@ const StyledPagination = styled(AntdPagination)`
     justify-content: center;
 
     cursor: pointer !important;
-    ${smallBoldSubtitle};
+    ${SubTitleMixin.smBold};
+
     color: ${primaryBrandLight};
     transition: none;
     background-color: transparent;

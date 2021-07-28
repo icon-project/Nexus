@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   margin: auto;
   padding: 52px 0 31px;
 
-  & > p.medium {
+  & > .plain-text.md {
     margin-bottom: 36px;
   }
 
@@ -38,10 +38,10 @@ const Wrapper = styled.div`
     align-items: center;
     margin-bottom: 42px;
 
-    .amount-of-bid {
+    > .amount-of-bid {
       width: 310px;
 
-      > h3.large {
+      > .header-text.lg {
         margin-right: 9.67px;
       }
     }
@@ -109,8 +109,7 @@ const EmptySearch = styled.div`
     margin-bottom: 53.42px;
   }
 
-  & > p.medium {
-    color: ${colors.graySubText};
+  & > .plain-text {
     margin-top: 20px;
   }
 `;
@@ -217,21 +216,21 @@ const FeeAuction = () => {
   return (
     <Wrapper>
       <div className="search-group">
-        <Header className="medium bold">Fee auction</Header>
+        <Header className="md bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
       </div>
       {!loading && keySearch && !filteredData.length > 0 ? (
         <EmptySearch>
           <img src={notFoundSearchIcon} alt="not found search" />
-          <Header className="x-small regular">
-            Sorry, no matching results found with this auction name
-          </Header>
-          <Text className="medium">Try again using more general search items</Text>
+          <Header className="xs">Sorry, no matching results found with this auction name</Header>
+          <Text className="md" color={colors.graySubText}>
+            Try again using more general search items
+          </Text>
         </EmptySearch>
       ) : (
         <>
           {keySearch ? (
-            <Text className="medium">
+            <Text className="md">
               There’{isPlural ? 're' : 's'} {filteredData.length} result{isPlural ? 's' : ''} for{' '}
               {keySearch}
             </Text>
@@ -241,7 +240,7 @@ const FeeAuction = () => {
                 <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">
                   TOTAL FEE AVAILABLE FOR AUCTION
                 </TextWithInfo>
-                <Header className="large bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
+                <Header className="lg bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
                 <UpDownPercent percent={availableAmountLast24h} />
               </div>
 
@@ -257,12 +256,12 @@ const FeeAuction = () => {
                   setOpen(true);
                 }}
               >
-                <SubTitle className="small bold">Create new bid</SubTitle>
+                <SubTitle className="sm bold">Create new bid</SubTitle>
               </CreateBidButton>
             </div>
           )}
           <div className="filter-by">
-            <SubTitle className="medium bold">Auction list</SubTitle>
+            <SubTitle className="md bold">Auction list</SubTitle>
             <SortSelect onChange={onSortByChange} />
           </div>
           <Table

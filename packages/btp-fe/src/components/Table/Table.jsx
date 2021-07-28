@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Table as antdTable } from 'antd';
 
 import { Pagination } from './Pagination';
-import { smallText, mediumText } from '../Typography/Text';
+import { TextMixin } from 'components/Typography/Text';
 import { Loader } from 'components/Loader';
 
 import { colors } from '../Styles/Colors';
@@ -20,12 +20,12 @@ const TableStyled = styled(antdTable)`
 
   .ant-table-tbody {
     background-color: ${(props) => props.backgroundColor};
-    ${(props) => (props.bodyText === 'sm' ? smallText : mediumText)}
+    ${(props) => (props.bodyText === 'sm' ? TextMixin.sm : TextMixin.md)}
   }
 
   .ant-table-thead > tr > th {
     background: ${(props) => props.headerColor};
-    ${(props) => (props.headerText === 'sm' ? smallText : mediumText)}
+    ${(props) => (props.headerText === 'sm' ? TextMixin.sm : TextMixin.md)}
   }
 
   .ant-table-thead > tr > th,

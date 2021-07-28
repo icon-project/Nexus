@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-import { smallText, Text } from 'components/Typography/Text';
+import { TextMixin, Text } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
 
 import { shortenNumber } from 'utils/app';
@@ -21,7 +21,7 @@ const Wapper = styled.div`
 
     > table {
       width: 100%;
-      ${smallText};
+      ${TextMixin.sm};
 
       th,
       td {
@@ -70,7 +70,7 @@ export const AssetFeeTable = ({ assets }) => {
         </table>
       </div>
       {assets.length > 10 && (
-        <Text className="x-small scroll-to-view">
+        <Text className="xs scroll-to-view">
           <img src={arrowDownIcon} alt="icon" />
           Scroll to view more asset fee
         </Text>

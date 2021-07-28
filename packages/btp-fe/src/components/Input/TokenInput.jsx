@@ -5,7 +5,7 @@ import { useTokenToUsd } from '../../hooks/useTokenToUsd';
 
 import { Input } from './Input';
 import { Text } from '../Typography';
-import { mediumBoldHeader } from '../Typography/Header';
+import { HeaderMixin } from 'components/Typography/Header';
 
 import { colors } from '../Styles/Colors';
 
@@ -16,12 +16,8 @@ const Wrapper = styled.div`
   margin: 0 auto;
   position: relative;
 
-  .exchange {
-    text-align: center;
-  }
-
   .token-label {
-    ${mediumBoldHeader}
+    ${HeaderMixin.mdBold}
     background-color: ${colors.grayBG};
     word-break: break-word;
     margin: 0 32px;
@@ -37,7 +33,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledTokenInput = styled(Input)`
-  ${mediumBoldHeader}
+  ${HeaderMixin.mdBold}
   width: 105px;
   background-color: transparent;
   width: 100%;
@@ -80,8 +76,8 @@ export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = 
       >
         {value || 0} {token}
       </div>
-      <Text className="medium exchange">= ${usdBalance.toLocaleString()}</Text>
-      {meta.error && meta.touched && <Text className="x-small err-msg">{meta.error}</Text>}
+      <Text className="md center">= ${usdBalance.toLocaleString()}</Text>
+      {meta.error && meta.touched && <Text className="xs err-msg">{meta.error}</Text>}
     </Wrapper>
   );
 };
