@@ -85,10 +85,6 @@ const Addresses = styled.div`
     display: flex;
     justify-content: space-between;
 
-    .subtitle {
-      color: ${colors.graySubText};
-    }
-
     .sender {
       display: flex;
       align-items: center;
@@ -98,14 +94,6 @@ const Addresses = styled.div`
       }
     }
   }
-
-  ${media.md`
-    .send, .to {
-      .subtitle {
-        margin-right: 25px;
-      }
-    }
-  `}
 `;
 
 const required = (value) => (value ? undefined : 'Required');
@@ -146,7 +134,7 @@ export const Details = memo(
         />
 
         <div className="content">
-          <Text className="small label">Recipient</Text>
+          <Text className="sm label">Recipient</Text>
 
           <Field
             name="recipient"
@@ -156,34 +144,40 @@ export const Details = memo(
             )}
           />
 
-          <Text className="small label">Wallet balance</Text>
+          <Text className="sm label">Wallet balance</Text>
           <WalletBalance>
             <div className="left">
               <Icon icon={wallet} />
-              <Text className="medium wallet-name">{wallet}</Text>
+              <Text className="md wallet-name">{wallet}</Text>
             </div>
             <div className="right">
-              <Text className="medium">
+              <Text className="md">
                 {balance.toLocaleString()} {unit}
               </Text>
-              <Text className="x-small">= ${usdTotalBalance.toLocaleString()}</Text>
+              <Text className="xs" color={colors.graySubText}>
+                = ${usdTotalBalance.toLocaleString()}
+              </Text>
             </div>
           </WalletBalance>
         </div>
 
         <Addresses>
           <div className="send">
-            <Text className="medium subtitle">Send</Text>
+            <Text className="md" color={colors.graySubText}>
+              Send
+            </Text>
             <div className="sender">
               <Icon icon={token} size="s" />
-              <Text className="medium sender--name">
+              <Text className="md sender--name">
                 {token} ({currentNetwork})
               </Text>
             </div>
           </div>
           <div className="to">
-            <Text className="medium subtitle">To</Text>
-            <Text className="medium">{network}</Text>
+            <Text className="md" color={colors.graySubText}>
+              To
+            </Text>
+            <Text className="md">{network}</Text>
           </div>
         </Addresses>
         <ControlButtons
