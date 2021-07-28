@@ -58,7 +58,7 @@ export const Feebox = ({ fee }) => {
         >
           Total cumulative amount
         </TextWithInfo>
-        <SubTitle className="medium bold">
+        <SubTitle className="md bold">
           {cumulativeAmount ? cumulativeAmount.toLocaleString() : 0}
         </SubTitle>
       </div>
@@ -69,7 +69,7 @@ export const Feebox = ({ fee }) => {
         >
           Total current amount of fee
         </TextWithInfo>
-        <SubTitle className="medium bold">
+        <SubTitle className="md bold">
           {currentAmount ? currentAmount.toLocaleString() : 0}
         </SubTitle>
       </div>

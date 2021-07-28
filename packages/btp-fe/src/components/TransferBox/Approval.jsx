@@ -175,7 +175,7 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, isC
       </SendToken>
 
       <Details>
-        <SubTitle className="large">Details</SubTitle>
+        <SubTitle className="lg">Details</SubTitle>
         <div className="send">
           <Text className="medium">Send</Text>
           <div className="sender">
@@ -207,8 +207,8 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, isC
       </Details>
 
       <Total>
-        <SubTitle className="large bold">Total receive</SubTitle>
-        <SubTitle className="large bold">
+        <SubTitle className="lg bold">Total receive</SubTitle>
+        <SubTitle className="lg bold">
           {tokenAmount - BTPFee} {token}
         </SubTitle>
       </Total>

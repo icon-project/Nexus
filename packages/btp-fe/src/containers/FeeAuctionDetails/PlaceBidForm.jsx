@@ -101,7 +101,7 @@ export const PlaceBidForm = memo(({ currentBidAmount, auctionName }) => {
             </div>
 
             <PrimaryButton htmlType="submit" disabled={!valid || !currentBidAmount}>
-              <SubTitle className="small bold">Place bid</SubTitle>
+              <SubTitle className="sm bold">Place bid</SubTitle>
             </PrimaryButton>
           </Form>
         );

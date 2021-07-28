@@ -29,7 +29,7 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
-  p, h3, ul {
+  p, h3, h4, ul {
     margin: 0;
   }
 

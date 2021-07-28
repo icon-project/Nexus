@@ -52,7 +52,7 @@ const Wrapper = styled.div`
       > .network-list {
         padding: 27px 8px;
 
-        h3 {
+        .subtitle-text {
           height: 40px;
           padding: 4px 12px;
           display: flex;
@@ -84,7 +84,7 @@ const Wrapper = styled.div`
       margin-bottom: 12px;
     }
 
-    > h3.small {
+    > .subtitle-text {
       margin-bottom: 27px;
     }
 
@@ -136,7 +136,7 @@ export const StatisticArea = ({ data, networks }) => {
 
           <div className="network-list">
             {networks.map(({ pathLogo, name }) => (
-              <SubTitle className="medium bold" key={name}>
+              <SubTitle className="md bold" key={name}>
                 <Icon
                   iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
                   width="24px"
@@ -152,7 +152,7 @@ export const StatisticArea = ({ data, networks }) => {
 
       <div className="promotion">
         <Header className="xs bold">Transfer your token to many networks</Header>
-        <SubTitle className="small">More than 30+ cryptocurrencies for swap and auction</SubTitle>
+        <SubTitle className="sm">More than 30+ cryptocurrencies for swap and auction</SubTitle>
         <Link to="/transfer">
           <PrimaryButton width={161} height={44} className="start-to-transfer">
             Start to transfer

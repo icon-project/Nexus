@@ -80,7 +80,7 @@ export const Details = ({ auction, auctionId, pagination, bids, getBids }) => {
         </div>
       </Info>
 
-      <SubTitle className="medium bold">Bid history</SubTitle>
+      <SubTitle className="md bold">Bid history</SubTitle>
       <StyledTable
         rowKey="id"
         columns={columns}

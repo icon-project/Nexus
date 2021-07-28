@@ -6,31 +6,29 @@ import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 
 const TransferStyled = styled.div`
+  padding-top: 43px;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: right;
+
   .transfer-card {
     display: flex;
     justify-content: center;
     padding-bottom: 43px;
   }
-  .history-link {
-    text-align: right;
-    color: ${colors.tertiaryBase};
-    width: 480px;
-    margin: 43px 0 19px;
-    cursor: pointer;
-  }
-  .history-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+
+  .subtitle-text {
+    display: inline-block;
+    margin: 0 auto 19px;
   }
 `;
 const Transfer = () => {
   return (
     <TransferStyled>
       <NavLink to={`/transfer/history`}>
-        <div className="history-container">
-          <SubTitle className="small bold history-link">Transfer history</SubTitle>
-        </div>
+        <SubTitle className="sm bold history-link" color={colors.tertiaryBase}>
+          Transfer history
+        </SubTitle>
       </NavLink>
 
       <div className="transfer-card">

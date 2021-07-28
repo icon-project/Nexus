@@ -40,10 +40,6 @@ const StyledHeader = styled(Layout.Header)`
 
   .left-side {
     min-width: 175px;
-
-    h3 {
-      color: ${primaryBrandLight};
-    }
   }
 
   .right-side {
@@ -301,7 +297,9 @@ const Header = ({ userStatus = defaultUser }) => {
         </>
       )}
       <div className="left-side">
-        <Heading className="x-small bold">BTP Dashboard</Heading>
+        <Heading className="xs bold" color={primaryBrandLight}>
+          BTP Dashboard
+        </Heading>
       </div>
       <HamburgerButton
         className={`menu-icon ${showMenu && 'active'}`}
@@ -311,7 +309,7 @@ const Header = ({ userStatus = defaultUser }) => {
         <Nav setShowMenu={setShowMenu} />
         {address ? (
           <div className="account-info">
-            <SubTitle className="small">{currentNetwork}</SubTitle>
+            <SubTitle className="sm">{currentNetwork}</SubTitle>
             <Avatar
               className="user-avatar"
               src={userStatus.avatar}
@@ -320,7 +318,7 @@ const Header = ({ userStatus = defaultUser }) => {
             />
             <span className="wallet-info">
               <Text className="x-small address">{shortedAddress}</Text>
-              <SubTitle className="medium bold">
+              <SubTitle className="md bold">
                 {balance} {unit}
               </SubTitle>
             </span>

@@ -255,12 +255,12 @@ const FeeAuction = () => {
                   setOpen(true);
                 }}
               >
-                <SubTitle className="small bold">Create new bid</SubTitle>
+                <SubTitle className="sm bold">Create new bid</SubTitle>
               </CreateBidButton>
             </div>
           )}
           <div className="filter-by">
-            <SubTitle className="medium bold">Auction list</SubTitle>
+            <SubTitle className="md bold">Auction list</SubTitle>
             <SortSelect onChange={onSortByChange} />
           </div>
           <Table
