@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 import { HorizontalScrollContainer } from 'components/HorizontalScrollContainer';
 import { smallBoldText } from 'components/Typography/Text';
-import { smallBoldHeader } from 'components/Typography/Header';
+import { HeaderMixin } from 'components/Typography/Header';
 import { colors } from 'components/Styles/Colors';
 
 import { shortenNumber } from 'utils/app';
@@ -19,7 +19,7 @@ const Table = styled.table`
   }
 
   td {
-    ${smallBoldHeader};
+    ${HeaderMixin.smBold};
   }
 `;
 

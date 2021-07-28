@@ -5,7 +5,7 @@ import { useTokenToUsd } from '../../hooks/useTokenToUsd';
 
 import { Input } from './Input';
 import { Text } from '../Typography';
-import { mediumBoldHeader } from '../Typography/Header';
+import { HeaderMixin } from 'components/Typography/Header';
 
 import { colors } from '../Styles/Colors';
 
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   }
 
   .token-label {
-    ${mediumBoldHeader}
+    ${HeaderMixin.mdBold}
     background-color: ${colors.grayBG};
     word-break: break-word;
     margin: 0 32px;
@@ -37,7 +37,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledTokenInput = styled(Input)`
-  ${mediumBoldHeader}
+  ${HeaderMixin.mdBold}
   width: 105px;
   background-color: transparent;
   width: 100%;
