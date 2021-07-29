@@ -43,7 +43,7 @@ function onSubmit() {
   const tx = txBuilder
     .from(from)
     .to(BTPNetwork.BSHAddress)
-    .method('setFeeRate')
+    .method('setFeeRate') // will replaced by [setFeeRatio]
     .params({ _feeRate: feeRate })
     .nid(IconConverter.toBigNumber(3))
     .stepLimit(IconConverter.toBigNumber(1000000000))
