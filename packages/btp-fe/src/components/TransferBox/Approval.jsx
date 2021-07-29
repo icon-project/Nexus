@@ -48,7 +48,6 @@ const Details = styled.div`
 
   .send,
   .to,
-  .estimated-fee,
   .transfer-fee {
     display: flex;
     justify-content: space-between;
@@ -98,18 +97,17 @@ const Details = styled.div`
       }
     }
   }
-
-  .estimated-fee {
-    margin-bottom: 21px;
-  }
 `;
 
 const Total = styled.div`
   padding: 26px 32px;
   border-bottom: solid 1px ${colors.grayLine};
 
-  display: flex;
-  justify-content: space-between;
+  .total-receive {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
 `;
 
 export const Approval = memo(({ setStep, values, sendingInfo, account, form, isCurrent }) => {
@@ -194,10 +192,6 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, isC
             <Text className="sm receiver--name">{network}</Text>
           </div>
         </div>
-        <div className="estimated-fee">
-          <Text className="md">Estimated network fee</Text>
-          <Text className="md bright">0.1</Text>
-        </div>
         <div className="transfer-fee">
           <Text className="md">BTP transfer fee</Text>
           <Text className="md bright">{BTPFee}</Text>
@@ -205,10 +199,16 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, isC
       </Details>
 
       <Total>
-        <SubTitle className="lg bold">Total receive</SubTitle>
-        <SubTitle className="lg bold">
-          {tokenAmount - BTPFee} {token}
-        </SubTitle>
+        <div className="total-receive">
+          <SubTitle className="lg bold">Total receive</SubTitle>
+          <SubTitle className="lg bold">
+            {(tokenAmount - BTPFee).toPrecision(4)} {token}
+          </SubTitle>
+        </div>
+        <Text className="xs" color={colors.graySubText}>
+          Please be known that this is NOT the final Total Receive. There will be an amount of
+          network fee deducted from the above Total receive.
+        </Text>
       </Total>
 
       <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />

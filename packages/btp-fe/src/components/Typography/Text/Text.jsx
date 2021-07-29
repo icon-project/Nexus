@@ -5,7 +5,7 @@ import { colors } from 'components/Styles/Colors';
 export const StyledText = styled.p`
   ${normal};
 
-  &.& {
+  & {
     color: ${({ $color }) => $color};
   }
 
