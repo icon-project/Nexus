@@ -1,0 +1,51 @@
+/*------------------------------------*\
+  #CSS-RESET
+\*------------------------------------*/
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/*------------------------------------*\
+  #VARIABLES
+\*------------------------------------*/
+
+:root {
+  --brand-secondary-dark: #131217;
+  --brand-primary-light: #99a3ff;
+  --gray-scale-text: #eff1ed;
+  --gray-scale-line: #353242;
+}
+
+/*------------------------------------*\
+  #HEADER
+\*------------------------------------*/
+
+header {
+  height: 80px;
+  padding: 0 40px;
+
+  background-color: var(--brand-secondary-dark);
+  border-bottom: solid 1px var(--gray-scale-line);
+  color: var(--brand-primary-light);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 28px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*------------------------------------*\
+  #MAIN
+\*------------------------------------*/
+
+main {
+  background-color: var(--brand-secondary-dark);
+  min-height: calc(100vh - 80px);
+}
