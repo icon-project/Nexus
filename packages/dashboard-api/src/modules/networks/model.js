@@ -9,6 +9,30 @@ const {
   getVolumeTokenAllTimeByNid,
 } = require('./repository');
 const { exchangeToFiat, numberToFixedAmount } = require('../../common/util');
+const Web3 = require('web3');
+
+const { abiBSHScore } = require('../../../scripts/bsh_score.json');  
+
+// Provider
+const providerRPC = {
+  development: 'http://localhost:9933',
+  moonbase: 'https://rpc.testnet.moonbeam.network',
+};
+const web3 =  new Web3(providerRPC.development);
+
+
+async function getTokensRegisteredMoonbeam() {
+  try {
+    const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.BSH_SCORE_MOONBEAM);
+
+    const coinNames = await BSHContract.methods.coinNames().call();
+
+    return coinNames;
+  } catch (error) {
+    logger.error('getTokensRegisteredMoonbeam failed', { error });
+    throw error;
+  }
+}
 
 async function getListNetworkConnectedIcon() {
   try {
@@ -54,8 +78,8 @@ async function getListTokenRegisteredNetwork(networkId) {
   switch (networkId) {
   case '0x1':
     return ['icx', 'xrp', 'eth', 'bnb'];
-  case '0x2':
-    return ['edg', 'ltc', 'eth', 'bnb'];
+  case '0x501':
+    return await getTokensRegisteredMoonbeam();
   case '0x3':
     return ['near', 'bsh', 'eth', 'bnb'];
   case '0x4':
