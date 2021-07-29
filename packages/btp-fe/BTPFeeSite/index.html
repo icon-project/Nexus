@@ -18,15 +18,18 @@
   <header>
     BTP FEE
     <div class="connect-wallet-controls">
-      <button class="btn">Connect to ICONex</button>
+      <button class="btn" id="connect-btn" onclick="onConnectWallet()">Connect to ICONex</button>
+      <p id="from-address"></p>
     </div>
   </header>
 
   <main>
-    <input type="number" placeholder="Enter desired BTP fee" />
-    <button class="btn">SUBMIT</button>
+    <input type="number" id="fee-input" placeholder="Enter BTP fee in 1/10000" />
+    <button class="btn" id="submit-btn" onclick="onSubmit()">SUBMIT</button>
   </main>
 
 </body>
+<script src="https://cdn.jsdelivr.net/gh/icon-project/icon-sdk-js@latest/build/icon-sdk-js.web.min.js"></script>
+<script src="./js/scripts.js"></script>
 
 </html>

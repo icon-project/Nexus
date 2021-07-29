@@ -104,6 +104,11 @@ main > input:focus {
   background-color: var(--brand-primary-base);
   border-radius: 4px;
   border: none;
+  cursor: pointer;
 
   padding: 12px 16px;
+}
+
+.btn:disabled {
+  background-color: var(--gray-scale-line);
 }
