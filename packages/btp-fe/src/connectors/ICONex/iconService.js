@@ -134,7 +134,7 @@ export const getBTPfee = async () => {
     });
 
     const result = await httpProvider.request(request).execute();
-    return result;
+    return IconConverter.toNumber(result);
   } catch (err) {
     console.log('err', err);
     return 0;
