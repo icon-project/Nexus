@@ -20,14 +20,13 @@ const providerRPC = {
 };
 const web3 =  new Web3(providerRPC.development);
 
-
 async function getTokensRegisteredMoonbeam() {
+  const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.BSH_SCORE_MOONBEAM);
+
   try {
-    const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.BSH_SCORE_MOONBEAM);
-
-    const coinNames = await BSHContract.methods.coinNames().call();
-
-    return coinNames;
+    const listTokens = await BSHContract.methods.coinNames().call();
+    
+    return listTokens;
   } catch (error) {
     logger.error('getTokensRegisteredMoonbeam failed', { error });
     throw error;
