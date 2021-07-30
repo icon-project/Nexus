@@ -28,3 +28,17 @@ INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, upda
 INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc002', '2c37741ffc', 300, '2021-07-13 15:16:36');
 INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc003', '2c37741ffd', 400, '2021-07-13 15:16:36');
 INSERT INTO public.relay_rewards (created_time, id, relay_id, reward_value, updated_time) VALUES ('2021-07-13 15:16:36', '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc004', '2c37741ffa', 500, '2021-07-13 15:16:36');
+
+-- Issue #226
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (1, 'BTC', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (1027, 'ETH', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (52, 'DEV', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (0, 'NONE', 1, 1, NOW(), NOW());

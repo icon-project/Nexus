@@ -23,6 +23,18 @@ Connect to PostgreSQL with shell
 
 `yarn start:pm2`
 
+Configure cron job to update tokens to USD conversion rate.
+
+```bash
+$ crontab -e
+
+# add this script and save changes.
+# ref: https://crontab.guru/
+0 0 * * * COIN_MARKET_CAP_URL=https://sandbox-api.coinmarketcap.com/v1 COIN_MARKET_CAP_KEY=b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c POSTGRES_DB_URL=postgresql://postgres:test123@localhost:5432/postgres node <dashboard-api folder>/scripts/cmc_conversion.js > cmc_conversion.log
+
+$ crontab -l
+```
+
 ## Documentations
 
 [API Design Guidelines](./docs/api.md)
