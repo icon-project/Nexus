@@ -15,6 +15,30 @@ const { HttpProvider, IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
 
+const Web3 = require('web3');
+
+const { abiBSHScore } = require('../../../scripts/bsh_score.json');  
+
+// Provider
+const providerRPC = {
+  development: 'http://localhost:9933',
+  moonbase: 'https://rpc.testnet.moonbeam.network',
+};
+const web3 =  new Web3(providerRPC.development);
+
+async function getTokensRegisteredMoonbeam() {
+  const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.BSH_SCORE_MOONBEAM);
+
+  try {
+    const listTokens = await BSHContract.methods.coinNames().call();
+    
+    return listTokens;
+  } catch (error) {
+    logger.error('getTokensRegisteredMoonbeam failed', { error });
+    throw error;
+  }
+}
+
 async function getListTokensRegisteredIcon() {
   const callBuilder = new IconBuilder.CallBuilder();
   const call = callBuilder.to(process.env.NATIVE_COIN_BSH_SCORE).method('coinNames').build();
@@ -73,8 +97,8 @@ async function getListTokenRegisteredNetwork(networkId) {
   switch (networkId) {
   case '0x1':
     return ['icx', 'xrp', 'eth', 'bnb'];
-  case '0x2':
-    return ['edg', 'ltc', 'eth', 'bnb'];
+  case '0x501':
+    return await getTokensRegisteredMoonbeam();
   case '0x3':
     return await getListTokensRegisteredIcon();
   case '0x4':
