@@ -59,7 +59,7 @@ function onSubmit() {
   const event = new CustomEvent('ICONEX_RELAY_REQUEST', {
     detail: {
       type: 'REQUEST_SIGNING',
-      payload: { from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd', hash: transactionHash },
+      payload: { from, hash: transactionHash },
     },
   });
   window.dispatchEvent(event);
