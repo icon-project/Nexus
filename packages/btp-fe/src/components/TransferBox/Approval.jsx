@@ -3,7 +3,6 @@ import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { useDispatch } from 'hooks/useRematch';
-import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
 import { transfer, getBTPfee } from 'connectors/ICONex/iconService';
@@ -48,7 +47,6 @@ const Details = styled.div`
 
   .send,
   .to,
-  .estimated-fee,
   .transfer-fee {
     display: flex;
     justify-content: space-between;
@@ -98,122 +96,124 @@ const Details = styled.div`
       }
     }
   }
-
-  .estimated-fee {
-    margin-bottom: 21px;
-  }
 `;
 
 const Total = styled.div`
   padding: 26px 32px;
   border-bottom: solid 1px ${colors.grayLine};
 
-  display: flex;
-  justify-content: space-between;
+  .total-receive {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
 `;
 
-export const Approval = memo(({ setStep, values, sendingInfo, account, form, isCurrent }) => {
-  const [BTPFee, setBTPFee] = useState(0);
-  const { recipient, tokenAmount = 0 } = values;
-  const { token, network } = sendingInfo;
-  const { currentNetwork, wallet, unit } = account;
-  const usdBalance = useTokenToUsd(token, tokenAmount);
+export const Approval = memo(
+  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate }) => {
+    const [BTPFee, setBTPFee] = useState(0);
+    const { recipient, tokenAmount = 0 } = values;
+    const { token, network } = sendingInfo;
+    const { currentNetwork, wallet, unit } = account;
 
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    if (isCurrent)
-      getBTPfee().then((result) => {
-        setBTPFee((result / 10000) * tokenAmount);
-      });
-  }, [isCurrent]);
+    /* eslint-disable react-hooks/exhaustive-deps */
+    useEffect(() => {
+      if (isCurrent)
+        getBTPfee().then((result) => {
+          setBTPFee((result / 10000) * tokenAmount);
+        });
+    }, [isCurrent]);
 
-  useListenForSuccessTransaction(() => {
-    setStep(0);
-    form.restart();
-  });
+    useListenForSuccessTransaction(() => {
+      setStep(0);
+      form.restart();
+    });
 
-  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
-    openModal,
-  }));
+    const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+      openModal,
+    }));
 
-  const onApprove = () => {
-    if (wallets.iconex === wallet) {
-      openModal({
-        icon: 'loader',
-        desc: 'Waiting for confirmation in your wallet.',
-      });
-      transfer({ to: recipient, value: tokenAmount });
-    } else if (wallets.metamask === wallet) {
-      openModal({
-        icon: 'loader',
-        desc: 'Waiting for confirmation in your wallet.',
-      });
-      EthereumInstance.tranferToken(recipient, tokenAmount);
-    } else {
-      openModal({
-        icon: 'exclamationPointIcon',
-        desc: `This action has not been implemented yet`,
-      });
-    }
-  };
+    const onApprove = () => {
+      if (wallets.iconex === wallet) {
+        openModal({
+          icon: 'loader',
+          desc: 'Waiting for confirmation in your wallet.',
+        });
+        transfer({ to: recipient, value: tokenAmount });
+      } else if (wallets.metamask === wallet) {
+        openModal({
+          icon: 'loader',
+          desc: 'Waiting for confirmation in your wallet.',
+        });
+        EthereumInstance.tranferToken(recipient, tokenAmount);
+      } else {
+        openModal({
+          icon: 'exclamationPointIcon',
+          desc: `This action has not been implemented yet`,
+        });
+      }
+    };
 
-  return (
-    <Wrapper>
-      <Header className="sm bold heading">Fee & Confirmation</Header>
-      <SendToken>
-        <Text className="sm" color={colors.graySubText}>
-          You will send
-        </Text>
-        <div className="content">
-          <Header className="md bold send-token">
-            {tokenAmount || 0} {unit}
-          </Header>
-          <Text className="md">= ${usdBalance.toLocaleString()}</Text>
-        </div>
-      </SendToken>
-
-      <Details>
-        <SubTitle className="lg">Details</SubTitle>
-        <div className="send">
-          <Text className="md">Send</Text>
-          <div className="sender">
-            <Icon icon={token} size="s" />
-            <Text className="md sender--alias">{token}</Text>
-            <Text className="sm sender--name">{currentNetwork}</Text>
+    return (
+      <Wrapper>
+        <Header className="sm bold heading">Fee & Confirmation</Header>
+        <SendToken>
+          <Text className="sm" color={colors.graySubText}>
+            You will send
+          </Text>
+          <div className="content">
+            <Header className="md bold send-token">
+              {tokenAmount || 0} {unit}
+            </Header>
+            <Text className="md">= ${(usdRate * tokenAmount).toLocaleString()}</Text>
           </div>
-        </div>
-        <div className="to">
-          <Text className="md">To</Text>
-          <div className="receiver">
-            <CopyToClipboard text={recipient}>
-              <div>
-                <Icon icon="copy" size="s" />
-                <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
-              </div>
-            </CopyToClipboard>
-            <Text className="sm receiver--name">{network}</Text>
+        </SendToken>
+
+        <Details>
+          <SubTitle className="lg">Details</SubTitle>
+          <div className="send">
+            <Text className="md">Send</Text>
+            <div className="sender">
+              <Icon icon={token} size="s" />
+              <Text className="md sender--alias">{token}</Text>
+              <Text className="sm sender--name">{currentNetwork}</Text>
+            </div>
           </div>
-        </div>
-        <div className="estimated-fee">
-          <Text className="md">Estimated network fee</Text>
-          <Text className="md bright">0.1</Text>
-        </div>
-        <div className="transfer-fee">
-          <Text className="md">BTP transfer fee</Text>
-          <Text className="md bright">{BTPFee}</Text>
-        </div>
-      </Details>
+          <div className="to">
+            <Text className="md">To</Text>
+            <div className="receiver">
+              <CopyToClipboard text={recipient}>
+                <div>
+                  <Icon icon="copy" size="s" />
+                  <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
+                </div>
+              </CopyToClipboard>
+              <Text className="sm receiver--name">{network}</Text>
+            </div>
+          </div>
+          <div className="transfer-fee">
+            <Text className="md">BTP transfer fee</Text>
+            <Text className="md bright">{BTPFee}</Text>
+          </div>
+        </Details>
 
-      <Total>
-        <SubTitle className="lg bold">Total receive</SubTitle>
-        <SubTitle className="lg bold">
-          {tokenAmount - BTPFee} {token}
-        </SubTitle>
-      </Total>
+        <Total>
+          <div className="total-receive">
+            <SubTitle className="lg bold">Total receive</SubTitle>
+            <SubTitle className="lg bold">
+              {(tokenAmount - BTPFee).toPrecision(4)} {token}
+            </SubTitle>
+          </div>
+          <Text className="xs" color={colors.graySubText}>
+            Please be known that this is NOT the final Total Receive. There will be an amount of
+            network fee deducted from the above Total receive.
+          </Text>
+        </Total>
 
-      <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />
-    </Wrapper>
-  );
-});
+        <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />
+      </Wrapper>
+    );
+  },
+);
 
 Approval.displayName = 'Approval';
