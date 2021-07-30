@@ -1,13 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
-import { useTokenToUsd } from '../../hooks/useTokenToUsd';
-
 import { Input } from './Input';
-import { Text } from '../Typography';
+import { Text } from 'components/Typography';
 import { HeaderMixin } from 'components/Typography/Header';
 
-import { colors } from '../Styles/Colors';
+import { colors } from 'components/Styles/Colors';
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,10 +39,17 @@ const StyledTokenInput = styled(Input)`
   text-align: center;
 `;
 
-export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = {}, ...props }) => {
+export const TokenInput = ({
+  isCurrent,
+  value,
+  token,
+  usdRate,
+  onBlur = () => {},
+  meta = {},
+  ...props
+}) => {
   const [showInput, setShowInput] = useState(true);
   const tokenInputRef = useRef();
-  const usdBalance = useTokenToUsd(token, value);
 
   useEffect(() => {
     if (isCurrent) {
@@ -76,7 +81,7 @@ export const TokenInput = ({ isCurrent, value, token, onBlur = () => {}, meta = 
       >
         {value || 0} {token}
       </div>
-      <Text className="md center">= ${usdBalance.toLocaleString()}</Text>
+      <Text className="md center">= ${(usdRate * value).toLocaleString()}</Text>
       {meta.error && meta.touched && <Text className="xs err-msg">{meta.error}</Text>}
     </Wrapper>
   );
