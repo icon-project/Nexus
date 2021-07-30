@@ -9,6 +9,12 @@ const {
   getVolumeTokenAllTimeByNid,
 } = require('./repository');
 const { exchangeToFiat, numberToFixedAmount } = require('../../common/util');
+const IconService = require('icon-sdk-js');
+const { HttpProvider, IconBuilder } = IconService;
+
+const provider = new HttpProvider(process.env.ICON_API_URL);
+const iconService = new IconService(provider);
+
 const Web3 = require('web3');
 
 const { abiBSHScore } = require('../../../scripts/bsh_score.json');  
@@ -29,6 +35,20 @@ async function getTokensRegisteredMoonbeam() {
     return listTokens;
   } catch (error) {
     logger.error('getTokensRegisteredMoonbeam failed', { error });
+    throw error;
+  }
+}
+
+async function getListTokensRegisteredIcon() {
+  const callBuilder = new IconBuilder.CallBuilder();
+  const call = callBuilder.to(process.env.NATIVE_COIN_BSH_SCORE).method('coinNames').build();
+
+  try {
+    const listTokens = await iconService.call(call).execute();
+    
+    return listTokens;
+  } catch (error) {
+    logger.error('getListTokensRegisteredIcon failed', { error });
     throw error;
   }
 }
@@ -80,7 +100,7 @@ async function getListTokenRegisteredNetwork(networkId) {
   case '0x501':
     return await getTokensRegisteredMoonbeam();
   case '0x3':
-    return ['near', 'bsh', 'eth', 'bnb'];
+    return await getListTokensRegisteredIcon();
   case '0x4':
     return ['sol', 'pol', 'eth', 'bnb'];
   default:
