@@ -4,11 +4,12 @@ import { Form } from 'react-final-form';
 
 import { Details } from './Details';
 import { Approval } from './Approval';
-import { TransferCard } from '../TransferCard';
+import { TransferCard } from 'components/TransferCard';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
+import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useSelect } from 'hooks/useRematch';
 
 const Wrapper = styled.div`
@@ -42,16 +43,18 @@ export const TransferBox = () => {
     }),
   );
 
+  const isCurrentStep = (s) => s === step;
+
+  const { unit } = account;
+  const usdRate = useTokenToUsd(unit, 1, isCurrentStep(1));
+
   const onSendingInfoChange = (info = {}) => {
     setSendingInfo((sendingInfo) => ({ ...sendingInfo, ...info }));
   };
 
   const memoizedSetStep = useCallback((param) => setStep(param), [setStep]);
   const memoizedSetTokenValue = useCallback((param) => setTokenValue(param), [setTokenValue]);
-
   const onSubmit = () => {};
-
-  const isCurrentStep = (s) => s === step;
 
   return (
     <Wrapper>
@@ -72,6 +75,7 @@ export const TransferBox = () => {
                   isCurrent={isCurrentStep(1)}
                   setStep={memoizedSetStep}
                   tokenValue={tokenValue}
+                  usdRate={usdRate}
                   setTokenValue={memoizedSetTokenValue}
                   isValidForm={valid}
                   sendingInfo={sendingInfo}
@@ -86,6 +90,7 @@ export const TransferBox = () => {
                   sendingInfo={sendingInfo}
                   account={account}
                   form={form}
+                  usdRate={usdRate}
                 />
               </div>
             </form>

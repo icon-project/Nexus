@@ -8,7 +8,6 @@ import { Header, Text } from '../Typography';
 import { ControlButtons } from './ControlButtons';
 
 import { composeValidators, maxValue } from 'utils/inputValidation';
-import { useTokenToUsd } from 'hooks/useTokenToUsd';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -107,10 +106,10 @@ export const Details = memo(
     isCurrent,
     sendingInfo,
     account,
+    usdRate,
   }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet, unit } = account;
-    const usdTotalBalance = useTokenToUsd(unit, balance);
 
     const max = maxValue(balance, 'Insufficient balance');
 
@@ -127,6 +126,7 @@ export const Details = memo(
               initalInputDisplay={initalInputDisplay}
               isCurrent={isCurrent}
               token={token}
+              usdRate={usdRate}
               {...input}
               meta={meta}
             />
@@ -155,7 +155,7 @@ export const Details = memo(
                 {balance.toLocaleString()} {unit}
               </Text>
               <Text className="xs" color={colors.graySubText}>
-                = ${usdTotalBalance.toLocaleString()}
+                = ${(usdRate * balance).toLocaleString()}
               </Text>
             </div>
           </WalletBalance>
