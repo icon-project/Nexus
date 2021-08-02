@@ -19,12 +19,7 @@ const Web3 = require('web3');
 
 const { abiBSHScore } = require('../../../scripts/bsh_score.json');
 
-// Provider
-const providerRPC = {
-  development: 'http://localhost:9933',
-  moonbase: 'https://rpc.testnet.moonbeam.network',
-};
-const web3 =  new Web3(providerRPC.development);
+const web3 =  new Web3(process.env.MOONBEAM_RPC_PROVIDER_URL);
 
 async function getTokensRegisteredMoonbeam() {
   const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.BSH_SCORE_MOONBEAM);
