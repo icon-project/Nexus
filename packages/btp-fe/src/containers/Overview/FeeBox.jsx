@@ -7,6 +7,7 @@ import { SubTitle } from 'components/Typography';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { toSeparatedNumberString } from 'utils/app';
 
 const Wrapper = styled.div`
   width: 48.57%;
@@ -58,7 +59,7 @@ export const Feebox = ({ fee }) => {
           Total cumulative amount
         </TextWithInfo>
         <SubTitle className="md bold">
-          {cumulativeAmount ? cumulativeAmount.toLocaleString() : 0}
+          {cumulativeAmount ? toSeparatedNumberString(cumulativeAmount) : 0}
         </SubTitle>
       </div>
       <div className="current-amount d-flex">
@@ -69,7 +70,7 @@ export const Feebox = ({ fee }) => {
           Total current amount of fee
         </TextWithInfo>
         <SubTitle className="md bold">
-          {currentAmount ? currentAmount.toLocaleString() : 0}
+          {currentAmount ? toSeparatedNumberString(currentAmount) : 0}
         </SubTitle>
       </div>
       <TextWithInfo tooltip="Amount of fee for each asset" className="asset-fee medium-text">

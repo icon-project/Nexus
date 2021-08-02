@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -13,7 +12,7 @@ import { Loader } from 'components/Loader';
 import { Modal } from 'components/NotificationModal';
 
 import { getTransferHistoryById } from 'services/btpServices';
-import { hashShortener } from 'utils/app';
+import { hashShortener, toSeparatedNumberString } from 'utils/app';
 
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
@@ -178,7 +177,7 @@ export const HistoryDetails = ({ id, onClose }) => {
               <Text className="md">Amount</Text>
               <Text className="md">
                 {details.value} {details.tokenName} (= $
-                {(tokenPrice * details.value)?.toLocaleString()})
+                {toSeparatedNumberString(tokenPrice * details.value)})
               </Text>
             </div>
             <div className="content">
@@ -225,7 +224,7 @@ export const HistoryDetails = ({ id, onClose }) => {
               <Text className="md">Network fee</Text>
               <Text className="md">
                 {details.networkFee} {details.tokenName} ( $
-                {(tokenPrice * details.networkFee)?.toLocaleString()})
+                {tokenPrice * toSeparatedNumberString(details.networkFee)})
               </Text>
             </div>
             <div className="content btp-fee">

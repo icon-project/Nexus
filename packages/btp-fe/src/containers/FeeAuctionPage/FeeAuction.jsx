@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
+import { toSeparatedNumberString } from 'utils/app';
 
 import { UpDownPercent } from 'components/UpDownPercent';
 import { Header, SubTitle, Text } from 'components/Typography';
@@ -17,7 +18,7 @@ import { CreateBidModal } from './CreateBidModal';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
-import notFoundSearchIcon from '../../assets/images/not-found-search-icon.svg';
+import notFoundSearchIcon from 'assets/images/not-found-search-icon.svg';
 
 const Wrapper = styled.div`
   max-width: 1120px;
@@ -240,7 +241,9 @@ const FeeAuction = () => {
                 <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">
                   TOTAL FEE AVAILABLE FOR AUCTION
                 </TextWithInfo>
-                <Header className="lg bold inline">$ {totalFeeInUsd.toLocaleString()}</Header>
+                <Header className="lg bold inline">
+                  $ {toSeparatedNumberString(totalFeeInUsd)}
+                </Header>
                 <UpDownPercent percent={availableAmountLast24h} />
               </div>
 
