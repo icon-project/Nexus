@@ -24,7 +24,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
 
-    > p.small {
+    > p.percent {
       margin-top: 12px;
     }
   }
@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 
 export const ValuesArea = ({ data }) => {
   const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
-  const { valueMint } = useSelect(({ app: { selectValueMint } }) => ({
+  const { valueMint = 0 } = useSelect(({ app: { selectValueMint } }) => ({
     valueMint: selectValueMint,
   }));
 
