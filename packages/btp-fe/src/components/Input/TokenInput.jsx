@@ -6,6 +6,7 @@ import { Text } from 'components/Typography';
 import { HeaderMixin } from 'components/Typography/Header';
 
 import { colors } from 'components/Styles/Colors';
+import { toSeparatedNumberString } from 'utils/app';
 
 const Wrapper = styled.div`
   display: flex;
@@ -81,7 +82,7 @@ export const TokenInput = ({
       >
         {value || 0} {token}
       </div>
-      <Text className="md center">= ${(usdRate * value).toLocaleString()}</Text>
+      <Text className="md center">= ${toSeparatedNumberString(usdRate * value)}</Text>
       {meta.error && meta.touched && <Text className="xs err-msg">{meta.error}</Text>}
     </Wrapper>
   );

@@ -30,20 +30,31 @@ export const roundNumber = (num, digit = 2) => {
   return +(Math.round(num + `e+${digit}`) + `e-${digit}`);
 };
 
+/**
+ * Separate number with ","
+ * @param {number} number
+ * @returns e.g. 100,000.
+ */
+const toSeparatedNumberString = (number) => {
+  if (!number && number !== 0) return '';
+
+  return number.toLocaleString();
+};
+
 const shortenNumber = (num) => {
   if (num === undefined) return 0;
   const intNum = (num + '').split('.')[0];
   const { length } = intNum;
   switch (true) {
     case length > 12:
-      return roundNumber(num / 1000000000000).toLocaleString() + ' T';
+      return toSeparatedNumberString(roundNumber(num / 1000000000000)) + ' T';
     case length > 9:
-      return roundNumber(num / 1000000000).toLocaleString() + ' B';
+      return toSeparatedNumberString(roundNumber(num / 1000000000)) + ' B';
     case length > 6:
-      return roundNumber(num / 1000000).toLocaleString() + ' M';
+      return toSeparatedNumberString(roundNumber(num / 1000000)) + ' M';
     default:
-      return (+num).toLocaleString();
+      return toSeparatedNumberString(+num);
   }
 };
 
-export { isEmpty, filterObjectByKeyArr, hashShortener, shortenNumber };
+export { isEmpty, filterObjectByKeyArr, hashShortener, shortenNumber, toSeparatedNumberString };

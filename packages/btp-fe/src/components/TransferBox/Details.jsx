@@ -8,6 +8,7 @@ import { Header, Text } from '../Typography';
 import { ControlButtons } from './ControlButtons';
 
 import { composeValidators, maxValue } from 'utils/inputValidation';
+import { toSeparatedNumberString } from 'utils/app';
 
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -152,10 +153,10 @@ export const Details = memo(
             </div>
             <div className="right">
               <Text className="md">
-                {balance.toLocaleString()} {unit}
+                {toSeparatedNumberString(balance)} {unit}
               </Text>
               <Text className="xs" color={colors.graySubText}>
-                = ${(usdRate * balance).toLocaleString()}
+                = ${toSeparatedNumberString(usdRate * balance)}
               </Text>
             </div>
           </WalletBalance>
