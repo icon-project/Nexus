@@ -220,13 +220,14 @@ async function getPercentsMintVolumeLast24h() {
   const tokensCurrently = await getLatestTokensMinted();
   const tokensLast24h = await getTotalTokensMintedLast24h();
 
+  // in the first 23 hours
+  if(0 === tokensLast24h)
+    return 0;
+
   if (tokensCurrently && tokensLast24h) {
     try {
-      const totalUSD = await exchangeTokensToUSD(tokensCurrently);
-      const last24hUSD = await exchangeTokensToUSD(tokensLast24h);
-
-      if (0 === last24hUSD)
-        return 0;
+      const totalUSD = await totalTokensToUSD(tokensCurrently);
+      const last24hUSD = await totalTokensToUSD(tokensLast24h);
 
       let percentage = (totalUSD - last24hUSD) / last24hUSD;
 
@@ -239,7 +240,7 @@ async function getPercentsMintVolumeLast24h() {
   return 0;
 }
 
-async function exchangeTokensToUSD(tokens) {
+async function totalTokensToUSD(tokens) {
   let promises = [];
   let totalUSD = 0;
 

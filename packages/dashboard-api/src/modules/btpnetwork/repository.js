@@ -79,7 +79,7 @@ async function getLatestTokensMinted() {
 
     let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount  
       FROM minted_tokens
-      WHERE create_at > $1
+      WHERE create_at >= $1
       ORDER BY token_name, create_at DESC`, [at24hAgo.toISOString()]);
 
     if (0 === results.rows.length)
