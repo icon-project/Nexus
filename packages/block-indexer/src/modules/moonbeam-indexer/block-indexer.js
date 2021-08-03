@@ -4,12 +4,15 @@ const debug = require('debug')('moonbeam');
 const axios = require('axios');
 const { logger } = require('../../common');
 const { saveBlock, saveTransaction, getLastSavedBlock } = require('./repository');
+const { handleMintEvents, handleBurnEvents } = require('./mint-burn');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, block) {
   // More transaction handlers go here.
+  await handleMintEvents(transaction, block);
+  await handleBurnEvents(transaction, block);
 }
 
 async function runBlockHandlers(block) {

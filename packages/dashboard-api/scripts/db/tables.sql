@@ -93,6 +93,23 @@ CREATE TABLE public.minted_tokens (
 
 
 --
+-- 
+-- Name: burned_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.burned_tokens (
+    id character varying(100) NOT NULL,
+    network_id character varying(100),
+    token_name character varying(100),
+    token_value numeric,
+    block_time bigint,
+    tx_hash character varying(100),
+    block_hash character varying(100),
+    block_height bigint,
+    create_at timestamp without time zone NOT NULL
+);
+
+--
 -- TOC entry 208 (class 1259 OID 16582)
 -- Name: moonbeam_blocks; Type: TABLE; Schema: public; Owner: -
 --
@@ -233,6 +250,15 @@ ALTER TABLE ONLY public.icon_blocks
 
 ALTER TABLE ONLY public.minted_tokens
     ADD CONSTRAINT minted_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2860 (class 2606 OID 16577)
+-- Name: burned_tokens burned_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.burned_tokens
+    ADD CONSTRAINT burned_tokens_pkey PRIMARY KEY (id);
 
 
 --

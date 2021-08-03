@@ -23,6 +23,14 @@ function hexToFixedAmount(value) {
   return Number(icx.toFixed(process.env.ASSET_FIXED_NUMBER));
 }
 
+// Convert string to fixed asset value for displaying.
+// Input: '1000000000000000000'
+// Output: x.yyyyyy (x and y are digits)
+function stringToNumberIcxUnit(value) {
+  const valueToken = parseInt(value) / ICX_LOOP_UNIT ;
+  return Number(valueToken.toFixed(process.env.ASSET_FIXED_NUMBER))
+}
+
 async function tokenToUsd(name, value) {
   try {
     const result = await axios.get(process.env.DASHBOARD_API_URL + '/btpnetwork/converter', {
@@ -47,5 +55,6 @@ module.exports = {
   getCurrentTimestamp,
   hexToFixedAmount,
   hexToIcxUnit,
-  tokenToUsd
+  tokenToUsd,
+  stringToNumberIcxUnit
 };
