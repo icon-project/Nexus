@@ -1,21 +1,19 @@
 import styled from 'styled-components';
-import { colors } from '../Styles/Colors';
 
 import { Text } from 'components/Typography';
+import { Icon } from 'components/Icon';
 import { TextWithIcon } from 'components/TextWithIcon';
+import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import iconexIcon from 'assets/images/icon-ex.svg';
-import ethIcon from 'assets/images/eth-icon.svg';
+import { wallets } from 'utils/constants';
 
 const StyledItem = styled.div`
   display: flex;
   align-items: center;
   min-width: 160px;
 
-  & > img {
-    width: 24px;
-    height: 24px;
+  & .icon {
     margin-right: 12px;
   }
 
@@ -28,7 +26,7 @@ const StyledItem = styled.div`
 const Item = ({ icon, symbol, children }) => {
   return (
     <StyledItem>
-      <img src={icon} alt="icon" />
+      <Icon icon={icon} width="24px" />
       <div className="info">
         <Text className="md">{symbol}</Text>
         <Text className="xs">{children}</Text>
@@ -43,9 +41,13 @@ const SelectAsset = ({ onChange }) => {
     {
       value: 'ICX',
       label: 'ICX',
-      renderLabel: () => <TextWithIcon icon="iconex">ICX</TextWithIcon>,
+      renderLabel: () => (
+        <TextWithIcon icon={wallets.iconex} width="24px">
+          ICX
+        </TextWithIcon>
+      ),
       renderItem: () => (
-        <Item icon={iconexIcon} symbol="ICX">
+        <Item icon={wallets.iconex} symbol="ICX">
           ICON
         </Item>
       ),
@@ -55,7 +57,7 @@ const SelectAsset = ({ onChange }) => {
       label: 'ETH',
       renderLabel: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
       renderItem: () => (
-        <Item icon={ethIcon} symbol="ETH">
+        <Item icon="ETH" symbol="ETH">
           Ethereum
         </Item>
       ),

@@ -184,7 +184,7 @@ export const Approval = memo(
             <div className="receiver">
               <CopyToClipboard text={recipient}>
                 <div>
-                  <Icon icon="copy" size="s" />
+                  <Icon icon="copy" size="s" color="#878491" />
                   <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
                 </div>
               </CopyToClipboard>

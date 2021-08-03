@@ -7,10 +7,10 @@ import { Loader } from '../Loader';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
-import closeIcon from '../../assets/images/close-icon.svg';
-import checkIcon from '../../assets/images/green-checked-icon.svg';
-import xIcon from '../../assets/images/red-x-icon.svg';
-import exclamationPointIcon from '../../assets/images/orange-exclamation-point-icon.svg';
+import closeIcon from 'assets/images/close-icon.svg';
+import checkIcon from 'assets/images/green-checked-icon.svg';
+import xIcon from 'assets/images/red-x-icon.svg';
+import exclamationPointIcon from 'assets/images/orange-exclamation-point-icon.svg';
 
 const Wapper = styled.div`
   min-height: 100vh;
