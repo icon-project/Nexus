@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "name": "sidecar",
+      "script": "substrate-api-sidecar",
+      "cwd": "/home/ubuntu/deploy/btp-dashboard/packages/block-indexer",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_ENV": "production",
+        "SAS_EXPRESS_BIND_HOST": "0.0.0.0",
+        "SAS_EXPRESS_LOG_MODE": "all",
+        "SAS_LOG_LEVEL": "http"
+      }
+    }
+  ]
+}

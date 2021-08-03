@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --no-eslintrc ./src",
-    "sidecar": "pm2 start substrate-api-sidecar --name sidecar",
+    "sidecar": "pm2 start sidecar.json",
     "start": "nodemon index.js",
     "start:pm2": "pm2 start pm2.json",
     "stop:pm2": "pm2 stop pm2.json",
