@@ -12,23 +12,27 @@ import FeeAuctionDetails from 'containers/FeeAuctionDetails';
 
 import { ModalWrapper } from 'components/NotificationModal';
 
+import ErrorBoundary from './ErrorBoundary';
+
 function Routes() {
   return (
     <BrowserRouter>
-      <Layout>
-        <Switch>
-          <Redirect from="/" to="/transfer" exact />
-          <Route path="/transfer" exact component={Transfer} />
-          <Route path="/transfer/history" exact component={TransferHistory} />
-          <Route path="/overview" exact component={Overview} />
-          <Route path="/network" exact component={NetworkPage} />
-          <Route path="/governance" exact component={Governance} />
-          <Route path="/auction" exact component={FeeAuctionPage} />
-          <Route path="/auction/:id" exact component={FeeAuctionDetails} />
-          <Route path="*" component={NotFoundPage} />
-        </Switch>
-        <ModalWrapper />
-      </Layout>
+      <ErrorBoundary>
+        <Layout>
+          <Switch>
+            <Redirect from="/" to="/transfer" exact />
+            <Route path="/transfer" exact component={Transfer} />
+            <Route path="/transfer/history" exact component={TransferHistory} />
+            <Route path="/overview" exact component={Overview} />
+            <Route path="/network" exact component={NetworkPage} />
+            <Route path="/governance" exact component={Governance} />
+            <Route path="/auction" exact component={FeeAuctionPage} />
+            <Route path="/auction/:id" exact component={FeeAuctionDetails} />
+            <Route path="*" component={NotFoundPage} />
+          </Switch>
+          <ModalWrapper />
+        </Layout>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

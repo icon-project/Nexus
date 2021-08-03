@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import { Layout as AtndLayout } from 'antd';
-import { Header } from '../Header';
-import { colors } from '../Styles/Colors';
+import { Header } from 'components/Header';
+import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
 const StyledLayout = styled(AtndLayout)`

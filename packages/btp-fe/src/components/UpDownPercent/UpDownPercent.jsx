@@ -8,7 +8,7 @@ import upIcon from '../../assets/images/up-percent-icon.svg';
 import downIcon from '../../assets/images/down-percent-icon.svg';
 
 const Wrapper = styled(Text)`
-  color: ${({ up }) => (up ? colors.successState : colors.errorState)};
+  color: ${({ up }) => (up ? colors.successState : colors.errorState)} !important;
   display: inline-block;
 
   img {
@@ -28,7 +28,7 @@ const Wrapper = styled(Text)`
 export const UpDownPercent = memo(({ percent = 0, sm = false, label = 'in 24h' }) => {
   const isUp = percent >= 0;
   return (
-    <Wrapper up={isUp} sm={sm} className="small percent">
+    <Wrapper up={isUp} sm={sm} className="sm percent">
       <img src={isUp ? upIcon : downIcon} alt="icon" />
       <span>{Math.abs(percent)}%</span>
       <span className="label">{label}</span>

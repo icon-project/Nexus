@@ -3,6 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
+import { toSeparatedNumberString } from 'utils/app';
 
 import { Text, Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
@@ -115,7 +116,7 @@ export const WalletDetails = ({
         <div className="right">
           <Header className="sm bold">{`${balance} ${unit}`}</Header>
 
-          <Text className="sm dark-text">= ${usdBalance.toLocaleString()}</Text>
+          <Text className="sm dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
         </div>
       </div>
       <div className="wallet-address">

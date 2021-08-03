@@ -7,6 +7,7 @@ import { UpDownPercent } from 'components/UpDownPercent';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { toSeparatedNumberString } from 'utils/app';
 
 import bgImg from 'assets/images/many-lines.svg';
 
@@ -24,7 +25,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
 
-    > p.small {
+    > p.percent {
       margin-top: 12px;
     }
   }
@@ -49,7 +50,7 @@ const Wrapper = styled.div`
 
 export const ValuesArea = ({ data }) => {
   const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
-  const { valueMint } = useSelect(({ app: { selectValueMint } }) => ({
+  const { valueMint = 0 } = useSelect(({ app: { selectValueMint } }) => ({
     valueMint: selectValueMint,
   }));
 
@@ -57,7 +58,7 @@ export const ValuesArea = ({ data }) => {
     <Wrapper>
       <div className="value">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
-        <Header className="md bold">${volume.toLocaleString()}</Header>
+        <Header className="md bold">${toSeparatedNumberString(volume)}</Header>
         <UpDownPercent percent={last24hChange} />
       </div>
       <div className="value">
@@ -67,7 +68,7 @@ export const ValuesArea = ({ data }) => {
         >
           VALUE MINT
         </TextWithInfo>
-        <Header className="md bold">${valueMint.toLocaleString()} </Header>
+        <Header className="md bold">${toSeparatedNumberString(valueMint)} </Header>
         <UpDownPercent percent={mintVolumeLast24hChange} />
       </div>
     </Wrapper>
