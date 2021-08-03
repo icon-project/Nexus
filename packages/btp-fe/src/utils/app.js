@@ -30,6 +30,11 @@ export const roundNumber = (num, digit = 2) => {
   return +(Math.round(num + `e+${digit}`) + `e-${digit}`);
 };
 
+/**
+ * Separate number with ","
+ * @param {number} number
+ * @returns e.g. 100,000.
+ */
 const toSeparatedNumberString = (number) => {
   if (!number && number !== 0) return '';
 
