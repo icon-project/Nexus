@@ -271,16 +271,6 @@ ALTER TABLE ONLY public.relay_candidates
 ALTER TABLE ONLY public.transactions
     ADD CONSTRAINT transactions_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 2846 (class 2606 OID 16394)
--- Name: transactions transactions_serial_number_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.transactions
-    ADD CONSTRAINT transactions_serial_number_key UNIQUE (serial_number);
-
-
 --
 -- TOC entry 2856 (class 2606 OID 16534)
 -- Name: transfer_fees transfer_fees_pkey; Type: CONSTRAINT; Schema: public; Owner: -

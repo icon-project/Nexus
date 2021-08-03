@@ -1,7 +1,7 @@
 {
   "env": {
     "NODE_ENV": "development",
-    "DEBUG": "app,indexer,icon,block,db,moonbeam,moonbeam_tx,evmlog",
+    "DEBUG": "app,indexer,icon,block,db,moonbeam_tx,evmlog",
     "DEBUG_DEPTH": 7
   },
   "execMap": {

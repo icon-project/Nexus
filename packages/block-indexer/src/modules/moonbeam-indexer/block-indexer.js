@@ -4,20 +4,19 @@ const debug = require('debug')('moonbeam');
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
-const { saveBlock, saveTransaction, getLastSavedBlock } = require('./repository');
+const { saveBlock, getLastSavedBlock } = require('./repository');
 const { buildEventMap } = require('./events');
-const { handleTransferEvents } = require('./transfer');
+const { handleTransactionEvents } = require('../transactions/moonbeam');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, block) {
   try {
-    await handleTransferEvents(transaction, block);
+    await handleTransactionEvents(transaction, block);
 
     // More transaction handlers go here.
-  }
-  catch (error) {
+  } catch (error) {
     logger.error('moonbeam:runTransactionHandlers fails %O', error);
   }
 }
@@ -27,8 +26,6 @@ async function runBlockHandlers(block) {
     // Ignore timestamp transactions.
     if ('timestamp' !== tx.method.pallet) {
       debug('Transaction: %O', tx);
-
-      await saveTransaction(tx);
       await runTransactionHandlers(tx, block);
     }
   }
@@ -122,7 +119,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('Failed to fetch Moonbeam block data, retry in 5 minutes', { error });
+    logger.error('Failed to fetch Moonbeam block data, retry in 5 minutes', { error: error.toString() });
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }

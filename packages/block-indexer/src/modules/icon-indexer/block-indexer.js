@@ -7,7 +7,7 @@ const { logger } = require('../../common');
 const { saveBlock, getLastSavedBlock } = require('./repository');
 const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
-const { handleTransEvent } = require('./transactions');
+const { handleTransactionEvents } = require('../transactions/icon');
 const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintEvents } = require('./mint-burn');
 
@@ -18,11 +18,16 @@ let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, txResult, block) {
-  await handleTransEvent(txResult, transaction);
-  await handleAuctionEvents(txResult);
-  await handleTransferFeeEvents(txResult);
-  await handleMintEvents(txResult, transaction);
-  // More transaction handlers go here.
+  try {
+    await handleTransactionEvents(txResult, transaction);
+    await handleAuctionEvents(txResult);
+    await handleTransferFeeEvents(txResult);
+    await handleMintEvents(txResult, transaction);
+
+    // More transaction handlers go here.
+  } catch (error) {
+    logger.error('icon:runTransactionHandlers fails %O', error);
+  }
 }
 
 async function getTransactionResult(txHash) {
