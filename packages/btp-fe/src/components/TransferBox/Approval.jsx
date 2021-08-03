@@ -7,7 +7,7 @@ import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransac
 
 import { transfer, getBTPfee } from 'connectors/ICONex/iconService';
 import { EthereumInstance } from 'connectors/MetaMask';
-import { hashShortener } from 'utils/app';
+import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { wallets } from 'utils/constants';
 
 import { Header, Text, SubTitle } from '../Typography';
@@ -165,7 +165,7 @@ export const Approval = memo(
             <Header className="md bold send-token">
               {tokenAmount || 0} {unit}
             </Header>
-            <Text className="md">= ${(usdRate * tokenAmount).toLocaleString()}</Text>
+            <Text className="md">= ${toSeparatedNumberString(usdRate * tokenAmount)}</Text>
           </div>
         </SendToken>
 

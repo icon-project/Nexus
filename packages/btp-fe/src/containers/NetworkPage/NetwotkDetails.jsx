@@ -7,7 +7,7 @@ import { media } from 'components/Styles/Media';
 import { Loader } from 'components/Loader';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
-import { shortenNumber } from 'utils/app';
+import { shortenNumber, toSeparatedNumberString } from 'utils/app';
 
 const Wrapper = styled.div`
   display: grid;
@@ -81,7 +81,7 @@ const NetWork = ({ detail = {} }) => {
           <Text className="sm uppercase">
             {shortenNumber(volumeAllTime)} {nameToken}
           </Text>
-          <Text className="xs">= ${(volumeAlTimeUSD + '').toLocaleString()}</Text>
+          <Text className="xs">= ${toSeparatedNumberString(volumeAlTimeUSD)}</Text>
         </div>
       </div>
 
@@ -93,7 +93,7 @@ const NetWork = ({ detail = {} }) => {
           <Text className="sm uppercase">
             {shortenNumber(volume24h)} {nameToken}
           </Text>
-          <Text className="xs">= ${(volume24hUSD + '').toLocaleString()}</Text>
+          <Text className="xs">= ${toSeparatedNumberString(volume24hUSD)}</Text>
         </div>
       </div>
     </NetworkWrapper>
