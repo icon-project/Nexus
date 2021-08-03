@@ -2,8 +2,11 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 import { TransferBox } from 'components/TransferBox';
+import { Icon } from 'components/Icon';
 import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
+
+import { ReactComponent as bchIcon } from 'assets/images/blue-back-arrow.svg';
 
 const TransferStyled = styled.div`
   padding-top: 43px;
@@ -34,6 +37,7 @@ const Transfer = () => {
       <div className="transfer-card">
         <TransferBox />
       </div>
+      <Icon SVGComp={bchIcon} color="white" />
     </TransferStyled>
   );
 };
