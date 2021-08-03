@@ -10,7 +10,8 @@ const Wrapper = styled.h4`
     text-transform: uppercase;
   }
 
-  & > .icon {
+  & > .icon,
+  & > img {
     margin-right: 8px;
     vertical-align: middle;
   }

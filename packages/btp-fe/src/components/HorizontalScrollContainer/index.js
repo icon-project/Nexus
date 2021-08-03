@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import styled from 'styled-components/macro';
 
-import leftArrow from '../../assets/images/left-arrow.svg';
+import leftArrow from 'assets/images/left-arrow.svg';
 
 const Wrapper = styled.div`
   width: 100%;

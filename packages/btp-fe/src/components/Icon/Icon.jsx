@@ -56,7 +56,7 @@ export const Icon = memo(
       bch: bchIcon,
     };
 
-    const MySVG = SVGComp || icons[icon];
+    const MySVG = SVGComp || (!iconURL && icons[icon]);
 
     return (
       <>
