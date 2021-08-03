@@ -31,7 +31,7 @@ export const roundNumber = (num, digit = 2) => {
 };
 
 const toSeparatedNumberString = (number) => {
-  if (!number) return '';
+  if (!number && number !== 0) return '';
 
   return number.toLocaleString();
 };
