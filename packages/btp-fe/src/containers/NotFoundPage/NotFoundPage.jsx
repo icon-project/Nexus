@@ -5,7 +5,7 @@ import { Link, Header } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import notFoundSrc from 'assets/images/not-found.svg';
-import backArrow from 'assets/images/blue-back-arrow.svg';
+import backArrow from 'assets/images/blue-left-arrow.svg';
 
 const NotFoundPageWrapper = styled.div`
   text-align: center;
