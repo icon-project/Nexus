@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components';
-import { Row } from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
@@ -79,8 +78,7 @@ const columns = [
 
 const TransferHistoryStyled = styled.div`
   padding-top: 36px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   color: ${colors.grayText};
   width: 1120px;
   max-width: 100%;
@@ -89,18 +87,17 @@ const TransferHistoryStyled = styled.div`
     align-items: center;
     margin-top: 60px;
 
-    p.medium {
-      margin-right: 8px;
-    }
     .selector-group {
       display: flex;
 
       .exchange-icon {
         margin: 22px 32px 0 32px;
       }
+
       .select-asset {
         margin-right: 128px;
       }
+
       .select-network {
         display: flex;
       }
@@ -109,15 +106,18 @@ const TransferHistoryStyled = styled.div`
 
   ${media.xl`
     width: 100%;
+
     .select-asset {
         margin-right: auto !important;
         margin-bottom: 8px;
     }
+
     .control-group {
       flex-direction: column;
       align-items: start;
       margin-left: 24px;
     }
+
     .selector-group {
       margin-top: 20px;
       flex-direction: column;
@@ -187,8 +187,8 @@ const TransferHistory = () => {
     {
       value: '',
       label: 'All assets',
-      renderLabel: () => <Text className="medium">All assets</Text>,
-      renderItem: () => <Text className="medium">All assets</Text>,
+      renderLabel: () => <Text className="md">All assets</Text>,
+      renderItem: () => <Text className="md">All assets</Text>,
     },
     {
       value: 'ICX',
@@ -208,8 +208,8 @@ const TransferHistory = () => {
     {
       value: '',
       label: 'All networks',
-      renderLabel: () => <Text className="medium">All networks</Text>,
-      renderItem: () => <Text className="medium">All networks</Text>,
+      renderLabel: () => <Text className="md">All networks</Text>,
+      renderItem: () => <Text className="md">All networks</Text>,
     },
   ];
   networks.forEach((network) => {
@@ -253,10 +253,8 @@ const TransferHistory = () => {
   };
   return (
     <TransferHistoryStyled>
-      <Row>
-        <BackButton>Transfer history</BackButton>
-      </Row>
-      <Row className="control-group">
+      <BackButton>Transfer history</BackButton>
+      <div className="control-group">
         <div className="selector-group">
           <div className="select-asset">
             <SelectWithBorder
@@ -290,7 +288,8 @@ const TransferHistory = () => {
             />
           </div>
         </div>
-      </Row>
+      </div>
+
       <TableStyled
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}

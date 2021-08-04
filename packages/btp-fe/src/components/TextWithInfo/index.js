@@ -40,7 +40,7 @@ export const TextWithInfo = ({
   direction = 'left',
 }) => {
   return (
-    <StyledHeading className={`small bold ${className}`}>
+    <StyledHeading className={`sm bold ${className}`}>
       {children}
       {hasInfo && (
         <div className="icon-with-tooltip">

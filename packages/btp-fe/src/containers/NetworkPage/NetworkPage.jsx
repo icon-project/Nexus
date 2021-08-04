@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Row } from 'antd';
 
 import { Table } from 'components/Table';
+import { Row } from 'components/Layout';
+import { Icon } from 'components/Icon';
 import { Header } from 'components/Typography';
 import { Modal } from 'components/NotificationModal';
 import { NetwotkDetails } from './NetwotkDetails';
@@ -15,8 +16,8 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 
 const Network = ({ iconUrl, name, url }) => {
   return (
-    <Row align="middle">
-      <img className="network-icon" src={iconUrl} />
+    <Row className="middle">
+      <Icon className="network-icon" iconURL={iconUrl} size="s" />
       <div>
         <div className="network-name">{name}</div>
         <a href={`https://${url}`} target="_blank" rel="noreferrer" className="url">
@@ -72,6 +73,7 @@ const columns = [
 const NetworkStyled = styled.div`
   max-width: 1120px;
   margin: auto;
+
   .main {
     display: flex;
     justify-content: center;
@@ -82,30 +84,28 @@ const NetworkStyled = styled.div`
     `}
     }
   }
+
   .header-text {
     padding: 48px 0 50px 0;
     ${media.md`
       padding: 20px 0 20px 20px;
     `}
   }
+
   .network-icon {
     margin-right: 12px;
-    width: 20px;
-    height: 20px;
-    image-rendering: -moz-crisp-edges; /* Firefox */
-    image-rendering: -o-crisp-edges; /* Opera */
-    image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-    image-rendering: crisp-edges;
-    -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
   }
+
   .url {
     ${TextMixin.sm};
     color: ${colors.tertiaryBase};
   }
+
   .network-name {
     height: 20px;
     margin-bottom: 8px;
   }
+
   .ant-table-tbody > tr > td {
     padding: 10px 14px 9px;
   }

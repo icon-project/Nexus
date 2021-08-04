@@ -44,7 +44,7 @@ const SVGWrapper = styled.span`
 `;
 
 export const Icon = memo(
-  ({ icon = 'metamask', width = '25.67px', size, iconURL, SVGComp, color }) => {
+  ({ icon = 'metamask', width = '25.67px', size, iconURL, SVGComp, color, ...props }) => {
     const icons = {
       metamask: metaMaskIcon,
       ICX: iconexIcon,
@@ -71,6 +71,7 @@ export const Icon = memo(
             loading="lazy"
             width={width}
             size={size}
+            {...props}
           />
         )}
       </>
