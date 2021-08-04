@@ -13,6 +13,24 @@ import { stableSort, getComparator } from './natureSorting';
 const TableStyled = styled(antdTable)`
   width: 100%;
 
+  > .ant-spin-nested-loading {
+    position: relative;
+
+    .ant-spin {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      z-index: 4;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ant-spin-blur {
+      opacity: 0.5;
+      user-select: none;
+    }
+  }
+
   /* hide empty row */
   .ant-table-placeholder {
     display: none;
@@ -31,7 +49,6 @@ const TableStyled = styled(antdTable)`
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
     height: 48px;
-    font-family: Poppins;
     border: none;
     border-bottom: 1px solid ${colors.grayLine};
     padding: 11.5px 14px;
