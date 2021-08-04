@@ -63,10 +63,9 @@ const StyledHistoryDetails = styled.div`
   .copy-address {
     cursor: pointer;
     color: ${colors.tertiaryBase};
-    img {
+    > .icon {
       margin-left: 8.83px;
-      width: 18.33px;
-      height: 18.33px;
+      vertical-align: middle;
     }
   }
   ${media.md`
@@ -75,49 +74,7 @@ const StyledHistoryDetails = styled.div`
     }
   `};
 `;
-// const columns = [
-//   {
-//     title: '#',
-//     dataIndex: 'key',
-//   },
-//   {
-//     title: 'Transaction hash',
-//     dataIndex: 'hash',
-//     render: (text) => (
-//       <Text>
-//         <span className="copy-address">{text}</span>(BVP)
-//       </Text>
-//     ),
-//   },
-//   {
-//     title: 'From',
-//     dataIndex: 'from',
-//     render: (text) => (
-//       <Text>
-//         <span className="copy-address">{text}</span>(BVP)
-//       </Text>
-//     ),
-//   },
-//   {
-//     title: 'To',
-//     dataIndex: 'to',
-//     render: (text) => (
-//       <Text>
-//         <span className="copy-address">{text}</span>(BVP)
-//       </Text>
-//     ),
-//   },
-//   {
-//     title: 'Status',
-//     dataIndex: 'status',
-//     width: 160,
-//     render: (text) => <Tag color={getColor(text)}>{text}</Tag>,
-//   },
-//   {
-//     title: 'Block',
-//     dataIndex: 'block',
-//   },
-// ];
+
 const getStatus = (statusCode) => {
   let color = colors.successState;
   let text = 'Success';
@@ -139,7 +96,7 @@ const CopyAddress = ({ text }) => {
     <CopyToClipboard text={text}>
       <span className="copy-address">
         {hashShortener(text)}
-        <Icon icon="copy" size="s" />
+        <Icon icon="copy" color="#878491" width="18.33px" />
       </span>
     </CopyToClipboard>
   );
@@ -173,6 +130,7 @@ export const HistoryDetails = ({ id, onClose }) => {
                 <CopyAddress text={details.txHash} />
               </Text>
             </div>
+
             <div className="content">
               <Text className="md">Amount</Text>
               <Text className="md">
@@ -180,6 +138,7 @@ export const HistoryDetails = ({ id, onClose }) => {
                 {toSeparatedNumberString(tokenPrice * details.value)})
               </Text>
             </div>
+
             <div className="content">
               <Text className="md">Status</Text>
               <Tag color={getStatus(details.status).color}>{getStatus(details.status).text}</Tag>
@@ -193,6 +152,7 @@ export const HistoryDetails = ({ id, onClose }) => {
                 </span>
               </Text>
             </div>
+
             <div className="content">
               <Text className="md">From</Text>
               <Text className="md">
@@ -200,6 +160,7 @@ export const HistoryDetails = ({ id, onClose }) => {
                 <CopyAddress text={details.fromAddress} />
               </Text>
             </div>
+
             <div className="content">
               <Text className="md">To</Text>
               <Text className="md">
@@ -207,19 +168,7 @@ export const HistoryDetails = ({ id, onClose }) => {
                 <CopyAddress text={details.toAddress} />
               </Text>
             </div>
-            {/* <div className="internal-trx">
-            <Text className="md">Internal transactions</Text>
-          </div>
-          <div className="content">
-            <Table
-              headerColor={colors.grayBG}
-              backgroundColor={colors.grayBG}
-              columns={columns}
-              dataSource={[]}
-              pagination={false}
-              hoverColor={colors.grayBG}
-            />
-          </div> */}
+
             <div className="content">
               <Text className="md">Network fee</Text>
               <Text className="md">
@@ -227,6 +176,7 @@ export const HistoryDetails = ({ id, onClose }) => {
                 {tokenPrice * toSeparatedNumberString(details.networkFee)})
               </Text>
             </div>
+
             <div className="content btp-fee">
               <Text className="md">BTP fee</Text>
               <Text className="md">
