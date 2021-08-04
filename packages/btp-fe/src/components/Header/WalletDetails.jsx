@@ -24,6 +24,10 @@ const Wrapper = styled.div`
     text-align: right;
   }
 
+  .user-avatar {
+    display: inline-flex;
+  }
+
   .wallet-balance,
   .wallet-address {
     display: flex;
