@@ -1,54 +1,46 @@
 import styled from 'styled-components';
-import { Card as AntCard, Row } from 'antd';
 
 import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
-import { media } from '../Styles/Media';
+import { Header, Text } from 'components/Typography';
+import { media } from 'components/Styles/Media';
 
-import VectorIconSrc from 'assets/images/vector-icon.svg';
+import transferIcon from 'assets/images/vector-icon.svg';
 
-const CardStyled = styled(AntCard)`
-  font-style: normal;
-  letter-spacing: 1px;
-  h1 {
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 36px;
-    color: #eff1ed;
-    text-align: center;
-  }
-  .content {
-    font-size: 16px;
-    color: #eff1ed;
-  }
+const StyledCard = styled.div`
+  width: 480px;
+  background-color: #1d1b22;
+  padding: 32px;
+
   .desc-txt {
-    font-size: 14px;
-    line-height: 20px;
     text-align: center;
     color: #878491;
-    margin-bottom: 37px;
+    margin: 11px 0 37px;
   }
-  .ant-card-body {
-    background-color: #1d1b22;
-    padding: 32px;
-  }
+
   .right-side {
     display: flex;
     justify-content: flex-end;
   }
-  hr {
-    margin-top: 45px;
+
+  .devider {
+    margin: 45px 0;
     border-top: 1px solid #353242;
-    text-align: center;
-    margin-bottom: 45px;
+    position: relative;
+
+    :after {
+      content: '';
+      background: transparent center / contain no-repeat url(${transferIcon});
+      width: 40px;
+      height: 40px;
+      display: block;
+
+      position: absolute;
+      left: 50%;
+      transform: translateY(-50%);
+    }
   }
-  hr:after {
-    content: '';
-    background-image: url(${VectorIconSrc});
-    background-repeat: no-repeat;
-    padding-top: 22px;
-    padding-right: 40px;
-  }
+
   .button-section {
     margin-top: 42px;
   }
@@ -79,24 +71,26 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
     { value: 'Moonbase Alpha', label: 'Moonbase Alpha' },
   ];
   return (
-    <CardStyled bordered={false} style={{ width: 480 }}>
-      <h1>Transfer</h1>
+    <StyledCard>
+      <Header className="sm bold center">Transfer</Header>
       <div className="content">
-        <p className="desc-txt">
+        <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
-        </p>
+        </Text>
 
         <div className="send">
-          Send <SelectAsset onChange={onChange} />
+          <Text className="md">Send</Text>
+          <SelectAsset onChange={onChange} />
         </div>
 
-        <hr />
+        <div className="devider" />
 
         <div className="to">
-          To <Select options={listNetwork} onChange={onChange} name="network" />
+          <Text className="md">To</Text>
+          <Select options={listNetwork} onChange={onChange} name="network" />
         </div>
 
-        <Row className="button-section">
+        <div className="button-section">
           {isConnected ? (
             <PrimaryButton width={416} height={64} onClick={() => setStep(1)}>
               Next
@@ -106,8 +100,8 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
               Connect wallet
             </PrimaryButton>
           )}
-        </Row>
+        </div>
       </div>
-    </CardStyled>
+    </StyledCard>
   );
 };
