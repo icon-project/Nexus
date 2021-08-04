@@ -14,6 +14,8 @@ import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
 
 const Wrapper = styled.div`
+  padding-top: 23px;
+
   .heading {
     text-align: center;
     margin-bottom: 28px;

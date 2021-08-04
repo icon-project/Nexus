@@ -65,6 +65,7 @@ Button.propTypes = {
 Button.defaultProps = {
   backgroundColor: '#5465FF',
   textColor: '#EBEDFF',
+  borderRadius: 4,
 };
 
 export default Button;
