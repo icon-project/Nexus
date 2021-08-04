@@ -26,7 +26,7 @@ const columns = [
   {
     title: 'Bonded ICX',
     dataIndex: 'bondedICX',
-    width: '241px',
+    width: '214px',
   },
   {
     title: 'Server status',
