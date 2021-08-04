@@ -6,8 +6,8 @@ import { Pagination } from './Pagination';
 import { TextMixin } from 'components/Typography/Text';
 import { Loader } from 'components/Loader';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 import { stableSort, getComparator } from './natureSorting';
 
 const TableStyled = styled(antdTable)`
@@ -36,6 +36,7 @@ const TableStyled = styled(antdTable)`
     border-bottom: 1px solid ${colors.grayLine};
     padding: 11.5px 14px;
     word-break: break-all;
+    text-align: left;
   }
 
   .ant-table-thead,
@@ -47,6 +48,8 @@ const TableStyled = styled(antdTable)`
   }
 
   table {
+    border-spacing: 0;
+
     tr {
       ${({ columns }) =>
         columns[0].width
