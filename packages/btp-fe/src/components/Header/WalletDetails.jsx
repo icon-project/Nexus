@@ -24,6 +24,10 @@ const Wrapper = styled.div`
     text-align: right;
   }
 
+  .user-avatar {
+    display: inline-flex;
+  }
+
   .wallet-balance,
   .wallet-address {
     display: flex;
@@ -54,6 +58,7 @@ const Wrapper = styled.div`
 
     img {
       margin-right: 4.67px;
+      vertical-align: middle;
     }
   }
 
@@ -127,7 +132,7 @@ export const WalletDetails = ({
           </Text>
           <CopyToClipboard text={address}>
             <Text className="xs bold copy-address">
-              <img src={copyIcon} />
+              <img src={copyIcon} alt="icon" />
               Copy address
             </Text>
           </CopyToClipboard>

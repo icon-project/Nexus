@@ -2,18 +2,24 @@ import { memo } from 'react';
 import styled from 'styled-components/macro';
 import { Field } from 'react-final-form';
 
-import { TokenInput, TextInput } from '../Input';
-import { Icon } from '../Icon/Icon';
-import { Header, Text } from '../Typography';
+import { TokenInput, TextInput } from 'components/Input';
+import { Icon } from 'components/Icon';
+import { Header, Text } from 'components/Typography';
 import { ControlButtons } from './ControlButtons';
 
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
+import { wallets } from 'utils/constants';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
+
+import metaMaskIcon from 'assets/images/metal-mask.svg';
+import iconexIcon from 'assets/images/icon-ex.svg';
 
 const Wrapper = styled.div`
+  padding-top: 23px;
+
   .heading {
     text-align: center;
     margin-bottom: 28px;
@@ -97,6 +103,11 @@ const Addresses = styled.div`
 `;
 
 const required = (value) => (value ? undefined : 'Required');
+const icons = {
+  [wallets.iconex]: iconexIcon,
+  icx: iconexIcon,
+  [wallets.metamask]: metaMaskIcon,
+};
 
 export const Details = memo(
   ({
@@ -148,7 +159,7 @@ export const Details = memo(
           <Text className="sm label">Wallet balance</Text>
           <WalletBalance>
             <div className="left">
-              <Icon icon={wallet} />
+              <Icon iconURL={icons[wallet]} />
               <Text className="md wallet-name">{wallet}</Text>
             </div>
             <div className="right">
@@ -168,7 +179,7 @@ export const Details = memo(
               Send
             </Text>
             <div className="sender">
-              <Icon icon={token} size="s" />
+              <Icon iconURL={icons[wallet]} size="s" />
               <Text className="md sender--name">
                 {token} ({currentNetwork})
               </Text>

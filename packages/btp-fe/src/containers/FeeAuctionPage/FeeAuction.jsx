@@ -119,27 +119,27 @@ const columns = [
   {
     title: 'Auction ID',
     dataIndex: 'shortedId',
-    width: '140px',
+    width: '178.4px',
   },
   {
     title: 'Auction name',
     dataIndex: 'name',
-    width: '170px',
+    width: '208.4px',
   },
   {
     title: 'Bid amount',
     dataIndex: 'availableBidAmount',
-    width: '170px',
+    width: '208.4px',
   },
   {
     title: 'Current highest bid (ICX)',
     dataIndex: 'currentBidAmount',
-    width: '224px',
+    width: '262.4px',
   },
   {
     title: 'Expiration',
     dataIndex: 'endTime',
-    width: '224px',
+    width: '262.4px',
   },
 ];
 
