@@ -252,7 +252,13 @@ const Header = ({ userStatus = defaultUser }) => {
       {showModal && (
         <>
           {loading && !cancelConfirmation ? (
-            <Modal icon="loader" desc="Please wait a moment." width="352px" display />
+            <Modal
+              icon="loader"
+              desc="Please wait a moment."
+              width="352px"
+              display
+              setDisplay={setShowModal}
+            />
           ) : showDetail ? (
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
               <WalletDetails
