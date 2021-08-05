@@ -32,6 +32,10 @@ const StyledHeader = styled.h3`
     font-weight: 600;
   }
 
+  &.center {
+    text-align: center;
+  }
+
   ${media.md`
     &.md {
       ${sm};

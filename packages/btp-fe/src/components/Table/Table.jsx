@@ -6,12 +6,30 @@ import { Pagination } from './Pagination';
 import { TextMixin } from 'components/Typography/Text';
 import { Loader } from 'components/Loader';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 import { stableSort, getComparator } from './natureSorting';
 
 const TableStyled = styled(antdTable)`
   width: 100%;
+
+  > .ant-spin-nested-loading {
+    position: relative;
+
+    .ant-spin {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      z-index: 4;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ant-spin-blur {
+      opacity: 0.5;
+      user-select: none;
+    }
+  }
 
   /* hide empty row */
   .ant-table-placeholder {
@@ -31,11 +49,11 @@ const TableStyled = styled(antdTable)`
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
     height: 48px;
-    font-family: Poppins;
     border: none;
     border-bottom: 1px solid ${colors.grayLine};
     padding: 11.5px 14px;
     word-break: break-all;
+    text-align: left;
   }
 
   .ant-table-thead,
@@ -47,6 +65,8 @@ const TableStyled = styled(antdTable)`
   }
 
   table {
+    border-spacing: 0;
+
     tr {
       ${({ columns }) =>
         columns[0].width

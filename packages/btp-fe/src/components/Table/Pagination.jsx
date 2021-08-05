@@ -39,7 +39,13 @@ const Wrapper = styled.div`
 `;
 
 const StyledPagination = styled(AntdPagination)`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+
+  & > li:not(:last-child) {
+    margin-right: 8px;
+    text-align: center;
+  }
 
   > .ant-pagination-item,
   > .ant-pagination-prev,

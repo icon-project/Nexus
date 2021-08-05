@@ -1,53 +1,52 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { Card as AntCard, Row } from 'antd';
 
 import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
-import { media } from '../Styles/Media';
+import { Header, Text } from 'components/Typography';
+import { media } from 'components/Styles/Media';
+import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
-import VectorIconSrc from 'assets/images/vector-icon.svg';
+import { useDispatch } from 'hooks/useRematch';
+import { connectedNetWorks } from 'utils/constants';
 
-const CardStyled = styled(AntCard)`
-  font-style: normal;
-  letter-spacing: 1px;
-  h1 {
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 36px;
-    color: #eff1ed;
-    text-align: center;
-  }
-  .content {
-    font-size: 16px;
-    color: #eff1ed;
-  }
+import { getService } from 'services/transfer';
+import transferIcon from 'assets/images/vector-icon.svg';
+
+const StyledCard = styled.div`
+  width: 480px;
+  background-color: #1d1b22;
+  padding: 32px;
+
   .desc-txt {
-    font-size: 14px;
-    line-height: 20px;
     text-align: center;
     color: #878491;
-    margin-bottom: 37px;
+    margin: 11px 0 37px;
   }
-  .ant-card-body {
-    background-color: #1d1b22;
-    padding: 32px;
-  }
+
   .right-side {
     display: flex;
     justify-content: flex-end;
   }
-  hr {
-    margin-top: 45px;
+
+  .devider {
+    margin: 45px 0;
     border-top: 1px solid #353242;
-    text-align: center;
-    margin-bottom: 45px;
+    position: relative;
+
+    :after {
+      content: '';
+      background: transparent center / contain no-repeat url(${transferIcon});
+      width: 40px;
+      height: 40px;
+      display: block;
+
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
-  hr:after {
-    content: '';
-    background-image: url(${VectorIconSrc});
-    padding-top: 17px;
-    padding-right: 40px;
-  }
+
   .button-section {
     margin-top: 42px;
   }
@@ -63,7 +62,21 @@ const CardStyled = styled(AntCard)`
     width: 100% !important;
   `}
 `;
-export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
+
+export const TransferCard = ({
+  setStep,
+  setSendingInfo,
+  isConnected,
+  isSendingNativeCoin,
+  currentNetwork,
+}) => {
+  const [checkingApproval, setCheckingApproval] = useState(false);
+
+  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
+    openModal,
+    setDisplay,
+  }));
+
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -73,31 +86,82 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
     }
   };
 
-  const listNetwork = [
-    { value: 'ICON blockchain', label: 'ICON blockchain' },
-    { value: 'Moonbase Alpha', label: 'Moonbase Alpha' },
-  ];
+  const onNext = async () => {
+    if (isSendingNativeCoin) {
+      setStep(1);
+    } else {
+      setCheckingApproval(true);
+
+      const result = await getService().isApprovedForAll();
+
+      if (result) {
+        setStep(1);
+      } else if (result === false) {
+        openModal({
+          hasHeading: false,
+          children: (
+            <TransferApproval
+              onOk={() => {
+                getService().setApprovalForAll();
+              }}
+              onCancel={() => {
+                setDisplay(false);
+              }}
+            />
+          ),
+        });
+      } else {
+        openModal({
+          icon: 'xIcon',
+          desc: 'Something went wrong',
+        });
+      }
+
+      setCheckingApproval(false);
+    }
+  };
+
+  const { icon, moonbeam } = connectedNetWorks;
+
+  const getCrossNetworks = () => {
+    return currentNetwork
+      ? [
+          { value: icon, label: icon },
+          { value: moonbeam, label: moonbeam },
+        ].filter((network) => network.value !== currentNetwork)
+      : [];
+  };
+
   return (
-    <CardStyled bordered={false} style={{ width: 480 }}>
-      <h1>Transfer</h1>
+    <StyledCard>
+      <Header className="sm bold center">Transfer</Header>
       <div className="content">
-        <p className="desc-txt">
+        <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
-        </p>
+        </Text>
 
         <div className="send">
-          Send <SelectAsset onChange={onChange} />
+          <Text className="md">Send</Text>
+          <SelectAsset onChange={onChange} />
         </div>
 
-        <hr />
+        <div className="devider" />
 
         <div className="to">
-          To <Select options={listNetwork} onChange={onChange} name="network" />
+          <Text className="md">To</Text>
+          <Select options={getCrossNetworks()} onChange={onChange} name="network" />
         </div>
 
-        <Row className="button-section">
+        <div className="button-section">
           {isConnected ? (
-            <PrimaryButton width={416} height={64} onClick={() => setStep(1)}>
+            <PrimaryButton
+              width={416}
+              height={64}
+              disabled={checkingApproval}
+              onClick={() => {
+                onNext();
+              }}
+            >
               Next
             </PrimaryButton>
           ) : (
@@ -105,8 +169,8 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
               Connect wallet
             </PrimaryButton>
           )}
-        </Row>
+        </div>
       </div>
-    </CardStyled>
+    </StyledCard>
   );
 };

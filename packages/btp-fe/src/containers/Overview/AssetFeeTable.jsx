@@ -27,6 +27,7 @@ const Wapper = styled.div`
       td {
         padding: 10px 0;
         border-bottom: solid 1px ${colors.grayLine};
+        text-align: left;
 
         &:nth-child(2) {
           text-align: right;

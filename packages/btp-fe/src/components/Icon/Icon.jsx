@@ -31,6 +31,7 @@ const SVGWrapper = styled.span`
   width: ${({ width, size }) => sizes[size] || width};
   display: inline-block;
   line-height: 0;
+  vertical-align: middle;
 
   > svg {
     width: 100%;
@@ -43,10 +44,9 @@ const SVGWrapper = styled.span`
 `;
 
 export const Icon = memo(
-  ({ icon = 'metamask', width = '25.67px', size, iconURL, SVGComp, color }) => {
+  ({ icon = 'metamask', width = '25.67px', size, iconURL, SVGComp, color, ...props }) => {
     const icons = {
       metamask: metaMaskIcon,
-      iconex: iconexIcon,
       ICX: iconexIcon,
       [wallets.iconex]: iconexIcon,
       ETH: ethIcon,
@@ -71,6 +71,7 @@ export const Icon = memo(
             loading="lazy"
             width={width}
             size={size}
+            {...props}
           />
         )}
       </>

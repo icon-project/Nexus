@@ -17,6 +17,8 @@ import { ControlButtons } from './ControlButtons';
 import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.div`
+  padding-top: 23px;
+
   .heading {
     text-align: center;
     margin-bottom: 34px;
