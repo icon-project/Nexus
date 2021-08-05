@@ -15,8 +15,9 @@ import { useSelect } from 'hooks/useRematch';
 const Wrapper = styled.div`
   width: 480px;
   background-color: ${colors.grayBG};
-  padding: 23px 0 0;
   text-align: initial;
+  overflow: hidden;
+  border-radius: 4px;
 
   .container {
     display: none;
