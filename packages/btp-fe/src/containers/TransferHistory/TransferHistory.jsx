@@ -180,7 +180,7 @@ const TransferHistory = () => {
   }));
 
   useEffect(() => {
-    getNetworks();
+    getNetworks({ cache: true });
   }, [getNetworks]);
 
   const assets = [
