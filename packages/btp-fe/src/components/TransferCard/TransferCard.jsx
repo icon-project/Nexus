@@ -37,7 +37,7 @@ const StyledCard = styled.div`
 
       position: absolute;
       left: 50%;
-      transform: translateY(-50%);
+      transform: translate(-50%, -50%);
     }
   }
 
