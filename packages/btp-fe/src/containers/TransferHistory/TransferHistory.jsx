@@ -305,7 +305,7 @@ const TransferHistory = () => {
         })}
         pagination={pagination}
         loading={isFetching}
-        getItemsHandler={(page) => () => fetchDataHandler(page, assetName, from, to)}
+        getItemsHandler={(page) => () => fetchDataHandler({ page, assetName, from, to })}
       />
       {showDetails && (
         <HistoryDetails id={selectedRow.id} onClose={() => setShowDetails(false)}></HistoryDetails>
