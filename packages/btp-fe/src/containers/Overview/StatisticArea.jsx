@@ -50,7 +50,7 @@ const Wrapper = styled.div`
       }
 
       > .network-list {
-        padding: 27px 8px;
+        padding: 23px 8px;
 
         .subtitle-text {
           height: 40px;
@@ -104,7 +104,8 @@ const Wrapper = styled.div`
 `;
 
 export const StatisticArea = ({ data, networks }) => {
-  const { fee = {}, totalNetworks = 0, totalTransactions = 0, bondedValue } = data;
+  const { fee = {}, totalTransactions = 0, bondedValue } = data;
+  const totalNetworks = networks.length;
   return (
     <Wrapper>
       <div className="transaction">
