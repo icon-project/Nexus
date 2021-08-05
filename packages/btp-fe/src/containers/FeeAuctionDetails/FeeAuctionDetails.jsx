@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 
+import { Helmet } from 'components/Helmet';
 import { BackButton } from 'components/Button/BackButton';
 import { Details } from './Details';
 import { PlaceBidForm } from './PlaceBidForm';
@@ -71,8 +72,9 @@ const FeeAuctionDetails = () => {
 
   return (
     <Wrapper>
-      <BackButton>{auction.name}</BackButton>
+      <Helmet title={`${auction.name || ''} auction`} />
 
+      <BackButton>{auction.name}</BackButton>
       <div className="content">
         <div className="details">
           <Details
