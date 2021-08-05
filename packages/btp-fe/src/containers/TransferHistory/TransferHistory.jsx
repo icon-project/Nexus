@@ -165,9 +165,13 @@ const TransferHistory = () => {
   const [historySource, setHistorySource] = useState([]);
   const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
-  const [assetName, setAssetName] = useState('');
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
+
+  const [filters, setFilters] = useState({
+    assetName: '',
+    from: '',
+    to: '',
+  });
+  const { from, to, assetName } = filters;
 
   const { handleError, getNetworks } = useDispatch(
     ({ modal: { handleError }, network: { getNetworks } }) => ({
@@ -229,7 +233,7 @@ const TransferHistory = () => {
     });
   });
 
-  const fetchDataHandler = async (page, assetName, from, to) => {
+  const fetchDataHandler = async ({ page, assetName, from, to }) => {
     try {
       const transferData =
         (await getTransferHistory(page - 1, pagination.limit, assetName, from, to)) || {};
@@ -251,6 +255,15 @@ const TransferHistory = () => {
     setSelectedRow(detail);
     setShowDetails(true);
   };
+
+  const onSelectChange = (event, selectorName) => {
+    const { value } = event.target;
+
+    if (value !== filters[selectorName]) {
+      setFilters({ ...filters, [selectorName]: value });
+      fetchDataHandler({ page: 1, [selectorName]: value, from, to });
+    }
+  };
   return (
     <TransferHistoryStyled>
       <BackButton>Transfer history</BackButton>
@@ -258,30 +271,21 @@ const TransferHistory = () => {
         <div className="selector-group">
           <div className="select-asset">
             <SelectWithBorder
-              onChange={(e) => {
-                setAssetName(e.target.value);
-                fetchDataHandler(1, e.target.value, from, to);
-              }}
+              onChange={(e) => onSelectChange(e, 'assetName')}
               label="Assets type"
               options={assets}
             />
           </div>
           <div className="select-network">
             <SelectWithBorder
-              onChange={(e) => {
-                setFrom(e.target.value);
-                fetchDataHandler(1, assetName, e.target.value, to);
-              }}
+              onChange={(e) => onSelectChange(e, 'from')}
               label="Sending from"
               width="326px"
               options={networkOptions}
             />
             <img className="exchange-icon" src={VectorSrc} />
             <SelectWithBorder
-              onChange={(e) => {
-                setTo(e.target.value);
-                fetchDataHandler(1, assetName, from, e.target.value);
-              }}
+              onChange={(e) => onSelectChange(e, 'to')}
               label="To"
               width="326px"
               options={networkOptions}
