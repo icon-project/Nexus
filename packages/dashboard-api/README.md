@@ -30,7 +30,7 @@ $ crontab -e
 
 # add this script and save changes.
 # ref: https://crontab.guru/
-0 0 * * * COIN_MARKET_CAP_URL=https://sandbox-api.coinmarketcap.com/v1 COIN_MARKET_CAP_KEY=b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c POSTGRES_DB_URL=postgresql://postgres:test123@localhost:5432/postgres node <dashboard-api folder>/scripts/cmc_conversion.js > cmc_conversion.log
+0 0 * * * cd /home/ubuntu/deploy/btp-dashboard/packages/dashboard-api/scripts && COIN_MARKET_CAP_URL=https://sandbox-api.coinmarketcap.com/v1 COIN_MARKET_CAP_KEY=b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c POSTGRES_DB_URL=postgresql://postgres:test123@127.0.0.1:5432/btp-dashboard node cmc_conversion.js > cmc_conversion.log
 
 $ crontab -l
 ```
@@ -42,3 +42,13 @@ $ crontab -l
 [Coding Style Guide](https://google.github.io/styleguide/javascriptguide.xml) Generally we follow Google style guide, not exactly 100%.
 
 [Git Commit Guidelines](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#commits) Generally we follow AngularJS style guide, not exactly 100%.
+
+## Known Issues
+
+Postgres database reset password after ever restart, change it back with:
+
+```bash
+$ docker exec -it postgres-btp bash
+$ psql postgres postgres
+$ alter user postgres with password 'test123';
+```
