@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
+import { Helmet } from 'components/Helmet';
 import { Table } from 'components/Table';
 import { Row } from 'components/Layout';
 import { Icon } from 'components/Icon';
@@ -131,6 +132,8 @@ function NetworkPage() {
 
   return (
     <NetworkStyled>
+      <Helmet title="Network" />
+
       <div className="content">
         <Header className="md bold">Networks</Header>
         <Table
