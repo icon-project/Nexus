@@ -25,14 +25,9 @@ export const allowedNetworkIDs = {
 
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
-  dev: {
-    name: 'Local',
-    endpoint: 'http://localhost:9080/api/v3/src',
-    nid: localStorage.getItem('nid') || '0xc7c937',
-  },
   cloud: {
     name: 'Custom ICON node',
-    endpoint: 'http://54.251.114.18:9082/api/v3',
+    endpoint: 'http://54.251.114.18:9080/api/v3',
     nid: 3,
     BSHAddress: 'cxd42ef4864c64f0cd793018e06eed190b46492a1c', // used to get the BTP fee from getBTPfee()
   },
