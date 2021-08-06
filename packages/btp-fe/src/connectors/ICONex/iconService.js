@@ -58,6 +58,23 @@ export const getTxResult = (txHash) => {
   }
 };
 
+export const sendNativeCoin = () => {
+  const transaction = {
+    to: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82',
+    value: 1,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transferNativeCoin',
+    params: {
+      _to: 'btp://0x501.pra/0x798d4Ba9baf0064Ec19eB4F0a1a45785ae9D6DFc',
+    },
+  };
+
+  signTx(transaction, options);
+};
+
 export const placeBid = (auctionName, value, fas) => {
   const transaction = {
     to: fas || 'cxe3d36b26abbe6e1005eacf7e1111d5fefbdbdcad', // default FAS addess to our server
@@ -95,6 +112,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
+    // .value(value)
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))
