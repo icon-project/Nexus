@@ -20,13 +20,18 @@ const network = {
     },
   },
   effects: (dispatch) => ({
-    async getNetworks() {
-      try {
-        const networks = await getConnectedNetworks();
-        this.setNetworks(networks.content.networks || []);
-        return networks;
-      } catch (error) {
-        dispatch.modal.handleError();
+    async getNetworks(params = {}, globalState) {
+      const hasData = globalState.network.networks.length > 0;
+      const { cache = false } = params;
+
+      if (!cache || (cache && !hasData)) {
+        try {
+          const networks = await getConnectedNetworks();
+          this.setNetworks(networks.content.networks || []);
+          return networks;
+        } catch (error) {
+          dispatch.modal.handleError();
+        }
       }
     },
     async getNetworkDetails(id) {
