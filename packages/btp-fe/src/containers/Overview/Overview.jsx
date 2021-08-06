@@ -29,7 +29,7 @@ const Overview = () => {
 
   useEffect(() => {
     getAppInfo();
-    getNetworks();
+    getNetworks({ cache: true });
   }, [getAppInfo, getNetworks]);
 
   return (
