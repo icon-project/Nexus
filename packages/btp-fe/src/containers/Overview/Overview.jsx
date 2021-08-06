@@ -4,6 +4,7 @@ import styled from 'styled-components/macro';
 
 import { ValuesArea } from './ValuesArea';
 import { StatisticArea } from './StatisticArea';
+import { Helmet } from 'components/Helmet';
 
 const Wrapper = styled.div`
   max-width: 1120px;
@@ -34,6 +35,8 @@ const Overview = () => {
 
   return (
     <Wrapper>
+      <Helmet title="Overview" />
+
       <ValuesArea data={content} />
       <StatisticArea data={content} networks={networks} />
     </Wrapper>

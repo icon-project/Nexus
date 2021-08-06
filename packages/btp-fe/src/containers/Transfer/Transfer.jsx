@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
+import { Helmet } from 'components/Helmet';
 import { TransferBox } from 'components/TransferBox';
 import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
@@ -25,6 +26,8 @@ const TransferStyled = styled.div`
 const Transfer = () => {
   return (
     <TransferStyled>
+      <Helmet title="Transfer" />
+
       <NavLink to={`/transfer/history`}>
         <SubTitle className="sm bold" color={colors.tertiaryBase}>
           Transfer history

@@ -7,6 +7,7 @@ dayjs.extend(relativeTime);
 
 import { getTransferHistory } from 'services/btpServices';
 
+import { Helmet } from 'components/Helmet';
 import { Table } from 'components/Table';
 import { Tag } from 'components/Tag';
 import { SelectWithBorder } from 'components/Select';
@@ -266,6 +267,8 @@ const TransferHistory = () => {
   };
   return (
     <TransferHistoryStyled>
+      <Helmet title="Transfer history" />
+
       <BackButton>Transfer history</BackButton>
       <div className="control-group">
         <div className="selector-group">
