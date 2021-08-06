@@ -4,12 +4,21 @@ const debug = require('debug')('moonbeam');
 const axios = require('axios');
 const { logger } = require('../../common');
 const { saveBlock, saveTransaction, getLastSavedBlock } = require('./repository');
+const { buildEventMap } = require('./events');
+const { handleTransferEvents } = require('./transfer');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, block) {
-  // More transaction handlers go here.
+  try {
+    await handleTransferEvents(transaction, block);
+
+    // More transaction handlers go here.
+  }
+  catch (error) {
+    logger.error('moonbeam:runTransactionHandlers fails %O', error);
+  }
 }
 
 async function runBlockHandlers(block) {
@@ -55,6 +64,8 @@ async function getBlockData() {
     const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
     if (block) {
+      logger.info(`Received block ${blockHeight}, ${block.hash}`);
+
       // Block always has one extrinsics of set timestamp.
       if (block.extrinsics.length > 1) {
         debug('Block: %O', block);
@@ -96,6 +107,9 @@ async function retryGetBlockData() {
 }
 
 async function start() {
+  const eventMap = buildEventMap();
+  logger.info('Moonbeam event map: %O', eventMap);
+
   if (-1 === blockHeight) {
     const block = await getLastSavedBlock();
 

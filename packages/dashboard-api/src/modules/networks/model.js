@@ -1,5 +1,7 @@
 'use strict';
 
+const Web3 = require('web3');
+const IconService = require('icon-sdk-js');
 const { logger } = require('../../common');
 const {
   getNetworkInfo,
@@ -9,15 +11,11 @@ const {
   getVolumeTokenAllTimeByNid,
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
-const IconService = require('icon-sdk-js');
-const { HttpProvider, IconBuilder } = IconService;
+const { abiBSHScore } = require('../../../scripts/bsh_score.json');
 
+const { HttpProvider, IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
-
-const Web3 = require('web3');
-
-const { abiBSHScore } = require('../../../scripts/bsh_score.json');
 
 const web3 =  new Web3(process.env.MOONBEAM_RPC_PROVIDER_URL);
 

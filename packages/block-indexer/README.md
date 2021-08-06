@@ -13,6 +13,12 @@ Start local Moonbeam development node.
 
 `docker run -d --name moonbeam-dev -p 9944:9944 -p 9933:9933 purestake/moonbeam:tutorial-v7 --dev --ws-external --rpc-external`
 
+### Tools
+
+npm i eth-cli -g
+
+https://geth.ethereum.org/downloads/
+
 ## Production
 
 `yarn sidecar`
