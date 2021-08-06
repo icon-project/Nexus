@@ -1,9 +1,9 @@
-/* eslint-disable react/display-name */
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Table } from 'components/Table';
 import { Header } from 'components/Typography';
+import { Helmet } from 'components/Helmet';
 
 import { colors } from 'components/Styles/Colors';
 import { Text } from 'components/Typography';
@@ -143,6 +143,8 @@ function GovernancePage() {
 
   return (
     <GovernanceStyled>
+      <Helmet title="Governance" />
+
       <div className="content">
         <div className="heading-area">
           <Header className="md bold">Governance</Header>

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Helmet } from 'react-helmet-async';
 
 import { Link, Header } from 'components/Typography';
+import { Helmet } from 'components/Helmet';
 import { media } from 'components/Styles/Media';
 
 import notFoundSrc from 'assets/images/not-found.svg';
@@ -41,9 +41,8 @@ const NotFoundPageWrapper = styled.div`
 const NotFoundPage = () => {
   return (
     <NotFoundPageWrapper>
-      <Helmet>
-        <title>Page Not Found</title>
-      </Helmet>
+      <Helmet title="Not found" />
+
       <img className="not-found-img" src={notFoundSrc} />
       <Header className="xs" color="white">
         Something’s missing

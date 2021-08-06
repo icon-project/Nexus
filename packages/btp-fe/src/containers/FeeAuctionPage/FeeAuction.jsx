@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { toSeparatedNumberString } from 'utils/app';
 
+import { Helmet } from 'components/Helmet';
 import { UpDownPercent } from 'components/UpDownPercent';
 import { Header, SubTitle, Text } from 'components/Typography';
 import { TextWithInfo } from 'components/TextWithInfo';
@@ -216,6 +217,8 @@ const FeeAuction = () => {
 
   return (
     <Wrapper>
+      <Helmet title="Fee auction" />
+
       <div className="search-group">
         <Header className="md bold">Fee auction</Header>
         <SearchForm setKeySearch={setKeySearch} />
