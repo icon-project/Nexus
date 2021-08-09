@@ -20,7 +20,12 @@ export const signingActions = {
 };
 
 export const allowedNetworkIDs = {
-  metamask: { '0x507': 'Moonbase Alpha', '0x4': 'Rinkeby' },
+  metamask: { '0x501': 'Moonbase Alpha', '0x4': 'Rinkeby' },
+};
+
+export const MOON_BEAM_NODE = {
+  RPCUrl: 'http://54.251.114.18:9933',
+  BSHCore: '0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963',
 };
 
 // https://www.icondev.io/docs/testnet
@@ -29,7 +34,7 @@ export const NETWORKS = {
     name: 'Custom ICON node',
     endpoint: 'http://54.251.114.18:9080/api/v3',
     nid: 3,
-    BSHAddress: 'cxd42ef4864c64f0cd793018e06eed190b46492a1c', // used to get the BTP fee from getBTPfee()
+    BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82', // used to get the BTP fee from getBTPfee()
   },
   yeouido: {
     name: 'Yeouido Testnet',

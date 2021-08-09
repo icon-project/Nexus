@@ -10,8 +10,8 @@ const { serialize } = IconUtil;
 
 import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE, signingActions } from '../constants';
 import { requestSigning } from './events';
-import Request from './utils';
-import store from '../../store';
+import Request, { convertToICX } from './utils';
+import store from 'store';
 
 const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
@@ -25,9 +25,7 @@ export const getBalance = (address) => {
     .getBalance(address)
     .execute()
     .then((balance) => {
-      return IconAmount.of(balance, IconAmount.Unit.LOOP)
-        .convertUnit(IconAmount.Unit.ICX)
-        .toString();
+      return convertToICX(balance);
     });
 };
 
@@ -60,7 +58,7 @@ export const getTxResult = (txHash) => {
 
 export const sendNativeCoin = () => {
   const transaction = {
-    to: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82',
+    to: currentICONexNetwork.BSHAddress,
     value: 1,
   };
 
@@ -68,7 +66,7 @@ export const sendNativeCoin = () => {
     builder: new CallTransactionBuilder(),
     method: 'transferNativeCoin',
     params: {
-      _to: 'btp://0x501.pra/0x798d4Ba9baf0064Ec19eB4F0a1a45785ae9D6DFc',
+      _to: 'btp://0x501.pra/0x5Aa12918084d969caddA6b31c509E44127FBa0A1',
     },
   };
 
