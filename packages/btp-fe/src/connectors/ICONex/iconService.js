@@ -8,16 +8,21 @@ import IconService, {
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE, signingActions } from '../constants';
+import {
+  currentICONexNetwork,
+  ADDRESS_LOCAL_STORAGE,
+  MOON_BEAM_NODE,
+  signingActions,
+} from '../constants';
 import { requestSigning } from './events';
-import Request from './utils';
-import store from '../../store';
+import Request, { convertToICX } from './utils';
+import store from 'store';
+import { connectedNetWorks } from 'utils/constants';
 
 const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
 
 const rawTransaction = 'rawTransaction';
-const loggedInAddress = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
@@ -25,9 +30,7 @@ export const getBalance = (address) => {
     .getBalance(address)
     .execute()
     .then((balance) => {
-      return IconAmount.of(balance, IconAmount.Unit.LOOP)
-        .convertUnit(IconAmount.Unit.ICX)
-        .toString();
+      return convertToICX(balance);
     });
 };
 
@@ -58,6 +61,23 @@ export const getTxResult = (txHash) => {
   }
 };
 
+export const sendNativeCoin = ({ value, to }) => {
+  const transaction = {
+    to: currentICONexNetwork.BSHAddress,
+    value,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transferNativeCoin',
+    params: {
+      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
+    },
+  };
+
+  signTx(transaction, options);
+};
+
 export const placeBid = (auctionName, value, fas) => {
   const transaction = {
     to: fas || 'cxe3d36b26abbe6e1005eacf7e1111d5fefbdbdcad', // default FAS addess to our server
@@ -76,13 +96,19 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx) => {
+export const transfer = (tx, network) => {
   window[signingActions.globalName] = signingActions.transfer;
-  signTx(tx);
+
+  // same ICON chain
+  if (network === connectedNetWorks.icon) {
+    signTx(tx);
+  } else {
+    sendNativeCoin(tx);
+  }
 };
 
 export const signTx = (transaction = {}, options = {}) => {
-  const { from = loggedInAddress, to, value } = transaction;
+  const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder } = options;
 
   if (!store.dispatch.modal.isICONexWalletConnected()) {
@@ -129,7 +155,7 @@ export const getBTPfee = async () => {
       to: currentICONexNetwork.BSHAddress,
       dataType: 'call',
       data: {
-        method: 'getFeeRate', // lasted function is feeRatio
+        method: 'feeRatio',
       },
     });
 

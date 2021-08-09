@@ -1,3 +1,4 @@
+import { IconAmount } from 'icon-sdk-js';
 export default class Request {
   constructor(id, method, params) {
     this.jsonrpc = '2.0';
@@ -6,3 +7,7 @@ export default class Request {
     this.params = params;
   }
 }
+
+export const convertToICX = (balance) => {
+  return IconAmount.of(balance, IconAmount.Unit.LOOP).convertUnit(IconAmount.Unit.ICX).toString();
+};
