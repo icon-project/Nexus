@@ -26,6 +26,7 @@ export const allowedNetworkIDs = {
 export const MOON_BEAM_NODE = {
   RPCUrl: 'http://54.251.114.18:9933',
   BSHCore: '0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963',
+  networkAddress: '0x501.pra',
 };
 
 // https://www.icondev.io/docs/testnet

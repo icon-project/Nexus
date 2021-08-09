@@ -8,10 +8,16 @@ import IconService, {
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { currentICONexNetwork, ADDRESS_LOCAL_STORAGE, signingActions } from '../constants';
+import {
+  currentICONexNetwork,
+  ADDRESS_LOCAL_STORAGE,
+  MOON_BEAM_NODE,
+  signingActions,
+} from '../constants';
 import { requestSigning } from './events';
 import Request, { convertToICX } from './utils';
 import store from 'store';
+import { connectedNetWorks } from 'utils/constants';
 
 const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
@@ -56,17 +62,17 @@ export const getTxResult = (txHash) => {
   }
 };
 
-export const sendNativeCoin = () => {
+export const sendNativeCoin = ({ value, to }) => {
   const transaction = {
     to: currentICONexNetwork.BSHAddress,
-    value: 1,
+    value,
   };
 
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'transferNativeCoin',
     params: {
-      _to: 'btp://0x501.pra/0x5Aa12918084d969caddA6b31c509E44127FBa0A1',
+      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
     },
   };
 
@@ -91,9 +97,15 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx) => {
+export const transfer = (tx, network) => {
   window[signingActions.globalName] = signingActions.transfer;
-  signTx(tx);
+
+  // same ICON chain
+  if (network === connectedNetWorks.icon) {
+    signTx(tx);
+  } else {
+    sendNativeCoin(tx);
+  }
 };
 
 export const signTx = (transaction = {}, options = {}) => {
@@ -110,7 +122,6 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
-    // .value(value)
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
     .nonce(IconConverter.toBigNumber(1))
@@ -145,7 +156,7 @@ export const getBTPfee = async () => {
       to: currentICONexNetwork.BSHAddress,
       dataType: 'call',
       data: {
-        method: 'getFeeRate', // lasted function is feeRatio
+        method: 'feeRatio', // lasted function is feeRatio
       },
     });
 
