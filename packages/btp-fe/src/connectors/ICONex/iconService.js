@@ -23,7 +23,6 @@ const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
 
 const rawTransaction = 'rawTransaction';
-const loggedInAddress = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
@@ -109,7 +108,7 @@ export const transfer = (tx, network) => {
 };
 
 export const signTx = (transaction = {}, options = {}) => {
-  const { from = loggedInAddress, to, value } = transaction;
+  const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder } = options;
 
   if (!store.dispatch.modal.isICONexWalletConnected()) {
@@ -156,7 +155,7 @@ export const getBTPfee = async () => {
       to: currentICONexNetwork.BSHAddress,
       dataType: 'call',
       data: {
-        method: 'feeRatio', // lasted function is feeRatio
+        method: 'feeRatio',
       },
     });
 
