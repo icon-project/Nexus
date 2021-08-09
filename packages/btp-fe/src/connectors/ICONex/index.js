@@ -91,7 +91,7 @@ const eventHandler = async (event) => {
               if (err && /(Pending|Executing)/g.test(err)) return;
               reject(err);
             }
-          }, 1000);
+          }, 2000);
         });
       } catch (err) {
         switch (window[signingActions.globalName]) {

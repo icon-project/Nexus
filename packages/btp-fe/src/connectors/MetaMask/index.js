@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
-import { METAMASK_LOCAL_ADDRESS, allowedNetworkIDs } from '../constants';
+import { METAMASK_LOCAL_ADDRESS, MOON_BEAM_NODE, allowedNetworkIDs } from '../constants';
+import { MB_ABI } from './moonBeamABI';
+import { convertToICX } from 'connectors/ICONex/utils';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -89,6 +91,21 @@ class Ethereum {
     }
   }
 
+  async getBalanceOf(address, symbol = 'ICX') {
+    try {
+      const contract = new ethers.Contract(
+        MOON_BEAM_NODE.BSHCore,
+        MB_ABI,
+        new ethers.providers.JsonRpcProvider(MOON_BEAM_NODE.RPCUrl),
+      );
+
+      const balance = await contract.getBalanceOf(address, symbol);
+      return convertToICX(balance[0]._hex);
+    } catch (err) {
+      console.log('Err: ', err);
+    }
+  }
+
   async getEthereumAccounts() {
     try {
       const isAllowedNetwork = this.isAllowedNetwork();
@@ -98,6 +115,9 @@ class Ethereum {
         const address = accounts[0];
         localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
         const balance = await this.getProvider.getBalance(address);
+        const ICXBalanceOf = await this.getBalanceOf(address);
+        console.log('ICXBalanceOf', ICXBalanceOf);
+
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
 
         account.setAccountInfo({
