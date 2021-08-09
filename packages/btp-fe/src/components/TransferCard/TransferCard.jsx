@@ -5,6 +5,8 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
+import { connectedNetWorks } from 'utils/constants';
+
 import transferIcon from 'assets/images/vector-icon.svg';
 
 const StyledCard = styled.div`
@@ -66,9 +68,11 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
     }
   };
 
+  const { icon, moonbeam } = connectedNetWorks;
+
   const listNetwork = [
-    { value: 'ICON blockchain', label: 'ICON blockchain' },
-    { value: 'Moonbase Alpha', label: 'Moonbase Alpha' },
+    { value: icon, label: icon },
+    { value: moonbeam, label: moonbeam },
   ];
   return (
     <StyledCard>
