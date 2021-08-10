@@ -143,6 +143,7 @@ class Ethereum {
       value,
     };
 
+    // send token same chain
     if (network === connectedNetWorks.moonbeam) {
       txParams = {
         ...txParams,
