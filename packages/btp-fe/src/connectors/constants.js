@@ -37,6 +37,7 @@ export const NETWORKS = {
     endpoint: 'http://54.251.114.18:9080/api/v3',
     nid: 3,
     networkAddress: '0x3.icon',
+    irc31token: 'cx8cefe5b2d97d15223f474e1aaab35bcb87450885',
     BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82', // used to get the BTP fee from getBTPfee()
   },
   sejong: {

@@ -118,7 +118,7 @@ class Ethereum {
         localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
         const balance = await this.getProvider.getBalance(address);
         const ICXBalanceOf = await this.getBalanceOf(address);
-        console.log('ICXBalanceOf', ICXBalanceOf);
+        console.log('ICX Balance', ICXBalanceOf);
 
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
 
