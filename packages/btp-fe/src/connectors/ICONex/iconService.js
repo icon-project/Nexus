@@ -122,7 +122,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
     .stepLimit(IconConverter.toBigNumber(1000000000))
-    .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
+    .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000);

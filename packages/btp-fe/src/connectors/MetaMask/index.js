@@ -1,9 +1,15 @@
 import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
-import { METAMASK_LOCAL_ADDRESS, MOON_BEAM_NODE, allowedNetworkIDs } from '../constants';
+import {
+  METAMASK_LOCAL_ADDRESS,
+  MOON_BEAM_NODE,
+  allowedNetworkIDs,
+  currentICONexNetwork,
+} from '../constants';
 import { MB_ABI } from './moonBeamABI';
 import { convertToICX } from 'connectors/ICONex/utils';
+import { connectedNetWorks } from 'utils/constants';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -129,59 +135,38 @@ class Ethereum {
     }
   }
 
-  async getRS() {
-    const rs = await this.provider.getTransactionReceipt(
-      '0x3218832f7da553907e86092dfd52b1abfbf172ed1295f98a5ac0a7e1b803a628',
-    );
-    console.log('🚀 ~ file: index.js ~ line 138 ~ Ethereum ~ getRS ~ rs', rs);
-  }
-
-  async transferNativeCoin() {
-    try {
-      const BSH_ABI = new ethers.utils.Interface(MB_ABI);
-
-      const data = BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        'btp://0x3.icon/hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262',
-      ]);
-
-      const value = ethers.utils.parseEther('1')._hex;
-      const tx = {
-        from: '0x4B0d307675CDae97Fc624E1987B942f4B9483231',
-        to: MOON_BEAM_NODE.BSHCore,
-        gas: '6691B7',
-        data,
-        value,
-      };
-
-      const txHash = await this.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [tx],
-      });
-      console.log(
-        '🚀 ~ file: index.js ~ line 157 ~ Ethereum ~ transferNativeCoin ~ txHash',
-        txHash,
-      );
-    } catch (err) {
-      console.log('Err: ', err);
-    }
-  }
-
-  async tranferToken(to, value) {
+  async tranferToken(to, amount, network, setStep) {
     // https://docs.metamask.io/guide/sending-transactions.html#example
-    const transactionParameters = {
-      nonce: '0x00',
-      to: to || '0x5Aa12918084d969caddA6b31c509E44127FBa0A1',
-      from: '0x4b0d307675cdae97fc624e1987b942f4b9483231',
-      value: ethers.utils.parseEther(value || '0.1')._hex,
-      chainId: '1281',
+    const value = ethers.utils.parseEther(amount)._hex;
+    let txParams = {
+      from: this.ethereum.selectedAddress,
+      value,
     };
 
-    // txHash is a hex string
-    // As with any RPC call, it may throw an error
+    if (network === connectedNetWorks.moonbeam) {
+      txParams = {
+        ...txParams,
+        nonce: '0x00',
+        to,
+      };
+    } else {
+      const BSH_ABI = new ethers.utils.Interface(MB_ABI);
+      const data = BSH_ABI.encodeFunctionData('transferNativeCoin', [
+        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+      ]);
+
+      txParams = {
+        ...txParams,
+        to: MOON_BEAM_NODE.BSHCore,
+        gas: MOON_BEAM_NODE.gasLimit,
+        data,
+      };
+    }
+
     try {
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
-        params: [transactionParameters],
+        params: [txParams],
       });
       if (txHash) {
         modal.openModal({
@@ -189,7 +174,11 @@ class Ethereum {
           children: <SuccessSubmittedTxContent />,
           button: {
             text: 'Continue transfer',
-            onClick: () => modal.setDisplay(false),
+            onClick: () => {
+              // back to transfer box
+              setStep(0);
+              modal.setDisplay(false);
+            },
           },
         });
       }
