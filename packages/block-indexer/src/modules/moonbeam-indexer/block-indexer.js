@@ -2,6 +2,7 @@
 
 const debug = require('debug')('moonbeam');
 const axios = require('axios');
+const { IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
 const { saveBlock, saveTransaction, getLastSavedBlock } = require('./repository');
 const { buildEventMap } = require('./events');
@@ -81,17 +82,37 @@ async function getBlockData() {
   }
 }
 
+// Issue: Sidecar /blocks/head always return 0 so need to call RPC directly.
+// Ref: https://git.baikal.io/btp-dashboard/pm/-/issues/233
 async function getHeadBlock() {
-  const result = await axios.get(process.env.SIDECAR_API_URL + '/blocks/head', {
+  let result = await axios.post(process.env.MOONBEAM_API_URL, {
+    id: 1,
+    jsonrpc: '2.0',
+    method: 'chain_getHead'
+  }, {
     headers: {
       'Content-Type': 'application/json'
     }
   });
 
-  debug('Head block: %O', result.data);
-
   if (200 === result.status) {
-    return result.data;
+    result = await axios.post(process.env.MOONBEAM_API_URL, {
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'chain_getBlock',
+      params: [result.data.result] // head block hash
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (200 === result.status) {
+      result.data.result.block.number = IconConverter.toNumber(result.data.result.block.header.number);
+      debug('Head block: %O', result.data.result.block);
+
+      return result.data.result.block;
+    }
   } else {
     throw Error(`getHeadBlock failed with status code ${result.status}`);
   }
@@ -121,7 +142,7 @@ async function start() {
 
   if (0 === blockHeight) {
     const block = await getHeadBlock();
-    blockHeight = Number(block.number);
+    blockHeight = block.number;
   }
 
   logger.info('Starting Moonbeam block indexer at block %d...', blockHeight);
