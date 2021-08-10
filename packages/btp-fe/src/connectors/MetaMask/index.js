@@ -93,11 +93,7 @@ class Ethereum {
 
   async getBalanceOf(address, symbol = 'ICX') {
     try {
-      const contract = new ethers.Contract(
-        MOON_BEAM_NODE.BSHCore,
-        MB_ABI,
-        new ethers.providers.JsonRpcProvider(MOON_BEAM_NODE.RPCUrl),
-      );
+      const contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
 
       const balance = await contract.getBalanceOf(address, symbol);
       return convertToICX(balance[0]._hex);
@@ -132,13 +128,52 @@ class Ethereum {
       console.log(error);
     }
   }
+
+  async getRS() {
+    const rs = await this.provider.getTransactionReceipt(
+      '0x3218832f7da553907e86092dfd52b1abfbf172ed1295f98a5ac0a7e1b803a628',
+    );
+    console.log('🚀 ~ file: index.js ~ line 138 ~ Ethereum ~ getRS ~ rs', rs);
+  }
+
+  async transferNativeCoin() {
+    try {
+      const BSH_ABI = new ethers.utils.Interface(MB_ABI);
+
+      const data = BSH_ABI.encodeFunctionData('transferNativeCoin', [
+        'btp://0x3.icon/hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262',
+      ]);
+
+      const value = ethers.utils.parseEther('1')._hex;
+      const tx = {
+        from: '0x4B0d307675CDae97Fc624E1987B942f4B9483231',
+        to: MOON_BEAM_NODE.BSHCore,
+        gas: '6691B7',
+        data,
+        value,
+      };
+
+      const txHash = await this.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [tx],
+      });
+      console.log(
+        '🚀 ~ file: index.js ~ line 157 ~ Ethereum ~ transferNativeCoin ~ txHash',
+        txHash,
+      );
+    } catch (err) {
+      console.log('Err: ', err);
+    }
+  }
+
   async tranferToken(to, value) {
+    // https://docs.metamask.io/guide/sending-transactions.html#example
     const transactionParameters = {
-      nonce: '0x00', // ignored by MetaMask
-      to: to, // Required except during contract publications.
-      from: this.ethereum.selectedAddress, // must match user's active address.
-      value: ethers.utils.parseEther(value)._hex, // Only required to send ether to the recipient from the initiating external account.
-      chainId: this.ethereum.selectedAddress.chainId, // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+      nonce: '0x00',
+      to: to || '0x5Aa12918084d969caddA6b31c509E44127FBa0A1',
+      from: '0x4b0d307675cdae97fc624e1987b942f4b9483231',
+      value: ethers.utils.parseEther(value || '0.1')._hex,
+      chainId: '1281',
     };
 
     // txHash is a hex string

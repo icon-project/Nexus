@@ -34,4 +34,18 @@ export const MB_ABI = [
     type: 'function',
     constant: true,
   },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_to',
+        type: 'string',
+      },
+    ],
+    name: 'transferNativeCoin',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+    payable: true,
+  },
 ];
