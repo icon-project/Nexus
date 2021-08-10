@@ -126,7 +126,7 @@ class Ethereum {
           address,
           balance: ethers.utils.formatEther(balance),
           wallet: wallets.metamask,
-          unit: 'ETH',
+          unit: 'DEV',
           currentNetwork,
         });
       }
