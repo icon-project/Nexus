@@ -151,7 +151,7 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REGISTERED</Text>
-              <Text className="lg bold total-value">{relayCandidates.length}</Text>
+              <Text className="lg bold total-value">{relayCandidates?.length}</Text>
               <UpDownPercent percent={registeredRelayLast24h} />
             </div>
             <div className="vl"></div>
