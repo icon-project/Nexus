@@ -21,7 +21,9 @@ const governance = {
     async getRelayCandidates() {
       try {
         const relayCandidates = await getRelayCandidates();
-        this.setGovernanceState(['relayCandidates', relayCandidates || {}]);
+        if (!relayCandidates.error) {
+          this.setGovernanceState(['relayCandidates', relayCandidates || {}]);
+        }
         return relayCandidates;
       } catch (error) {
         dispatch.modal.handleError();
@@ -51,7 +53,7 @@ const governance = {
     },
     selectTotalRewardFund() {
       const getTotalRewardFund = (relays) => {
-        if (relays.length === 0) return 0;
+        if (!relays || relays.length === 0) return 0;
         const totalRewardFund = relays.reduce(
           (total, relay) => total + (relay['monthlyReward'] || 0),
           0,
