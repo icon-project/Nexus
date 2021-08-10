@@ -141,7 +141,8 @@ function testConverter() {
 
 (async () => {
   // testBid();
-  endBid();
+  // endBid();
+  console.log(IconConverter.toNumber('0x2321c'));
 })();
 
 /*
