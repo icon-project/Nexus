@@ -147,7 +147,7 @@ export const Approval = memo(
           icon: 'loader',
           desc: 'Waiting for confirmation in your wallet.',
         });
-        EthereumInstance.tranferToken(recipient, tokenAmount);
+        EthereumInstance.tranferToken(recipient, tokenAmount, network, setStep);
       } else {
         openModal({
           icon: 'exclamationPointIcon',

@@ -1,12 +1,8 @@
-import IconService, {
-  HttpProvider,
-  IconAmount,
-  IconUtil,
-  IconConverter,
-  IconBuilder,
-} from 'icon-sdk-js';
+import IconService, { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
+
+import { ethers } from 'ethers';
 
 import {
   currentICONexNetwork,
@@ -15,13 +11,11 @@ import {
   signingActions,
 } from '../constants';
 import { requestSigning } from './events';
-import Request, { convertToICX } from './utils';
+import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
 import store from 'store';
 import { connectedNetWorks } from 'utils/constants';
 
-const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 const iconService = new IconService(httpProvider);
-
 const rawTransaction = 'rawTransaction';
 
 export const getBalance = (address) => {
@@ -122,7 +116,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .to(to)
     .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
     .stepLimit(IconConverter.toBigNumber(1000000000))
-    .nid(IconConverter.toBigNumber(currentICONexNetwork.nid || '0xc7c937'))
+    .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000);
@@ -149,20 +143,43 @@ export const signTx = (transaction = {}, options = {}) => {
  * ref: https://github.com/icon-project/btp/blob/iconloop/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L40
  */
 export const getBTPfee = async () => {
+  const fee = await makeICXCall({
+    to: currentICONexNetwork.BSHAddress,
+    dataType: 'call',
+    data: {
+      method: 'feeRatio',
+    },
+  });
+  return IconConverter.toNumber(fee);
+};
+
+export const getReceivedTokenBalance = async (address) => {
   try {
-    const requestId = IconUtil.getCurrentTime();
-    const request = new Request(requestId, 'icx_call', {
+    const coinId = await makeICXCall({
       to: currentICONexNetwork.BSHAddress,
       dataType: 'call',
       data: {
-        method: 'feeRatio',
+        method: 'coinId',
+        params: {
+          _coinName: 'DEV',
+        },
       },
     });
 
-    const result = await httpProvider.request(request).execute();
-    return IconConverter.toNumber(result);
+    const balance = await makeICXCall({
+      to: currentICONexNetwork.irc31token,
+      dataType: 'call',
+      data: {
+        method: 'balanceOf',
+        params: {
+          _owner: address,
+          _id: coinId,
+        },
+      },
+    });
+
+    return ethers.utils.formatUnits(balance, 'ether');
   } catch (err) {
     console.log('err', err);
-    return 0;
   }
 };

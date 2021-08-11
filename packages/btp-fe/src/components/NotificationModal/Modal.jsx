@@ -31,6 +31,7 @@ const Content = styled.div`
   width: ${({ width }) => width};
   margin-top: ${({ marginTop }) => marginTop};
   padding: 23px 32px 32px;
+  word-break: break-word;
 
   display: flex;
   flex-direction: column;

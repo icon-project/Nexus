@@ -1,9 +1,15 @@
 import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
-import { METAMASK_LOCAL_ADDRESS, MOON_BEAM_NODE, allowedNetworkIDs } from '../constants';
+import {
+  METAMASK_LOCAL_ADDRESS,
+  MOON_BEAM_NODE,
+  allowedNetworkIDs,
+  currentICONexNetwork,
+} from '../constants';
 import { MB_ABI } from './moonBeamABI';
 import { convertToICX } from 'connectors/ICONex/utils';
+import { connectedNetWorks } from 'utils/constants';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -93,11 +99,7 @@ class Ethereum {
 
   async getBalanceOf(address, symbol = 'ICX') {
     try {
-      const contract = new ethers.Contract(
-        MOON_BEAM_NODE.BSHCore,
-        MB_ABI,
-        new ethers.providers.JsonRpcProvider(MOON_BEAM_NODE.RPCUrl),
-      );
+      const contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
 
       const balance = await contract.getBalanceOf(address, symbol);
       return convertToICX(balance[0]._hex);
@@ -116,7 +118,7 @@ class Ethereum {
         localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
         const balance = await this.getProvider.getBalance(address);
         const ICXBalanceOf = await this.getBalanceOf(address);
-        console.log('ICXBalanceOf', ICXBalanceOf);
+        console.log('ICX Balance', ICXBalanceOf);
 
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
 
@@ -124,7 +126,7 @@ class Ethereum {
           address,
           balance: ethers.utils.formatEther(balance),
           wallet: wallets.metamask,
-          unit: 'ETH',
+          unit: 'DEV',
           currentNetwork,
         });
       }
@@ -132,21 +134,40 @@ class Ethereum {
       console.log(error);
     }
   }
-  async tranferToken(to, value) {
-    const transactionParameters = {
-      nonce: '0x00', // ignored by MetaMask
-      to: to, // Required except during contract publications.
-      from: this.ethereum.selectedAddress, // must match user's active address.
-      value: ethers.utils.parseEther(value)._hex, // Only required to send ether to the recipient from the initiating external account.
-      chainId: this.ethereum.selectedAddress.chainId, // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+
+  async tranferToken(to, amount, network, setStep) {
+    // https://docs.metamask.io/guide/sending-transactions.html#example
+    const value = ethers.utils.parseEther(amount)._hex;
+    let txParams = {
+      from: this.ethereum.selectedAddress,
+      value,
     };
 
-    // txHash is a hex string
-    // As with any RPC call, it may throw an error
+    // send token same chain
+    if (network === connectedNetWorks.moonbeam) {
+      txParams = {
+        ...txParams,
+        nonce: '0x00',
+        to,
+      };
+    } else {
+      const BSH_ABI = new ethers.utils.Interface(MB_ABI);
+      const data = BSH_ABI.encodeFunctionData('transferNativeCoin', [
+        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+      ]);
+
+      txParams = {
+        ...txParams,
+        to: MOON_BEAM_NODE.BSHCore,
+        gas: MOON_BEAM_NODE.gasLimit,
+        data,
+      };
+    }
+
     try {
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
-        params: [transactionParameters],
+        params: [txParams],
       });
       if (txHash) {
         modal.openModal({
@@ -154,7 +175,11 @@ class Ethereum {
           children: <SuccessSubmittedTxContent />,
           button: {
             text: 'Continue transfer',
-            onClick: () => modal.setDisplay(false),
+            onClick: () => {
+              // back to transfer box
+              setStep(0);
+              modal.setDisplay(false);
+            },
           },
         });
       }

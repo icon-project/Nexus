@@ -97,7 +97,7 @@
     "bfj": "7.0.2",
     "connected-react-router": "6.8.0",
     "dayjs": "1.10.4",
-    "ethers": "5.2.0",
+    "ethers": "5.4.4",
     "final-form": "4.20.2",
     "i18next": "19.8.4",
     "i18next-browser-languagedetector": "6.0.1",

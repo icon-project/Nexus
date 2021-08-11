@@ -71,6 +71,7 @@ export const Icon = memo(
             loading="lazy"
             width={width}
             size={size}
+            className="icon"
             {...props}
           />
         )}
