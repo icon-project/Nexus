@@ -27,6 +27,7 @@ export const MOON_BEAM_NODE = {
   RPCUrl: 'http://54.251.114.18:9933',
   BSHCore: '0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963',
   networkAddress: '0x501.pra',
+  gasLimit: '6691B7',
 };
 
 // https://www.icondev.io/docs/testnet
@@ -35,32 +36,9 @@ export const NETWORKS = {
     name: 'Custom ICON node',
     endpoint: 'http://54.251.114.18:9080/api/v3',
     nid: 3,
+    networkAddress: '0x3.icon',
+    irc31token: 'cx8cefe5b2d97d15223f474e1aaab35bcb87450885',
     BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82', // used to get the BTP fee from getBTPfee()
-  },
-  yeouido: {
-    name: 'Yeouido Testnet',
-    endpoint: 'https://bicon.net.solidwallet.io/api/v3',
-    nid: '3',
-  },
-  hannam: {
-    name: 'Hannam Testnet',
-    endpoint: 'https://hannam.net.solidwallet.io/api/v3',
-    nid: '3',
-  },
-  euljiro: {
-    name: 'Euljiro Testnet',
-    endpoint: 'https://test-ctz.solidwallet.io/api/v3',
-    nid: '2',
-  },
-  pagoda: {
-    name: 'Pagoda Testnet',
-    endpoint: 'https://zicon.net.solidwallet.io/api/v3',
-    nid: '80',
-  },
-  gangnam: {
-    name: 'Gangnam Testnet',
-    endpoint: 'https://gicon.net.solidwallet.io/api/v3',
-    nid: '0x7',
   },
   sejong: {
     name: 'Sejong Testnet',
