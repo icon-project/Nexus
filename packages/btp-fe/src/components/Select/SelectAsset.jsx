@@ -7,6 +7,7 @@ import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
 import { wallets } from 'utils/constants';
+import MBIcon from 'assets/images/moonbeam.jpeg';
 
 const StyledItem = styled.div`
   display: flex;
@@ -23,10 +24,10 @@ const StyledItem = styled.div`
   }
 `;
 
-const Item = ({ icon, symbol, children }) => {
+const Item = ({ symbol, children, ...props }) => {
   return (
     <StyledItem>
-      <Icon icon={icon} width="24px" />
+      <Icon {...props} width="24px" />
       <div className="info">
         <Text className="md">{symbol}</Text>
         <Text className="xs">{children}</Text>
@@ -55,10 +56,10 @@ const SelectAsset = ({ onChange }) => {
     {
       value: 'ETH',
       label: 'ETH',
-      renderLabel: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
+      renderLabel: () => <TextWithIcon iconURL={MBIcon}>DEV</TextWithIcon>,
       renderItem: () => (
-        <Item icon="ETH" symbol="ETH">
-          Ethereum
+        <Item iconURL={MBIcon} symbol="DEV">
+          Moonbeam
         </Item>
       ),
     },

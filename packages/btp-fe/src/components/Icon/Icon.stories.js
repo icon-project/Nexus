@@ -31,7 +31,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const req = require.context('../../../src/assets/images', true, /\.svg|png?$/);
+const req = require.context('../../../src/assets/images', true, /\.svg|png|jpeg?$/);
 const Template = () => (
   <Wrapper>
     {req.keys().map((filename, idx) => {
