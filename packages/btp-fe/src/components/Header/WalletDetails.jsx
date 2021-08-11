@@ -115,6 +115,7 @@ const TokenSelector = styled(Select)`
   border: solid 1px ${grayScaleSubText};
   padding: 0 5px;
   margin-left: 4px;
+  background-color: transparent !important;
 
   &::after {
     width: 9.33px;
