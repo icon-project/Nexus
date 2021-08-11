@@ -4,7 +4,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
-import { toSeparatedNumberString } from 'utils/app';
+import { toSeparatedNumberString, roundNumber } from 'utils/app';
 import { connectedNetWorks } from 'utils/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { getReceivedTokenBalance } from 'connectors/ICONex/iconService';
@@ -45,10 +45,7 @@ const Wrapper = styled.div`
 
     .header-text {
       display: flex;
-
-      button {
-        padding: 0 5px;
-      }
+      align-items: center;
     }
   }
 
@@ -114,6 +111,22 @@ const Wrapper = styled.div`
   `}
 `;
 
+const TokenSelector = styled(Select)`
+  border: solid 1px ${grayScaleSubText};
+  padding: 0 5px;
+  margin-left: 4px;
+
+  &::after {
+    width: 9.33px;
+    margin-left: 11.67px;
+  }
+
+  > ul {
+    top: calc(100% - 5px);
+    width: 120px;
+  }
+`;
+
 export const WalletDetails = ({
   networkName,
   userAvatar,
@@ -161,8 +174,8 @@ export const WalletDetails = ({
         <Text className="md dark-text">Balance</Text>
         <div className="right">
           <Header className="sm bold">
-            {currentToken.balance}
-            <Select options={tokens} onChange={onTokenChange} name="tokens" />
+            {roundNumber(currentToken.balance, 6)}
+            <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
           </Header>
 
           <Text className="sm dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
