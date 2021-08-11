@@ -1,6 +1,6 @@
 'use strict';
 
-const { getMintEvent } = require('../src/modules/icon-indexer/mint-burn');
+const { getMintBurnEvent } = require('../src/modules/icon-indexer/mint-burn');
 
 const transaction = {
     timestamp: 1625807568924298,
@@ -69,7 +69,7 @@ const txResultBatch = {
 
 // Test case for mint event
 test('should return mint event from tx result', async () => {
-    const event = await getMintEvent(txResult, transaction);
+    const event = await getMintBurnEvent(txResult, transaction);
 
     expect(event[0]).toMatchObject({
         tokenValue: 10,
@@ -84,7 +84,7 @@ test('should return mint event from tx result', async () => {
 
 // Test case for mintBatch event
 test('should return mintBatch event from tx result', async () => {
-    const event = await getMintEvent(txResultBatch, transaction);
+    const event = await getMintBurnEvent(txResultBatch, transaction);
 
     expect(event[0]).toMatchObject({
         tokenValue: 100,
