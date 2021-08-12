@@ -1,3 +1,5 @@
+import { connectedNetWorks } from 'utils/constants';
+
 export const TYPES = {
   REQUEST_HAS_ACCOUNT: 'REQUEST_HAS_ACCOUNT',
   RESPONSE_HAS_ACCOUNT: 'RESPONSE_HAS_ACCOUNT',
@@ -20,7 +22,7 @@ export const signingActions = {
 };
 
 export const allowedNetworkIDs = {
-  metamask: { '0x501': 'Moonbase Alpha', '0x4': 'Rinkeby' },
+  metamask: { '0x501': connectedNetWorks.moonbeam, '0x4': 'Rinkeby' },
 };
 
 export const MOON_BEAM_NODE = {
@@ -33,7 +35,7 @@ export const MOON_BEAM_NODE = {
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   cloud: {
-    name: 'Custom ICON node',
+    name: connectedNetWorks.icon,
     endpoint: 'http://54.251.114.18:9080/api/v3',
     nid: 3,
     networkAddress: '0x3.icon',

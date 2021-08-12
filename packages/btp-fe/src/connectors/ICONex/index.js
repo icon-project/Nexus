@@ -1,7 +1,7 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import { getBalance, sendTransaction, getTxResult, getReceivedTokenBalance } from './iconService';
+import { getBalance, sendTransaction, getTxResult } from './iconService';
 import { requestHasAddress } from './events';
 
 import store from 'store';
@@ -143,16 +143,23 @@ const eventHandler = async (event) => {
 };
 
 const getAccountInfo = async (address) => {
-  const balance = +(await getBalance(address));
-  const test = await getReceivedTokenBalance(address);
-  console.log('DEV Balance', test);
-  account.setAccountInfo({
-    address,
-    balance,
-    wallet: wallets.iconex,
-    unit: 'ICX',
-    currentNetwork: currentICONexNetwork.name,
-  });
+  try {
+    const balance = +(await getBalance(address));
+    account.setAccountInfo({
+      address,
+      balance,
+      wallet: wallets.iconex,
+      unit: 'ICX',
+      currentNetwork: currentICONexNetwork.name,
+    });
+  } catch (err) {
+    console.log('Err: ', err);
+    account.resetAccountInfo();
+    modal.openModal({
+      icon: 'xIcon',
+      desc: 'Something went wrong',
+    });
+  }
 };
 
 const setBalance = (balance) => {
