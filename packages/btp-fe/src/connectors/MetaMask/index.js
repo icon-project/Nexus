@@ -199,7 +199,6 @@ class Ethereum {
         address || localStorage.getItem(METAMASK_LOCAL_ADDRESS),
         MOON_BEAM_NODE.BSHCore,
       );
-      console.log('🚀 ~ file: index.js ~ line 202 ~ Ethereum ~ isApprovedForAll ~ result', result);
       return result;
     } catch (err) {
       console.log('Err: ', err);

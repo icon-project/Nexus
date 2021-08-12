@@ -106,14 +106,14 @@ export const TransferCard = ({
             },
           },
         });
-
-        setCheckingApproval(false);
       } else {
         openModal({
           icon: 'xIcon',
           desc: 'Something went wrong',
         });
       }
+
+      setCheckingApproval(false);
     } else {
       setStep(1);
     }
