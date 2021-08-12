@@ -8,7 +8,7 @@ import { media } from 'components/Styles/Media';
 
 import { useDispatch } from 'hooks/useRematch';
 import { connectedNetWorks } from 'utils/constants';
-import { isApprovedForAll } from 'connectors/ICONex/iconService';
+import { isApprovedForAll, setApprovalForAll } from 'connectors/ICONex/iconService';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 import transferIcon from 'assets/images/vector-icon.svg';
@@ -87,17 +87,27 @@ export const TransferCard = ({
   const onNext = async () => {
     if (!isSendingNativeCoin) {
       setCheckingApproval(true);
+
       const result = await (isConnectedToICON
         ? isApprovedForAll()
         : EthereumInstance.isApprovedForAll());
+
       if (result) {
-        setCheckingApproval(false);
         setStep(1);
       } else if (result === false) {
         openModal({
           icon: 'exclamationPointIcon',
-          desc: 'You need to grant permission before sending none native coin. Process?',
+          desc:
+            'You need to grant permission before sending none native coin once and only first. Process?',
+          button: {
+            text: 'Okay',
+            onClick: () => {
+              isConnectedToICON ? setApprovalForAll() : EthereumInstance.setApprovalForAll();
+            },
+          },
         });
+
+        setCheckingApproval(false);
       } else {
         openModal({
           icon: 'xIcon',
