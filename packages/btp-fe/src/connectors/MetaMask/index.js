@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 import store from 'store';
-import { wallets } from 'utils/constants';
 import {
   METAMASK_LOCAL_ADDRESS,
   MOON_BEAM_NODE,
@@ -9,7 +8,8 @@ import {
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
 import { convertToICX } from 'connectors/ICONex/utils';
-import { connectedNetWorks } from 'utils/constants';
+import { connectedNetWorks, wallets } from 'utils/constants';
+import { roundNumber } from 'utils/app';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -102,7 +102,7 @@ class Ethereum {
       const contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
 
       const balance = await contract.getBalanceOf(address, symbol);
-      return convertToICX(balance[0]._hex);
+      return roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
       return 0;

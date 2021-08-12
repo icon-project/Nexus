@@ -5,7 +5,7 @@ import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
-import { toSeparatedNumberString, roundNumber } from 'utils/app';
+import { toSeparatedNumberString } from 'utils/app';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -160,7 +160,7 @@ export const WalletDetails = ({
         <Text className="md dark-text">Balance</Text>
         <div className="right">
           <Header className="sm bold">
-            {roundNumber(currentBalance, 6)}
+            {currentBalance}
             <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
           </Header>
 

@@ -14,6 +14,7 @@ import { requestSigning } from './events';
 import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
 import store from 'store';
 import { connectedNetWorks } from 'utils/constants';
+import { roundNumber } from 'utils/app';
 
 const iconService = new IconService(httpProvider);
 const rawTransaction = 'rawTransaction';
@@ -178,7 +179,7 @@ export const getBalanceOf = async (address, symbol = 'DEV') => {
       },
     });
 
-    return ethers.utils.formatUnits(balance, 'ether');
+    return roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
   } catch (err) {
     console.log('err', err);
   }

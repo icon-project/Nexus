@@ -7,6 +7,7 @@ import { Icon } from 'components/Icon';
 import { Header, Text } from 'components/Typography';
 import { ControlButtons } from './ControlButtons';
 
+import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
 import { wallets } from 'utils/constants';
@@ -121,9 +122,10 @@ export const Details = memo(
     usdRate,
   }) => {
     const { token, network } = sendingInfo;
-    const { balance, currentNetwork, wallet, unit } = account;
+    const { balance, currentNetwork, wallet } = account;
+    const [currentBalance] = useTokenBalance(token);
 
-    const max = maxValue(balance, 'Insufficient balance');
+    const max = maxValue(currentBalance, 'Insufficient balance');
 
     return (
       <Wrapper>
@@ -164,7 +166,7 @@ export const Details = memo(
             </div>
             <div className="right">
               <Text className="md">
-                {toSeparatedNumberString(balance)} {unit}
+                {toSeparatedNumberString(currentBalance)} {token}
               </Text>
               <Text className="xs" color={colors.graySubText}>
                 = ${toSeparatedNumberString(usdRate * balance)}
@@ -197,6 +199,7 @@ export const Details = memo(
             if (isValidForm) setStep(2);
           }}
           onBack={() => setStep(0)}
+          disabled={currentBalance === null}
         />
       </Wrapper>
     );
