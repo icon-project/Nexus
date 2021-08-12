@@ -95,6 +95,7 @@ export const TransferBox = () => {
                   account={account}
                   form={form}
                   usdRate={usdRate}
+                  isConnectedToICON={isConnectedToICON}
                 />
               </div>
             </form>

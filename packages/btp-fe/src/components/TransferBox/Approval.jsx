@@ -8,7 +8,6 @@ import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransac
 import { transfer, getBTPfee } from 'connectors/ICONex/iconService';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
-import { wallets } from 'utils/constants';
 
 import { Header, Text, SubTitle } from 'components/Typography';
 import { Icon } from 'components/Icon/Icon';
@@ -113,11 +112,11 @@ const Total = styled.div`
 `;
 
 export const Approval = memo(
-  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate }) => {
+  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate, isConnectedToICON }) => {
     const [BTPFee, setBTPFee] = useState(0);
     const { recipient, tokenAmount = 0 } = values;
     const { token, network } = sendingInfo;
-    const { currentNetwork, wallet, unit } = account;
+    const { currentNetwork, unit } = account;
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
@@ -139,7 +138,7 @@ export const Approval = memo(
     const onApprove = () => {
       const isSendingNativeCoin = unit === token;
 
-      if (wallets.iconex === wallet) {
+      if (isConnectedToICON) {
         openModal({
           icon: 'loader',
           desc: 'Waiting for confirmation in your wallet.',
@@ -150,7 +149,7 @@ export const Approval = memo(
           network,
           isSendingNativeCoin,
         );
-      } else if (wallets.metamask === wallet) {
+      } else {
         openModal({
           icon: 'loader',
           desc: 'Waiting for confirmation in your wallet.',
@@ -163,11 +162,6 @@ export const Approval = memo(
           isSendingNativeCoin,
           setStep,
         );
-      } else {
-        openModal({
-          icon: 'exclamationPointIcon',
-          desc: `This action has not been implemented yet`,
-        });
       }
     };
 

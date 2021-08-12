@@ -215,11 +215,16 @@ class Ethereum {
 
     // send token same chain
     if (network === connectedNetWorks.moonbeam) {
-      txParams = {
-        ...txParams,
-        nonce: '0x00',
-        to,
-      };
+      if (sendNativeCoin) {
+        txParams = {
+          ...txParams,
+          nonce: '0x00',
+          to,
+        };
+      } else {
+        modal.openUnSupportTransfer();
+        return;
+      }
     } else {
       let data = null;
       if (sendNativeCoin) {

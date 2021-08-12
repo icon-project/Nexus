@@ -85,7 +85,9 @@ export const TransferCard = ({
   };
 
   const onNext = async () => {
-    if (!isSendingNativeCoin) {
+    if (isSendingNativeCoin) {
+      setStep(1);
+    } else {
       setCheckingApproval(true);
 
       const result = await (isConnectedToICON
@@ -114,8 +116,6 @@ export const TransferCard = ({
       }
 
       setCheckingApproval(false);
-    } else {
-      setStep(1);
     }
   };
 

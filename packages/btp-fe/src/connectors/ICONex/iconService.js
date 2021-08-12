@@ -18,6 +18,7 @@ import { roundNumber } from 'utils/app';
 
 const iconService = new IconService(httpProvider);
 const rawTransaction = 'rawTransaction';
+const { modal } = store.dispatch;
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
@@ -147,7 +148,11 @@ export const transfer = (tx, network, sendNativeCoin) => {
 
   // same ICON chain
   if (network === connectedNetWorks.icon) {
-    signTx(tx);
+    if (sendNativeCoin) {
+      signTx(tx);
+    } else {
+      modal.openUnSupportTransfer();
+    }
   } else {
     if (sendNativeCoin) {
       sendNativeCoin(tx);
@@ -157,12 +162,11 @@ export const transfer = (tx, network, sendNativeCoin) => {
   }
 };
 
-/* eslint-disable */
 export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder } = options;
 
-  if (!store.dispatch.modal.isICONexWalletConnected()) {
+  if (!modal.isICONexWalletConnected()) {
     return;
   }
 
