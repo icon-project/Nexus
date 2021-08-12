@@ -143,18 +143,18 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx, network, sendNativeCoin) => {
+export const transfer = (tx, network, isSendingNativeCoin) => {
   window[signingActions.globalName] = signingActions.transfer;
 
   // same ICON chain
   if (network === connectedNetWorks.icon) {
-    if (sendNativeCoin) {
+    if (isSendingNativeCoin) {
       signTx(tx);
     } else {
       modal.openUnSupportTransfer();
     }
   } else {
-    if (sendNativeCoin) {
+    if (isSendingNativeCoin) {
       sendNativeCoin(tx);
     } else {
       sendNoneNativeCoin(tx);
