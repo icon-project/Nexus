@@ -17,6 +17,7 @@ import { media } from 'components/Styles/Media';
 
 import metaMaskIcon from 'assets/images/metal-mask.svg';
 import iconexIcon from 'assets/images/icon-ex.svg';
+import moonbeamIcon from 'assets/images/moonbeam.jpeg';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -104,10 +105,11 @@ const Addresses = styled.div`
 `;
 
 const required = (value) => (value ? undefined : 'Required');
-const icons = {
+export const icons = {
   [wallets.iconex]: iconexIcon,
-  icx: iconexIcon,
+  ICX: iconexIcon,
   [wallets.metamask]: metaMaskIcon,
+  DEV: moonbeamIcon,
 };
 
 export const Details = memo(
@@ -181,7 +183,7 @@ export const Details = memo(
               Send
             </Text>
             <div className="sender">
-              <Icon iconURL={icons[wallet]} size="s" />
+              <Icon iconURL={icons[token]} size="s" />
               <Text className="md sender--name">
                 {token} ({currentNetwork})
               </Text>

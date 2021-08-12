@@ -10,11 +10,12 @@ import { EthereumInstance } from 'connectors/MetaMask';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { wallets } from 'utils/constants';
 
-import { Header, Text, SubTitle } from '../Typography';
-import { Icon } from '../Icon/Icon';
+import { Header, Text, SubTitle } from 'components/Typography';
+import { Icon } from 'components/Icon/Icon';
 import { ControlButtons } from './ControlButtons';
+import { icons } from './Details';
 
-import { colors } from '../Styles/Colors';
+import { colors } from 'components/Styles/Colors';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -190,7 +191,7 @@ export const Approval = memo(
           <div className="send">
             <Text className="md">Send</Text>
             <div className="sender">
-              <Icon icon={token} size="s" />
+              <Icon iconURL={icons[token]} size="s" />
               <Text className="md sender--alias">{token}</Text>
               <Text className="sm sender--name">{currentNetwork}</Text>
             </div>
