@@ -2,7 +2,7 @@ import { ADDRESS_LOCAL_STORAGE, METAMASK_LOCAL_ADDRESS } from 'connectors/consta
 import { roundNumber } from 'utils/app';
 
 const initState = {
-  unit: '',
+  unit: '', // a.k.a symbol, also native coin
   wallet: '',
   address: '',
   balance: 0,
