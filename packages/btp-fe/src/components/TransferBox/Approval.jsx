@@ -141,7 +141,12 @@ export const Approval = memo(
           icon: 'loader',
           desc: 'Waiting for confirmation in your wallet.',
         });
-        transfer({ to: recipient, value: tokenAmount, coinName: token }, network, unit === token);
+        const isSendingNativeCoin = unit === token;
+        transfer(
+          { to: recipient, value: tokenAmount, coinName: token },
+          network,
+          isSendingNativeCoin,
+        );
       } else if (wallets.metamask === wallet) {
         openModal({
           icon: 'loader',
