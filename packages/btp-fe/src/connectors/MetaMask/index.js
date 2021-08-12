@@ -22,6 +22,7 @@ class Ethereum {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
     this.BSH_ABI = new ethers.utils.Interface(MB_ABI);
+    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
   }
 
   get getEthereum() {
@@ -100,9 +101,7 @@ class Ethereum {
 
   async getBalanceOf(address, symbol = 'ICX') {
     try {
-      const contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
-
-      const balance = await contract.getBalanceOf(address, symbol);
+      const balance = await this.contract.getBalanceOf(address, symbol);
       return roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
@@ -192,6 +191,18 @@ class Ethereum {
       gas: MOON_BEAM_NODE.gasLimit,
       data,
     });
+  }
+
+  async isApprovedForAll(address) {
+    try {
+      const result = await this.contract.isApprovedForAll(
+        address || localStorage.getItem(METAMASK_LOCAL_ADDRESS),
+        MOON_BEAM_NODE.BSHCore,
+      );
+      return result;
+    } catch (err) {
+      console.log('Err: ', err);
+    }
   }
 
   async tranferToken(to, amount, network, sendNativeCoin, setStep) {

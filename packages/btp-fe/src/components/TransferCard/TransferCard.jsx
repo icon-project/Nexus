@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 import { Select, SelectAsset } from 'components/Select';
@@ -5,7 +6,10 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
+import { useDispatch } from 'hooks/useRematch';
 import { connectedNetWorks } from 'utils/constants';
+import { isApprovedForAll } from 'connectors/ICONex/iconService';
+import { EthereumInstance } from 'connectors/MetaMask';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -58,13 +62,50 @@ const StyledCard = styled.div`
     width: 100% !important;
   `}
 `;
-export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
+export const TransferCard = ({
+  setStep,
+  setSendingInfo,
+  isConnected,
+  isSendingNativeCoin,
+  isConnectedToICON,
+}) => {
+  const [checkingApproval, setCheckingApproval] = useState(false);
+
+  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+    openModal,
+  }));
+
   const onChange = (values) => {
     const {
       target: { value, name },
     } = values;
     if (name) {
       setSendingInfo({ [name]: value });
+    }
+  };
+
+  const onNext = async () => {
+    if (!isSendingNativeCoin) {
+      setCheckingApproval(true);
+      const result = await (isConnectedToICON
+        ? isApprovedForAll()
+        : EthereumInstance.isApprovedForAll());
+      if (result) {
+        setCheckingApproval(false);
+        setStep(1);
+      } else if (result === false) {
+        openModal({
+          icon: 'exclamationPointIcon',
+          desc: 'You need to grant permission before sending none native coin. Process?',
+        });
+      } else {
+        openModal({
+          icon: 'xIcon',
+          desc: 'Something went wrong',
+        });
+      }
+    } else {
+      setStep(1);
     }
   };
 
@@ -96,7 +137,14 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
 
         <div className="button-section">
           {isConnected ? (
-            <PrimaryButton width={416} height={64} onClick={() => setStep(1)}>
+            <PrimaryButton
+              width={416}
+              height={64}
+              disabled={checkingApproval}
+              onClick={() => {
+                onNext();
+              }}
+            >
               Next
             </PrimaryButton>
           ) : (

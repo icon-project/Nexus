@@ -109,6 +109,21 @@ export const setApprovalForAll = async () => {
   signTx(transaction, options);
 };
 
+export const isApprovedForAll = async (address) => {
+  const result = await makeICXCall({
+    to: currentICONexNetwork.irc31token,
+    dataType: 'call',
+    data: {
+      method: 'isApprovedForAll',
+      params: {
+        _operator: currentICONexNetwork.BSHAddress,
+        _owner: address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
+      },
+    },
+  });
+  return result === '0x1';
+};
+
 export const placeBid = (auctionName, value, fas) => {
   const transaction = {
     to: fas || 'cxe3d36b26abbe6e1005eacf7e1111d5fefbdbdcad', // default FAS addess to our server

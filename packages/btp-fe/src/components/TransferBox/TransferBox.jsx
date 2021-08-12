@@ -37,10 +37,11 @@ export const TransferBox = () => {
   const [tokenValue, setTokenValue] = useState('');
   const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
 
-  const { isConnected, account } = useSelect(
-    ({ account: { selectIsConnected, selectAccountInfo } }) => ({
+  const { isConnected, account, isConnectedToICON } = useSelect(
+    ({ account: { selectIsConnected, selectAccountInfo, selectIsConnectedToICON } }) => ({
       isConnected: selectIsConnected,
       account: selectAccountInfo,
+      isConnectedToICON: selectIsConnectedToICON,
     }),
   );
 
@@ -69,6 +70,8 @@ export const TransferBox = () => {
                   setStep={memoizedSetStep}
                   setSendingInfo={onSendingInfoChange}
                   isConnected={isConnected}
+                  isSendingNativeCoin={unit === sendingInfo.token}
+                  isConnectedToICON={isConnectedToICON}
                 />
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>
