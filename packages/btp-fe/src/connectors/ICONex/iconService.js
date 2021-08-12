@@ -56,6 +56,25 @@ export const getTxResult = (txHash) => {
   }
 };
 
+export const sendNoneNativeCoin = ({ value, to, coinName }) => {
+  const transaction = {
+    to: currentICONexNetwork.BSHAddress,
+    value,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
+      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+      _coinName: coinName,
+    },
+  };
+
+  signTx(transaction, options);
+};
+
 export const sendNativeCoin = ({ value, to }) => {
   const transaction = {
     to: currentICONexNetwork.BSHAddress,
@@ -91,14 +110,18 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx, network) => {
+export const transfer = (tx, network, sendNativeCoin) => {
   window[signingActions.globalName] = signingActions.transfer;
 
   // same ICON chain
   if (network === connectedNetWorks.icon) {
     signTx(tx);
   } else {
-    sendNativeCoin(tx);
+    if (sendNativeCoin) {
+      sendNativeCoin(tx);
+    } else {
+      sendNoneNativeCoin(tx);
+    }
   }
 };
 
@@ -129,6 +152,7 @@ export const signTx = (transaction = {}, options = {}) => {
   tx = tx.build();
 
   const rawTx = IconConverter.toRawTransaction(tx);
+  console.log('🚀 ~ file: iconService.js ~ line 157 ~ signTx ~ rawTx', rawTx);
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
