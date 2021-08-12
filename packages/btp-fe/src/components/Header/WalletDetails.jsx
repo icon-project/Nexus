@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
-import { toSeparatedNumberString } from 'utils/app';
+import { toSeparatedNumberString, roundNumber } from 'utils/app';
+import { connectedNetWorks } from 'utils/constants';
+import { EthereumInstance } from 'connectors/MetaMask';
+import { getReceivedTokenBalance } from 'connectors/ICONex/iconService';
 
+import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -35,8 +40,13 @@ const Wrapper = styled.div`
     line-height: normal;
   }
 
-  .wallet-balance {
+  > .wallet-balance {
     margin: 32px 0 21px;
+
+    .header-text {
+      display: flex;
+      align-items: center;
+    }
   }
 
   .wallet-address {
@@ -101,6 +111,23 @@ const Wrapper = styled.div`
   `}
 `;
 
+const TokenSelector = styled(Select)`
+  border: solid 1px ${grayScaleSubText};
+  padding: 0 5px;
+  margin-left: 4px;
+  background-color: transparent !important;
+
+  &::after {
+    width: 9.33px;
+    margin-left: 11.67px;
+  }
+
+  > ul {
+    top: calc(100% - 5px);
+    width: 120px;
+  }
+`;
+
 export const WalletDetails = ({
   networkName,
   userAvatar,
@@ -111,7 +138,35 @@ export const WalletDetails = ({
   onDisconnectWallet,
   onSwitchWallet,
 }) => {
-  const usdBalance = useTokenToUsd(unit, balance);
+  const [currentToken, setToken] = useState({ symbol: unit, balance });
+  const usdBalance = useTokenToUsd(currentToken.symbol, currentToken.balance);
+
+  const tokens = [
+    { label: unit, value: unit },
+    ...[
+      { label: 'DEV', value: 'DEV' },
+      { label: 'ICX', value: 'ICX' },
+    ].filter((item) => item.label !== unit),
+  ];
+
+  const onTokenChange = async (evt) => {
+    const { value } = evt.target;
+    let tokenBalance = 0;
+
+    // native coin
+    if (value === unit) {
+      setToken({ symbol: value, balance });
+    } else {
+      if (networkName && networkName === connectedNetWorks.moonbeam) {
+        tokenBalance = await EthereumInstance.getBalanceOf(address, value);
+      } else if (networkName && networkName === connectedNetWorks.icon) {
+        tokenBalance = await getReceivedTokenBalance(address, value);
+      }
+
+      setToken({ symbol: value, balance: tokenBalance });
+    }
+  };
+
   return (
     <Wrapper>
       <Text className="md network-name">{networkName}</Text>
@@ -119,7 +174,10 @@ export const WalletDetails = ({
       <div className="wallet-balance">
         <Text className="md dark-text">Balance</Text>
         <div className="right">
-          <Header className="sm bold">{`${balance} ${unit}`}</Header>
+          <Header className="sm bold">
+            {roundNumber(currentToken.balance, 6)}
+            <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
+          </Header>
 
           <Text className="sm dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
         </div>
