@@ -56,10 +56,9 @@ export const getTxResult = (txHash) => {
   }
 };
 
-export const sendNoneNativeCoin = ({ value, to, coinName }) => {
+export const sendNoneNativeCoin = ({ value, to }) => {
   const transaction = {
     to: currentICONexNetwork.BSHAddress,
-    // value,
   };
 
   const options = {
@@ -68,7 +67,7 @@ export const sendNoneNativeCoin = ({ value, to, coinName }) => {
     params: {
       _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
       _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
-      _coinName: coinName,
+      _coinName: 'DEV',
     },
   };
 
@@ -101,7 +100,7 @@ export const setApprovalForAll = async () => {
     builder: new CallTransactionBuilder(),
     method: 'setApprovalForAll',
     params: {
-      _operator: 'hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262',
+      _operator: currentICONexNetwork.BSHAddress,
       _approved: '0x1',
     },
   };
@@ -143,6 +142,7 @@ export const transfer = (tx, network, sendNativeCoin) => {
   }
 };
 
+/* eslint-disable */
 export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder } = options;
