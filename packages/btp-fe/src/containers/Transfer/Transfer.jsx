@@ -7,7 +7,7 @@ import { TransferBox } from 'components/TransferBox';
 import { SubTitle } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 
-import { setApprovalForAll } from 'connectors/ICONex/iconService';
+import { EthereumInstance } from 'connectors/MetaMask';
 
 const TransferStyled = styled.div`
   padding-top: 43px;
@@ -40,7 +40,13 @@ const Transfer = () => {
       <div className="transfer-card">
         <TransferBox />
       </div>
-      <PrimaryButton onClick={setApprovalForAll}>Set Approve</PrimaryButton>
+      <PrimaryButton
+        onClick={() => {
+          EthereumInstance.setApprovalForAll();
+        }}
+      >
+        Set Approve
+      </PrimaryButton>
     </TransferStyled>
   );
 };

@@ -21,6 +21,7 @@ class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
+    this.BSH_ABI = new ethers.utils.Interface(MB_ABI);
   }
 
   get getEthereum() {
@@ -133,35 +134,7 @@ class Ethereum {
     }
   }
 
-  async tranferToken(to, amount, network, setStep) {
-    // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(amount)._hex;
-    let txParams = {
-      from: this.ethereum.selectedAddress,
-      value,
-    };
-
-    // send token same chain
-    if (network === connectedNetWorks.moonbeam) {
-      txParams = {
-        ...txParams,
-        nonce: '0x00',
-        to,
-      };
-    } else {
-      const BSH_ABI = new ethers.utils.Interface(MB_ABI);
-      const data = BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
-      ]);
-
-      txParams = {
-        ...txParams,
-        to: MOON_BEAM_NODE.BSHCore,
-        gas: MOON_BEAM_NODE.gasLimit,
-        data,
-      };
-    }
-
+  async sendTransaction(txParams, callback) {
     try {
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
@@ -175,7 +148,7 @@ class Ethereum {
             text: 'Continue transfer',
             onClick: () => {
               // back to transfer box
-              setStep(0);
+              if (callback) callback(0);
               modal.setDisplay(false);
             },
           },
@@ -205,6 +178,50 @@ class Ethereum {
         return;
       }
     }
+  }
+
+  async setApprovalForAll() {
+    const data = this.BSH_ABI.encodeFunctionData('setApprovalForAll', [
+      MOON_BEAM_NODE.BSHCore,
+      '0x1',
+    ]);
+
+    await this.sendTransaction({
+      from: this.ethereum.selectedAddress,
+      to: MOON_BEAM_NODE.BSHCore,
+      gas: MOON_BEAM_NODE.gasLimit,
+      data,
+    });
+  }
+
+  async tranferToken(to, amount, network, setStep) {
+    // https://docs.metamask.io/guide/sending-transactions.html#example
+    const value = ethers.utils.parseEther(amount)._hex;
+    let txParams = {
+      from: this.ethereum.selectedAddress,
+      value,
+    };
+
+    // send token same chain
+    if (network === connectedNetWorks.moonbeam) {
+      txParams = {
+        ...txParams,
+        nonce: '0x00',
+        to,
+      };
+    } else {
+      const data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
+        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+      ]);
+
+      txParams = {
+        ...txParams,
+        to: MOON_BEAM_NODE.BSHCore,
+        gas: MOON_BEAM_NODE.gasLimit,
+        data,
+      };
+    }
+    await this.sendTransaction(txParams, setStep);
   }
 }
 
