@@ -153,7 +153,7 @@ export const getBTPfee = async () => {
   return IconConverter.toNumber(fee);
 };
 
-export const getReceivedTokenBalance = async (address, symbol = 'DEV') => {
+export const getBalanceOf = async (address, symbol = 'DEV') => {
   try {
     const coinId = await makeICXCall({
       to: currentICONexNetwork.BSHAddress,

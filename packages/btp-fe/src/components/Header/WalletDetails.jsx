@@ -4,10 +4,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
+import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString, roundNumber } from 'utils/app';
-import { connectedNetWorks } from 'utils/constants';
-import { EthereumInstance } from 'connectors/MetaMask';
-import { getReceivedTokenBalance } from 'connectors/ICONex/iconService';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -131,15 +129,16 @@ const TokenSelector = styled(Select)`
 export const WalletDetails = ({
   networkName,
   userAvatar,
-  balance,
+  // balance,
   unit,
   address,
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
 }) => {
-  const [currentToken, setToken] = useState({ symbol: unit, balance });
-  const usdBalance = useTokenToUsd(currentToken.symbol, currentToken.balance);
+  const [selectedToken, setSelectedToken] = useState(unit);
+  const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
+  const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
 
   const tokens = [
     { label: unit, value: unit },
@@ -150,21 +149,7 @@ export const WalletDetails = ({
   ];
 
   const onTokenChange = async (evt) => {
-    const { value } = evt.target;
-    let tokenBalance = 0;
-
-    // native coin
-    if (value === unit) {
-      setToken({ symbol: value, balance });
-    } else {
-      if (networkName && networkName === connectedNetWorks.moonbeam) {
-        tokenBalance = await EthereumInstance.getBalanceOf(address, value);
-      } else if (networkName && networkName === connectedNetWorks.icon) {
-        tokenBalance = await getReceivedTokenBalance(address, value);
-      }
-
-      setToken({ symbol: value, balance: tokenBalance });
-    }
+    setSelectedToken(evt.target.value);
   };
 
   return (
@@ -175,7 +160,7 @@ export const WalletDetails = ({
         <Text className="md dark-text">Balance</Text>
         <div className="right">
           <Header className="sm bold">
-            {roundNumber(currentToken.balance, 6)}
+            {roundNumber(currentBalance, 6)}
             <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
           </Header>
 
