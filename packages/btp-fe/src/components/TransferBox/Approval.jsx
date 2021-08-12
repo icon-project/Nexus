@@ -137,24 +137,18 @@ export const Approval = memo(
 
     const onApprove = () => {
       const isSendingNativeCoin = unit === token;
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
 
       if (isConnectedToICON) {
-        openModal({
-          icon: 'loader',
-          desc: 'Waiting for confirmation in your wallet.',
-        });
-
         transfer(
           { to: recipient, value: tokenAmount, coinName: token },
           network,
           isSendingNativeCoin,
         );
       } else {
-        openModal({
-          icon: 'loader',
-          desc: 'Waiting for confirmation in your wallet.',
-        });
-
         EthereumInstance.tranferToken(
           recipient,
           tokenAmount,
