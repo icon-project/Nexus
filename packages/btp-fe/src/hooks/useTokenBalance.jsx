@@ -16,20 +16,22 @@ export const useTokenBalance = (currentSymbol) => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    if (currentSymbol === unit) {
-      setToken({ balance, symbol: unit });
-    } else {
-      if (currentNetwork === connectedNetWorks.moonbeam) {
-        EthereumInstance.getBalanceOf(address, currentSymbol).then((result) => {
-          setToken({ balance: result, symbol: currentSymbol });
-        });
-      } else if (currentNetwork === connectedNetWorks.icon) {
-        getBalanceOf(address, currentSymbol).then((result) => {
-          setToken({ balance: result, symbol: currentSymbol });
-        });
+    if (currentNetwork && currentSymbol) {
+      if (currentSymbol === unit) {
+        setToken({ balance, symbol: unit });
+      } else {
+        if (currentNetwork === connectedNetWorks.moonbeam) {
+          EthereumInstance.getBalanceOf(address, currentSymbol).then((result) => {
+            setToken({ balance: result, symbol: currentSymbol });
+          });
+        } else if (currentNetwork === connectedNetWorks.icon) {
+          getBalanceOf(address, currentSymbol).then((result) => {
+            setToken({ balance: result, symbol: currentSymbol });
+          });
+        }
       }
     }
-  }, [currentSymbol]);
+  }, [currentSymbol, currentNetwork]);
 
   return [token.balance, token.symbol];
 };

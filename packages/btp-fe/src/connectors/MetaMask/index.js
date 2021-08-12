@@ -194,7 +194,7 @@ class Ethereum {
     });
   }
 
-  async tranferToken(to, amount, network, setStep) {
+  async tranferToken(to, amount, network, sendNativeCoin, setStep) {
     // https://docs.metamask.io/guide/sending-transactions.html#example
     const value = ethers.utils.parseEther(amount)._hex;
     let txParams = {
@@ -210,9 +210,20 @@ class Ethereum {
         to,
       };
     } else {
-      const data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
-      ]);
+      let data = null;
+      if (sendNativeCoin) {
+        data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
+          `btp://${currentICONexNetwork.networkAddress}/${to}`,
+        ]);
+      } else {
+        data = this.BSH_ABI.encodeFunctionData('transfer', [
+          'ICX',
+          value,
+          `btp://${currentICONexNetwork.networkAddress}/${to}`,
+        ]);
+
+        delete txParams.value;
+      }
 
       txParams = {
         ...txParams,
@@ -221,6 +232,7 @@ class Ethereum {
         data,
       };
     }
+
     await this.sendTransaction(txParams, setStep);
   }
 }

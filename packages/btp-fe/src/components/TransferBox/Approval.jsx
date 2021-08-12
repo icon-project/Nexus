@@ -136,12 +136,14 @@ export const Approval = memo(
     }));
 
     const onApprove = () => {
+      const isSendingNativeCoin = unit === token;
+
       if (wallets.iconex === wallet) {
         openModal({
           icon: 'loader',
           desc: 'Waiting for confirmation in your wallet.',
         });
-        const isSendingNativeCoin = unit === token;
+
         transfer(
           { to: recipient, value: tokenAmount, coinName: token },
           network,
@@ -152,7 +154,14 @@ export const Approval = memo(
           icon: 'loader',
           desc: 'Waiting for confirmation in your wallet.',
         });
-        EthereumInstance.tranferToken(recipient, tokenAmount, network, setStep);
+
+        EthereumInstance.tranferToken(
+          recipient,
+          tokenAmount,
+          network,
+          isSendingNativeCoin,
+          setStep,
+        );
       } else {
         openModal({
           icon: 'exclamationPointIcon',
