@@ -59,7 +59,7 @@ export const getTxResult = (txHash) => {
 export const sendNoneNativeCoin = ({ value, to, coinName }) => {
   const transaction = {
     to: currentICONexNetwork.BSHAddress,
-    value,
+    // value,
   };
 
   const options = {
@@ -89,6 +89,24 @@ export const sendNativeCoin = ({ value, to }) => {
     },
   };
 
+  signTx(transaction, options);
+};
+
+export const setApprovalForAll = async () => {
+  const transaction = {
+    to: currentICONexNetwork.irc31token,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'setApprovalForAll',
+    params: {
+      _operator: 'hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262',
+      _approved: '0x1',
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.transfer;
   signTx(transaction, options);
 };
 
@@ -138,12 +156,15 @@ export const signTx = (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000);
+
+  if (value) {
+    tx = tx.value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop());
+  }
 
   if (method) {
     tx = tx.method(method).params(params);
@@ -152,7 +173,6 @@ export const signTx = (transaction = {}, options = {}) => {
   tx = tx.build();
 
   const rawTx = IconConverter.toRawTransaction(tx);
-  console.log('🚀 ~ file: iconService.js ~ line 157 ~ signTx ~ rawTx', rawTx);
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
