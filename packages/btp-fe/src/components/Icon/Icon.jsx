@@ -20,6 +20,8 @@ const sizes = {
 
 const StyledIcon = styled.img`
   width: ${({ width, size }) => sizes[size] || width};
+  vertical-align: middle;
+
   image-rendering: -moz-crisp-edges; /* Firefox */
   image-rendering: -o-crisp-edges; /* Opera */
   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */

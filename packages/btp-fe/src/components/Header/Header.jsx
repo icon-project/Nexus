@@ -10,6 +10,7 @@ import { PrimaryButton, HamburgerButton } from '../Button';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
+import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
 import { METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
@@ -227,6 +228,7 @@ const Header = ({ userStatus = defaultUser }) => {
   };
 
   const onDisconnectWallet = () => {
+    resetTransferStep();
     resetAccountInfo();
     toggleModal();
   };
