@@ -10,6 +10,7 @@ import { MB_ABI } from './moonBeamABI';
 import { convertToICX } from 'connectors/ICONex/utils';
 import { connectedNetWorks, wallets } from 'utils/constants';
 import { roundNumber } from 'utils/app';
+import { resetTransferStep } from 'connectors/ICONex/utils';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -133,7 +134,7 @@ class Ethereum {
     }
   }
 
-  async sendTransaction(txParams, callback) {
+  async sendTransaction(txParams) {
     try {
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
@@ -147,7 +148,7 @@ class Ethereum {
             text: 'Continue transfer',
             onClick: () => {
               // back to transfer box
-              if (callback) callback(0);
+              resetTransferStep();
               modal.setDisplay(false);
             },
           },
@@ -205,7 +206,7 @@ class Ethereum {
     }
   }
 
-  async tranferToken(to, amount, network, sendNativeCoin, setStep) {
+  async tranferToken(to, amount, network, sendNativeCoin) {
     // https://docs.metamask.io/guide/sending-transactions.html#example
     const value = ethers.utils.parseEther(amount)._hex;
     let txParams = {
@@ -249,7 +250,7 @@ class Ethereum {
       };
     }
 
-    await this.sendTransaction(txParams, setStep);
+    await this.sendTransaction(txParams);
   }
 }
 

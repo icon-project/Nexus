@@ -149,13 +149,7 @@ export const Approval = memo(
           isSendingNativeCoin,
         );
       } else {
-        EthereumInstance.tranferToken(
-          recipient,
-          tokenAmount,
-          network,
-          isSendingNativeCoin,
-          setStep,
-        );
+        EthereumInstance.tranferToken(recipient, tokenAmount, network, isSendingNativeCoin);
       }
     };
 
@@ -168,7 +162,7 @@ export const Approval = memo(
           </Text>
           <div className="content">
             <Header className="md bold send-token">
-              {tokenAmount || 0} {unit}
+              {tokenAmount || 0} {token}
             </Header>
             <Text className="md">= ${toSeparatedNumberString(usdRate * tokenAmount)}</Text>
           </div>
