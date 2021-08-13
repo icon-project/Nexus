@@ -49,6 +49,12 @@ const modal = {
       }
       return true;
     },
+    openUnSupportTransfer() {
+      this.openModal({
+        icon: 'exclamationPointIcon',
+        desc: 'We have not supported for transfer none native coin in same chain for now.',
+      });
+    },
   }),
 
   selectors: (slice) => ({

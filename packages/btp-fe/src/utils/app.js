@@ -27,6 +27,7 @@ const hashShortener = (hashStr) => {
 };
 
 export const roundNumber = (num, digit = 2) => {
+  if (!num) return 0;
   return +(Math.round(num + `e+${digit}`) + `e-${digit}`);
 };
 

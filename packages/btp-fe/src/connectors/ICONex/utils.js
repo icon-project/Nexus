@@ -1,5 +1,7 @@
 import { IconAmount, IconUtil, HttpProvider } from 'icon-sdk-js';
 import { currentICONexNetwork } from '../constants';
+import { SUCCESS_TRANSACTION } from 'utils/constants';
+
 export default class Request {
   constructor(id, method, params) {
     this.jsonrpc = '2.0';
@@ -26,4 +28,9 @@ export const makeICXCall = async (payload) => {
     console.log('err', err);
     return 0;
   }
+};
+
+export const resetTransferStep = () => {
+  const event = new Event(SUCCESS_TRANSACTION);
+  document.dispatchEvent(event);
 };

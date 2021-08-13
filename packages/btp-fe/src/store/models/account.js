@@ -1,8 +1,9 @@
 import { ADDRESS_LOCAL_STORAGE, METAMASK_LOCAL_ADDRESS } from 'connectors/constants';
 import { roundNumber } from 'utils/app';
+import { wallets } from 'utils/constants';
 
 const initState = {
-  unit: '',
+  unit: '', // a.k.a symbol, also native coin
   wallet: '',
   address: '',
   balance: 0,
@@ -34,6 +35,9 @@ const account = {
     },
     selectIsConnected() {
       return slice((state) => !!state.address);
+    },
+    selectIsConnectedToICON() {
+      return slice((state) => state.wallet === wallets.iconex);
     },
   }),
 };
