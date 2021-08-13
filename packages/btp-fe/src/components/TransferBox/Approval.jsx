@@ -8,13 +8,13 @@ import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransac
 import { transfer, getBTPfee } from 'connectors/ICONex/iconService';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
-import { wallets } from 'utils/constants';
 
-import { Header, Text, SubTitle } from '../Typography';
-import { Icon } from '../Icon/Icon';
+import { Header, Text, SubTitle } from 'components/Typography';
+import { Icon } from 'components/Icon/Icon';
 import { ControlButtons } from './ControlButtons';
+import { icons } from './Details';
 
-import { colors } from '../Styles/Colors';
+import { colors } from 'components/Styles/Colors';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -112,11 +112,11 @@ const Total = styled.div`
 `;
 
 export const Approval = memo(
-  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate }) => {
+  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate, isConnectedToICON }) => {
     const [BTPFee, setBTPFee] = useState(0);
     const { recipient, tokenAmount = 0 } = values;
     const { token, network } = sendingInfo;
-    const { currentNetwork, wallet, unit } = account;
+    const { currentNetwork, unit } = account;
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
@@ -136,23 +136,20 @@ export const Approval = memo(
     }));
 
     const onApprove = () => {
-      if (wallets.iconex === wallet) {
-        openModal({
-          icon: 'loader',
-          desc: 'Waiting for confirmation in your wallet.',
-        });
-        transfer({ to: recipient, value: tokenAmount }, network);
-      } else if (wallets.metamask === wallet) {
-        openModal({
-          icon: 'loader',
-          desc: 'Waiting for confirmation in your wallet.',
-        });
-        EthereumInstance.tranferToken(recipient, tokenAmount, network, setStep);
+      const isSendingNativeCoin = unit === token;
+      openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+
+      if (isConnectedToICON) {
+        transfer(
+          { to: recipient, value: tokenAmount, coinName: token },
+          network,
+          isSendingNativeCoin,
+        );
       } else {
-        openModal({
-          icon: 'exclamationPointIcon',
-          desc: `This action has not been implemented yet`,
-        });
+        EthereumInstance.tranferToken(recipient, tokenAmount, network, isSendingNativeCoin);
       }
     };
 
@@ -165,7 +162,7 @@ export const Approval = memo(
           </Text>
           <div className="content">
             <Header className="md bold send-token">
-              {tokenAmount || 0} {unit}
+              {tokenAmount || 0} {token}
             </Header>
             <Text className="md">= ${toSeparatedNumberString(usdRate * tokenAmount)}</Text>
           </div>
@@ -176,7 +173,7 @@ export const Approval = memo(
           <div className="send">
             <Text className="md">Send</Text>
             <div className="sender">
-              <Icon icon={token} size="s" />
+              <Icon iconURL={icons[token]} size="s" />
               <Text className="md sender--alias">{token}</Text>
               <Text className="sm sender--name">{currentNetwork}</Text>
             </div>

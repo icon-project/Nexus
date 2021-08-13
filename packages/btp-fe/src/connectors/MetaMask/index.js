@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 import store from 'store';
-import { wallets } from 'utils/constants';
 import {
   METAMASK_LOCAL_ADDRESS,
   MOON_BEAM_NODE,
@@ -9,7 +8,9 @@ import {
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
 import { convertToICX } from 'connectors/ICONex/utils';
-import { connectedNetWorks } from 'utils/constants';
+import { connectedNetWorks, wallets } from 'utils/constants';
+import { roundNumber } from 'utils/app';
+import { resetTransferStep } from 'connectors/ICONex/utils';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -21,6 +22,8 @@ class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
+    this.BSH_ABI = new ethers.utils.Interface(MB_ABI);
+    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
   }
 
   get getEthereum() {
@@ -99,10 +102,8 @@ class Ethereum {
 
   async getBalanceOf(address, symbol = 'ICX') {
     try {
-      const contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
-
-      const balance = await contract.getBalanceOf(address, symbol);
-      return convertToICX(balance[0]._hex);
+      const balance = await this.contract.getBalanceOf(address, symbol);
+      return roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
       return 0;
@@ -133,35 +134,7 @@ class Ethereum {
     }
   }
 
-  async tranferToken(to, amount, network, setStep) {
-    // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(amount)._hex;
-    let txParams = {
-      from: this.ethereum.selectedAddress,
-      value,
-    };
-
-    // send token same chain
-    if (network === connectedNetWorks.moonbeam) {
-      txParams = {
-        ...txParams,
-        nonce: '0x00',
-        to,
-      };
-    } else {
-      const BSH_ABI = new ethers.utils.Interface(MB_ABI);
-      const data = BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
-      ]);
-
-      txParams = {
-        ...txParams,
-        to: MOON_BEAM_NODE.BSHCore,
-        gas: MOON_BEAM_NODE.gasLimit,
-        data,
-      };
-    }
-
+  async sendTransaction(txParams) {
     try {
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
@@ -175,7 +148,7 @@ class Ethereum {
             text: 'Continue transfer',
             onClick: () => {
               // back to transfer box
-              setStep(0);
+              resetTransferStep();
               modal.setDisplay(false);
             },
           },
@@ -205,6 +178,79 @@ class Ethereum {
         return;
       }
     }
+  }
+
+  async setApprovalForAll() {
+    const data = this.BSH_ABI.encodeFunctionData('setApprovalForAll', [
+      MOON_BEAM_NODE.BSHCore,
+      '0x1',
+    ]);
+
+    await this.sendTransaction({
+      from: this.ethereum.selectedAddress,
+      to: MOON_BEAM_NODE.BSHCore,
+      gas: MOON_BEAM_NODE.gasLimit,
+      data,
+    });
+  }
+
+  async isApprovedForAll(address) {
+    try {
+      const result = await this.contract.isApprovedForAll(
+        address || localStorage.getItem(METAMASK_LOCAL_ADDRESS),
+        MOON_BEAM_NODE.BSHCore,
+      );
+      return result;
+    } catch (err) {
+      console.log('Err: ', err);
+    }
+  }
+
+  async tranferToken(to, amount, network, sendNativeCoin) {
+    // https://docs.metamask.io/guide/sending-transactions.html#example
+    const value = ethers.utils.parseEther(amount)._hex;
+    let txParams = {
+      from: this.ethereum.selectedAddress,
+      value,
+    };
+
+    // send token same chain
+    if (network === connectedNetWorks.moonbeam) {
+      if (sendNativeCoin) {
+        txParams = {
+          ...txParams,
+          nonce: '0x00',
+          to,
+        };
+      } else {
+        modal.openUnSupportTransfer();
+        return;
+      }
+    } else {
+      let data = null;
+      if (sendNativeCoin) {
+        data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
+          `btp://${currentICONexNetwork.networkAddress}/${to}`,
+        ]);
+      } else {
+        data = this.BSH_ABI.encodeFunctionData('transfer', [
+          'ICX',
+          value,
+          `btp://${currentICONexNetwork.networkAddress}/${to}`,
+        ]);
+
+        delete txParams.value;
+      }
+
+      txParams = {
+        ...txParams,
+        to: MOON_BEAM_NODE.BSHCore,
+        gas: MOON_BEAM_NODE.gasLimit,
+        data,
+      };
+    }
+
+    await this.sendTransaction(txParams);
   }
 }
 

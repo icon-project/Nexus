@@ -7,6 +7,7 @@ import { Icon } from 'components/Icon';
 import { Header, Text } from 'components/Typography';
 import { ControlButtons } from './ControlButtons';
 
+import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
 import { wallets } from 'utils/constants';
@@ -16,6 +17,7 @@ import { media } from 'components/Styles/Media';
 
 import metaMaskIcon from 'assets/images/metal-mask.svg';
 import iconexIcon from 'assets/images/icon-ex.svg';
+import moonbeamIcon from 'assets/images/moonbeam.jpeg';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -103,10 +105,11 @@ const Addresses = styled.div`
 `;
 
 const required = (value) => (value ? undefined : 'Required');
-const icons = {
+export const icons = {
   [wallets.iconex]: iconexIcon,
-  icx: iconexIcon,
+  ICX: iconexIcon,
   [wallets.metamask]: metaMaskIcon,
+  DEV: moonbeamIcon,
 };
 
 export const Details = memo(
@@ -121,9 +124,10 @@ export const Details = memo(
     usdRate,
   }) => {
     const { token, network } = sendingInfo;
-    const { balance, currentNetwork, wallet, unit } = account;
+    const { balance, currentNetwork, wallet } = account;
+    const [currentBalance] = useTokenBalance(token);
 
-    const max = maxValue(balance, 'Insufficient balance');
+    const max = maxValue(currentBalance, 'Insufficient balance');
 
     return (
       <Wrapper>
@@ -164,7 +168,7 @@ export const Details = memo(
             </div>
             <div className="right">
               <Text className="md">
-                {toSeparatedNumberString(balance)} {unit}
+                {toSeparatedNumberString(currentBalance)} {token}
               </Text>
               <Text className="xs" color={colors.graySubText}>
                 = ${toSeparatedNumberString(usdRate * balance)}
@@ -179,7 +183,7 @@ export const Details = memo(
               Send
             </Text>
             <div className="sender">
-              <Icon iconURL={icons[wallet]} size="s" />
+              <Icon iconURL={icons[token]} size="s" />
               <Text className="md sender--name">
                 {token} ({currentNetwork})
               </Text>
@@ -197,6 +201,7 @@ export const Details = memo(
             if (isValidForm) setStep(2);
           }}
           onBack={() => setStep(0)}
+          disabled={currentBalance === null}
         />
       </Wrapper>
     );

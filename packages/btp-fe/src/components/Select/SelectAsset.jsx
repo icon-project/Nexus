@@ -54,8 +54,8 @@ const SelectAsset = ({ onChange }) => {
       ),
     },
     {
-      value: 'ETH',
-      label: 'ETH',
+      value: 'DEV',
+      label: 'DEV',
       renderLabel: () => <TextWithIcon iconURL={MBIcon}>DEV</TextWithIcon>,
       renderItem: () => (
         <Item iconURL={MBIcon} symbol="DEV">

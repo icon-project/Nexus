@@ -14,9 +14,11 @@ import { requestSigning } from './events';
 import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
 import store from 'store';
 import { connectedNetWorks } from 'utils/constants';
+import { roundNumber } from 'utils/app';
 
 const iconService = new IconService(httpProvider);
 const rawTransaction = 'rawTransaction';
+const { modal } = store.dispatch;
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
@@ -55,6 +57,24 @@ export const getTxResult = (txHash) => {
   }
 };
 
+export const sendNoneNativeCoin = ({ value, to }) => {
+  const transaction = {
+    to: currentICONexNetwork.BSHAddress,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
+      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+      _coinName: 'DEV',
+    },
+  };
+
+  signTx(transaction, options);
+};
+
 export const sendNativeCoin = ({ value, to }) => {
   const transaction = {
     to: currentICONexNetwork.BSHAddress,
@@ -70,6 +90,39 @@ export const sendNativeCoin = ({ value, to }) => {
   };
 
   signTx(transaction, options);
+};
+
+export const setApprovalForAll = async () => {
+  const transaction = {
+    to: currentICONexNetwork.irc31token,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'setApprovalForAll',
+    params: {
+      _operator: currentICONexNetwork.BSHAddress,
+      _approved: '0x1',
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(transaction, options);
+};
+
+export const isApprovedForAll = async (address) => {
+  const result = await makeICXCall({
+    to: currentICONexNetwork.irc31token,
+    dataType: 'call',
+    data: {
+      method: 'isApprovedForAll',
+      params: {
+        _operator: currentICONexNetwork.BSHAddress,
+        _owner: address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
+      },
+    },
+  });
+  return result === '0x1';
 };
 
 export const placeBid = (auctionName, value, fas) => {
@@ -90,14 +143,22 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx, network) => {
+export const transfer = (tx, network, isSendingNativeCoin) => {
   window[signingActions.globalName] = signingActions.transfer;
 
   // same ICON chain
   if (network === connectedNetWorks.icon) {
-    signTx(tx);
+    if (isSendingNativeCoin) {
+      signTx(tx);
+    } else {
+      modal.openUnSupportTransfer();
+    }
   } else {
-    sendNativeCoin(tx);
+    if (isSendingNativeCoin) {
+      sendNativeCoin(tx);
+    } else {
+      sendNoneNativeCoin(tx);
+    }
   }
 };
 
@@ -105,7 +166,7 @@ export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder } = options;
 
-  if (!store.dispatch.modal.isICONexWalletConnected()) {
+  if (!modal.isICONexWalletConnected()) {
     return;
   }
 
@@ -114,12 +175,15 @@ export const signTx = (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop())
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000);
+
+  if (value) {
+    tx = tx.value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop());
+  }
 
   if (method) {
     tx = tx.method(method).params(params);
@@ -153,7 +217,7 @@ export const getBTPfee = async () => {
   return IconConverter.toNumber(fee);
 };
 
-export const getReceivedTokenBalance = async (address, symbol = 'DEV') => {
+export const getBalanceOf = async (address, symbol = 'DEV') => {
   try {
     const coinId = await makeICXCall({
       to: currentICONexNetwork.BSHAddress,
@@ -178,7 +242,7 @@ export const getReceivedTokenBalance = async (address, symbol = 'DEV') => {
       },
     });
 
-    return ethers.utils.formatUnits(balance, 'ether');
+    return roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
   } catch (err) {
     console.log('err', err);
   }
