@@ -30,7 +30,7 @@ ALTER TABLE minted_tokens
 DROP COLUMN delete_at,
 DROP COLUMN update_at,
 DROP COLUMN total_amount_usd,
-ADD COLUMN total_token_amount numeric NOT NULL DEFAULT 0, 
+ADD COLUMN total_token_amount numeric NOT NULL DEFAULT 0,
 ALTER COLUMN create_at SET DATA TYPE timestamp without time zone USING to_timestamp(create_at);
 
 -- Issue #153
@@ -72,16 +72,7 @@ TABLESPACE pg_default;
 ALTER TABLE public.token_prices
     OWNER to postgres;
 
--- test data
+-- Issue #224
 
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
-VALUES (1, 'BTC', 1, 1, NOW(), NOW());
-
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
-VALUES (1027, 'ETH', 1, 1, NOW(), NOW());
-
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
-VALUES (52, 'DEV', 1, 1, NOW(), NOW());
-
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
-VALUES (0, 'NONE', 1, 1, NOW(), NOW());
+ALTER TABLE ONLY public.transactions
+    DROP CONSTRAINT transactions_serial_number_key

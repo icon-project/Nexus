@@ -86,7 +86,7 @@ Sidecar head block no longer works correctly, always returns 0.
 
 ## Tests
 
-goloop rpc lastblock --uri http://localhost:9080/api/v3/icon | jq
+goloop rpc lastblock --uri http://54.251.114.18:9080/api/v3/icon | jq
 
 curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "chain_getHead"}' http://54.251.114.18:9933/ | jq
 
