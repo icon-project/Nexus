@@ -8,9 +8,8 @@ import { media } from 'components/Styles/Media';
 
 import { useDispatch } from 'hooks/useRematch';
 import { connectedNetWorks } from 'utils/constants';
-import { isApprovedForAll, setApprovalForAll } from 'connectors/ICONex/iconService';
-import { EthereumInstance } from 'connectors/MetaMask';
 
+import { services } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
 const StyledCard = styled.div`
@@ -67,7 +66,6 @@ export const TransferCard = ({
   setSendingInfo,
   isConnected,
   isSendingNativeCoin,
-  isConnectedToICON,
   currentNetwork,
 }) => {
   const [checkingApproval, setCheckingApproval] = useState(false);
@@ -91,9 +89,7 @@ export const TransferCard = ({
     } else {
       setCheckingApproval(true);
 
-      const result = await (isConnectedToICON
-        ? isApprovedForAll()
-        : EthereumInstance.isApprovedForAll());
+      const result = await services.isApprovedForAll();
 
       if (result) {
         setStep(1);
@@ -105,7 +101,7 @@ export const TransferCard = ({
           button: {
             text: 'Okay',
             onClick: () => {
-              isConnectedToICON ? setApprovalForAll() : EthereumInstance.setApprovalForAll();
+              services.setApprovalForAll();
             },
           },
         });
