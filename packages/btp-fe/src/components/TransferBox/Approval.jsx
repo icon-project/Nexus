@@ -143,11 +143,7 @@ export const Approval = memo(
       });
 
       if (isConnectedToICON) {
-        transfer(
-          { to: recipient, value: tokenAmount, coinName: token },
-          network,
-          isSendingNativeCoin,
-        );
+        transfer({ to: recipient, value: tokenAmount, coinName: token }, isSendingNativeCoin);
       } else {
         EthereumInstance.tranferToken(recipient, tokenAmount, network, isSendingNativeCoin);
       }

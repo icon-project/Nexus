@@ -13,7 +13,6 @@ import {
 import { requestSigning } from './events';
 import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
 import store from 'store';
-import { connectedNetWorks } from 'utils/constants';
 import { roundNumber } from 'utils/app';
 
 const iconService = new IconService(httpProvider);
@@ -143,22 +142,13 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx, network, isSendingNativeCoin) => {
+export const transfer = (tx, isSendingNativeCoin) => {
   window[signingActions.globalName] = signingActions.transfer;
 
-  // same ICON chain
-  if (network === connectedNetWorks.icon) {
-    if (isSendingNativeCoin) {
-      signTx(tx);
-    } else {
-      modal.openUnSupportTransfer();
-    }
+  if (isSendingNativeCoin) {
+    sendNativeCoin(tx);
   } else {
-    if (isSendingNativeCoin) {
-      sendNativeCoin(tx);
-    } else {
-      sendNoneNativeCoin(tx);
-    }
+    sendNoneNativeCoin(tx);
   }
 };
 

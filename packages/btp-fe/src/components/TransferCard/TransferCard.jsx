@@ -68,6 +68,7 @@ export const TransferCard = ({
   isConnected,
   isSendingNativeCoin,
   isConnectedToICON,
+  currentNetwork,
 }) => {
   const [checkingApproval, setCheckingApproval] = useState(false);
 
@@ -121,10 +122,15 @@ export const TransferCard = ({
 
   const { icon, moonbeam } = connectedNetWorks;
 
-  const listNetwork = [
-    { value: icon, label: icon },
-    { value: moonbeam, label: moonbeam },
-  ];
+  const getCrossNetworks = () => {
+    return currentNetwork
+      ? [
+          { value: icon, label: icon },
+          { value: moonbeam, label: moonbeam },
+        ].filter((network) => network.value !== currentNetwork)
+      : [];
+  };
+
   return (
     <StyledCard>
       <Header className="sm bold center">Transfer</Header>
@@ -142,7 +148,7 @@ export const TransferCard = ({
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={listNetwork} onChange={onChange} name="network" />
+          <Select options={getCrossNetworks()} onChange={onChange} name="network" />
         </div>
 
         <div className="button-section">
