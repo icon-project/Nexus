@@ -206,9 +206,10 @@ class Ethereum {
     }
   }
 
-  async tranferToken(to, amount, network, sendNativeCoin) {
+  async tranfer(tx, sendNativeCoin) {
     // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(amount)._hex;
+    const value = ethers.utils.parseEther(tx.value)._hex;
+    const { to } = tx;
     let txParams = {
       from: this.ethereum.selectedAddress,
       value,
