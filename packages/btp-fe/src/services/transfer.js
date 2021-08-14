@@ -8,7 +8,7 @@ import {
 import { EthereumInstance } from 'connectors/MetaMask';
 import { wallets } from 'utils/constants';
 
-const getCurrentTransferService = () => {
+const getCurrentTransferService = () => () => {
   const { wallet } = store.getState().account;
   const iconServices = { transfer, isApprovedForAll, setApprovalForAll, getBalanceOf };
 
@@ -21,6 +21,6 @@ const getCurrentTransferService = () => {
   }
 };
 
-const services = getCurrentTransferService();
+const getService = getCurrentTransferService();
 
-export { services };
+export { getService };

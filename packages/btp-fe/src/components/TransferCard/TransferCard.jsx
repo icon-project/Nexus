@@ -9,7 +9,7 @@ import { media } from 'components/Styles/Media';
 import { useDispatch } from 'hooks/useRematch';
 import { connectedNetWorks } from 'utils/constants';
 
-import { services } from 'services/transfer';
+import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
 const StyledCard = styled.div`
@@ -89,7 +89,7 @@ export const TransferCard = ({
     } else {
       setCheckingApproval(true);
 
-      const result = await services.isApprovedForAll();
+      const result = await getService().isApprovedForAll();
 
       if (result) {
         setStep(1);
@@ -101,7 +101,7 @@ export const TransferCard = ({
           button: {
             text: 'Okay',
             onClick: () => {
-              services.setApprovalForAll();
+              getService().setApprovalForAll();
             },
           },
         });

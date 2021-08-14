@@ -7,7 +7,7 @@ import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransac
 
 import { getBTPfee } from 'connectors/ICONex/iconService';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
-import { services } from 'services/transfer';
+import { getService } from 'services/transfer';
 
 import { Header, Text, SubTitle } from 'components/Typography';
 import { Icon } from 'components/Icon/Icon';
@@ -143,7 +143,7 @@ export const Approval = memo(
         desc: 'Waiting for confirmation in your wallet.',
       });
 
-      services.transfer(tx, isSendingNativeCoin);
+      getService().transfer(tx, isSendingNativeCoin);
     };
 
     return (
