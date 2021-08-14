@@ -5,7 +5,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { getBTPfee } from 'connectors/ICONex/iconService';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { services } from 'services/transfer';
 
@@ -121,7 +120,7 @@ export const Approval = memo(
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
       if (isCurrent)
-        getBTPfee().then((result) => {
+        services.getBTPfee().then((result) => {
           setBTPFee((result / 10000) * tokenAmount);
         });
     }, [isCurrent]);
