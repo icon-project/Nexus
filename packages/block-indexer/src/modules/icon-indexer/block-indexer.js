@@ -9,7 +9,8 @@ const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
 const { handleTransactionEvents } = require('../transactions/icon');
 const { handleTransferFeeEvents } = require('./transfer-fee');
-const { handleMintEvents } = require('./mint-burn');
+const { handleMintBurnEvents } = require('./mint-burn');
+const { handleTokenRegister } = require('./token-register');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -22,8 +23,9 @@ async function runTransactionHandlers(transaction, txResult, block) {
     await handleTransactionEvents(txResult, transaction);
     await handleAuctionEvents(txResult);
     await handleTransferFeeEvents(txResult);
-    await handleMintEvents(txResult, transaction);
-
+    await handleMintBurnEvents(txResult, transaction);
+    await handleTokenRegister(txResult, transaction);
+    
     // More transaction handlers go here.
   } catch (error) {
     logger.error('icon:runTransactionHandlers fails %O', error);
