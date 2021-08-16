@@ -115,3 +115,21 @@ Send 100 DEV: 0x97ceb92790a4f79cd480fb36a4b2bcd16060d86261bf1e3d3f03a40a462324c6
 Send 1 ICX: 0x9f2d28b1f3f501bdb9cba01716599fba7c063f307ecc841e3e269d3ff6b283d2
 
 eth transaction:get --network http://localhost:9933 0x97ceb92790a4f79cd480fb36a4b2bcd16060d86261bf1e3d3f03a40a462324c6
+
+# Test with UI 08/16/2021
+
+Ida sent John 10 DEV successfully.
+
+transactions.id = 0e9ee10b-8e56-4aae-ad2a-1228524ac875
+block 296971 0x7dcc42ccf9fe5f4ce4aa82485ba1cde0eb7becc5b14eb8b40503b344f4734508
+tx 0xd1aef8c48703dfe1d9745559eb45c32f280b92394395c5309669ac02de28f027
+
+John sent Ida 10 ICX unsuccessfully.
+
+transactions.id = 04355fdc-0987-452b-b240-d1d9600aa398
+block 445596 "0xa8c1f3f4363fdef54462f6161845fb6bf2cdfeca3780d85268721a91b873860c"
+tx "0x1b01d51f95dd20060c22bb5f081f79d0071bf561f2a9f565abf350f8871033d6"
+
+1 ICX from Alice to Bob:
+7cbefae7-6230-4062-a3a9-b5adde1a6b0d
+block 450546

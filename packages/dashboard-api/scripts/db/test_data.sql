@@ -42,3 +42,6 @@ VALUES (52, 'DEV', 1, 1, NOW(), NOW());
 
 INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
 VALUES (0, 'NONE', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (2099, 'ICX', 1, 1, NOW(), NOW());

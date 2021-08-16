@@ -4,7 +4,7 @@ const { getNetworkById } = require('../networks/repository');
 const { getTransactions, getTransactionById, countAllTransaction } = require('./repository');
 
 async function getTrans(page, limit, from, to, assetName) {
-  return getTransactions(page, limit, from, to, assetName);
+  return await getTransactions(page, limit, from, to, assetName);
 }
 
 async function getTotalTransaction() {
@@ -26,6 +26,7 @@ async function getTransById(id) {
   }
   return transation;
 }
+
 module.exports = {
   getTrans,
   getTransById,

@@ -14,7 +14,8 @@ async function getTransHistory(request, response) {
 
   let transHistory = await model.getTrans(page, limit, from, to, assetName);
 
-  if (!transHistory) return response.sendStatus(HttpStatus.NotFound);
+  if (!transHistory)
+    return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
     content: [...transHistory.transactions],
