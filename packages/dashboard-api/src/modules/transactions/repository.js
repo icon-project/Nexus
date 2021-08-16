@@ -11,29 +11,32 @@ const {
 
 async function getTransactions(page = 0, limit = 20, from, to, assestName) {
   let offset = page * limit;
-  let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME}
-                    WHERE ${TRANSACTION_TBL.deleteAt} = $1 `;
+  let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME} WHERE value <> $1`;
   const limitOffset = ' LIMIT $2 OFFSET $3';
   let params = [0, limit, offset];
 
   if (from) {
-    query += `AND ${TRANSACTION_TBL.fromAddress} ~ $${params.length + 1} `;
+    query += ` AND ${TRANSACTION_TBL.networkId}=$${params.length + 1}`;
     params.push(from);
   }
+
   if (to) {
-    query += `AND ${TRANSACTION_TBL.toAddress} ~ $${params.length + 1} `;
+    query += ` AND ${TRANSACTION_TBL.toAddress} ~ $${params.length + 1}`;
     params.push(to);
   }
+
   if (assestName) {
-    query += `AND ${TRANSACTION_TBL.tokenName} ILIKE $${params.length + 1} `;
+    query += ` AND ${TRANSACTION_TBL.tokenName} ILIKE $${params.length + 1}`;
     params.push(assestName);
   }
 
   query += limitOffset;
+
   try {
     const { rows } = await pgPool.query(query, params);
     const transactions = [];
     let total = 0;
+
     if (rows.length > 0) {
       for (const row of rows) {
         transactions.push({
@@ -44,9 +47,11 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName) {
           status: row.status,
           blockTime: Number(row.block_time),
         });
+
         total = row.total;
       }
     }
+
     return { transactions, total: Number(total) };
   } catch (error) {
     logger.error('getHistories fails', { error });

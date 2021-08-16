@@ -417,3 +417,6 @@ bash-5.0# cat BSHPeriphery.json | jq -r .abi
 # Polkadot portal
 
 docker run -it --name polkadot-ui -e WS_URL=ws://54.251.114.18:9944 -p 80:80 jacogr/polkadot-js-apps:latest
+
+
+curl http://54.251.114.18:8000/v1/transactions
