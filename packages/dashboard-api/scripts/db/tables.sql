@@ -92,6 +92,18 @@ CREATE TABLE public.minted_tokens (
     create_at timestamp without time zone NOT NULL
 );
 
+CREATE TABLE public.burned_tokens (
+    id character varying(100) NOT NULL,
+    network_id character varying(100),
+    token_name character varying(100),
+    token_value numeric,
+    total_token_amount numeric NOT NULL,
+    block_time bigint,
+    tx_hash character varying(100),
+    block_hash character varying(100),
+    block_height bigint,
+    create_at timestamp without time zone NOT NULL
+);
 
 --
 -- TOC entry 208 (class 1259 OID 16582)
@@ -199,6 +211,19 @@ CREATE TABLE IF NOT EXISTS public.transfer_fees
     created_time timestamp without time zone NOT NULL,
     CONSTRAINT transfer_fees_pkey PRIMARY KEY (id)
 )
+
+
+CREATE TABLE IF NOT EXISTS public.tokens_info
+(
+    id character varying(100) NOT NULL,
+    network_id character varying(100),
+    token_name character varying(100),
+    token_id character varying(200),
+    tx_hash character varying(100),
+    block_hash character varying(100),
+    block_height bigint,
+    create_at timestamp without time zone NOT NULL
+);
 
 --
 -- TOC entry 2848 (class 2606 OID 16462)
