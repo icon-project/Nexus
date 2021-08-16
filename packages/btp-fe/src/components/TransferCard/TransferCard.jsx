@@ -97,7 +97,7 @@ export const TransferCard = ({
         openModal({
           icon: 'exclamationPointIcon',
           desc:
-            'You need to grant permission before sending none native coin once and only first. Process?',
+            'You need to grant permission before sending none native coin once and only first. Proceed?',
           button: {
             text: 'Okay',
             onClick: () => {
