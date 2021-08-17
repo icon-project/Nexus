@@ -8,7 +8,7 @@ import {
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
 import { convertToICX } from 'connectors/ICONex/utils';
-import { connectedNetWorks, wallets } from 'utils/constants';
+import { wallets } from 'utils/constants';
 import { roundNumber } from 'utils/app';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 
@@ -206,49 +206,36 @@ class Ethereum {
     }
   }
 
-  async tranferToken(to, amount, network, sendNativeCoin) {
+  async tranfer(tx, sendNativeCoin) {
     // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(amount)._hex;
+    const value = ethers.utils.parseEther(tx.value)._hex;
+    const { to } = tx;
     let txParams = {
       from: this.ethereum.selectedAddress,
       value,
     };
 
-    // send token same chain
-    if (network === connectedNetWorks.moonbeam) {
-      if (sendNativeCoin) {
-        txParams = {
-          ...txParams,
-          nonce: '0x00',
-          to,
-        };
-      } else {
-        modal.openUnSupportTransfer();
-        return;
-      }
+    let data = null;
+    if (sendNativeCoin) {
+      data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
+        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+      ]);
     } else {
-      let data = null;
-      if (sendNativeCoin) {
-        data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
-          `btp://${currentICONexNetwork.networkAddress}/${to}`,
-        ]);
-      } else {
-        data = this.BSH_ABI.encodeFunctionData('transfer', [
-          'ICX',
-          value,
-          `btp://${currentICONexNetwork.networkAddress}/${to}`,
-        ]);
+      data = this.BSH_ABI.encodeFunctionData('transfer', [
+        'ICX',
+        value,
+        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+      ]);
 
-        delete txParams.value;
-      }
-
-      txParams = {
-        ...txParams,
-        to: MOON_BEAM_NODE.BSHCore,
-        gas: MOON_BEAM_NODE.gasLimit,
-        data,
-      };
+      delete txParams.value;
     }
+
+    txParams = {
+      ...txParams,
+      to: MOON_BEAM_NODE.BSHCore,
+      gas: MOON_BEAM_NODE.gasLimit,
+      data,
+    };
 
     await this.sendTransaction(txParams);
   }
