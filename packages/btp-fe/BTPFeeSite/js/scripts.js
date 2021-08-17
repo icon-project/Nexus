@@ -8,8 +8,8 @@ const {
 } = IconService;
 
 const BTPNetwork = {
-  endpoint: 'http://54.251.114.18:9082/api/v3',
-  BSHAddress: 'cxd42ef4864c64f0cd793018e06eed190b46492a1c',
+  endpoint: 'http://54.251.114.18:9080/api/v3',
+  BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82',
 };
 const httpProvider = new HttpProvider(BTPNetwork.endpoint);
 const FROM_ADDRESS = 'from-address';
@@ -30,7 +30,7 @@ function onSubmit() {
   const feeRate = document.getElementById('fee-input').value;
   const from = localStorage.getItem(FROM_ADDRESS);
 
-  if (!feeRate) {
+  if (!feeRate || feeRate < 0) {
     alert('Please input fee');
     return;
   }
@@ -43,8 +43,8 @@ function onSubmit() {
   const tx = txBuilder
     .from(from)
     .to(BTPNetwork.BSHAddress)
-    .method('setFeeRate') // will replaced by [setFeeRatio]
-    .params({ _feeRate: feeRate })
+    .method('setFeeRatio')
+    .params({ _feeNumerator: feeRate * 100 + '' })
     .nid(IconConverter.toBigNumber(3))
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nonce(IconConverter.toBigNumber(1))
@@ -133,13 +133,29 @@ function setInitialDOMState() {
 function showConnectICONexBtn(state, text) {
   const connectBtn = document.getElementById('connect-btn');
   const fromAddressText = document.getElementById('from-address');
+  const logoutBtn = document.getElementById('logout-btn');
 
   if (state) {
     connectBtn.style.display = 'block';
+    logoutBtn.style.display = 'none';
     fromAddressText.style.display = 'none';
   } else {
     connectBtn.style.display = 'none';
+    logoutBtn.style.display = 'block';
     fromAddressText.innerText = text;
     fromAddressText.style.display = 'block';
   }
+}
+
+/* eslint-disable-next-line */
+function onLogout() {
+  localStorage.removeItem(FROM_ADDRESS);
+
+  const connectBtn = document.getElementById('connect-btn');
+  const fromAddressText = document.getElementById('from-address');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  connectBtn.style.display = 'block';
+  fromAddressText.style.display = 'none';
+  logoutBtn.style.display = 'none';
 }
