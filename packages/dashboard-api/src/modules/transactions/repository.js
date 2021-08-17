@@ -83,7 +83,6 @@ async function getTransactionById(id) {
         status: Number(row.status),
         createAt: Number(row.create_at),
         updateAt: Number(row.update_at),
-        deleteAt: Number(row.delete_at),
         networkId: row.network_id,
         blockTime: Number(row.block_time),
         bptFee: numberToFixedAmount(Number(row.btp_fee) || 0),
@@ -98,6 +97,7 @@ async function getTransactionById(id) {
     throw error;
   }
 }
+
 /**
  * Get total transaction volume all time or total transaction volume of 24h ago
  * @param {*} is24hAgo true/false default false
@@ -132,11 +132,12 @@ async function getTotalTransactionVolume(is24hAgo = false, sortBy = 'DESC') {
     throw error;
   }
 }
+
 async function countAllTransaction() {
   const {
     rows: [result],
   } = await pgPool.query(
-    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.deleteAt} = 0`,
+    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME}`,
   );
   return Number(result.count) || 0;
 }

@@ -168,33 +168,27 @@ CREATE TABLE public.relay_rewards (
     created_time timestamp without time zone NOT NULL,
 );
 
-
---
--- TOC entry 200 (class 1259 OID 16385)
--- Name: transactions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.transactions (
-    id character varying(37) NOT NULL,
-    serial_number character varying(200) NOT NULL,
-    token_name character varying(300),
-    value numeric(100,5),
-    to_address character varying(300),
-    from_address character varying(300),
+CREATE TABLE IF NOT EXISTS public.transactions
+(
+    id character varying(37) COLLATE pg_catalog."default" NOT NULL,
+    serial_number character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default",
+    value numeric,
+    to_address character varying(100) COLLATE pg_catalog."default",
+    from_address character varying(100) COLLATE pg_catalog."default",
     block_height integer,
-    block_hash character varying(300),
-    tx_hash character varying(300),
+    block_hash character varying(100) COLLATE pg_catalog."default",
+    tx_hash character varying(100) COLLATE pg_catalog."default",
     create_at timestamp without time zone,
     update_at timestamp without time zone,
-    delete_at integer,
-    network_id character varying(100),
+    network_id character varying(20) COLLATE pg_catalog."default",
     block_time bigint,
-    btp_fee numeric(100,100),
-    network_fee numeric(100,100),
+    btp_fee numeric,
+    network_fee numeric,
     status integer DEFAULT 0,
-    total_volume numeric(100,6) NOT NULL DEFAULT 0
-);
-
+    total_volume numeric NOT NULL DEFAULT 0,
+    CONSTRAINT transactions_pkey PRIMARY KEY (id)
+)
 
 --
 -- TOC entry 205 (class 1259 OID 16527)
@@ -287,14 +281,6 @@ ALTER TABLE ONLY public.networks
 ALTER TABLE ONLY public.relay_candidates
     ADD CONSTRAINT relay_candidates_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 2844 (class 2606 OID 16392)
--- Name: transactions transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.transactions
-    ADD CONSTRAINT transactions_pkey PRIMARY KEY (id);
 
 --
 -- TOC entry 2856 (class 2606 OID 16534)
