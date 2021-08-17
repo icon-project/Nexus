@@ -13,6 +13,8 @@ import { ReactComponent as binanceIcon } from 'assets/images/binance-icon.svg';
 import { ReactComponent as btcIcon } from 'assets/images/btc-icon.svg';
 import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
 
+import MBIcon from 'assets/images/moonbeam.jpeg';
+
 const sizes = {
   s: '20px',
   m: '25.67px',
@@ -56,19 +58,21 @@ export const Icon = memo(
       binance: binanceIcon,
       btc: btcIcon,
       bch: bchIcon,
+      DEV: MBIcon,
     };
 
-    const MySVG = SVGComp || (!iconURL && icons[icon]);
+    const MySVG = SVGComp || icons[icon];
+    const isImagePath = typeof MySVG === 'string' && MySVG.includes('/');
 
     return (
       <>
-        {MySVG ? (
+        {!isImagePath ? (
           <SVGWrapper color={color} width={width} size={size} className="icon">
             <MySVG />
           </SVGWrapper>
         ) : (
           <StyledIcon
-            src={iconURL || iconexIcon}
+            src={MySVG || iconURL || iconexIcon}
             alt="wallet icon"
             loading="lazy"
             width={width}
