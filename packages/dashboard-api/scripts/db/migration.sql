@@ -76,3 +76,21 @@ ALTER TABLE public.token_prices
 
 ALTER TABLE ONLY public.transactions
     DROP CONSTRAINT transactions_serial_number_key
+
+-- Issue #262
+
+ALTER TABLE ONLY public.transactions
+    ALTER COLUMN serial_number  TYPE character varying(50),
+    ALTER COLUMN token_name  TYPE character varying(50),
+    ALTER COLUMN value  TYPE numeric,
+    ALTER COLUMN to_address  TYPE character varying(100),
+    ALTER COLUMN from_address  TYPE character varying(100),
+    ALTER COLUMN block_hash  TYPE character varying(100),
+    ALTER COLUMN tx_hash  TYPE character varying(100),
+    ALTER COLUMN network_id  TYPE character varying(20),
+    ALTER COLUMN btp_fee  TYPE numeric,
+    ALTER COLUMN network_fee  TYPE numeric,
+    ALTER COLUMN total_volume  TYPE numeric,
+    DROP COLUMN delete_at;
+
+UPDATE transactions SET btp_fee=value * 0.01, network_fee=value * 0.0001

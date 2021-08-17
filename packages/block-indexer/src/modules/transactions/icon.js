@@ -84,7 +84,7 @@ async function handleTransactionEvents(txResult, transaction) {
         blockHash: txResult.blockHash,
         blockHeight: txResult.blockHeight,
         status: TRANSACTION_STATUS.pending,
-        blockTime: transaction.timestamp,
+        blockTime: Math.floor(transaction.timestamp / 1000), // microsecond to millisecond
         networkId: process.env.ICON_NETWORK_ID,
         btpFee: btpFee,
         networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT
