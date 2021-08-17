@@ -174,10 +174,12 @@ export const WalletDetails = ({
             {shortedAddress}
           </Text>
           <CopyToClipboard text={address}>
-            <Text className="xs bold copy-address">
-              <img src={copyIcon} alt="icon" />
-              Copy address
-            </Text>
+            <div>
+              <Text className="xs bold copy-address">
+                <img src={copyIcon} alt="icon" />
+                Copy address
+              </Text>
+            </div>
           </CopyToClipboard>
         </div>
       </div>

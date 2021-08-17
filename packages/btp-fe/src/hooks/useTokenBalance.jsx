@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
-import { EthereumInstance } from 'connectors/MetaMask';
-import { getBalanceOf } from 'connectors/ICONex/iconService';
+
 import { useSelect } from 'hooks/useRematch';
+import { getService } from 'services/transfer';
 
 export const useTokenBalance = (currentSymbol) => {
   const [token, setToken] = useState({ balance: null, symbol: currentSymbol });
 
   const {
     accountInfo: { address, balance, unit, currentNetwork },
-    isConnectedToICON,
-  } = useSelect(({ account: { selectAccountInfo, selectIsConnectedToICON } }) => ({
+  } = useSelect(({ account: { selectAccountInfo } }) => ({
     accountInfo: selectAccountInfo,
-    isConnectedToICON: selectIsConnectedToICON,
   }));
 
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -22,15 +20,11 @@ export const useTokenBalance = (currentSymbol) => {
       if (isNativeCoin) {
         setToken({ balance, symbol: unit });
       } else {
-        if (isConnectedToICON) {
-          getBalanceOf(address, currentSymbol).then((result) => {
+        getService()
+          .getBalanceOf(address, currentSymbol)
+          .then((result) => {
             setToken({ balance: result, symbol: currentSymbol });
           });
-        } else {
-          EthereumInstance.getBalanceOf(address, currentSymbol).then((result) => {
-            setToken({ balance: result, symbol: currentSymbol });
-          });
-        }
       }
     }
   }, [currentSymbol, currentNetwork]);

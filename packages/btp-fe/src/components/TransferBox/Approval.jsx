@@ -5,9 +5,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { transfer, getBTPfee } from 'connectors/ICONex/iconService';
-import { EthereumInstance } from 'connectors/MetaMask';
+import { getBTPfee } from 'connectors/ICONex/iconService';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
+import { getService } from 'services/transfer';
 
 import { Header, Text, SubTitle } from 'components/Typography';
 import { Icon } from 'components/Icon/Icon';
@@ -112,7 +112,7 @@ const Total = styled.div`
 `;
 
 export const Approval = memo(
-  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate, isConnectedToICON }) => {
+  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate }) => {
     const [BTPFee, setBTPFee] = useState(0);
     const { recipient, tokenAmount = 0 } = values;
     const { token, network } = sendingInfo;
@@ -137,20 +137,13 @@ export const Approval = memo(
 
     const onApprove = () => {
       const isSendingNativeCoin = unit === token;
+      const tx = { to: recipient, value: tokenAmount, coinName: token };
       openModal({
         icon: 'loader',
         desc: 'Waiting for confirmation in your wallet.',
       });
 
-      if (isConnectedToICON) {
-        transfer(
-          { to: recipient, value: tokenAmount, coinName: token },
-          network,
-          isSendingNativeCoin,
-        );
-      } else {
-        EthereumInstance.tranferToken(recipient, tokenAmount, network, isSendingNativeCoin);
-      }
+      getService().transfer(tx, isSendingNativeCoin);
     };
 
     return (
