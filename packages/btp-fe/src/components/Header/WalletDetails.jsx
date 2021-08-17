@@ -6,6 +6,7 @@ import { Avatar } from 'antd';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
+import { tokenOptionList } from 'utils/constants';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -142,10 +143,9 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: unit, value: unit },
-    ...[
-      { label: 'DEV', value: 'DEV' },
-      { label: 'ICX', value: 'ICX' },
-    ].filter((item) => item.label !== unit),
+    ...tokenOptionList
+      .map(({ symbol }) => ({ label: symbol, value: symbol }))
+      .filter((item) => item.label !== unit),
   ];
 
   const onTokenChange = async (evt) => {
