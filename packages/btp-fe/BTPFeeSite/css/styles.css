@@ -48,6 +48,15 @@ header {
   align-items: center;
 }
 
+header > .connect-wallet-controls {
+  display: flex;
+  align-items: center;
+}
+
+header > .connect-wallet-controls > #from-address {
+  margin-right: 20px;
+}
+
 /*------------------------------------*\
   #MAIN
 \*------------------------------------*/
