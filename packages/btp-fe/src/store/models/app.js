@@ -22,6 +22,7 @@ const app = {
     async getAppInfo() {
       try {
         const appInfo = await fetchAPI('/btpnetwork?mintLast24h=true&&availableAmountLast24h=1');
+        //await new Promise((r) => setTimeout(r, 5000));
         this.setAppState(['appInfo', appInfo || {}]);
         return appInfo;
       } catch (error) {
