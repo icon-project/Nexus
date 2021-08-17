@@ -19,9 +19,6 @@ export const nativeTokens = {
   },
 };
 
-export const tokenOptionList = Object.values(nativeTokens).map(({ symbol }) => ({
-  name: symbol,
-  value: symbol,
-}));
+export const tokenOptionList = Object.values(nativeTokens);
 
 export const SUCCESS_TRANSACTION = 'SUCCESS_TRANSACTION';

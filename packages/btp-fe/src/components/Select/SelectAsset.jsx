@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { nativeTokens } from 'utils/constants';
+import { tokenOptionList } from 'utils/constants';
 
 const StyledItem = styled.div`
   display: flex;
@@ -37,7 +37,7 @@ const Item = ({ symbol, children, ...props }) => {
 
 const SelectAsset = ({ onChange }) => {
   /* eslint-disable react/display-name */
-  const coins = Object.values(nativeTokens).map(({ symbol, netWorkLabel }) => ({
+  const coins = tokenOptionList.map(({ symbol, netWorkLabel }) => ({
     value: symbol,
     label: symbol,
     renderLabel: () => (
