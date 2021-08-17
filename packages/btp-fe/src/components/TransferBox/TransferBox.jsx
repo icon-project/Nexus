@@ -37,17 +37,16 @@ export const TransferBox = () => {
   const [tokenValue, setTokenValue] = useState('');
   const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
 
-  const { isConnected, account, isConnectedToICON } = useSelect(
-    ({ account: { selectIsConnected, selectAccountInfo, selectIsConnectedToICON } }) => ({
+  const { isConnected, account } = useSelect(
+    ({ account: { selectIsConnected, selectAccountInfo } }) => ({
       isConnected: selectIsConnected,
       account: selectAccountInfo,
-      isConnectedToICON: selectIsConnectedToICON,
     }),
   );
 
   const isCurrentStep = (s) => s === step;
 
-  const { unit } = account;
+  const { unit, currentNetwork } = account;
   const usdRate = useTokenToUsd(unit, 1, isCurrentStep(1));
 
   const onSendingInfoChange = (info = {}) => {
@@ -71,7 +70,7 @@ export const TransferBox = () => {
                   setSendingInfo={onSendingInfoChange}
                   isConnected={isConnected}
                   isSendingNativeCoin={unit === sendingInfo.token}
-                  isConnectedToICON={isConnectedToICON}
+                  currentNetwork={currentNetwork}
                 />
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>
@@ -95,7 +94,6 @@ export const TransferBox = () => {
                   account={account}
                   form={form}
                   usdRate={usdRate}
-                  isConnectedToICON={isConnectedToICON}
                 />
               </div>
             </form>
