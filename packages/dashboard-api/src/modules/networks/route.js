@@ -8,4 +8,5 @@ let router = express.Router();
 router.use(debugLogMiddleware(debug));
 router.get('/', asyncMiddleware(getNetworksInfo));
 router.get('/:id', asyncMiddleware(getNetworkInfoById));
+
 module.exports = router;

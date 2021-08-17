@@ -6,9 +6,10 @@ const { tokenToUsd } = require('../../common');
 
 // curl http://localhost:8000/v1/btpnetwork | jq
 async function getNetworkInfo(request, response) {
-  let last24hChange;
-  if (request.query.availableAmountLast24h == 1) {
-    last24hChange = await model.calculateVolumePercents();
+  let volumeLast24hChange;
+
+  if ('true' === request.query.volumeLast24h) {
+    volumeLast24hChange = await model.calculateVolumePercents();
   }
 
   let mintVolumeLast24hChange;
@@ -27,7 +28,7 @@ async function getNetworkInfo(request, response) {
   response.status(HttpStatus.OK).json({
     content: {
       volume: totalTransactionAmount,
-      last24hChange,
+      volumeLast24hChange,
       bondedValue: bondedRelays,
       fee: {
         cumulativeAmount: allTimeFeeAssets.totalUSD,

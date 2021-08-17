@@ -98,7 +98,6 @@ async function handleTransactionEvents(txResult, transaction) {
       await saveTransaction(transObj);
     }
   } else if (process.env.ICON_BMC_ADDRESS === txResult.to) {
-
     for (const event of txResult.eventLogs) {
       if (TRANFER_END_PROTOTYPE !== event.indexed[0])
         continue;
