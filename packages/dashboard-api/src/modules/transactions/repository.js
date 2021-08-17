@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('db');
 const {
   logger,
   pgPool,
@@ -108,17 +109,20 @@ async function getTotalTransactionVolume(is24hAgo = false, sortBy = 'DESC') {
     let query = `SELECT DISTINCT ON (${TRANSACTION_TBL.tokenName}) ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.updateAt}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.networkId}
     FROM ${TRANSACTION_TBL_NAME}
     WHERE ${TRANSACTION_TBL.status} = 1 `;
+
     const orderBy = ` ORDER BY ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.updateAt} ${sortBy}`;
 
     if (is24hAgo) {
-      const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
+      const at24hAgo = new Date().getTime() - (24 * 60 * 60 * 1000);
       query += ` AND ${TRANSACTION_TBL.blockTime} >= ${at24hAgo} ` + orderBy;
     } else {
       query += orderBy;
     }
 
+    debug('getTotalTransactionVolume: %s', query);
     const { rows } = await pgPool.query(query);
     let result = [];
+
     for (let data of rows) {
       result.push({
         networkId: data.network_id,
@@ -126,6 +130,7 @@ async function getTotalTransactionVolume(is24hAgo = false, sortBy = 'DESC') {
         totalVolume: data.total_volume,
       });
     }
+
     return result;
   } catch (error) {
     logger.error('getTokenVolumeAllTime fails', { error });

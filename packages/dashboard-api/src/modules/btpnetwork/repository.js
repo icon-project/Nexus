@@ -8,20 +8,11 @@ async function countNetwork() {
   return Number(result.count) || 0;
 }
 
-async function sumTransactionAmount() {
-  const {
-    rows: [result],
-  } = await pgPool.query(
-    `SELECT SUM(value) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.status} = 1 AND ${TRANSACTION_TBL.deleteAt} = 0`,
-  );
-  return Number(result.sum) || 0;
-}
-
 async function countTransaction() {
   const {
     rows: [result],
   } = await pgPool.query(
-    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.status} = 1 AND ${TRANSACTION_TBL.deleteAt} = 0`,
+    `SELECT COUNT(*) FROM ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.status} = 1`,
   );
   return Number(result.count) || 0;
 }
@@ -75,9 +66,9 @@ async function getVolumeMintedNetworks() {
 
 async function getLatestTokensMinted() {
   try {
-    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond 
+    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond
 
-    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount  
+    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
       FROM minted_tokens
       WHERE create_at >= $1
       ORDER BY token_name, create_at DESC`, [at24hAgo.toISOString()]);
@@ -97,7 +88,7 @@ async function getLatestTokensMinted() {
 
 async function getTotalTokensMintedLast24h() {
   try {
-    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond 
+    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond
     let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
     FROM minted_tokens
     WHERE create_at <= $1
@@ -118,7 +109,6 @@ async function getTotalTokensMintedLast24h() {
 
 module.exports = {
   countNetwork,
-  sumTransactionAmount,
   countTransaction,
   getAllTimeFeeOfAssets,
   getVolumeMintedNetworks,

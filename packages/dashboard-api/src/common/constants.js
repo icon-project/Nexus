@@ -39,8 +39,7 @@ const TRANSACTION_TBL = {
   networkFee: 'network_fee',
   totalVolume: 'total_volume',
   createAt: 'create_at',
-  updateAt: 'update_at',
-  deleteAt: 'delete_at',
+  updateAt: 'update_at'
 };
 
 const RELAY_REWARD_TBL = {

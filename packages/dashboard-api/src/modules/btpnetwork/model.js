@@ -118,6 +118,7 @@ async function getTotalTransactionAmount(is24hAgo) {
 
     const results = await Promise.all(promises);
     results.forEach(item => totalUSD += item);
+
     return totalUSD;
   } catch (error) {
     logger.error('getTotalTransactionAmount failed', { error });
