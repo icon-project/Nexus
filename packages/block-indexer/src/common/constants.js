@@ -14,7 +14,6 @@ const TRANSACTION_TBL = {
   value: 'value',
   toAddress: 'to_address',
   blockHeight: 'block_height',
-  blockHash: 'block_hash',
   txHash: 'tx_hash',
   blockTime: 'block_time',
   networkId: 'network_id',
@@ -23,8 +22,7 @@ const TRANSACTION_TBL = {
   status: 'status',
   totalVolume: 'total_volume',
   createAt: 'create_at',
-  updateAt: 'update_at',
-  deleteAt: 'delete_at',
+  updateAt: 'update_at'
 };
 
 const ICX_LOOP_UNIT = 10 ** 18;

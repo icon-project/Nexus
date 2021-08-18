@@ -81,7 +81,6 @@ async function handleTransactionEvents(txResult, transaction) {
         value: value,
         toAddress: data[0],
         txHash: txResult.txHash,
-        blockHash: txResult.blockHash,
         blockHeight: txResult.blockHeight,
         status: TRANSACTION_STATUS.pending,
         blockTime: Math.floor(transaction.timestamp / 1000), // microsecond to millisecond
@@ -104,8 +103,7 @@ async function handleTransactionEvents(txResult, transaction) {
 
       confirmTransferEnd(event, {
         txHash: txResult.txHash,
-        blockHeight: txResult.blockHeight,
-        blockHash: txResult.blockHash,
+        blockHeight: txResult.blockHeight
       });
     }
   }
