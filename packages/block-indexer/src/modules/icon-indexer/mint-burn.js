@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { logger, pgPool } = require('../../common');
+const { logger, ICX_LOOP_UNIT, pgPool } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
 const { IconConverter } = require('icon-sdk-js');
 const { decode } = require('rlp');
@@ -20,6 +20,7 @@ async function getTokensInfo(idEncode, valueEncode) {
   return {
     tokenValue: value,
     tokenName: name,
+    tokenId: id
   }
 }
 
@@ -60,7 +61,10 @@ async function getMintBurnEvent(txResult, transaction) {
 
         return {
           tokenName: token.tokenName,
-          tokenValue: token.tokenValue,
+          tokenId: token.tokenId,
+          tokenValue: Number(token.tokenValue) / ICX_LOOP_UNIT,
+          to: event.indexed[3],
+          from: event.indexed[2],
           txHash: txResult.txHash,
           blockHash: txResult.blockHash,
           blockHeight: txResult.blockHeight,
@@ -76,12 +80,12 @@ async function getMintBurnEvent(txResult, transaction) {
 
 async function getTotalTokenMintAmount(name) {
   const { rows } = await pgPool.query('SELECT total_token_amount FROM minted_tokens WHERE token_name = $1 ORDER BY create_at DESC LIMIT 1', [name]);
-  return rows[0] ? rows[0].total_token_amount : 0;
+  return rows[0] ? Number(rows[0].total_token_amount) : 0;
 }
 
 async function getTotalTokenBurnAmount(name) {
   const { rows } = await pgPool.query('SELECT total_token_amount FROM burned_tokens WHERE token_name = $1 ORDER BY create_at DESC LIMIT 1', [name]);
-  return rows[0] ? rows[0].total_token_amount : 0;
+  return rows[0] ? Number(rows[0].total_token_amount) : 0;
 }
 
 async function getTokenNameById(id) {
@@ -94,8 +98,8 @@ async function saveMintToken(mintObj, totalToken) {
     preSave(mintObj);
 
     const totalTokenAmount = totalToken + mintObj.tokenValue;
-    const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
-    const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash];
+    const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, token_id, mint_to, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())';
+    const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash, mintObj.tokenId , mintObj.to];
 
     await pgPool.query(query, values);
   } catch (error) {
@@ -108,8 +112,8 @@ async function saveBurnToken(burnObj, totalToken) {
     preSave(burnObj);
 
     const totalTokenAmount = totalToken + burnObj.tokenValue;
-    const query = 'INSERT INTO burned_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
-    const values = [burnObj.id, burnObj.networkId, burnObj.tokenName, burnObj.tokenValue, totalTokenAmount, burnObj.blockTime, burnObj.blockHeight , burnObj.blockHash , burnObj.txHash];
+    const query = 'INSERT INTO burned_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, token_id, burn_from, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())';
+    const values = [burnObj.id, burnObj.networkId, burnObj.tokenName, burnObj.tokenValue, totalTokenAmount, burnObj.blockTime, burnObj.blockHeight , burnObj.blockHash , burnObj.txHash, burnObj.tokenId, burnObj.from];
 
     await pgPool.query(query, values);
   } catch (error) {

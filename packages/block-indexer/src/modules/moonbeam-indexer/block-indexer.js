@@ -5,8 +5,9 @@ const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
 const { saveBlock, getLastSavedBlock } = require('./repository');
-const { buildEventMap } = require('./events');
+const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
+const { handleMintBurnEvents } = require('./mint-burn');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
@@ -14,6 +15,7 @@ let isWaitToStop = false;
 async function runTransactionHandlers(transaction, block) {
   try {
     await handleTransactionEvents(transaction, block);
+    await handleMintBurnEvents(transaction, block);
 
     // More transaction handlers go here.
   } catch (error) {
@@ -25,7 +27,7 @@ async function runBlockHandlers(block) {
   for (const tx of block.extrinsics) {
     // Ignore timestamp transactions.
     if ('timestamp' !== tx.method.pallet) {
-      debug('Transaction: %O', tx);
+      debug('Transaction: %O', tx) ;
       await runTransactionHandlers(tx, block);
     }
   }
@@ -126,8 +128,9 @@ async function retryGetBlockData() {
 
 async function start() {
   const eventMap = buildEventMap();
+  const eventMapBSHScore = buildBSHScoreEventMap();
   logger.info('Moonbeam event map: %O', eventMap);
-
+  logger.info('Moonbeam BSH SCORE event map: %O', eventMapBSHScore);
   if (-1 === blockHeight) {
     const block = await getLastSavedBlock();
 
