@@ -59,17 +59,14 @@ export const ValuesArea = ({ isFetching, data }) => {
     <Wrapper>
       <div className="value">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
-        {isFetching ? (
-          <>
-            <Skeleton width="337px" height="48px" bottom="12px" />
-            <Skeleton width="120px" height="20px" />
-          </>
-        ) : (
-          <>
-            <Header className="md bold">${toSeparatedNumberString(volume)}</Header>
-            <UpDownPercent percent={last24hChange} />
-          </>
-        )}
+        <Header className="md bold skeleton-loading" style={{ ['--skeleton-width']: '337px' }}>
+          ${toSeparatedNumberString(volume)}
+        </Header>
+        <UpDownPercent
+          percent={last24hChange}
+          className="skeleton-loading"
+          style={{ ['--skeleton-width']: '120px' }}
+        />
       </div>
       <div className="value">
         <TextWithInfo

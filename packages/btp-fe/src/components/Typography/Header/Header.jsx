@@ -43,9 +43,9 @@ const StyledHeader = styled.h3`
   `};
 `;
 
-export const Header = ({ children, className, color = colors.grayText }) => {
+export const Header = ({ children, className, color = colors.grayText, style }) => {
   return (
-    <StyledHeader className={`header-text ${className}`} $color={color}>
+    <StyledHeader className={`header-text ${className}`} $color={color} style={style}>
       {children}
     </StyledHeader>
   );
