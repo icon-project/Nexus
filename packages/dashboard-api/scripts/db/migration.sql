@@ -94,3 +94,10 @@ ALTER TABLE ONLY public.transactions
     DROP COLUMN delete_at;
 
 UPDATE transactions SET btp_fee=value * 0.01, network_fee=value * 0.0001
+
+-- Issue #264
+
+ALTER TABLE ONLY public.transactions
+    ADD COLUMN tx_hash_end character varying(100),
+    ADD COLUMN block_height_end integer,
+    DROP COLUMN block_hash;

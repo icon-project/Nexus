@@ -129,7 +129,6 @@ async function handleTransferStartEvent(transferStart, evmLogEvent, transaction,
         btpFee: event.fee,
         serialNumber: event.sn,
         txHash: transaction.hash,
-        blockHash: block.hash,
         blockHeight: Number(block.number),
         status: TRANSACTION_STATUS.pending,
         blockTime: Number(block.extrinsics[0].args.now),
@@ -174,7 +173,6 @@ async function handleTransferEndEvent(transferEnd, evmLogEvent, transaction, blo
       // Issue: need to keep hashes of both start and end transactions.
       const txData = {
         txHash: transaction.hash,
-        blockHash: block.hash,
         blockHeight: Number(block.number)
       };
 

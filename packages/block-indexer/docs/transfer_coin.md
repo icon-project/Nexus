@@ -23,7 +23,8 @@ echo 'ibase=16; d3c21bcecceda1000000' | bc
 # 0 (too big to show :))
 
 # Ida:
-# Public Address: 0xc41c5f1123eccd5ce233578b2e7ebd5693869d73
+# Warning: address must be case sensitive.
+# Public Address: 0xC41C5F1123ECCd5ce233578B2e7ebd5693869d73
 # Private Key: 0x4c42532034540267bf568198ccec4cb822a025da542861fcb146a5fab6433ff8
 # printf '%s\n' "0xC41C5F1123ECCd5ce233578B2e7ebd5693869d73" | awk '{ print tolower($0) }'
 
