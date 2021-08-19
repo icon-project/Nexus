@@ -61,18 +61,18 @@ export const Icon = memo(
       DEV: MBIcon,
     };
 
-    const MySVG = SVGComp || icons[icon];
-    const isImagePath = typeof MySVG === 'string' && MySVG.includes('/');
+    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL;
+    const isImagePath = iconURL || (typeof MySource === 'string' && MySource.includes('/'));
 
     return (
       <>
         {!isImagePath ? (
           <SVGWrapper color={color} width={width} size={size} className="icon">
-            <MySVG />
+            <MySource />
           </SVGWrapper>
         ) : (
           <StyledIcon
-            src={MySVG || iconURL || iconexIcon}
+            src={MySource || iconURL || iconexIcon}
             alt="wallet icon"
             loading="lazy"
             width={width}
