@@ -22,6 +22,7 @@ const {
 
 const { HttpProvider, IconBuilder } = IconService;
 const { getTotalTransactionVolume } = require('../transactions/repository');
+const { getTotalBondedRelayCandidates } = require('../relay-candidates/repository');
 
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
@@ -135,14 +136,13 @@ async function getTotalTransaction() {
   }
 }
 
-async function getBondedVolumeByRelays() {
-  return 0; // TODO refactor relay candidate
-  // try {
-  //   return getTotalBondedRelays();
-  // } catch (error) {
-  //   logger.error('getBondedVolumeByRelays failed', { error });
-  //   throw error;
-  // }
+async function getBondedVolumeByRelayCandidates() {
+  try {
+    return getTotalBondedRelayCandidates();
+  } catch (error) {
+    logger.error('getBondedVolumeByRelayCandidates failed', { error });
+    throw error;
+  }
 }
 
 async function getAllTimeFee() {
@@ -246,7 +246,7 @@ module.exports = {
   getTotalNetworks,
   getTotalTransactionAmount,
   getTotalTransaction,
-  getBondedVolumeByRelays,
+  getBondedVolumeByRelayCandidates,
   getAllTimeFee,
   getMintedNetworks,
   calculateVolumePercents,

@@ -124,3 +124,10 @@ ALTER TABLE ONLY public.relays
 
 ALTER TABLE ONLY public.transactions
     ADD COLUMN tx_error character varying(100);
+
+-- Issue #38
+ALTER TABLE ONLY public.relay_candidates
+    DROP COLUMN server_status,
+	DROP COLUMN total_transferred_tx,
+	DROP COLUMN total_failed_tx,
+	DROP COLUMN total_active;

@@ -8,8 +8,9 @@ const { createBtpNetworkRoute } = require('../modules/btpnetwork');
 const { createAuctionRoute } = require('../modules/auctions');
 const { createRelayRoute } = require('../modules/relays');
 const { createTransRoute } = require('../modules/transactions');
-const { createNetworksRoute} = require('../modules/networks');
-const { createFeeRoute} = require('../modules/fees');
+const { createNetworksRoute } = require('../modules/networks');
+const { createFeeRoute } = require('../modules/fees');
+const { createRelayCandidateRoute } = require('../modules/relay-candidates');
 
 const app = express();
 const version = process.env.API_VERSION;
@@ -23,6 +24,8 @@ app.use(`/${version}/auctions`, createAuctionRoute());
 app.use(`/${version}/relays`, createRelayRoute());
 app.use(`/${version}/transactions`, createTransRoute());
 app.use(`/${version}/fees`, createFeeRoute());
+app.use(`/${version}/relay-candidates`, createRelayCandidateRoute());
+
 app.use(errorHandlerMiddleware(logger));
 
 module.exports = app;
