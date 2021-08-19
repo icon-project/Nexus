@@ -80,7 +80,7 @@ const columns = [
 ];
 
 const TransferHistoryStyled = styled.div`
-  padding-top: 36px;
+  padding: 36px 0 60px;
   margin: 0 auto;
   color: ${colors.grayText};
   width: 1120px;
