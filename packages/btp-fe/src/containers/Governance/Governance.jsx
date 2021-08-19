@@ -14,14 +14,24 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 
 const columns = [
   {
-    title: 'Address',
-    dataIndex: 'address',
-    width: '500px',
+    title: '#',
+    dataIndex: 'rank',
+    width: '64px',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    width: '282px',
+  },
+  {
+    title: 'Bonded ICX',
+    dataIndex: 'bondedICX',
+    width: '214px',
   },
   {
     title: 'Server status',
     dataIndex: 'serverStatus',
-    width: '192px',
+    width: '132px',
   },
   {
     title: 'Transferred transaction',
@@ -35,32 +45,6 @@ const columns = [
   },
 ];
 
-const candidatesColumns = [
-  {
-    title: '#',
-    dataIndex: 'rank',
-    width: '100px',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    width: '400px',
-  },
-  {
-    title: 'Bonded ICS',
-    dataIndex: 'bondedICX',
-    width: '620px',
-  },
-];
-
-let candidates = [];
-for (let rank = 1; rank < 11; rank++) {
-  candidates.push({
-    rank,
-    name: 'ICON Foundation',
-    bondedICX: '52,254,777.1397',
-  });
-}
 const GovernanceStyled = styled.div`
   max-width: 1120px;
   margin: auto;
@@ -79,12 +63,7 @@ const GovernanceStyled = styled.div`
       padding: 20px 0 20px 20px;
     `}
   }
-  .table-name {
-    padding: 0 0 25px 0;
-  }
-  .table-component {
-    padding-bottom: 58px;
-  }
+
   .iconex {
     width: 20px;
     margin-right: 12px;
@@ -161,6 +140,7 @@ function GovernancePage() {
     getRelayCandidates();
     getRegisteredRelayLast24h();
   }, [getRelayCandidates, getRegisteredRelayLast24h]);
+
   return (
     <GovernanceStyled>
       <Helmet title="Governance" />
@@ -182,27 +162,15 @@ function GovernancePage() {
             </div>
           </div>
         </div>
-        <Header className="xs bold table-name">Relay</Header>
         <Table
           rowKey="id"
           columns={columns}
           dataSource={relayCandidates}
+          pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
           hoverColor={colors.darkBG}
           bodyText={'md'}
-          pagination={{ totalItem: 21, limit: 10 }}
-        />
-        <Header className="xs bold table-name">Relay Candidates</Header>
-        <Table
-          rowKey="rank"
-          columns={candidatesColumns}
-          dataSource={candidates}
-          headerColor={colors.grayAccent}
-          backgroundColor={colors.darkBG}
-          hoverColor={colors.darkBG}
-          bodyText={'md'}
-          pagination={{ totalItem: 100, limit: 10 }}
         />
       </div>
     </GovernanceStyled>

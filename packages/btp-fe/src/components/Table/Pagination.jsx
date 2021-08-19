@@ -75,14 +75,8 @@ const StyledPagination = styled(AntdPagination)`
       width: 100%;
     }
 
-    .ant-pagination-item-container {
-      svg {
-        display: none;
-      }
-
-      .ant-pagination-item-ellipsis {
-        color: ${primaryBrandLight};
-      }
+    .ant-pagination-item-ellipsis {
+      color: ${primaryBrandLight};
     }
 
     button.ant-pagination-item-link {
@@ -92,10 +86,6 @@ const StyledPagination = styled(AntdPagination)`
     :hover {
       border-color: ${primaryBrandBase};
       color: ${primaryBrandBase};
-
-      .ant-pagination-item-ellipsis {
-        color: ${primaryBrandBase};
-      }
     }
 
     :active {
