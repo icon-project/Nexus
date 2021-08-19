@@ -14,7 +14,6 @@ import { requestSigning } from './events';
 import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { toChecksumAddress } from 'connectors/MetaMask/utils';
 
 const iconService = new IconService(httpProvider);
 const rawTransaction = 'rawTransaction';
@@ -165,7 +164,7 @@ export const signTx = (transaction = {}, options = {}) => {
 
   let tx = txBuilder
     .from(from)
-    .to(toChecksumAddress(to))
+    .to(to)
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
     .nonce(IconConverter.toBigNumber(1))
