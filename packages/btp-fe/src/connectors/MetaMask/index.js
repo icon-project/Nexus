@@ -7,10 +7,10 @@ import {
   currentICONexNetwork,
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
-import { convertToICX } from 'connectors/ICONex/utils';
+import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
+import { toChecksumAddress } from './utils';
 import { wallets } from 'utils/constants';
 import { roundNumber } from 'utils/app';
-import { resetTransferStep } from 'connectors/ICONex/utils';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -116,7 +116,7 @@ class Ethereum {
 
       if (isAllowedNetwork) {
         const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
-        const address = accounts[0];
+        const address = toChecksumAddress(accounts[0]);
         localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
@@ -211,7 +211,7 @@ class Ethereum {
     const value = ethers.utils.parseEther(tx.value)._hex;
     const { to } = tx;
     let txParams = {
-      from: this.ethereum.selectedAddress,
+      from: toChecksumAddress(this.ethereum.selectedAddress),
       value,
     };
 
