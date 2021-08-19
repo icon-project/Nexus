@@ -7,6 +7,7 @@ import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransac
 
 import { getBTPfee } from 'connectors/ICONex/iconService';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
+import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { getService } from 'services/transfer';
 
 import { Header, Text, SubTitle } from 'components/Typography';
@@ -137,7 +138,7 @@ export const Approval = memo(
 
     const onApprove = () => {
       const isSendingNativeCoin = unit === token;
-      const tx = { to: recipient, value: tokenAmount, coinName: token };
+      const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token };
       openModal({
         icon: 'loader',
         desc: 'Waiting for confirmation in your wallet.',
