@@ -13,7 +13,6 @@ const {
   saveTransaction
 } = require('./repository');
 
-
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
 /*
@@ -173,7 +172,8 @@ async function handleTransferEndEvent(transferEnd, evmLogEvent, transaction, blo
       // Issue: need to keep hashes of both start and end transactions.
       const txData = {
         txHash: transaction.hash,
-        blockHeight: Number(block.number)
+        blockHeight: Number(block.number),
+        error: TRANSACTION_STATUS.failed === statusCode ? event.response : ''
       };
 
       await setTransactionConfirmed([updatingTx], txData, statusCode);

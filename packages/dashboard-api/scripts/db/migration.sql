@@ -17,8 +17,8 @@ ALTER TABLE transactions
 -- Issue #33
 
 ALTER TABLE networks
-DROP COLUMN delete_at,
-ADD COLUMN native_token character varying(100);
+    DROP COLUMN delete_at,
+    ADD COLUMN native_token character varying(100);
 
 ALTER TABLE networks
 ALTER COLUMN create_at SET DATA TYPE timestamp without time zone USING to_timestamp(create_at),
@@ -119,3 +119,8 @@ CREATE TABLE public.relays (
 
 ALTER TABLE ONLY public.relays
     ADD CONSTRAINT relays_pkey PRIMARY KEY (id);
+
+-- Issue #269
+
+ALTER TABLE ONLY public.transactions
+    ADD COLUMN tx_error character varying(100);

@@ -207,6 +207,7 @@ CREATE TABLE IF NOT EXISTS public.transactions
     network_fee numeric,
     status integer DEFAULT 0,
     total_volume numeric NOT NULL DEFAULT 0,
+    tx_error character varying(100) COLLATE pg_catalog."default",
     CONSTRAINT transactions_pkey PRIMARY KEY (id)
 )
 

@@ -36,7 +36,7 @@ async function getTransaction(request, response) {
   if (!trans) return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
-    content: { ...trans, internalTransactions: [] },
+    content: { ...trans }
   });
 }
 
