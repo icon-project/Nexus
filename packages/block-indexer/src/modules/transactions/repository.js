@@ -58,9 +58,10 @@ async function getBySerialNumber(serialNumber, networkId) {
           ${TRANSACTION_TBL.status} = $1,
           block_height_end = $2,
           tx_hash_end = $3,
+          tx_error = $4,
           ${TRANSACTION_TBL.updateAt} = NOW()
-        WHERE ${TRANSACTION_TBL.id} = $4`;
-      const values = [status, txInfo.blockHeight, txInfo.txHash, transt.id];
+        WHERE ${TRANSACTION_TBL.id} = $5`;
+      const values = [status, txInfo.blockHeight, txInfo.txHash, txInfo.error, transt.id];
 
       await client.query(query, values);
       debug('saveTransaction SQL %s %O:', query, values);

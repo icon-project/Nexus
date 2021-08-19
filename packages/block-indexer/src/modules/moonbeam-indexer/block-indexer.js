@@ -64,10 +64,9 @@ async function getBlockData() {
     const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
     if (block) {
-      logger.info(`Received block ${blockHeight}, ${block.hash}`);
-
       // Block always has one extrinsics of set timestamp.
       if (block.extrinsics.length > 1) {
+        logger.info(`Received Moonbeam block ${block.number}, ${block.hash}`);
         debug('Block: %O', block);
 
         await saveBlock(block);

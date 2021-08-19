@@ -2,6 +2,7 @@
 
 const { decode } = require('rlp');
 const { IconConverter } = require('icon-sdk-js');
+const Web3 = require('web3');
 const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { calculateTotalVolume } = require('./model');
 const {
@@ -13,6 +14,7 @@ const {
 
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,bytes)';
+const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
 /**
  * * TransferEnd(Address string, serialNumber int, status int, message str)
@@ -37,6 +39,7 @@ async function confirmTransferEnd(event, txInfo) {
         break;
     }
 
+    txInfo.error = TRANSACTION_STATUS.failed === statusCode ? web3.utils.hexToUtf8(data[2]) : '';
     await setTransactionConfirmed([transaction], txInfo, statusCode);
   } catch (error) {
     logger.error('confirmTransferEnd failed confirm transaction %O', error);

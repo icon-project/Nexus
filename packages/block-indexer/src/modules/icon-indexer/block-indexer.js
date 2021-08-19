@@ -91,13 +91,14 @@ async function getBlockData() {
 
     if (block) {
       if (block.confirmedTransactionList.length > 0) {
+        logger.info(`Received ICON block ${block.height}, ${block.blockHash}`);
         debug('Block: %O', block);
 
         await saveBlock(block);
         await runBlockHandlers(block);
       }
 
-      ++blockHeight;
+      ++ blockHeight;
     }
 
     setTimeout(async () => await retryGetBlockData(), timeout);

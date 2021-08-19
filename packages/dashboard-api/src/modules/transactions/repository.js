@@ -13,7 +13,7 @@ const {
 async function getTransactions(page = 0, limit = 20, from, to, assestName) {
   let offset = page * limit;
   let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME} WHERE value <> $1`;
-  const limitOffset = ' LIMIT $2 OFFSET $3';
+  const limitOffset = ' ORDER BY block_time DESC LIMIT $2 OFFSET $3';
   let params = [0, limit, offset];
 
   if (from) {
@@ -32,6 +32,7 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName) {
   }
 
   query += limitOffset;
+  debug('getTransactions: %s', query);
 
   try {
     const { rows } = await pgPool.query(query, params);
@@ -71,6 +72,7 @@ async function getTransactionById(id) {
     const { rows } = await pgPool.query(query, [id]);
     if (rows.length > 0) {
       let row = rows[0];
+
       transaction = {
         id: row.id,
         serialNumber: row.serial_number,
@@ -90,8 +92,10 @@ async function getTransactionById(id) {
         networkFee: numberToFixedAmount(Number(row.network_fee) || 0),
         networkNameSrc: row.name,
         nativeToken: row.native_token,
+        txError: row.tx_error
       };
     }
+
     return transaction;
   } catch (error) {
     logger.error('getTransactionById fails', { error });
