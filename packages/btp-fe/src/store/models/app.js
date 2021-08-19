@@ -20,7 +20,7 @@ const app = {
   effects: (dispatch) => ({
     async getAppInfo() {
       try {
-        const appInfo = await fetchAPI('/btpnetwork?mintLast24h=true&&volumeLast24h=true');
+        const appInfo = await fetchAPI('/btpnetwork?mintLast24h=true&volumeLast24h=true');
         this.setAppState(['appInfo', appInfo || {}]);
         return appInfo;
       } catch (error) {
