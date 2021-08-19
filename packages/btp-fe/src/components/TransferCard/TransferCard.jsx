@@ -101,7 +101,9 @@ export const TransferCard = ({
           hasHeading: false,
           children: (
             <TransferApproval
-              onOk={getService().setApprovalForAll}
+              onOk={() => {
+                getService().setApprovalForAll();
+              }}
               onCancel={() => {
                 setDisplay(false);
               }}

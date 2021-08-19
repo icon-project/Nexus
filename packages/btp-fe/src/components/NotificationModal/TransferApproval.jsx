@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import { Text } from 'components/Typography';
-import { PrimaryButton } from 'components/Button';
+import { PrimaryButton, SecondaryButton } from 'components/Button';
+import { media } from 'components/Styles/Media';
 
 const Wrapper = styled.div`
   padding-top: 3px;
@@ -11,6 +12,16 @@ const Wrapper = styled.div`
     .cancel-btn {
       margin-right: 32px;
     }
+
+    ${media.md`
+      display: flex;
+      align-items: center;
+      flex-direction: column-reverse;
+
+      .cancel-btn {
+        margin: 20px 0 0;
+      }
+    `}
   }
 `;
 
@@ -21,9 +32,9 @@ export const TransferApproval = ({ onOk, onCancel }) => {
         You need to grant permission before sending none native coin once and only first. Proceed?
       </Text>
       <div className="button-control">
-        <PrimaryButton width={192} height={64} className="cancel-btn" onClick={onCancel}>
+        <SecondaryButton width={192} height={64} className="cancel-btn" onClick={onCancel}>
           Cancel
-        </PrimaryButton>
+        </SecondaryButton>
         <PrimaryButton width={192} height={64} onClick={onOk}>
           OK
         </PrimaryButton>
