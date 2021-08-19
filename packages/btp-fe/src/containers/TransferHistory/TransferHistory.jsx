@@ -48,7 +48,7 @@ const columns = [
   {
     title: 'Time',
     dataIndex: 'blockTime',
-    render: (blockTime) => dayjs(blockTime / 1000).fromNow(),
+    render: (blockTime) => dayjs(blockTime).fromNow(),
     width: '180px',
   },
   {
