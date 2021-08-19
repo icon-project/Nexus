@@ -122,7 +122,7 @@ export const Table = ({
   }, [loading]);
 
   return (
-    <>
+    <div className="table-component">
       <TableStyled
         headerColor={headerColor}
         headerText={headerText}
@@ -153,7 +153,7 @@ export const Table = ({
       ) : (
         ''
       )}
-    </>
+    </div>
   );
 };
 
