@@ -14,7 +14,7 @@ import { colors } from 'components/Styles/Colors';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { media } from 'components/Styles/Media';
 
-import { getBalanceOf } from 'connectors/ICONex/iconService';
+import { getService } from 'services/transfer';
 
 import copyIcon from 'assets/images/copy-icon.svg';
 
@@ -144,12 +144,16 @@ export const WalletDetails = ({
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
 
   useEffect(() => {
-    getBalanceOf({ address, refundable: true, symbol: 'ICX' }).then((balance) => {
-      console.log('ICX refundable balance: ', balance);
-    });
-    getBalanceOf({ address, refundable: true, symbol: 'DEV' }).then((balance) => {
-      console.log('DEV refundable balance: ', balance);
-    });
+    getService()
+      .getBalanceOf({ address, refundable: true, symbol: 'ICX' })
+      .then((balance) => {
+        console.log('%cICX refundable balance: ', 'color: blue;', balance);
+      });
+    getService()
+      .getBalanceOf({ address, refundable: true, symbol: 'DEV' })
+      .then((balance) => {
+        console.log('%cDEV refundable balance: ', 'color: blue;', balance);
+      });
   }, [address]);
 
   const tokens = [
