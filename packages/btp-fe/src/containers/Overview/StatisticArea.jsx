@@ -163,17 +163,19 @@ export const StatisticArea = ({ data, networks, isFetching }) => {
             )}
           </div>
 
-          <div className="network-list">
-            {networks.map(({ pathLogo, name }) => (
-              <SubTitle className="md bold" key={name}>
-                <Icon
-                  iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
-                  width="24px"
-                />
-                {name}
-              </SubTitle>
-            ))}
-          </div>
+          {!isFetching && (
+            <div className="network-list">
+              {networks.map(({ pathLogo, name }) => (
+                <SubTitle className="md bold" key={name}>
+                  <Icon
+                    iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
+                    width="24px"
+                  />
+                  {name}
+                </SubTitle>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
