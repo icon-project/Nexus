@@ -9,7 +9,7 @@ const {
   getLatestTokensMinted,
   getTotalTokensMintedLast24h,
 } = require('./repository');
-const { getTotalBondedRelays } = require('../relays/repository');
+
 const { getNetworkInfo } = require('../networks/repository');
 const {
   logger,
@@ -52,7 +52,7 @@ async function getAmountFeeAggregationSCORE() {
     let totalAssets = await Promise.all(promises);
     let totalUSD = 0;
 
-    totalAssets.forEach(item => totalUSD += item);
+    totalAssets.forEach((item) => (totalUSD += item));
 
     return {
       assets,
@@ -117,7 +117,7 @@ async function getTotalTransactionAmount(is24hAgo) {
     }
 
     const results = await Promise.all(promises);
-    results.forEach(item => totalUSD += item);
+    results.forEach((item) => (totalUSD += item));
 
     return totalUSD;
   } catch (error) {
@@ -136,12 +136,13 @@ async function getTotalTransaction() {
 }
 
 async function getBondedVolumeByRelays() {
-  try {
-    return getTotalBondedRelays();
-  } catch (error) {
-    logger.error('getBondedVolumeByRelays failed', { error });
-    throw error;
-  }
+  return 0; // TODO refactor relay candidate
+  // try {
+  //   return getTotalBondedRelays();
+  // } catch (error) {
+  //   logger.error('getBondedVolumeByRelays failed', { error });
+  //   throw error;
+  // }
 }
 
 async function getAllTimeFee() {
@@ -205,8 +206,7 @@ async function getPercentsMintVolumeLast24h() {
   const tokensLast24h = await getTotalTokensMintedLast24h();
 
   // in the first 23 hours
-  if(0 === tokensLast24h)
-    return 0;
+  if (0 === tokensLast24h) return 0;
 
   if (tokensCurrently && tokensLast24h) {
     try {
@@ -229,7 +229,7 @@ async function totalTokensToUSD(tokens) {
   let totalUSD = 0;
 
   for (let item of tokens) {
-    promises.push(exchangeToFiat(item.tokenName, ['USD'], item.tokenAmount));
+    promises.push(tokenToUsd(item.tokenName, item.tokenAmount));
   }
 
   let totalAssets = await Promise.all(promises);
