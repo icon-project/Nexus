@@ -7,7 +7,6 @@ const app = {
         minted: [],
       },
     },
-    volumeChangeLast24h: 0,
   },
   reducers: {
     setAppState(state, prop = []) {
@@ -21,8 +20,7 @@ const app = {
   effects: (dispatch) => ({
     async getAppInfo() {
       try {
-        const appInfo = await fetchAPI('/btpnetwork?mintLast24h=true&&availableAmountLast24h=1');
-        //await new Promise((r) => setTimeout(r, 5000));
+        const appInfo = await fetchAPI('/btpnetwork?mintLast24h=true&volumeLast24h=true');
         this.setAppState(['appInfo', appInfo || {}]);
         return appInfo;
       } catch (error) {

@@ -50,7 +50,7 @@ const Wrapper = styled.div`
 `;
 
 export const ValuesArea = ({ isFetching, data }) => {
-  const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
+  const { volume = 0, volumeLast24hChange, mintVolumeLast24hChange } = data;
   const { valueMint = 0 } = useSelect(({ app: { selectValueMint } }) => ({
     valueMint: selectValueMint,
   }));
@@ -67,7 +67,7 @@ export const ValuesArea = ({ isFetching, data }) => {
         ) : (
           <>
             <Header className="md bold">${toSeparatedNumberString(volume)}</Header>
-            <UpDownPercent percent={last24hChange} />
+            <UpDownPercent percent={volumeLast24hChange} />
           </>
         )}
       </div>

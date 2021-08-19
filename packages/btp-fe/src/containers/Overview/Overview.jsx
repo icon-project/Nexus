@@ -33,7 +33,7 @@ const Overview = () => {
     const fetchData = async () => {
       await getAppInfo();
       await getNetworks({ cache: true });
-      setIsFeching(false);
+      setIsFeching(true);
     };
     fetchData();
   }, [getAppInfo, getNetworks]);

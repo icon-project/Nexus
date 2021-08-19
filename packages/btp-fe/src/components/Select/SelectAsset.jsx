@@ -6,8 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { wallets } from 'utils/constants';
-import MBIcon from 'assets/images/moonbeam.jpeg';
+import { tokenOptionList } from 'utils/constants';
 
 const StyledItem = styled.div`
   display: flex;
@@ -38,32 +37,20 @@ const Item = ({ symbol, children, ...props }) => {
 
 const SelectAsset = ({ onChange }) => {
   /* eslint-disable react/display-name */
-  const coins = [
-    {
-      value: 'ICX',
-      label: 'ICX',
-      renderLabel: () => (
-        <TextWithIcon icon={wallets.iconex} width="24px">
-          ICX
-        </TextWithIcon>
-      ),
-      renderItem: () => (
-        <Item icon={wallets.iconex} symbol="ICX">
-          ICON
-        </Item>
-      ),
-    },
-    {
-      value: 'DEV',
-      label: 'DEV',
-      renderLabel: () => <TextWithIcon iconURL={MBIcon}>DEV</TextWithIcon>,
-      renderItem: () => (
-        <Item iconURL={MBIcon} symbol="DEV">
-          Moonbeam
-        </Item>
-      ),
-    },
-  ];
+  const coins = tokenOptionList.map(({ symbol, netWorkLabel }) => ({
+    value: symbol,
+    label: symbol,
+    renderLabel: () => (
+      <TextWithIcon icon={symbol} width="24px">
+        {symbol}
+      </TextWithIcon>
+    ),
+    renderItem: () => (
+      <Item icon={symbol} symbol={symbol}>
+        {netWorkLabel}
+      </Item>
+    ),
+  }));
 
   return <Select options={coins} onChange={onChange} name="token" />;
 };

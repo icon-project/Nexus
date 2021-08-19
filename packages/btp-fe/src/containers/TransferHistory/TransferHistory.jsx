@@ -19,6 +19,8 @@ import { media } from 'components/Styles/Media';
 import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
+import { tokenOptionList } from 'utils/constants';
+
 import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
@@ -46,7 +48,7 @@ const columns = [
   {
     title: 'Time',
     dataIndex: 'blockTime',
-    render: (blockTime) => dayjs(blockTime / 1000).fromNow(),
+    render: (blockTime) => dayjs(blockTime).fromNow(),
     width: '180px',
   },
   {
@@ -78,7 +80,7 @@ const columns = [
 ];
 
 const TransferHistoryStyled = styled.div`
-  padding-top: 36px;
+  padding: 36px 0 60px;
   margin: 0 auto;
   color: ${colors.grayText};
   width: 1120px;
@@ -195,18 +197,12 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All assets</Text>,
       renderItem: () => <Text className="md">All assets</Text>,
     },
-    {
-      value: 'ICX',
-      label: 'ICX',
-      renderLabel: () => <TextWithIcon icon="iconex">ICX</TextWithIcon>,
-      renderItem: () => <TextWithIcon icon="iconex">ICX</TextWithIcon>,
-    },
-    {
-      value: 'ETH',
-      label: 'ETH',
-      renderLabel: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
-      renderItem: () => <TextWithIcon icon="ETH">ETH</TextWithIcon>,
-    },
+    ...tokenOptionList.map(({ symbol }) => ({
+      value: symbol,
+      label: symbol,
+      renderLabel: () => <TextWithIcon icon={symbol}>{symbol}</TextWithIcon>,
+      renderItem: () => <TextWithIcon icon={symbol}>{symbol}</TextWithIcon>,
+    })),
   ];
 
   let networkOptions = [

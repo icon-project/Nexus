@@ -20,11 +20,12 @@
     <div class="connect-wallet-controls">
       <button class="btn" id="connect-btn" onclick="onConnectWallet()">Connect to ICONex</button>
       <p id="from-address"></p>
+      <button class="btn" id="logout-btn" onclick="onLogout()" >Logout</button>
     </div>
   </header>
 
   <main>
-    <input type="number" id="fee-input" placeholder="Enter BTP fee in 1/10000" />
+    <input type="number" id="fee-input" placeholder="Enter BTP fee in % (1 - 99)" />
     <button class="btn" id="submit-btn" onclick="onSubmit()">SUBMIT</button>
   </main>
 

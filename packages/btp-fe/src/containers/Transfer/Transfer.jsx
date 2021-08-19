@@ -23,6 +23,7 @@ const TransferStyled = styled.div`
     margin: 0 auto 19px;
   }
 `;
+
 const Transfer = () => {
   return (
     <TransferStyled>
