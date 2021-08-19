@@ -9,6 +9,7 @@
       "request": "launch",
       "name": "BTP-DB",
       "envFile": "${workspaceRoot}/packages/dashboard-api/.env",
+      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -19,6 +20,7 @@
       "request": "launch",
       "name": "ICON-Block-Idx",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
+      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "skipFiles": [
         "<node_internals>/**"
       ],

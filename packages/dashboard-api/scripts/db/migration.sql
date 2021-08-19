@@ -101,3 +101,21 @@ ALTER TABLE ONLY public.transactions
     ADD COLUMN tx_hash_end character varying(100),
     ADD COLUMN block_height_end integer,
     DROP COLUMN block_hash;
+
+
+-- Issue #256
+CREATE TABLE public.relays (
+    id character varying(100) NOT NULL,
+    address character varying(300) UNIQUE NOT NULL,
+    link character varying(300) NOT NULL,
+    server_status  character varying(20) NOT NULL,
+    total_transferred_tx numeric NOT NULL,
+    total_failed_tx numeric NOT NULL,
+    registered_time timestamp without time zone NOT NULL,
+    unregistered_time timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone,
+);
+
+ALTER TABLE ONLY public.relays
+    ADD CONSTRAINT relays_pkey PRIMARY KEY (id);

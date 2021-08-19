@@ -11,6 +11,7 @@ const { handleTransactionEvents } = require('../transactions/icon');
 const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { handleTokenRegister } = require('./token-register');
+const { handleRelayAction } = require('./relay');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -25,7 +26,7 @@ async function runTransactionHandlers(transaction, txResult, block) {
     await handleTransferFeeEvents(txResult);
     await handleMintBurnEvents(txResult, transaction);
     await handleTokenRegister(txResult, transaction);
-    
+    await handleRelayAction(txResult, transaction);
     // More transaction handlers go here.
   } catch (error) {
     logger.error('icon:runTransactionHandlers fails %O', error);
@@ -116,10 +117,8 @@ async function start() {
   if (-1 === blockHeight) {
     const block = await getLastSavedBlock();
 
-    if (block)
-      blockHeight = block.height + 1;
-    else
-      blockHeight = 0;
+    if (block) blockHeight = block.height + 1;
+    else blockHeight = 0;
   }
 
   if (0 === blockHeight) {
@@ -139,5 +138,5 @@ async function start() {
 }
 
 module.exports = {
-  start
+  start,
 };

@@ -1,34 +1,17 @@
 'use strict';
 
-const {
-  countTotalRelay,
-  getRelayDetailList,
-  getRegisteredRelayChange,
-  getRelayReward30DaysAgo,
-} = require('./repository');
+const { countTotalRelay, getRelayDetailList, getRegisteredRelayChange } = require('./repository');
 
 async function getTotalRelay() {
   return await countTotalRelay();
 }
 
-async function getRelayList() {
-  let relays = await getRelayDetailList();
+async function getRelayList(page, limit) {
+  let relays = await getRelayDetailList(page, limit);
   return relays;
 }
 
-async function getRelayList30DaysAgo() {
-  let relays = await getRelayReward30DaysAgo();
-  return relays;
-}
-
-function calculateReward30DaysChanged(currentRelays = [], relays30DaysAgo = []) {
-  let totalReward30DaysAgo = relays30DaysAgo.reduce((sum, item) => (sum += item.monthlyReward), 0);
-  let totalReward = currentRelays.reduce((sum, item) => (sum += item.monthlyReward), 0);
-
-  return totalReward - totalReward30DaysAgo;
-}
-
-async function getRegisteredChangeLast24h() {
+async function getRegisteredLast24hChange() {
   const result = await getRegisteredRelayChange(24 * 60 * 60 * 1000);
   return result ? result.currentCount - result.comparedCount : 0;
 }
@@ -36,7 +19,5 @@ async function getRegisteredChangeLast24h() {
 module.exports = {
   getTotalRelay,
   getRelayList,
-  getRegisteredChangeLast24h,
-  calculateReward30DaysChanged,
-  getRelayList30DaysAgo,
+  getRegisteredLast24hChange,
 };

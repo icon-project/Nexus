@@ -7,61 +7,17 @@ const model = require('./model');
 // GET /relays
 // curl http://localhost:8000/v1/relays | jq
 async function getRelayList(request, response) {
-  let style = request.query.style || 'list';
+  let page = Number(request.query.page) || 0;
+  let limit = Number(request.query.limit) || 20;
 
-  switch (style) {
-    case 'count':
-      return await getTotalRelay(request, response);
-
-    case 'reward':
-      return response.sendStatus(HttpStatus.NotImplemented);
-
-    case 'list':
-      return await getRelayDetailList(request, response);
-
-    case 'registeredLast24h':
-      return await getRegisteredRelayChange(request, response);
-
-    default:
-      return response.sendStatus(HttpStatus.BadRequest);
-  }
-}
-
-// GET /relays?style=count
-async function getTotalRelay(request, response) {
-  const count = await model.getTotalRelay();
-
-  return response.status(HttpStatus.OK).json({
-    content: {
-      count,
-    },
-  });
-}
-
-// GET /relays
-async function getRelayDetailList(request, response) {
-  const relays = await model.getRelayList();
-  let rewardChanged30Days;
-
-  if (request.query.rewardLast30Days == 1) {
-    let relays30DaysAgo = await model.getRelayList30DaysAgo();
-    rewardChanged30Days = model.calculateReward30DaysChanged(relays, relays30DaysAgo);
-  }
+  const totalRelay = await model.getTotalRelay();
+  const relays = await model.getRelayList(page, limit);
+  const registeredLastChange24h = await model.getRegisteredLast24hChange();
 
   return response.status(HttpStatus.OK).json({
     content: [...relays],
-    rewardChanged30Days,
-  });
-}
-
-// GET /relays?style=registeredLast24h
-async function getRegisteredRelayChange(request, response) {
-  const last24hChange = await model.getRegisteredChangeLast24h();
-
-  response.status(HttpStatus.OK).json({
-    content: {
-      last24hChange,
-    },
+    total: totalRelay || 0,
+    registeredLastChange24h,
   });
 }
 
