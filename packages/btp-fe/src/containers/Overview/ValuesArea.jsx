@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 `;
 
 export const ValuesArea = ({ data }) => {
-  const { volume = 0, last24hChange, mintVolumeLast24hChange } = data;
+  const { volume = 0, volumeLast24hChange, mintVolumeLast24hChange } = data;
   const { valueMint = 0 } = useSelect(({ app: { selectValueMint } }) => ({
     valueMint: selectValueMint,
   }));
@@ -59,7 +59,7 @@ export const ValuesArea = ({ data }) => {
       <div className="value">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
         <Header className="md bold">${toSeparatedNumberString(volume)}</Header>
-        <UpDownPercent percent={last24hChange} />
+        <UpDownPercent percent={volumeLast24hChange} />
       </div>
       <div className="value">
         <TextWithInfo
