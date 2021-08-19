@@ -4,6 +4,7 @@ import { useSelect } from 'hooks/useRematch';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { Header } from 'components/Typography';
 import { UpDownPercent } from 'components/UpDownPercent';
+import { Skeleton } from 'components/Loader';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
@@ -48,7 +49,7 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const ValuesArea = ({ data }) => {
+export const ValuesArea = ({ isFetching, data }) => {
   const { volume = 0, volumeLast24hChange, mintVolumeLast24hChange } = data;
   const { valueMint = 0 } = useSelect(({ app: { selectValueMint } }) => ({
     valueMint: selectValueMint,
@@ -58,8 +59,17 @@ export const ValuesArea = ({ data }) => {
     <Wrapper>
       <div className="value">
         <TextWithInfo tooltip="Total amount of volume transacted via BTP in $">VOLUME</TextWithInfo>
-        <Header className="md bold">${toSeparatedNumberString(volume)}</Header>
-        <UpDownPercent percent={volumeLast24hChange} />
+        {isFetching ? (
+          <>
+            <Skeleton width="337px" height="48px" bottom="12px" />
+            <Skeleton width="120px" height="20px" />
+          </>
+        ) : (
+          <>
+            <Header className="md bold">${toSeparatedNumberString(volume)}</Header>
+            <UpDownPercent percent={volumeLast24hChange} />
+          </>
+        )}
       </div>
       <div className="value">
         <TextWithInfo
@@ -68,8 +78,17 @@ export const ValuesArea = ({ data }) => {
         >
           VALUE MINT
         </TextWithInfo>
-        <Header className="md bold">${toSeparatedNumberString(valueMint)} </Header>
-        <UpDownPercent percent={mintVolumeLast24hChange} />
+        {isFetching ? (
+          <>
+            <Skeleton width="337px" height="48px" bottom="12px" />
+            <Skeleton width="120px" height="20px" />
+          </>
+        ) : (
+          <>
+            <Header className="md bold">${toSeparatedNumberString(valueMint)} </Header>
+            <UpDownPercent percent={mintVolumeLast24hChange} />
+          </>
+        )}
       </div>
     </Wrapper>
   );

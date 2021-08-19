@@ -1,3 +1,3 @@
 import { Loader } from './Loader';
-
-export { Loader };
+import { Skeleton } from './Skeleton';
+export { Loader, Skeleton };

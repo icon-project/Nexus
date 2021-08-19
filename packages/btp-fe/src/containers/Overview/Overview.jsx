@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 
@@ -13,6 +13,7 @@ const Wrapper = styled.div`
 `;
 
 const Overview = () => {
+  const [isFetching, setIsFeching] = useState(true);
   const {
     app: { content = {} },
     networks,
@@ -29,16 +30,19 @@ const Overview = () => {
   );
 
   useEffect(() => {
-    getAppInfo();
-    getNetworks({ cache: true });
+    const fetchData = async () => {
+      await getAppInfo();
+      await getNetworks({ cache: true });
+      setIsFeching(false);
+    };
+    fetchData();
   }, [getAppInfo, getNetworks]);
 
   return (
     <Wrapper>
       <Helmet title="Overview" />
-
-      <ValuesArea data={content} />
-      <StatisticArea data={content} networks={networks} />
+      <ValuesArea isFetching={isFetching} data={content} />
+      <StatisticArea isFetching={isFetching} data={content} networks={networks} />
     </Wrapper>
   );
 };
