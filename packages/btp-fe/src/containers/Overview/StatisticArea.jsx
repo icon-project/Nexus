@@ -7,6 +7,7 @@ import { Icon } from 'components/Icon';
 import { TextWithInfo } from 'components/TextWithInfo';
 import { PrimaryButton } from 'components/Button';
 import { Feebox } from './FeeBox';
+import { Skeleton } from 'components/Loader';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
@@ -93,6 +94,12 @@ const Wrapper = styled.div`
       ${SubTitleMixin.smBold};
     }
   }
+  .flex {
+    display: flex;
+  }
+  .inline {
+    display: inline-grid;
+  }
 
   ${media.xl`
     flex-direction: column;
@@ -103,53 +110,76 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const StatisticArea = ({ data, networks }) => {
+export const StatisticArea = ({ data, networks, isFetching }) => {
   const { fee = {}, totalTransactions = 0, bondedValue } = data;
   const totalNetworks = networks.length;
   return (
     <Wrapper>
       <div className="transaction">
         <div className="box value-bonded">
-          <TextWithInfo tooltip="Total collective value bonded by Relays">
+          <TextWithInfo className="flex" tooltip="Total collective value bonded by Relays">
             VALUE BONDED
           </TextWithInfo>
-          <Header className="sm bold" title={bondedValue}>
-            {shortenNumber(bondedValue)}
-          </Header>
+          {isFetching ? (
+            <Skeleton width="125px" height="36px" />
+          ) : (
+            <Header className="sm bold" title={bondedValue}>
+              {shortenNumber(bondedValue)}
+            </Header>
+          )}
         </div>
 
         <div className="box transaction">
-          <TextWithInfo tooltip="Total number of transactions on the BTP Network">
+          <TextWithInfo className="flex" tooltip="Total number of transactions on the BTP Network">
             TRANSACTIONS
           </TextWithInfo>
-          <Header className="sm bold" title={totalTransactions}>
-            {shortenNumber(totalTransactions)}
-          </Header>
+          {isFetching ? (
+            <Skeleton width="125px" height="36px" />
+          ) : (
+            <Header className="sm bold" title={totalTransactions}>
+              {shortenNumber(totalTransactions)}
+            </Header>
+          )}
         </div>
 
         <div className="networks box">
           <div className="amount-of-networks">
-            <TextWithInfo tooltip="Total number of transactions on the BTP Network">
+            <TextWithInfo
+              className="flex"
+              tooltip="Total number of transactions on the BTP Network"
+            >
               NETWORKS CONNECTED
             </TextWithInfo>
-            <Header className="sm bold">{totalNetworks}</Header>
+            {isFetching ? (
+              <div className="inline">
+                <Skeleton width="60px" height="36px" bottom="23px" />
+                <Skeleton bottom="12px" />
+                <Skeleton bottom="12px" />
+                <Skeleton bottom="12px" />
+                <Skeleton />
+              </div>
+            ) : (
+              <Header className="sm bold">{totalNetworks}</Header>
+            )}
           </div>
 
-          <div className="network-list">
-            {networks.map(({ pathLogo, name }) => (
-              <SubTitle className="md bold" key={name}>
-                <Icon
-                  iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
-                  width="24px"
-                />
-                {name}
-              </SubTitle>
-            ))}
-          </div>
+          {!isFetching && (
+            <div className="network-list">
+              {networks.map(({ pathLogo, name }) => (
+                <SubTitle className="md bold" key={name}>
+                  <Icon
+                    iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
+                    width="24px"
+                  />
+                  {name}
+                </SubTitle>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <Feebox fee={fee} />
+      <Feebox fee={fee} isFetching={isFetching} />
 
       <div className="promotion">
         <Header className="xs bold">Transfer your token to many networks</Header>

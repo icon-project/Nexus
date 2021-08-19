@@ -21,6 +21,7 @@ const globalColors = {
   grayLine: '#353242',
   grayDark: '#131314',
   grayAccent: '#312F39',
+  grayScaleLoading: '#3E3C46',
   grayScaleSubText: '#85838E',
   grayScaleDisabled: '#D0CED8',
 
