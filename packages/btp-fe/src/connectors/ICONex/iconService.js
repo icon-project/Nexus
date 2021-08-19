@@ -207,7 +207,7 @@ export const getBTPfee = async () => {
   return IconConverter.toNumber(fee);
 };
 
-export const getBalanceOf = async (address, symbol = 'DEV') => {
+export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
   try {
     const coinId = await makeICXCall({
       to: currentICONexNetwork.BSHAddress,
@@ -220,19 +220,27 @@ export const getBalanceOf = async (address, symbol = 'DEV') => {
       },
     });
 
-    const balance = await makeICXCall({
-      to: currentICONexNetwork.irc31token,
+    const params = {
       dataType: 'call',
       data: {
         method: 'balanceOf',
         params: {
           _owner: address,
-          _id: coinId,
         },
       },
-    });
+    };
 
-    return roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
+    if (refundable) {
+      params.to = currentICONexNetwork.BSHAddress;
+      params.data.params._coinName = coinId;
+    } else {
+      params.to = currentICONexNetwork.irc31token;
+      params.data.params._id = coinId;
+    }
+
+    const balance = await makeICXCall(params);
+
+    return refundable ? balance : roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
   } catch (err) {
     console.log('err', err);
   }

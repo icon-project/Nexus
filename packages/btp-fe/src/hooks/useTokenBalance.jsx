@@ -21,7 +21,7 @@ export const useTokenBalance = (currentSymbol) => {
         setToken({ balance, symbol: unit });
       } else {
         getService()
-          .getBalanceOf(address, currentSymbol)
+          .getBalanceOf({ address, symbol: currentSymbol })
           .then((result) => {
             setToken({ balance: result, symbol: currentSymbol });
           });
