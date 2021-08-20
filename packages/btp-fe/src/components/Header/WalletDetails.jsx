@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
@@ -13,6 +13,8 @@ import { Text, Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { media } from 'components/Styles/Media';
+
+import { getService } from 'services/transfer';
 
 import copyIcon from 'assets/images/copy-icon.svg';
 
@@ -140,6 +142,19 @@ export const WalletDetails = ({
   const [selectedToken, setSelectedToken] = useState(unit);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
+
+  useEffect(() => {
+    getService()
+      .getBalanceOf({ address, refundable: true, symbol: 'ICX' })
+      .then((balance) => {
+        console.log('%cICX refundable balance: ', 'color: blue;', balance);
+      });
+    getService()
+      .getBalanceOf({ address, refundable: true, symbol: 'DEV' })
+      .then((balance) => {
+        console.log('%cDEV refundable balance: ', 'color: blue;', balance);
+      });
+  }, [address]);
 
   const tokens = [
     { label: unit, value: unit },

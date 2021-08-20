@@ -100,10 +100,10 @@ class Ethereum {
     }
   }
 
-  async getBalanceOf(address, symbol = 'ICX') {
+  async getBalanceOf({ address, refundable = false, symbol = 'ICX' }) {
     try {
       const balance = await this.contract.getBalanceOf(address, symbol);
-      return roundNumber(convertToICX(balance[0]._hex), 6);
+      return refundable ? balance : roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
       return 0;
