@@ -22,7 +22,6 @@ const {
 
 const { HttpProvider, IconBuilder } = IconService;
 const { getTotalTransactionVolume } = require('../transactions/repository');
-const { getTotalBondedRelayCandidates } = require('../relay-candidates/repository');
 
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
@@ -137,8 +136,21 @@ async function getTotalTransaction() {
 }
 
 async function getBondedVolumeByRelayCandidates() {
+  const callBuilder = new IconBuilder.CallBuilder();
+  const call = callBuilder
+    .to(process.env.ICON_BMC_SCORE)
+    .method('getRelayers')
+    .build();
   try {
-    return getTotalBondedRelayCandidates();
+    //return getTotalBondedRelayCandidates();
+    const relayers = await iconService.call(call).execute();
+    let totalBondedVolume = 0;
+
+    for(let item in relayers) {
+      totalBondedVolume += hexToIcxUnit(relayers[item].bond);
+    }
+    
+    return totalBondedVolume;
   } catch (error) {
     logger.error('getBondedVolumeByRelayCandidates failed', { error });
     throw error;
