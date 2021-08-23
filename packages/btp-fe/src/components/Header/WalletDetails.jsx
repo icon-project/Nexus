@@ -11,14 +11,15 @@ import { tokenOptionList } from 'utils/constants';
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
-import { SubTitleMixin } from 'components/Typography/SubTitle';
+// import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { media } from 'components/Styles/Media';
+import { PrimaryButton, SecondaryButton } from 'components/Button';
 
 import { getService } from 'services/transfer';
 
 import copyIcon from 'assets/images/copy-icon.svg';
 
-const { primaryBrandLight, primaryBrandBase, tertiaryBase, grayScaleSubText } = colors;
+const { tertiaryBase, grayScaleSubText } = colors;
 
 const Wrapper = styled.div`
   .network-name {
@@ -79,36 +80,18 @@ const Wrapper = styled.div`
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-
-    .btn {
-      ${SubTitleMixin.mdBold};
-      width: 192px;
-      height: 64px;
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    .btn__disconnect {
-      color: ${primaryBrandLight};
-      border: solid 1px ${primaryBrandLight};
-      background-color: transparent;
-    }
-
-    .btn__switch-wallet {
-      background-color: ${primaryBrandBase};
-    }
   }
 
   ${media.md`
-    .control-buttons {
-      .btn {
-        font-size: 12px;
-        height: 50px;
-        width: 45%;
-      }
-    }
     width: 100%;
     overflow: auto;
+
+    .control-buttons {
+      > .disconnect-btn {
+        margin-right: 10px;
+      }
+    }
+    
   `}
 `;
 
@@ -199,12 +182,17 @@ export const WalletDetails = ({
         </div>
       </div>
       <div className="control-buttons">
-        <button className="btn btn__disconnect" onClick={onDisconnectWallet}>
+        <SecondaryButton
+          width={192}
+          height={64}
+          onClick={onDisconnectWallet}
+          className="disconnect-btn"
+        >
           Disconnect wallet
-        </button>
-        <button className="btn btn__switch-wallet" onClick={onSwitchWallet}>
+        </SecondaryButton>
+        <PrimaryButton width={192} height={64} onClick={onSwitchWallet}>
           Switch wallet
-        </button>
+        </PrimaryButton>
       </div>
     </Wrapper>
   );

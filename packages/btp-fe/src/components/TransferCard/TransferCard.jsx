@@ -5,6 +5,7 @@ import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
+import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
 import { connectedNetWorks } from 'utils/constants';
@@ -61,6 +62,7 @@ const StyledCard = styled.div`
     width: 100% !important;
   `}
 `;
+
 export const TransferCard = ({
   setStep,
   setSendingInfo,
@@ -70,8 +72,9 @@ export const TransferCard = ({
 }) => {
   const [checkingApproval, setCheckingApproval] = useState(false);
 
-  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
     openModal,
+    setDisplay,
   }));
 
   const onChange = (values) => {
@@ -95,15 +98,17 @@ export const TransferCard = ({
         setStep(1);
       } else if (result === false) {
         openModal({
-          icon: 'exclamationPointIcon',
-          desc:
-            'You need to grant permission before sending none native coin once and only first. Proceed?',
-          button: {
-            text: 'Okay',
-            onClick: () => {
-              getService().setApprovalForAll();
-            },
-          },
+          hasHeading: false,
+          children: (
+            <TransferApproval
+              onOk={() => {
+                getService().setApprovalForAll();
+              }}
+              onCancel={() => {
+                setDisplay(false);
+              }}
+            />
+          ),
         });
       } else {
         openModal({
