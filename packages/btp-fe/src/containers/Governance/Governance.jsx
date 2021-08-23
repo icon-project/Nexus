@@ -140,9 +140,8 @@ function GovernancePage() {
     relays: selectRelays,
   }));
 
-  const { getRelays } = useDispatch(({ governance: { getRelays, getRegisteredRelayLast24h } }) => ({
+  const { getRelays } = useDispatch(({ governance: { getRelays } }) => ({
     getRelays,
-    getRegisteredRelayLast24h,
   }));
 
   const { content, total, registeredLastChange24h } = relays;
