@@ -32,11 +32,14 @@ const governance = {
     selectRelay() {
       return slice((state) => state.relay.content);
     },
-    selectRewardLast30Days() {
-      return slice((state) => state.relayCandidates.rewardChanged30Days);
+    selectTotalRegistered() {
+      return slice((state) => state.relay.total);
     },
     selectRegisteredRelayLast24h() {
-      return slice((state) => state.totalRegisteredLast24h);
+      return slice((state) => state.relay.registeredLastChange24h);
+    },
+    selectRewardLast30Days() {
+      return slice((state) => state.relayCandidates.rewardChanged30Days);
     },
     selectTotalRewardFund() {
       const getTotalRewardFund = (relays) => {

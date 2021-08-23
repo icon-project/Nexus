@@ -136,15 +136,13 @@ const GovernanceStyled = styled.div`
 function GovernancePage() {
   const [relayPagination, setRelayPagination] = useState({ totalItem: 0, limit: 10 });
 
-  const { relay } = useSelect(({ governance: { selectRelay } }) => ({
-    // selectTotalRewardFund,
-    // selectRegisteredRelayLast24h,
-    // selectRewardLast30Days,
-    relay: selectRelay,
-    // totalRewardFund: selectTotalRewardFund,
-    // registeredRelayLast24h: selectRegisteredRelayLast24h,
-    // rewardLast30Days: selectRewardLast30Days,
-  }));
+  const { relay, registeredRelayLast24h, totalRegistered } = useSelect(
+    ({ governance: { selectRelay, selectRegisteredRelayLast24h, selectTotalRegistered } }) => ({
+      relay: selectRelay,
+      registeredRelayLast24h: selectRegisteredRelayLast24h,
+      totalRegistered: selectTotalRegistered,
+    }),
+  );
 
   const { getRelay } = useDispatch(({ governance: { getRelay, getRegisteredRelayLast24h } }) => ({
     getRelay,
@@ -166,8 +164,8 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REGISTERED</Text>
-              <Text className="lg bold total-value">{relay?.length}</Text>
-              <UpDownPercent percent={0} />
+              <Text className="lg bold total-value">{totalRegistered}</Text>
+              <UpDownPercent percent={registeredRelayLast24h} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
