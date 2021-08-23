@@ -136,18 +136,16 @@ const GovernanceStyled = styled.div`
 function GovernancePage() {
   const [relayPagination, setRelayPagination] = useState({ totalItem: 0, limit: 10 });
 
-  const { relays, registeredRelayLast24h, totalRegistered } = useSelect(
-    ({ governance: { selectRelays, selectRegisteredRelayLast24h, selectTotalRegistered } }) => ({
-      relays: selectRelays,
-      registeredRelayLast24h: selectRegisteredRelayLast24h,
-      totalRegistered: selectTotalRegistered,
-    }),
-  );
+  const { relays } = useSelect(({ governance: { selectRelays } }) => ({
+    relays: selectRelays,
+  }));
 
   const { getRelays } = useDispatch(({ governance: { getRelays, getRegisteredRelayLast24h } }) => ({
     getRelays,
     getRegisteredRelayLast24h,
   }));
+
+  const { content, total, registeredLastChange24h } = relays;
 
   const fetchRelayHandler = async (page) => {
     const relay = await getRelays({ page: page - 1, limit: relayPagination.limit });
@@ -164,8 +162,8 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REGISTERED</Text>
-              <Text className="lg bold total-value">{totalRegistered}</Text>
-              <UpDownPercent percent={registeredRelayLast24h} />
+              <Text className="lg bold total-value">{total}</Text>
+              <UpDownPercent percent={registeredLastChange24h} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
@@ -179,7 +177,7 @@ function GovernancePage() {
         <Table
           rowKey="id"
           columns={columns}
-          dataSource={relays}
+          dataSource={content}
           getItemsHandler={(page) => () => fetchRelayHandler(page)}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}

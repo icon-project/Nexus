@@ -30,13 +30,7 @@ const governance = {
   }),
   selectors: (slice) => ({
     selectRelays() {
-      return slice((state) => state.relays.content);
-    },
-    selectTotalRegistered() {
-      return slice((state) => state.relays.total);
-    },
-    selectRegisteredRelayLast24h() {
-      return slice((state) => state.relays.registeredLastChange24h);
+      return slice((state) => state.relays);
     },
   }),
 };
