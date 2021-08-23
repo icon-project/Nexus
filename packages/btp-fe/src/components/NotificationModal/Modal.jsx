@@ -125,6 +125,7 @@ export const Modal = memo(
     marginTop = '0px',
     setDisplay = () => {},
     hasClosedBtn = true,
+    hasHeading = true,
   }) => {
     const iconURL = icons[icon];
     const { text, ...others } = button;
@@ -132,12 +133,14 @@ export const Modal = memo(
     return (
       <Wapper isShowed={display}>
         <Content width={width} marginTop={marginTop}>
-          <div className="heading">
-            {title && <h3 className="title">{title}</h3>}
-            {hasClosedBtn && (
-              <button className="close-btn" onClick={() => setDisplay(false)}></button>
-            )}
-          </div>
+          {hasHeading && (
+            <div className="heading">
+              {title && <h3 className="title">{title}</h3>}
+              {hasClosedBtn && (
+                <button className="close-btn" onClick={() => setDisplay(false)}></button>
+              )}
+            </div>
+          )}
           <div className="content">
             {iconURL && iconURL}
             {desc && <p className="desc">{desc}</p>}
