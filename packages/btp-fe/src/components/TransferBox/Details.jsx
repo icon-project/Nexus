@@ -18,6 +18,7 @@ import { media } from 'components/Styles/Media';
 import metaMaskIcon from 'assets/images/metal-mask.svg';
 import iconexIcon from 'assets/images/icon-ex.svg';
 import moonbeamIcon from 'assets/images/moonbeam.jpeg';
+import hanaIcon from 'assets/images/hana-wallet.png';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -110,6 +111,7 @@ export const icons = {
   ICX: iconexIcon,
   [wallets.metamask]: metaMaskIcon,
   DEV: moonbeamIcon,
+  [wallets.hana]: hanaIcon,
 };
 
 export const Details = memo(
