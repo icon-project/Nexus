@@ -1,0 +1,668 @@
+[
+  {
+    "inputs": [],
+    "name": "getBtpAddress",
+    "outputs": [
+      {
+        "type": "str"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_net",
+        "type": "str"
+      },
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "addVerifier",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_net",
+        "type": "str"
+      }
+    ],
+    "name": "removeVerifier",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVerifiers",
+    "outputs": [
+      {
+        "type": "dict"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_svc",
+        "type": "str"
+      },
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "addService",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_svc",
+        "type": "str"
+      }
+    ],
+    "name": "removeService",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getServices",
+    "outputs": [
+      {
+        "type": "dict"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      }
+    ],
+    "name": "addLink",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      }
+    ],
+    "name": "removeLink",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      }
+    ],
+    "name": "getStatus",
+    "outputs": [
+      {
+        "type": "dict"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLinks",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_dst",
+        "type": "str"
+      },
+      {
+        "name": "_link",
+        "type": "str"
+      }
+    ],
+    "name": "addRoute",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_dst",
+        "type": "str"
+      }
+    ],
+    "name": "removeRoute",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRoutes",
+    "outputs": [
+      {
+        "type": "dict"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_prev",
+        "type": "str"
+      },
+      {
+        "name": "_msg",
+        "type": "str"
+      }
+    ],
+    "name": "handleRelayMessage",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_to",
+        "type": "str"
+      },
+      {
+        "name": "_svc",
+        "type": "str"
+      },
+      {
+        "name": "_sn",
+        "type": "int"
+      },
+      {
+        "name": "_msg",
+        "type": "bytes"
+      }
+    ],
+    "name": "sendMessage",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "indexed": "0x1",
+        "name": "_next",
+        "type": "str"
+      },
+      {
+        "indexed": "0x1",
+        "name": "_seq",
+        "type": "int"
+      },
+      {
+        "name": "_msg",
+        "type": "bytes"
+      }
+    ],
+    "name": "Message",
+    "type": "eventlog"
+  },
+  {
+    "inputs": [
+      {
+        "indexed": "0x1",
+        "name": "_svc",
+        "type": "str"
+      },
+      {
+        "indexed": "0x1",
+        "name": "_seq",
+        "type": "int"
+      },
+      {
+        "name": "_code",
+        "type": "int"
+      },
+      {
+        "name": "_msg",
+        "type": "str"
+      },
+      {
+        "name": "_ecode",
+        "type": "int"
+      },
+      {
+        "name": "_emsg",
+        "type": "str"
+      }
+    ],
+    "name": "ErrorOnBTPError",
+    "type": "eventlog"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_prev",
+        "type": "str"
+      },
+      {
+        "name": "_msg",
+        "type": "str"
+      },
+      {
+        "name": "_idx",
+        "type": "int"
+      }
+    ],
+    "name": "handleFragment",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      },
+      {
+        "name": "_block_interval",
+        "type": "int"
+      },
+      {
+        "name": "_max_agg",
+        "type": "int"
+      }
+    ],
+    "name": "setLinkRotateTerm",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      },
+      {
+        "name": "_value",
+        "type": "int"
+      }
+    ],
+    "name": "setLinkDelayLimit",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      },
+      {
+        "name": "_value",
+        "type": "int"
+      }
+    ],
+    "name": "setLinkSackTerm",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      },
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "addRelay",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      },
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "removeRelay",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_svc",
+        "type": "str"
+      },
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "addServiceCandidate",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_svc",
+        "type": "str"
+      },
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "removeServiceCandidate",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getServiceCandidates",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_link",
+        "type": "str"
+      }
+    ],
+    "name": "getRelays",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sendFeeGathering",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeGatheringTerm",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_value",
+        "type": "int"
+      }
+    ],
+    "name": "setFeeGatheringTerm",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeAggregator",
+    "outputs": [
+      {
+        "type": "Address"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "setFeeAggregator",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "addOwner",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "removeOwner",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwners",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_addr",
+        "type": "Address"
+      }
+    ],
+    "name": "isOwner",
+    "outputs": [
+      {
+        "type": "bool"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_desc",
+        "type": "str"
+      }
+    ],
+    "name": "registerRelayer",
+    "outputs": [],
+    "payable": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unregisterRelayer",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_addr",
+        "type": "Address"
+      },
+      {
+        "name": "_refund",
+        "type": "Address"
+      }
+    ],
+    "name": "removeRelayer",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRelayers",
+    "outputs": [
+      {
+        "type": "dict"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "distributeRelayerReward",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fallback",
+    "outputs": [],
+    "payable": "0x1",
+    "type": "fallback"
+  },
+  {
+    "inputs": [],
+    "name": "claimRelayerReward",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRelayerMinBond",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_value",
+        "type": "int"
+      }
+    ],
+    "name": "setRelayerMinBond",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRelayerTerm",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_value",
+        "type": "int"
+      }
+    ],
+    "name": "setRelayerTerm",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_height",
+        "type": "int"
+      }
+    ],
+    "name": "setNextRewardDistribution",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRelayerRewardRank",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRelayerManagerProperties",
+    "outputs": [
+      {
+        "type": "dict"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_value",
+        "type": "int"
+      }
+    ],
+    "name": "setRelayerRewardRank",
+    "outputs": [],
+    "type": "function"
+  }
+]
