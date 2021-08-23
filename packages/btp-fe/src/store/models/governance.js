@@ -1,12 +1,12 @@
-import { getRelayCandidates, getRegisteredRelayLast24h } from 'services/btpServices';
+import { getRelay } from 'services/btpServices';
 
 const governance = {
   state: {
-    relayCandidates: {
+    relay: {
       content: [],
-      rewardChanged30Days: 0,
+      total: 0,
+      registeredLastChange24h: 0,
     },
-    totalRegisteredLast24h: 0,
   },
   reducers: {
     setGovernanceState(state, prop = []) {
@@ -18,32 +18,19 @@ const governance = {
     },
   },
   effects: (dispatch) => ({
-    async getRelayCandidates() {
+    async getRelay({ page, limit }) {
       try {
-        const relayCandidates = await getRelayCandidates();
-        if (!relayCandidates.error) {
-          this.setGovernanceState(['relayCandidates', relayCandidates || {}]);
-        }
-        return relayCandidates;
-      } catch (error) {
-        dispatch.modal.handleError();
-      }
-    },
-    async getRegisteredRelayLast24h() {
-      try {
-        const totalRegisteredLast24h = await getRegisteredRelayLast24h();
-        this.setGovernanceState([
-          'totalRegisteredLast24h',
-          totalRegisteredLast24h?.content.last24hChange || 0,
-        ]);
+        const relay = await getRelay(page, limit);
+        this.setGovernanceState(['relay', relay || {}]);
+        return relay;
       } catch (error) {
         dispatch.modal.handleError();
       }
     },
   }),
   selectors: (slice) => ({
-    selectRelayCandidates() {
-      return slice((state) => state.relayCandidates.content);
+    selectRelay() {
+      return slice((state) => state.relay.content);
     },
     selectRewardLast30Days() {
       return slice((state) => state.relayCandidates.rewardChanged30Days);
