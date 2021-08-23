@@ -32,14 +32,6 @@ export const getRelay = (page = 0, limit = 10) => {
   return fetchAPI(`${baseRelayURL}?limit=${limit}&page=${page}`);
 };
 
-export const getRegisteredRelayCandidate = () => {
-  return fetchAPI(`${baseRelayURL}?style=count`);
-};
-
-export const getRegisteredRelayLast24h = () => {
-  return fetchAPI(`${baseRelayURL}?style=registeredLast24h`);
-};
-
 export const getConnectedNetworks = () => {
   return fetchAPI(`/networks`);
 };
