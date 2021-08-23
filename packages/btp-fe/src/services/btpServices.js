@@ -28,7 +28,7 @@ export const getAvailableAmountLast24h = () => {
   return fetchAPI(`/fees/?availableAmountLast24h=1`);
 };
 
-export const getRelay = (page = 0, limit = 10) => {
+export const getRelays = (page = 0, limit = 10) => {
   return fetchAPI(`${baseRelayURL}?limit=${limit}&page=${page}`);
 };
 

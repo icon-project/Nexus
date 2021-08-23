@@ -1,8 +1,8 @@
-import { getRelay } from 'services/btpServices';
+import { getRelays } from 'services/btpServices';
 
 const governance = {
   state: {
-    relay: {
+    relays: {
       content: [],
       total: 0,
       registeredLastChange24h: 0,
@@ -18,25 +18,25 @@ const governance = {
     },
   },
   effects: (dispatch) => ({
-    async getRelay({ page, limit }) {
+    async getRelays({ page, limit }) {
       try {
-        const relay = await getRelay(page, limit);
-        this.setGovernanceState(['relay', relay || {}]);
-        return relay;
+        const relays = await getRelays(page, limit);
+        this.setGovernanceState(['relays', relays || {}]);
+        return relays;
       } catch (error) {
         dispatch.modal.handleError();
       }
     },
   }),
   selectors: (slice) => ({
-    selectRelay() {
-      return slice((state) => state.relay.content);
+    selectRelays() {
+      return slice((state) => state.relays.content);
     },
     selectTotalRegistered() {
-      return slice((state) => state.relay.total);
+      return slice((state) => state.relays.total);
     },
     selectRegisteredRelayLast24h() {
-      return slice((state) => state.relay.registeredLastChange24h);
+      return slice((state) => state.relays.registeredLastChange24h);
     },
   }),
 };

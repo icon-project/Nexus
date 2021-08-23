@@ -136,21 +136,21 @@ const GovernanceStyled = styled.div`
 function GovernancePage() {
   const [relayPagination, setRelayPagination] = useState({ totalItem: 0, limit: 10 });
 
-  const { relay, registeredRelayLast24h, totalRegistered } = useSelect(
-    ({ governance: { selectRelay, selectRegisteredRelayLast24h, selectTotalRegistered } }) => ({
-      relay: selectRelay,
+  const { relays, registeredRelayLast24h, totalRegistered } = useSelect(
+    ({ governance: { selectRelays, selectRegisteredRelayLast24h, selectTotalRegistered } }) => ({
+      relays: selectRelays,
       registeredRelayLast24h: selectRegisteredRelayLast24h,
       totalRegistered: selectTotalRegistered,
     }),
   );
 
-  const { getRelay } = useDispatch(({ governance: { getRelay, getRegisteredRelayLast24h } }) => ({
-    getRelay,
+  const { getRelays } = useDispatch(({ governance: { getRelays, getRegisteredRelayLast24h } }) => ({
+    getRelays,
     getRegisteredRelayLast24h,
   }));
 
   const fetchRelayHandler = async (page) => {
-    const relay = await getRelay({ page: page - 1, limit: relayPagination.limit });
+    const relay = await getRelays({ page: page - 1, limit: relayPagination.limit });
     setRelayPagination({ ...relayPagination, totalItem: relay.total });
   };
 
@@ -179,7 +179,7 @@ function GovernancePage() {
         <Table
           rowKey="id"
           columns={columns}
-          dataSource={relay}
+          dataSource={relays}
           getItemsHandler={(page) => () => fetchRelayHandler(page)}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
