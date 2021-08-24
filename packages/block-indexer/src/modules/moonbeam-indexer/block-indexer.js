@@ -8,6 +8,8 @@ const { saveBlock, getLastSavedBlock } = require('./repository');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleMintBurnEvents } = require('./mint-burn');
+const { buildActionMap } = require('./actions');
+const { handleRelayAction } = require('../relays/moonbeam');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
@@ -16,6 +18,7 @@ async function runTransactionHandlers(transaction, block) {
   try {
     await handleTransactionEvents(transaction, block);
     await handleMintBurnEvents(transaction, block);
+    await handleRelayAction(transaction, block);
 
     // More transaction handlers go here.
   } catch (error) {
@@ -27,7 +30,7 @@ async function runBlockHandlers(block) {
   for (const tx of block.extrinsics) {
     // Ignore timestamp transactions.
     if ('timestamp' !== tx.method.pallet) {
-      debug('Transaction: %O', tx) ;
+      debug('Transaction: %O', tx);
       await runTransactionHandlers(tx, block);
     }
   }
@@ -39,8 +42,8 @@ async function getBlockByHeight(height) {
   try {
     const result = await axios.get(`${process.env.SIDECAR_API_URL}/blocks/${blockHeight}`, {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     return result.data;
@@ -72,8 +75,7 @@ async function getBlockData() {
         await saveBlock(block);
         await runBlockHandlers(block);
       }
-
-      ++ blockHeight;
+      ++blockHeight;
     }
 
     setTimeout(async () => await retryGetBlockData(), timeout);
@@ -83,30 +85,40 @@ async function getBlockData() {
 // Issue: Sidecar /blocks/head always return 0 so need to call RPC directly.
 // Ref: https://git.baikal.io/btp-dashboard/pm/-/issues/233
 async function getHeadBlock() {
-  let result = await axios.post(process.env.MOONBEAM_API_URL, {
-    id: 1,
-    jsonrpc: '2.0',
-    method: 'chain_getHead'
-  }, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (200 === result.status) {
-    result = await axios.post(process.env.MOONBEAM_API_URL, {
+  let result = await axios.post(
+    process.env.MOONBEAM_API_URL,
+    {
       id: 1,
       jsonrpc: '2.0',
-      method: 'chain_getBlock',
-      params: [result.data.result] // head block hash
-    }, {
+      method: 'chain_getHead',
+    },
+    {
       headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  if (200 === result.status) {
+    result = await axios.post(
+      process.env.MOONBEAM_API_URL,
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'chain_getBlock',
+        params: [result.data.result], // head block hash
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
 
     if (200 === result.status) {
-      result.data.result.block.number = IconConverter.toNumber(result.data.result.block.header.number);
+      result.data.result.block.number = IconConverter.toNumber(
+        result.data.result.block.header.number,
+      );
       debug('Head block: %O', result.data.result.block);
 
       return result.data.result.block;
@@ -120,7 +132,9 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('Failed to fetch Moonbeam block data, retry in 5 minutes', { error: error.toString() });
+    logger.error('Failed to fetch Moonbeam block data, retry in 5 minutes', {
+      error: error.toString(),
+    });
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
@@ -128,15 +142,15 @@ async function retryGetBlockData() {
 async function start() {
   const eventMap = buildEventMap();
   const eventMapBSHScore = buildBSHScoreEventMap();
+  const actionMap = buildActionMap();
   logger.info('Moonbeam event map: %O', eventMap);
   logger.info('Moonbeam BSH SCORE event map: %O', eventMapBSHScore);
+  logger.info('Moonbeam BMC Management action map: %O', actionMap);
   if (-1 === blockHeight) {
     const block = await getLastSavedBlock();
 
-    if (block)
-      blockHeight = Number(block.number) + 1;
-    else
-      blockHeight = 0;
+    if (block) blockHeight = Number(block.number) + 1;
+    else blockHeight = 0;
   }
 
   if (0 === blockHeight) {
@@ -150,5 +164,5 @@ async function start() {
 }
 
 module.exports = {
-  start
+  start,
 };

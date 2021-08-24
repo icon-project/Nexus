@@ -11,8 +11,8 @@ const { handleTransactionEvents } = require('../transactions/icon');
 const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { handleTokenRegister } = require('./token-register');
-const { handleRelayAction } = require('./relay');
-const { handleRelayerEvent } = require('./bonded-icx')
+const { handleRelayerEvent } = require('./bonded-icx');
+const { handleRelayAction } = require('../relays/icon');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -100,7 +100,7 @@ async function getBlockData() {
         await runBlockHandlers(block);
       }
 
-      ++ blockHeight;
+      ++blockHeight;
     }
 
     setTimeout(async () => await retryGetBlockData(), timeout);
