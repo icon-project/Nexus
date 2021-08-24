@@ -18,8 +18,9 @@ import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { getService } from 'services/transfer';
 
 import copyIcon from 'assets/images/copy-icon.svg';
+import refundIcon from 'assets/images/refund-icon.svg';
 
-const { tertiaryBase, grayScaleSubText } = colors;
+const { tertiaryBase, grayScaleSubText, grayLine } = colors;
 
 const Wrapper = styled.div`
   .network-name {
@@ -28,38 +29,46 @@ const Wrapper = styled.div`
 
   .dark-text {
     color: ${grayScaleSubText};
-    text-align: right;
   }
 
   .user-avatar {
     display: inline-flex;
+    margin-bottom: 14px;
   }
 
-  .wallet-balance,
-  .wallet-address {
+  .wallet-balance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 72px;
+    margin-bottom: 4px;
+  }
+
+  .sub-title {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 7px;
+  }
+
+  .box-container {
+    width: 100%;
+    border: solid 1px ${grayLine};
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
-    line-height: normal;
-  }
+    align-items: center;
+    margin-bottom: 27px;
 
-  > .wallet-balance {
-    margin: 32px 0 21px;
-
-    .header-text {
+    .select-refund {
       display: flex;
       align-items: center;
     }
-  }
 
-  .wallet-address {
-    margin-bottom: 48px;
-
-    .address {
-      margin-bottom: 14px;
-      display: inline-block;
+    .padding-content {
+      padding: 10px 0 10px 16px;
     }
-
-    .copy-address {
+    .action {
+      padding: 10px 16px 10px 0;
       color: ${tertiaryBase};
       cursor: pointer;
 
@@ -69,13 +78,13 @@ const Wrapper = styled.div`
     }
 
     img {
-      margin-right: 4.67px;
+      margin-right: 8.83px;
       vertical-align: middle;
     }
   }
 
   .control-buttons {
-    margin-top: auto;
+    margin-top: 40px;
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
@@ -87,6 +96,7 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
+      margin-top: 27px;
       > .disconnect-btn {
         margin-right: 10px;
       }
@@ -96,11 +106,15 @@ const Wrapper = styled.div`
 `;
 
 const TokenSelector = styled(Select)`
-  border: solid 1px ${grayScaleSubText};
-  padding: 0 5px;
-  margin-left: 4px;
+  border: solid 1px ${grayLine};
+  padding: 4px 8px;
+  margin-left: 10px;
   background-color: transparent !important;
-
+  display: inline-flex;
+  height: 32px;
+  > .md {
+    font-weight: 600;
+  }
   &::after {
     width: 9.33px;
     margin-left: 11.67px;
@@ -108,7 +122,30 @@ const TokenSelector = styled(Select)`
 
   > ul {
     top: calc(100% - 5px);
-    width: 120px;
+    width: 110px;
+  }
+`;
+
+const RefundSelector = styled(Select)`
+  padding: 0px 0px;
+  background-color: transparent !important;
+  display: inline-flex;
+  border-right: solid 1px ${grayLine};
+  border-radius: 0px;
+  margin-right: 11.67px;
+  &::after {
+    width: 9.33px;
+    margin: 0 11.67px;
+  }
+  > .md {
+    width: 33px;
+  }
+
+  > ul {
+    width: 114px;
+    ${media.md`
+      width: 83px;
+    `};
   }
 `;
 
@@ -154,32 +191,38 @@ export const WalletDetails = ({
     <Wrapper>
       <Text className="md network-name">{networkName}</Text>
       <Avatar className="user-avatar" src={userAvatar} size={120} />
-      <div className="wallet-balance">
-        <Text className="md dark-text">Balance</Text>
-        <div className="right">
-          <Header className="sm bold">
-            {currentBalance}
-            <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
-          </Header>
+      <Header className="md bold wallet-balance">
+        {currentBalance}
+        <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
+      </Header>
 
-          <Text className="sm dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
+      <Text className="md dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
+      <Text className="sm sub-title">Refunds</Text>
+      <div className="box-container">
+        <div className="select-refund">
+          <RefundSelector className="padding-content" options={tokens} />
+          <Text className="md">2.301</Text>
+        </div>
+        <div>
+          <Text className="xs bold action">
+            <img src={refundIcon} alt="refund-icon" />
+            Receive
+          </Text>
         </div>
       </div>
-      <div className="wallet-address">
-        <Text className="md dark-text">Wallet Address</Text>
-        <div className="right">
-          <Text title={address} className="md address">
-            {shortedAddress}
-          </Text>
-          <CopyToClipboard text={address}>
-            <div>
-              <Text className="xs bold copy-address">
-                <img src={copyIcon} alt="icon" />
-                Copy address
-              </Text>
-            </div>
-          </CopyToClipboard>
-        </div>
+      <Text className="sm sub-title">Wallet Address</Text>
+      <div className="box-container">
+        <Text title={address} className="md padding-content">
+          {shortedAddress}
+        </Text>
+        <CopyToClipboard text={address}>
+          <div>
+            <Text className="xs bold action">
+              <img src={copyIcon} alt="icon" />
+              Copy address
+            </Text>
+          </div>
+        </CopyToClipboard>
       </div>
       <div className="control-buttons">
         <SecondaryButton
