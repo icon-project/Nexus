@@ -9,6 +9,8 @@ const {
   getTokenVolumeAllTime,
   getVolumeToken24hByNid,
   getVolumeTokenAllTimeByNid,
+  getTotalMintValue,
+  getTotalBurnValue
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 const { abiBSHScore } = require('../../../scripts/bsh_score.json');
@@ -49,20 +51,27 @@ async function getListTokensRegisteredIcon() {
 async function getListNetworkConnectedIcon() {
   try {
     const networks = await getNetworkInfo();
+
+    const totalMintTokens = await getTotalMintValue();
+    const totalBurnTokens = await getTotalBurnValue();
+
     const tokensVolume24h = await getTokensVolume24h();
     const tokensVolumeAllTime = await getTokenVolumeAllTime();
 
-    return await updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime);
+    return await updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime, totalMintTokens, totalBurnTokens);
   } catch (err) {
     logger.error('"getListNetworkConnectedIcon" failed while getting total transaction', err);
     throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
   }
 }
 
-async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) {
+async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime, totalMintTokens, totalBurnTokens) {
   for (let networkInfo of networks) {
     let USD24h = 0;
     let USDAllTime = 0;
+    let USDMint = 0;
+    let USDBurn = 0;
+
     for (let data of tokensVolume24h) {
       if (data.networkId == networkInfo.id) {
         let fiat = await tokenToUsd(data.tokenName, Number(data.tokenVolume));
@@ -76,8 +85,25 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime) 
         USDAllTime += fiat;
       }
     }
+
+    for (let data of totalMintTokens) {
+      if (data.networkId == networkInfo.id) {
+        let fiat = await tokenToUsd(data.tokenName, Number(data.tokenValue));
+        USDMint += fiat;
+      }
+    }
+
+    for (let data of totalBurnTokens) {
+      if (data.networkId == networkInfo.id) {
+        let fiat = await tokenToUsd(data.tokenName, Number(data.tokenValue));
+        USDBurn += fiat;
+      }
+    }
+
     networkInfo.usd24h = numberToFixedAmount(USD24h);
     networkInfo.usdAllTime = numberToFixedAmount(USDAllTime);
+    networkInfo.mintFee = USDMint;
+    networkInfo.burnFee = USDBurn;
   }
   return networks;
 }
