@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS public.tokens_info
 );
 
 
-CREATE TABLE public.relayers (
+CREATE TABLE public.bonded-icx (
     id character varying(100) NOT NULL,
     description character varying(200) NOT NULL,
     address_relayer character varying(100) NOT NULL,

@@ -109,7 +109,7 @@ async function getTotalTokensMintedLast24h() {
 
 async function getTotalBondedIcx() {
   try {
-    const { rows } = await pgPool.query('SELECT SUM(bonded_icx) as total_icx FROM relayers WHERE server_status=$1', ['Active']);
+    const { rows } = await pgPool.query('SELECT SUM(bonded_icx) as total_icx FROM bonded_icx WHERE server_status=$1', ['Active']);
     return rows[0].total_icx ? Number(rows[0].total_icx) : 0;
   } catch (error) {
     logger.error('getTotalBondedIcx fails', { error });

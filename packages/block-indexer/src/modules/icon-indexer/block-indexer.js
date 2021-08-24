@@ -12,7 +12,7 @@ const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { handleTokenRegister } = require('./token-register');
 const { handleRelayAction } = require('./relay');
-const { handleRelayerEvent } = require('./relayer')
+const { handleRelayerEvent } = require('./bonded-icx')
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);

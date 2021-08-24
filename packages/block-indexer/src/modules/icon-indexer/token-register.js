@@ -10,15 +10,17 @@ const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 
 async function handleTokenRegister(txResult, transaction) {
-  if('register' === transaction.data.method && 1 === txResult.status) {
-    const id = await getTokenId(transaction.data.params._name);
+  if (transaction.data.method) {
+    if('register' === transaction.data.method && 1 === txResult.status) {
+      const id = await getTokenId(transaction.data.params._name);
 
-    const tokenObj = {
-      tokenId: id,
-      tokenName: transaction.data.params._name
-    };
+      const tokenObj = {
+        tokenId: id,
+        tokenName: transaction.data.params._name
+      };
 
-    await saveTokenInfo(tokenObj, txResult);
+      await saveTokenInfo(tokenObj, txResult);
+    }
   }
 }
 
