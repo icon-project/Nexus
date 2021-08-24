@@ -59,13 +59,57 @@ async function getNetworkInfo() {
         id: data.id,
         pathLogo: data.path_logo,
         url: data.url,
-        mintFee: Number(data.mint_fee),
-        burnFee: Number(data.burn_fee),
       });
     }
     return result;
   } catch (error) {
     logger.error('getNetworkInfo fails', { error });
+    throw error;
+  }
+}
+
+async function getTotalMintValue() {
+  try {
+    let result = [];
+
+    const { rows } = await pgPool.query('SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id \
+    FROM minted_tokens \
+    ORDER BY token_name, create_at DESC');
+
+    for (let data of rows) {
+      result.push({
+        tokenName: data.token_name,
+        tokenValue: data.total_token_amount,
+        networkId: data.network_id
+      });
+    }
+
+    return result;
+  } catch (error) {
+    logger.error('getTotalMintValue fails', { error });
+    throw error;
+  }
+}
+
+async function getTotalBurnValue() {
+  try {
+    let result = [];
+
+    const { rows } = await pgPool.query('SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id \
+    FROM burned_tokens \
+    ORDER BY token_name, create_at DESC');
+
+    for (let data of rows) {
+      result.push({
+        tokenName: data.token_name,
+        tokenValue: data.total_token_amount,
+        networkId: data.network_id
+      });
+    }
+
+    return result;
+  } catch (error) {
+    logger.error('getTotalBurnValue fails', { error });
     throw error;
   }
 }
@@ -132,4 +176,6 @@ module.exports = {
   getVolumeToken24hByNid,
   getVolumeTokenAllTimeByNid,
   getNetworkById,
+  getTotalMintValue,
+  getTotalBurnValue,
 };
