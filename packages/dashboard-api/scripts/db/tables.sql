@@ -236,6 +236,23 @@ CREATE TABLE IF NOT EXISTS public.tokens_info
     create_at timestamp without time zone NOT NULL
 );
 
+
+CREATE TABLE public.relayers (
+    id character varying(100) NOT NULL,
+    description character varying(200) NOT NULL,
+    address_relayer character varying(100) NOT NULL,
+    address_bonded_to character varying(100) NOT NULL, 
+    bonded_icx numeric NOT NULL,
+    server_status character varying(20) NOT NULL,
+    tx_hash character varying(100),
+    block_hash character varying(100),
+    block_height bigint,
+    registered_time timestamp without time zone NOT NULL,
+    unregistered_time timestamp without time zone,
+    created_time timestamp without time zone NOT NULL,
+    updated_time timestamp without time zone
+);
+
 --
 -- TOC entry 2848 (class 2606 OID 16462)
 -- Name: auctions auctions_pkey; Type: CONSTRAINT; Schema: public; Owner: -

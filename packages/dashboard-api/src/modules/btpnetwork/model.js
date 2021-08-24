@@ -8,6 +8,7 @@ const {
   getVolumeMintedNetworks,
   getLatestTokensMinted,
   getTotalTokensMintedLast24h,
+  getTotalBondedIcx
 } = require('./repository');
 
 const { getNetworkInfo } = require('../networks/repository');
@@ -136,21 +137,8 @@ async function getTotalTransaction() {
 }
 
 async function getBondedVolumeByRelayCandidates() {
-  const callBuilder = new IconBuilder.CallBuilder();
-  const call = callBuilder
-    .to(process.env.ICON_BMC_SCORE)
-    .method('getRelayers')
-    .build();
   try {
-    //return getTotalBondedRelayCandidates();
-    const relayers = await iconService.call(call).execute();
-    let totalBondedVolume = 0;
-
-    for(let item in relayers) {
-      totalBondedVolume += hexToIcxUnit(relayers[item].bond);
-    }
-    
-    return totalBondedVolume;
+    return await getTotalBondedIcx();
   } catch (error) {
     logger.error('getBondedVolumeByRelayCandidates failed', { error });
     throw error;
