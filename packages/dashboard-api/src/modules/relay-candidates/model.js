@@ -1,13 +1,13 @@
 'use strict';
 
 const {
-  countTotalRelayCandidates,
   getRelayCandidateList,
-  getRelayCAND30DaysAgo,
+  getTotalRewardLast30Days,
+  getTotalReward
 } = require('./repository');
 
-async function getTotalRelayCandidates() {
-  return await countTotalRelayCandidates();
+async function getTotalMonthlyReward() {
+  return await getTotalReward();
 }
 
 async function getRelayCandidates() {
@@ -15,21 +15,15 @@ async function getRelayCandidates() {
   return relayCandidates;
 }
 
-async function getRelayCandidates30DaysAgo() {
-  let relays = await getRelayCAND30DaysAgo();
-  return relays;
-}
+async function getRewardLast30DaysChange() {
+  const totalReward = await getTotalReward();
+  const last30DaysReward = await getTotalRewardLast30Days();
 
-function calculateReward30DaysChanged(currentRelays = [], relays30DaysAgo = []) {
-  let totalReward30DaysAgo = relays30DaysAgo.reduce((sum, item) => (sum += item.monthlyReward), 0);
-  let totalReward = currentRelays.reduce((sum, item) => (sum += item.monthlyReward), 0);
-  console.log(totalReward30DaysAgo, totalReward);
-  return totalReward - totalReward30DaysAgo;
+  return totalReward - last30DaysReward;
 }
 
 module.exports = {
-  getTotalRelayCandidates,
   getRelayCandidates,
-  calculateReward30DaysChanged,
-  getRelayCandidates30DaysAgo,
+  getRewardLast30DaysChange,
+  getTotalMonthlyReward
 };

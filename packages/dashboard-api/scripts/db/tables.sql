@@ -175,12 +175,13 @@ CREATE TABLE public.relays (
 -- Name: relay_rewards; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.relay_rewards (
-    id character varying(100) NOT NULL,
-    relay_id character varying(100) NOT NULL,
+CREATE TABLE public.relay_candidate_rewards (
+    id character varying(50) NOT NULL,
+    rc_id character varying(50) NOT NULL,
+    rc_address character varying(100) NOT NULL,
     reward_value numeric NOT NULL,
-    updated_time timestamp without time zone
-    created_time timestamp without time zone NOT NULL,
+    total_reward numeric NOT NULL,
+    created_time timestamp without time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.transactions
@@ -329,7 +330,7 @@ ALTER TABLE ONLY public.transfer_fees
 -- Name: relay_rewards relay_rewards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.relay_rewards
+ALTER TABLE ONLY public.relay_candidate_rewards
     ADD CONSTRAINT relay_rewards_pkey PRIMARY KEY (id);
 
 --
@@ -337,8 +338,8 @@ ALTER TABLE ONLY public.relay_rewards
 -- Name: relay_rewards relay_rewards_relay_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.relay_rewards
-    ADD CONSTRAINT relay_rewards_relay_id_fkey FOREIGN KEY (relay_id) REFERENCES public.relay_candidates(id);
+ALTER TABLE ONLY public.relay_candidate_rewards
+    ADD CONSTRAINT relay_rewards_relay_id_fkey FOREIGN KEY (rc_id) REFERENCES public.relay_candidates(id);
 
 -- Completed on 2021-07-08 06:56:41 UTC
 

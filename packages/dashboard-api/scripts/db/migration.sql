@@ -131,3 +131,8 @@ ALTER TABLE ONLY public.relay_candidates
 	DROP COLUMN total_transferred_tx,
 	DROP COLUMN total_failed_tx,
 	DROP COLUMN total_active;
+
+-- Issue #37
+
+-- drop relay_rewards
+-- create relay_candidate_rewards

@@ -40,3 +40,25 @@ VALUES (0, 'NONE', 1, 1, NOW(), NOW());
 
 INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
 VALUES (2099, 'ICX', 1, 1, NOW(), NOW());
+
+-- Issue #37
+
+INSERT INTO public.relay_candidate_rewards(
+	id, rc_id, rc_address, reward_value, total_reward, created_time)
+	VALUES ('2c37741ffa', '2c37741ffa', 'hxd007a51447a18021ed2d27e8cb4784febb0c9561', 100, 300, (NOW() - interval '30 days'));
+
+INSERT INTO public.relay_candidate_rewards(
+	id, rc_id, rc_address, reward_value, total_reward, created_time)
+	VALUES ('2c37741ffb', '2c37741ffb', 'hxd007a51447a18021ed2d27e8cb4784febb0c9562', 200, 300, (NOW() - interval '30 days'));
+
+INSERT INTO public.relay_candidate_rewards(
+	id, rc_id, rc_address, reward_value, total_reward, created_time)
+	VALUES ('2c37741faa', '2c37741ffa', 'hxd007a51447a18021ed2d27e8cb4784febb0c9561', 100, 900, NOW());
+
+INSERT INTO public.relay_candidate_rewards(
+	id, rc_id, rc_address, reward_value, total_reward, created_time)
+	VALUES ('2c37741fab', '2c37741ffb', 'hxd007a51447a18021ed2d27e8cb4784febb0c9562', 200, 900, NOW());
+
+INSERT INTO public.relay_candidate_rewards(
+	id, rc_id, rc_address, reward_value, total_reward, created_time)
+	VALUES ('2c37741fac', '2c37741ffc', 'hxeb62be05a3f276039e40b3e1bbb3c358d157de29', 300, 900, NOW());

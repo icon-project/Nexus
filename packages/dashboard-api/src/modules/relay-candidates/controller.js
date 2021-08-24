@@ -8,19 +8,24 @@ const model = require('./model');
 // curl http://localhost:8000/v1/relay-candidates | jq
 async function getRelayCandidateList(request, response) {
   const relays = await model.getRelayCandidates();
-  let rewardChanged30Days;
-
-  if (request.query.rewardLast30Days == 'true') {
-    let relayCANDs30DaysAgo = await model.getRelayCandidates30DaysAgo();
-    rewardChanged30Days = model.calculateReward30DaysChanged(relays, relayCANDs30DaysAgo);
-  }
 
   return response.status(HttpStatus.OK).json({
-    content: [...relays],
-    rewardChanged30Days,
+    content: [...relays]
+  });
+}
+
+// GET /relay-candidates/reward
+// curl http://localhost:8000/v1/relay-candidates/reward | jq
+async function getMonthlyReward(request, response) {
+  return response.status(HttpStatus.OK).json({
+    content: {
+      totalAmount: await model.getTotalMonthlyReward(),
+      last30DaysChange: await model.getRewardLast30DaysChange()
+    }
   });
 }
 
 module.exports = {
   getRelayCandidateList,
+  getMonthlyReward
 };

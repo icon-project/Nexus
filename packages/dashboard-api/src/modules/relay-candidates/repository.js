@@ -2,21 +2,35 @@
 
 const { logger, pgPool } = require('../../common');
 
-async function countTotalRelayCandidates() {
-  const query = 'SELECT COUNT(*) FROM relay_candidates WHERE unregistered_time IS NULL';
+async function getTotalReward() {
+  try {
+    const { rows } = await pgPool.query('SELECT total_reward FROM relay_candidate_rewards ORDER BY created_time DESC LIMIT 1');
+    return rows[0].total_reward ? Number(rows[0].total_reward) : 0;
+  } catch (error) {
+    logger.error('getTotalReward fails', { error });
+    throw error;
+  }
+}
+
+async function getTotalRewardLast30Days() {
+  const timeToCompare = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days before
 
   try {
-    const { rows } = await pgPool.query(query);
-    return Number(rows[0].count);
+    const { rows } = await pgPool.query(
+      'SELECT total_reward FROM relay_candidate_rewards WHERE created_time <= $1 ORDER BY created_time DESC LIMIT 1',
+      [timeToCompare.toISOString()]
+    );
+
+    return rows[0].total_reward ? Number(rows[0].total_reward) : 0;
   } catch (error) {
-    logger.error('countTotalRelayCandidates fails', { error });
+    logger.error('getTotalRewardLast30Days fails', { error });
     throw error;
   }
 }
 
 async function getRelayCandidateList() {
-  const query = `SELECT relay_candidates.*, sum(reward_value) as monthly_reward FROM relay_candidates
-                    INNER JOIN relay_rewards ON relay_candidates.id = relay_rewards.relay_id
+  const query = `SELECT relay_candidates.*, sum(relay_candidate_rewards.reward_value) as monthly_reward FROM relay_candidates
+                  INNER JOIN relay_candidate_rewards ON relay_candidates.id = relay_candidate_rewards.rc_id
                   WHERE unregistered_time IS NULL
                   GROUP BY (relay_candidates.id)`;
 
@@ -32,7 +46,7 @@ async function getRelayCandidateList() {
           rank: Number(row.rank),
           name: row.name,
           bondedICX: Number(row.bonded_icx),
-          monthlyReward: Number(row.monthly_reward),
+          monthlyReward: row.monthly_reward ? Number(row.monthly_reward) : 0
         });
       }
 
@@ -40,34 +54,6 @@ async function getRelayCandidateList() {
     }
   } catch (error) {
     logger.error('getRelayCandidateList fails', { error });
-    throw error;
-  }
-
-  return [];
-}
-async function getRelayCAND30DaysAgo() {
-  const time24hAgo = new Date(new Date().getTime() - 86400000 * 30);
-  const query = `SELECT relay_candidates.id, name, sum(reward_value) as monthly_reward FROM relay_candidates
-                    INNER JOIN relay_rewards ON relay_candidates.id = relay_rewards.relay_id
-                  WHERE unregistered_time IS NULL AND relay_rewards.created_time <= $1
-                  GROUP BY (relay_candidates.id)`;
-  try {
-    const { rows } = await pgPool.query(query, [time24hAgo.toISOString()]);
-
-    if (rows.length > 0) {
-      const relayCandidates = [];
-
-      for (const row of rows) {
-        relayCandidates.push({
-          id: row.id,
-          name: row.name,
-          monthlyReward: Number(row.monthly_reward),
-        });
-      }
-      return relayCandidates;
-    }
-  } catch (error) {
-    logger.error('getRelayCAND30DaysAgo fails', { error });
     throw error;
   }
 
@@ -111,9 +97,9 @@ async function getById(id) {
 }
 
 module.exports = {
-  countTotalRelayCandidates,
   getRelayCandidateList,
   getTotalBondedRelayCandidates,
   getById,
-  getRelayCAND30DaysAgo,
+  getTotalReward,
+  getTotalRewardLast30Days
 };
