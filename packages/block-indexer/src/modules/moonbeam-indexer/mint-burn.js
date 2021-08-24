@@ -24,9 +24,10 @@ async function handleMintBurnEvents(transaction, block) {
     const transferSingle = eventMapBSHScore.get('TransferSingle');
     const event = findEvmLogByEventHash(transferSingle.hash, transaction.events);
 
-  if (event) {
-    logger.info(`Get TransferSingle event in tx ${transaction.hash}, block ${block.hash}`);
-    await handleTransferSingleEvent(transferSingle, event, transaction, block);}
+    if (event) {
+      logger.info(`Get TransferSingle event in tx ${transaction.hash}, block ${block.hash}`);
+      await handleTransferSingleEvent(transferSingle, event, transaction, block);
+    }
   }
 
 }
@@ -101,35 +102,22 @@ function getTransferSingleEvent(inputs, evmLogData) {
     const result = web3.eth.abi.decodeLog(inputs, evmLogData.data, evmLogData.topics.slice(1));
 
     if (result) {
-    logger.info('moonbeam:getTransferSingleEvent got TransferStart event: %O', result);
+      logger.info('moonbeam:getTransferSingleEvent got TransferStart event: %O', result);
 
-    const data = {
-      from: result.from.toLowerCase(),
-      to: result.to.toLowerCase(),
-      id: result.id,
-      value: Number(result.value) / ICX_LOOP_UNIT
-    };
+      const data = {
+        from: result.from.toLowerCase(),
+        to: result.to.toLowerCase(),
+        id: result.id,
+        value: Number(result.value) / ICX_LOOP_UNIT
+      };
 
-    return data;
+      return data;
     }
   } catch (error) {
     logger.error('moonbeam:getTransferSingleEvent fails: %O', error);
   }
 }
 
-
-function findEvmLogByEventHash(hash, events) {
-  for (const event of events) {
-    if ('evm' !== event.method.pallet || 'Log' !== event.method.method)
-    continue;
-
-    debugEvmLog('evm.Log: %O', event);
-
-    if (hash === event.data[0].topics[0])
-    return event;
-  }
-}
-
 module.exports = {
   handleMintBurnEvents
-}
+};
