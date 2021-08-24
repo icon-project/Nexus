@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const { decode } = require('rlp');
 
 async function handleRelayerEvent(txResult, transaction) {
-  if( ('registerRelayer' === transaction.data.method || 'unregisterRelayer' === transaction.data.method) && 1 === txResult.status) {
+  if( transaction.data.method && ('registerRelayer' === transaction.data.method || 'unregisterRelayer' === transaction.data.method) && 1 === txResult.status) {
     const relayerObj = {
       relayerAddress: transaction.from,
       bondedToAddress: transaction.to,
@@ -21,7 +21,7 @@ async function handleRelayerEvent(txResult, transaction) {
 
       const isRelayerExisted = await checkRelayerExisted(relayerObj.relayerAddress);
 
-      if(isRelayerExisted) {
+      if (isRelayerExisted) {
         await updateRelayerInfo(relayerObj, txResult);
       } else {
         await saveRelayerInfo(relayerObj, txResult);
@@ -37,7 +37,7 @@ async function handleRelayerEvent(txResult, transaction) {
 
 async function checkRelayerExisted(relayerAddress) {
   try {
-    const { rows } = await pgPool.query( 'SELECT id FROM relayers WHERE address_relayer=$1', [relayerAddress]);
+    const { rows } = await pgPool.query( 'SELECT id FROM bonded_icx WHERE address_relayer=$1', [relayerAddress]);
 
     return rows[0].id ? true : false;
   } catch (error) {
@@ -47,7 +47,7 @@ async function checkRelayerExisted(relayerAddress) {
 
 async function saveRelayerInfo(relayerObj, txResult) {
   try {
-    const query = 'INSERT INTO relayers (id, description, address_relayer, address_bonded_to, bonded_icx, server_status, tx_hash, block_hash, block_height, registered_time, created_time, updated_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())';
+    const query = 'INSERT INTO bonded_icx (id, description, address_relayer, address_bonded_to, bonded_icx, server_status, tx_hash, block_hash, block_height, registered_time, created_time, updated_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())';
     const values = [relayerObj.id, relayerObj.description, relayerObj.relayerAddress, relayerObj.bondedToAddress, relayerObj.valueBonded, relayerObj.serverStatus, txResult.txHash, txResult.blockHash, txResult.blockHeight, relayerObj.blockTime ];
 
     await pgPool.query(query, values);
@@ -60,11 +60,11 @@ async function updateRelayerInfo(relayerObj, txResult) {
   try {
     let query, values;
     if(relayerObj.serverStatus === 'Active') {
-      query = 'UPDATE relayers SET description = $2, address_bonded_to = $3, bonded_icx = $4, tx_hash = $5, block_hash = $6, block_height = $7, server_status = $8, registered_time = NOW(), updated_time = NOW() WHERE address_relayer = $1';
+      query = 'UPDATE bonded_icx SET description = $2, address_bonded_to = $3, bonded_icx = $4, tx_hash = $5, block_hash = $6, block_height = $7, server_status = $8, registered_time = NOW(), updated_time = NOW() WHERE address_relayer = $1';
       values = [relayerObj.relayerAddress, relayerObj.description, relayerObj.bondedToAddress, relayerObj.valueBonded, txResult.txHash, txResult.blockHash, txResult.blockHeight, relayerObj.serverStatus];
       
     } else {
-      query = 'UPDATE relayers SET tx_hash = $2, block_hash = $3, block_height = $4, unregistered_time = NOW(), server_status = $5, updated_time = NOW() WHERE address_relayer = $1';
+      query = 'UPDATE bonded_icx SET tx_hash = $2, block_hash = $3, block_height = $4, unregistered_time = NOW(), server_status = $5, updated_time = NOW() WHERE address_relayer = $1';
       values = [relayerObj.relayerAddress, txResult.txHash, txResult.blockHash, txResult.blockHeight, relayerObj.serverStatus];
     }
     await pgPool.query(query, values);
