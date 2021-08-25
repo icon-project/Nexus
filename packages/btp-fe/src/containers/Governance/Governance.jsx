@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 import { Table } from 'components/Table';
@@ -134,33 +134,23 @@ const GovernanceStyled = styled.div`
 `;
 
 function GovernancePage() {
-  const { relayCandidates, totalRewardFund, registeredRelayLast24h, rewardLast30Days } = useSelect(
-    ({
-      governance: {
-        selectRelayCandidates,
-        selectTotalRewardFund,
-        selectRegisteredRelayLast24h,
-        selectRewardLast30Days,
-      },
-    }) => ({
-      relayCandidates: selectRelayCandidates,
-      totalRewardFund: selectTotalRewardFund,
-      registeredRelayLast24h: selectRegisteredRelayLast24h,
-      rewardLast30Days: selectRewardLast30Days,
-    }),
-  );
+  const [relayPagination, setRelayPagination] = useState({ totalItem: 0, limit: 10 });
 
-  const { getRelayCandidates, getRegisteredRelayLast24h } = useDispatch(
-    ({ governance: { getRelayCandidates, getRegisteredRelayLast24h } }) => ({
-      getRelayCandidates,
-      getRegisteredRelayLast24h,
-    }),
-  );
+  const { relays } = useSelect(({ governance: { selectRelays } }) => ({
+    relays: selectRelays,
+  }));
 
-  useEffect(() => {
-    getRelayCandidates();
-    getRegisteredRelayLast24h();
-  }, [getRelayCandidates, getRegisteredRelayLast24h]);
+  const { getRelays } = useDispatch(({ governance: { getRelays } }) => ({
+    getRelays,
+  }));
+
+  const { content, total, registeredLastChange24h } = relays;
+
+  const fetchRelayHandler = async (page) => {
+    const relay = await getRelays({ page: page - 1, limit: relayPagination.limit });
+    setRelayPagination({ ...relayPagination, totalItem: relay.total });
+  };
+
   return (
     <GovernanceStyled>
       <Helmet title="Governance" />
@@ -171,14 +161,14 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REGISTERED</Text>
-              <Text className="lg bold total-value">{relayCandidates?.length}</Text>
-              <UpDownPercent percent={registeredRelayLast24h} />
+              <Text className="lg bold total-value">{total || 0}</Text>
+              <UpDownPercent percent={registeredLastChange24h} />
             </div>
             <div className="vl"></div>
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REWARD FUND</Text>
-              <Text className="lg bold total-value">{totalRewardFund}</Text>
-              <UpDownPercent percent={rewardLast30Days} label="past 30 days" />
+              <Text className="lg bold total-value">{0}</Text>
+              <UpDownPercent percent={0} label="past 30 days" />
             </div>
           </div>
         </div>
@@ -186,12 +176,13 @@ function GovernancePage() {
         <Table
           rowKey="id"
           columns={columns}
-          dataSource={relayCandidates}
+          dataSource={content}
+          getItemsHandler={(page) => () => fetchRelayHandler(page)}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
           hoverColor={colors.darkBG}
           bodyText={'md'}
-          pagination={{ totalItem: 21, limit: 10 }}
+          pagination={relayPagination}
         />
         <Header className="xs bold table-name">Relay Candidates</Header>
         <Table
