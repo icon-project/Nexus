@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Table } from 'components/Table';
@@ -136,20 +136,30 @@ const GovernanceStyled = styled.div`
 function GovernancePage() {
   const [relayPagination, setRelayPagination] = useState({ totalItem: 0, limit: 10 });
 
-  const { relays } = useSelect(({ governance: { selectRelays } }) => ({
-    relays: selectRelays,
-  }));
+  const { relays, totalRewardFund } = useSelect(
+    ({ governance: { selectRelays, selectTotalRewardFund } }) => ({
+      relays: selectRelays,
+      totalRewardFund: selectTotalRewardFund,
+    }),
+  );
 
-  const { getRelays } = useDispatch(({ governance: { getRelays } }) => ({
-    getRelays,
-  }));
+  const { getRelays, getTotalRewardFund } = useDispatch(
+    ({ governance: { getRelays, getTotalRewardFund } }) => ({
+      getRelays,
+      getTotalRewardFund,
+    }),
+  );
 
   const { content, total, registeredLastChange24h } = relays;
-
+  const { totalAmount, last30DaysChange } = totalRewardFund;
   const fetchRelayHandler = async (page) => {
     const relay = await getRelays({ page: page - 1, limit: relayPagination.limit });
-    setRelayPagination({ ...relayPagination, totalItem: relay.total });
+    setRelayPagination({ ...relayPagination, totalItem: relay?.total });
   };
+
+  useEffect(() => {
+    getTotalRewardFund();
+  }, [getTotalRewardFund]);
 
   return (
     <GovernanceStyled>
@@ -167,8 +177,8 @@ function GovernancePage() {
             <div className="vl"></div>
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REWARD FUND</Text>
-              <Text className="lg bold total-value">{0}</Text>
-              <UpDownPercent percent={0} label="past 30 days" />
+              <Text className="lg bold total-value">{totalAmount}</Text>
+              <UpDownPercent percent={last30DaysChange} label="past 30 days" />
             </div>
           </div>
         </div>
