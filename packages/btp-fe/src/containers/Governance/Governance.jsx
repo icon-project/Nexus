@@ -161,7 +161,7 @@ function GovernancePage() {
           <div className="total">
             <div className="total-wrapper">
               <Text className="sm bold total-text">TOTAL REGISTERED</Text>
-              <Text className="lg bold total-value">{total}</Text>
+              <Text className="lg bold total-value">{total || 0}</Text>
               <UpDownPercent percent={registeredLastChange24h} />
             </div>
             <div className="vl"></div>
