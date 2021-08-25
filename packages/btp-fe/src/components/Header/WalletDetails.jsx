@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
@@ -15,7 +15,7 @@ import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 
-import { getService } from 'services/transfer';
+//import { getService } from 'services/transfer';
 
 import copyIcon from 'assets/images/copy-icon.svg';
 import refundIcon from 'assets/images/refund-icon.svg';
@@ -153,6 +153,7 @@ export const WalletDetails = ({
   networkName,
   userAvatar,
   // balance,
+  refundableBalance,
   unit,
   address,
   shortedAddress,
@@ -160,21 +161,9 @@ export const WalletDetails = ({
   onSwitchWallet,
 }) => {
   const [selectedToken, setSelectedToken] = useState(unit);
+  const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
-
-  useEffect(() => {
-    getService()
-      .getBalanceOf({ address, refundable: true, symbol: 'ICX' })
-      .then((balance) => {
-        console.log('%cICX refundable balance: ', 'color: blue;', balance);
-      });
-    getService()
-      .getBalanceOf({ address, refundable: true, symbol: 'DEV' })
-      .then((balance) => {
-        console.log('%cDEV refundable balance: ', 'color: blue;', balance);
-      });
-  }, [address]);
 
   const tokens = [
     { label: unit, value: unit },
@@ -185,6 +174,10 @@ export const WalletDetails = ({
 
   const onTokenChange = async (evt) => {
     setSelectedToken(evt.target.value);
+  };
+
+  const onChangeRefundSelect = async (e) => {
+    setSelectedRefundToken(e.target.value);
   };
 
   return (
@@ -200,8 +193,12 @@ export const WalletDetails = ({
       <Text className="sm sub-title">Refunds</Text>
       <div className="box-container">
         <div className="select-refund">
-          <RefundSelector className="padding-content" options={tokens} />
-          <Text className="md">2.301</Text>
+          <RefundSelector
+            className="padding-content"
+            options={tokens}
+            onChange={onChangeRefundSelect}
+          />
+          <Text className="md">{refundableBalance[selectedRefundToken]}</Text>
         </div>
         <div>
           <Text className="xs bold action">
