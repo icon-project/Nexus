@@ -47,20 +47,13 @@ const candidatesColumns = [
     width: '400px',
   },
   {
-    title: 'Bonded ICS',
+    title: 'Bonded ICX',
     dataIndex: 'bondedICX',
+    render: (value) => value.toFixed(20).replace(/0+$/, ''),
     width: '620px',
   },
 ];
 
-let candidates = [];
-for (let rank = 1; rank < 11; rank++) {
-  candidates.push({
-    rank,
-    name: 'ICON Foundation',
-    bondedICX: '52,254,777.1397',
-  });
-}
 const GovernanceStyled = styled.div`
   max-width: 1120px;
   margin: auto;
@@ -135,26 +128,38 @@ const GovernanceStyled = styled.div`
 
 function GovernancePage() {
   const [relayPagination, setRelayPagination] = useState({ totalItem: 0, limit: 10 });
+  const [relayCandidatesPagination, setRelayCandidatesPagination] = useState({
+    totalItem: 0,
+    limit: 10,
+  });
 
-  const { relays, totalRewardFund } = useSelect(
-    ({ governance: { selectRelays, selectTotalRewardFund } }) => ({
+  const { relays, totalRewardFund, relayCandidates } = useSelect(
+    ({ governance: { selectRelays, selectTotalRewardFund, selectRelayCandidates } }) => ({
       relays: selectRelays,
       totalRewardFund: selectTotalRewardFund,
+      relayCandidates: selectRelayCandidates,
     }),
   );
 
-  const { getRelays, getTotalRewardFund } = useDispatch(
-    ({ governance: { getRelays, getTotalRewardFund } }) => ({
+  const { getRelays, getTotalRewardFund, getRelayCandidates } = useDispatch(
+    ({ governance: { getRelays, getTotalRewardFund, getRelayCandidates } }) => ({
       getRelays,
       getTotalRewardFund,
+      getRelayCandidates,
     }),
   );
 
   const { content, total, registeredLastChange24h } = relays;
   const { totalAmount, last30DaysChange } = totalRewardFund;
+
   const fetchRelayHandler = async (page) => {
     const relay = await getRelays({ page: page - 1, limit: relayPagination.limit });
     setRelayPagination({ ...relayPagination, totalItem: relay?.total });
+  };
+
+  const fetchRelayCandidatesHandler = async (page) => {
+    const relay = await getRelayCandidates({ page: page - 1, limit: relayPagination.limit });
+    setRelayCandidatesPagination({ ...relayPagination, totalItem: relay?.total });
   };
 
   useEffect(() => {
@@ -196,14 +201,15 @@ function GovernancePage() {
         />
         <Header className="xs bold table-name">Relay Candidates</Header>
         <Table
-          rowKey="rank"
+          rowKey="id"
           columns={candidatesColumns}
-          dataSource={candidates}
+          dataSource={relayCandidates}
+          getItemsHandler={(page) => () => fetchRelayCandidatesHandler(page)}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
           hoverColor={colors.darkBG}
           bodyText={'md'}
-          pagination={{ totalItem: 100, limit: 10 }}
+          pagination={relayCandidatesPagination}
         />
       </div>
     </GovernanceStyled>

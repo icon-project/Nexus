@@ -32,6 +32,10 @@ export const getRelays = (page = 0, limit = 10) => {
   return fetchAPI(`${baseRelayURL}?limit=${limit}&page=${page}`);
 };
 
+export const getRelayCandidates = (page = 0, limit = 10) => {
+  return fetchAPI(`/relay-candidates?limit=${limit}&page=${page}`);
+};
+
 export const getTotalRewardFund = () => {
   return fetchAPI(`/relay-candidates/reward`);
 };
