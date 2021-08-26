@@ -117,17 +117,18 @@ class Ethereum {
       const isAllowedNetwork = this.isAllowedNetwork();
 
       if (isAllowedNetwork) {
+        const wallet = wallets.metamask;
         const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
         const address = toChecksumAddress(accounts[0]);
         localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
-        const refundableBalance = await account.getRefundableBalance(address);
+        const refundableBalance = await account.getRefundableBalance({ address, wallet });
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
           refundableBalance,
-          wallet: wallets.metamask,
+          wallet,
           unit: 'DEV',
           currentNetwork,
         });

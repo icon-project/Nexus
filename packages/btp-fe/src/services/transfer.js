@@ -8,11 +8,11 @@ import {
 import { EthereumInstance } from 'connectors/MetaMask';
 import { wallets } from 'utils/constants';
 
-const getCurrentTransferService = () => () => {
+const getCurrentTransferService = () => (targetWallet) => {
   const { wallet } = store.getState().account;
   const iconServices = { transfer, isApprovedForAll, setApprovalForAll, getBalanceOf };
 
-  switch (wallet) {
+  switch (wallet || targetWallet) {
     case wallets.iconex:
       return iconServices;
 
