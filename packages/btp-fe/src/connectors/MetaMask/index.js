@@ -197,6 +197,17 @@ class Ethereum {
     });
   }
 
+  async reclaim({ coinName, value }) {
+    const data = this.BSH_ABI.encodeFunctionData('reclaim', [coinName, value]);
+
+    await this.sendTransaction({
+      from: this.ethereum.selectedAddress,
+      to: MOON_BEAM_NODE.BSHCore,
+      gas: MOON_BEAM_NODE.gasLimit,
+      data,
+    });
+  }
+
   async isApprovedForAll(address) {
     try {
       const result = await this.contract.isApprovedForAll(

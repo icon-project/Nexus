@@ -114,4 +114,22 @@ export const MB_ABI = [
     type: 'function',
     constant: true,
   },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_coinName',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'reclaim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ];
