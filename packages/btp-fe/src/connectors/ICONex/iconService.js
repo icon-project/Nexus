@@ -240,7 +240,9 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
 
     const balance = await makeICXCall(params);
 
-    return refundable ? balance : roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
+    return refundable
+      ? balance.refundable
+      : roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
   } catch (err) {
     console.log('err', err);
   }
