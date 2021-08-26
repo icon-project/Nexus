@@ -103,7 +103,9 @@ class Ethereum {
   async getBalanceOf({ address, refundable = false, symbol = 'ICX' }) {
     try {
       const balance = await this.contract.getBalanceOf(address, symbol);
-      return refundable ? balance : roundNumber(convertToICX(balance[0]._hex), 6);
+      return refundable
+        ? balance._refundableBalance
+        : roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
       return 0;
@@ -120,10 +122,11 @@ class Ethereum {
         localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
-
+        const refundableBalance = await account.getRefundableBalance(address);
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
+          refundableBalance,
           wallet: wallets.metamask,
           unit: 'DEV',
           currentNetwork,
