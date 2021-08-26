@@ -47,7 +47,7 @@ const Wrapper = styled.div`
   .sub-title {
     display: flex;
     justify-content: start;
-    margin-bottom: 7px;
+    margin: 21px 0 7px;
   }
 
   .box-container {
@@ -112,9 +112,11 @@ const TokenSelector = styled(Select)`
   background-color: transparent !important;
   display: inline-flex;
   height: 32px;
+
   > .md {
     font-weight: 600;
   }
+
   &::after {
     width: 9.33px;
     margin-left: 11.67px;
@@ -133,16 +135,19 @@ const RefundSelector = styled(Select)`
   border-right: solid 1px ${grayLine};
   border-radius: 0px;
   margin-right: 11.67px;
+
   &::after {
     width: 9.33px;
     margin: 0 11.67px;
   }
+
   > .md {
     width: 33px;
   }
 
   > ul {
     width: 114px;
+
     ${media.md`
       width: 83px;
     `};
