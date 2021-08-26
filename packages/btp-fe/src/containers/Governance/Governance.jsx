@@ -49,7 +49,7 @@ const candidatesColumns = [
   {
     title: 'Bonded ICX',
     dataIndex: 'bondedICX',
-    render: (value) => value.toFixed(20).replace(/\.0+$/gm, ''),
+    render: (value) => value.toFixed(20).replace(/\.0+$/, ''),
     width: '620px',
   },
 ];
