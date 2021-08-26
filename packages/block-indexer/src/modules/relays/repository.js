@@ -4,16 +4,16 @@ async function createRelay(relay) {
   try {
     await pgPool.query(
       `INSERT INTO relays(
-     id,
-     address,
-     link,
-     server_status,
-     total_transferred_tx,
-     total_failed_tx,
-     registered_time,
-     unregistered_time,
-     created_at,
-     updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())`,
+      id,
+      address,
+      link,
+      server_status,
+      total_transferred_tx,
+      total_failed_tx,
+      registered_time,
+      unregistered_time,
+      created_at,
+      updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())`,
       [
         relay.id,
         relay.address,

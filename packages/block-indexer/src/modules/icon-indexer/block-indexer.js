@@ -11,7 +11,7 @@ const { handleTransactionEvents } = require('../transactions/icon');
 const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { handleTokenRegister } = require('./token-register');
-const { handleRelayerEvent } = require('./bonded-icx');
+const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
@@ -28,7 +28,7 @@ async function runTransactionHandlers(transaction, txResult, block) {
     await handleMintBurnEvents(txResult, transaction);
     await handleTokenRegister(txResult, transaction);
     await handleRelayAction(txResult, transaction);
-    await handleRelayerEvent(txResult, transaction);
+    await handleRelayerAction(txResult, transaction);
     // More transaction handlers go here.
   } catch (error) {
     logger.error('icon:runTransactionHandlers fails %O', error);
