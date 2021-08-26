@@ -127,6 +127,9 @@ ALTER TABLE ONLY public.transactions
 
 -- Issue #38
 ALTER TABLE ONLY public.relay_candidates
+    ALTER COLUMN rank DROP NOT NULL,
+    ADD COLUMN address character varying(300) UNIQUE NOT NULL,
+    ADD COLUMN dest_address character varying(300) NOT NULL;
     DROP COLUMN server_status,
 	DROP COLUMN total_transferred_tx,
 	DROP COLUMN total_failed_tx,
