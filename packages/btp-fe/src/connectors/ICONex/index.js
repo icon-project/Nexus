@@ -6,8 +6,13 @@ import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
 import store from 'store';
-import { wallets } from 'utils/constants';
-import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork, signingActions } from '../constants';
+import {
+  TYPES,
+  ADDRESS_LOCAL_STORAGE,
+  CONNECTED_WALLET_LOCAL_STORAGE,
+  currentICONexNetwork,
+  signingActions,
+} from '../constants';
 
 const { modal, account } = store.dispatch;
 
@@ -150,7 +155,7 @@ const getAccountInfo = async (address) => {
       address,
       balance,
       refundableBalance,
-      wallet: wallets.iconex,
+      wallet: localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE),
       unit: 'ICX',
       currentNetwork: currentICONexNetwork.name,
     });
