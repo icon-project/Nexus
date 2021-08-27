@@ -1,5 +1,5 @@
 import IconService, { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
-const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
+const { IcxTransactionBuilder, CallTransactionBuilder, CallBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
 import { ethers } from 'ethers';
@@ -27,6 +27,16 @@ export const getBalance = (address) => {
     .then((balance) => {
       return convertToICX(balance);
     });
+};
+
+// https://www.icondev.io/icon-sdks/javascript#icx-transfer
+const getDefaultStepCost = async () => {
+  const governanceAddress = 'cx0000000000000000000000000000000000000000';
+
+  const callBuilder = new CallBuilder();
+  const call = callBuilder.to(governanceAddress).method('getStepCosts').build();
+  const stepCosts = await iconService.call(call).execute();
+  return stepCosts.default;
 };
 
 export const sendTransaction = async (signature) => {
@@ -165,7 +175,7 @@ export const signTx = (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .stepLimit(IconConverter.toBigNumber(1000000000))
+    .stepLimit(getDefaultStepCost() || IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
