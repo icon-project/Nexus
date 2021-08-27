@@ -21,7 +21,7 @@ async function getTransById(id) {
     // https://github.com/icon-project/btp#introduction
     if (addressPaths.length == 4) {
       let networkDst = await getNetworkById(addressPaths[1]);
-      transation.networkNameDst = networkDst.name;
+      transation.networkNameDst = networkDst[0].name;
     }
   }
   return transation;
