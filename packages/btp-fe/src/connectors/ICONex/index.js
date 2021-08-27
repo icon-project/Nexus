@@ -150,9 +150,11 @@ const eventHandler = async (event) => {
 const getAccountInfo = async (address) => {
   try {
     const balance = +(await getBalance(address));
-    account.setAccountInfo({
+    const refundableBalance = await account.getRefundableBalance(address);
+    await account.setAccountInfo({
       address,
       balance,
+      refundableBalance,
       wallet: localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE),
       unit: 'ICX',
       currentNetwork: currentICONexNetwork.name,

@@ -195,7 +195,15 @@ const Header = ({ userStatus = defaultUser }) => {
   }, []);
 
   const {
-    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork },
+    accountInfo: {
+      address,
+      balance,
+      refundableBalance,
+      unit,
+      wallet,
+      cancelConfirmation,
+      currentNetwork,
+    },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -273,6 +281,7 @@ const Header = ({ userStatus = defaultUser }) => {
                 networkName={currentNetwork}
                 userAvatar={userStatus.avatar}
                 balance={balance}
+                refundableBalance={refundableBalance}
                 unit={unit}
                 address={address}
                 shortedAddress={shortedAddress}

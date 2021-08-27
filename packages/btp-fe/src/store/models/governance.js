@@ -1,12 +1,16 @@
-import { getRelayCandidates, getRegisteredRelayLast24h } from 'services/btpServices';
+import { getRelays, getTotalRewardFund } from 'services/btpServices';
 
 const governance = {
   state: {
-    relayCandidates: {
+    relays: {
       content: [],
-      rewardChanged30Days: 0,
+      total: 0,
+      registeredLastChange24h: 0,
     },
-    totalRegisteredLast24h: 0,
+    totalRewardFund: {
+      totalAmount: 0,
+      last30DaysChange: 0,
+    },
   },
   reducers: {
     setGovernanceState(state, prop = []) {
@@ -18,49 +22,38 @@ const governance = {
     },
   },
   effects: (dispatch) => ({
-    async getRelayCandidates() {
+    async getRelays({ page, limit }) {
       try {
-        const relayCandidates = await getRelayCandidates();
-        if (!relayCandidates.error) {
-          this.setGovernanceState(['relayCandidates', relayCandidates || {}]);
-        }
-        return relayCandidates;
+        const relays = await getRelays(page, limit);
+        this.setGovernanceState(['relays', relays || {}]);
+        return relays;
       } catch (error) {
         dispatch.modal.handleError();
       }
     },
-    async getRegisteredRelayLast24h() {
+    async getTotalRewardFund() {
       try {
-        const totalRegisteredLast24h = await getRegisteredRelayLast24h();
+        const totalRewardFund = await getTotalRewardFund();
+        const { totalAmount, last30DaysChange } = totalRewardFund.content;
         this.setGovernanceState([
-          'totalRegisteredLast24h',
-          totalRegisteredLast24h?.content.last24hChange || 0,
+          'totalRewardFund',
+          {
+            totalAmount,
+            last30DaysChange,
+          },
         ]);
+        return totalRewardFund;
       } catch (error) {
         dispatch.modal.handleError();
       }
     },
   }),
   selectors: (slice) => ({
-    selectRelayCandidates() {
-      return slice((state) => state.relayCandidates.content);
-    },
-    selectRewardLast30Days() {
-      return slice((state) => state.relayCandidates.rewardChanged30Days);
-    },
-    selectRegisteredRelayLast24h() {
-      return slice((state) => state.totalRegisteredLast24h);
+    selectRelays() {
+      return slice((state) => state.relays);
     },
     selectTotalRewardFund() {
-      const getTotalRewardFund = (relays) => {
-        if (!relays || relays.length === 0) return 0;
-        const totalRewardFund = relays.reduce(
-          (total, relay) => total + (relay['monthlyReward'] || 0),
-          0,
-        );
-        return totalRewardFund.toFixed(2);
-      };
-      return slice((state) => getTotalRewardFund(state.relayCandidates.content));
+      return slice((state) => state.totalRewardFund);
     },
   }),
 };

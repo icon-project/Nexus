@@ -28,16 +28,12 @@ export const getAvailableAmountLast24h = () => {
   return fetchAPI(`/fees/?availableAmountLast24h=1`);
 };
 
-export const getRelayCandidates = () => {
-  return fetchAPI(`${baseRelayURL}?style=list&rewardLast30Days=1`);
+export const getRelays = (page = 0, limit = 10) => {
+  return fetchAPI(`${baseRelayURL}?limit=${limit}&page=${page}`);
 };
 
-export const getRegisteredRelayCandidate = () => {
-  return fetchAPI(`${baseRelayURL}?style=count`);
-};
-
-export const getRegisteredRelayLast24h = () => {
-  return fetchAPI(`${baseRelayURL}?style=registeredLast24h`);
+export const getTotalRewardFund = () => {
+  return fetchAPI(`/relay-candidates/reward`);
 };
 
 export const getConnectedNetworks = () => {
