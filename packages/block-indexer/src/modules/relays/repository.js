@@ -32,17 +32,14 @@ async function createRelay(relay) {
 }
 
 async function updateRelay(relay) {
-  let params = [relay.address, relay.serverStatus];
+  let params = [relay.address, relay.serverStatus, relay.unregisteredTime];
   let query = `UPDATE relays
     SET
       updated_at = NOW(),
-      server_status = $2
+      server_status = $2,
+      unregistered_time = $3
     `;
 
-  if (relay.unregisteredTime) {
-    query += `, unregistered_time = $${params.length + 1}`;
-    params.push(relay.unregisteredTime);
-  }
   if (relay.registeredTime) {
     query += `, registered_time = $${params.length + 1}`;
     params.push(relay.registeredTime);
