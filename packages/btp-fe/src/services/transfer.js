@@ -15,12 +15,10 @@ const getCurrentTransferService = () => (targetWallet) => {
   const iconServices = { transfer, isApprovedForAll, setApprovalForAll, getBalanceOf };
 
   switch (wallet || targetWallet) {
-    case wallets.iconex:
-      return iconServices;
-    case wallets.hana:
-      return iconServices;
-    default:
+    case wallets.metamask:
       return EthereumInstance;
+    default:
+      return iconServices;
   }
 };
 
