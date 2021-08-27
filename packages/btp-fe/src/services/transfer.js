@@ -17,7 +17,8 @@ const getCurrentTransferService = () => (targetWallet) => {
   switch (wallet || targetWallet) {
     case wallets.iconex:
       return iconServices;
-
+    case wallets.hana:
+      return iconServices;
     default:
       return EthereumInstance;
   }
