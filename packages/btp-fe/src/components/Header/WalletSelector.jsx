@@ -39,6 +39,11 @@ const StyledWalletItem = styled.button`
     background: ${grayAccent};
     border-radius: 4px;
   }
+  .wallet-img {
+    img {
+      width: inherit;
+    }
+  }
 
   ${media.md`
     width: 100%;
@@ -59,7 +64,7 @@ export const WalletSelector = ({
       autoFocus={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
-      <Avatar src={wallet[type].icon} size={30} />
+      <Avatar className="wallet-img" src={wallet[type].icon} size={32} />
       <Text className="md wallet-title">
         {!isInstalled && !isCheckingInstalled && 'Install '}
         {wallet[type].title}
