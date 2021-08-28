@@ -40,14 +40,14 @@ const account = {
     },
   },
   effects: (dispatch) => ({
-    async getRefundableBalance(address) {
+    async getRefundableBalance({ address, wallet }) {
       try {
-        const icxRefundable = await getService().getBalanceOf({
+        const icxRefundable = await getService(wallet).getBalanceOf({
           address: address,
           refundable: true,
           symbol: 'ICX',
         });
-        const devRefundable = await getService().getBalanceOf({
+        const devRefundable = await getService(wallet).getBalanceOf({
           address: address,
           refundable: true,
           symbol: 'DEV',
