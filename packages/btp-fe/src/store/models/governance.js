@@ -1,4 +1,4 @@
-import { getRelays, getTotalRewardFund } from 'services/btpServices';
+import { getRelays, getTotalRewardFund, getRelayCandidates } from 'services/btpServices';
 
 const governance = {
   state: {
@@ -7,6 +7,7 @@ const governance = {
       total: 0,
       registeredLastChange24h: 0,
     },
+    relayCandidates: [],
     totalRewardFund: {
       totalAmount: 0,
       last30DaysChange: 0,
@@ -31,6 +32,15 @@ const governance = {
         dispatch.modal.handleError();
       }
     },
+    async getRelayCandidates({ page, limit }) {
+      try {
+        const relayCandidates = (await getRelayCandidates(page, limit)).content;
+        this.setGovernanceState(['relayCandidates', relayCandidates || {}]);
+        return relayCandidates;
+      } catch (error) {
+        dispatch.modal.handleError();
+      }
+    },
     async getTotalRewardFund() {
       try {
         const totalRewardFund = await getTotalRewardFund();
@@ -51,6 +61,9 @@ const governance = {
   selectors: (slice) => ({
     selectRelays() {
       return slice((state) => state.relays);
+    },
+    selectRelayCandidates() {
+      return slice((state) => state.relayCandidates);
     },
     selectTotalRewardFund() {
       return slice((state) => state.totalRewardFund);
