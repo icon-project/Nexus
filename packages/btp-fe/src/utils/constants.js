@@ -1,6 +1,7 @@
 export const wallets = {
   metamask: 'metamask',
   iconex: 'iconex',
+  hana: 'hana',
 };
 
 export const connectedNetWorks = {

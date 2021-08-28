@@ -6,8 +6,13 @@ import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
 import store from 'store';
-import { wallets } from 'utils/constants';
-import { TYPES, ADDRESS_LOCAL_STORAGE, currentICONexNetwork, signingActions } from '../constants';
+import {
+  TYPES,
+  ADDRESS_LOCAL_STORAGE,
+  CONNECTED_WALLET_LOCAL_STORAGE,
+  currentICONexNetwork,
+  signingActions,
+} from '../constants';
 
 const { modal, account } = store.dispatch;
 
@@ -144,13 +149,14 @@ const eventHandler = async (event) => {
 
 const getAccountInfo = async (address) => {
   try {
+    const wallet = localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE);
     const balance = +(await getBalance(address));
-    const refundableBalance = await account.getRefundableBalance(address);
+    const refundableBalance = await account.getRefundableBalance({ address, wallet });
     await account.setAccountInfo({
       address,
       balance,
       refundableBalance,
-      wallet: wallets.iconex,
+      wallet,
       unit: 'ICX',
       currentNetwork: currentICONexNetwork.name,
     });
