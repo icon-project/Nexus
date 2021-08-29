@@ -15,7 +15,7 @@ import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 
-//import { getService } from 'services/transfer';
+import { getService } from 'services/transfer';
 
 import copyIcon from 'assets/images/copy-icon.svg';
 import refundIcon from 'assets/images/refund-icon.svg';
@@ -84,7 +84,7 @@ const Wrapper = styled.div`
   }
 
   .control-buttons {
-    margin-top: 40px;
+    margin-top: 27px;
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
@@ -96,7 +96,7 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
-      margin-top: 27px;
+      //margin-top: 27px;
       > .disconnect-btn {
         margin-right: 10px;
       }
@@ -205,7 +205,14 @@ export const WalletDetails = ({
           />
           <Text className="md">{refundableBalance[selectedRefundToken]}</Text>
         </div>
-        <div>
+        <div
+          onClick={() => {
+            getService().reclaim({
+              coinName: selectedRefundToken,
+              value: refundableBalance[selectedRefundToken],
+            });
+          }}
+        >
           <Text className="xs bold action">
             <img src={refundIcon} alt="refund-icon" />
             Receive

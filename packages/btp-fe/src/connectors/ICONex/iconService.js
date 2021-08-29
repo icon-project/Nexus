@@ -108,7 +108,22 @@ export const setApprovalForAll = async () => {
   window[signingActions.globalName] = signingActions.transfer;
   signTx(transaction, options);
 };
+export const reclaim = async ({ coinName, value }) => {
+  const transaction = {
+    to: currentICONexNetwork.BSHAddress,
+  };
 
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'reclaim',
+    params: {
+      _coinName: coinName,
+      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+    },
+  };
+
+  signTx(transaction, options);
+};
 export const isApprovedForAll = async (address) => {
   const result = await makeICXCall({
     to: currentICONexNetwork.irc31token,
