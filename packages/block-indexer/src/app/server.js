@@ -5,6 +5,7 @@ const { logger } = require('../common');
 const app = require('./app');
 const iconIndexer = require('../modules/icon-indexer');
 const moonbeamIndexer = require('../modules/moonbeam-indexer');
+const bscIndexer = require('../modules/bsc-indexer');
 
 function start() {
   // Separate Express 'app' and 'server'
@@ -22,6 +23,10 @@ function start() {
 
   if ('true' === process.env.MOONBEAM_INDEXER_ENABLED) {
     moonbeamIndexer.start();
+  }
+
+  if ('true' === process.env.BSC_INDEXER_ENABLED) {
+    bscIndexer.start();
   }
 }
 
