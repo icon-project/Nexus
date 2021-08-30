@@ -3,7 +3,13 @@ const { v4: uuidv4 } = require('uuid');
 const { logger } = require('../../common');
 const { debug } = require('../../common/logger');
 const { getActionMap } = require('../moonbeam-indexer/actions');
-const { getRelayByAddress, updateRelay, createRelay } = require('./repository');
+const {
+  getRelayByAddress,
+  updateRelay,
+  createRelay,
+  updateRelayTransaction,
+  getRelayAddresses,
+} = require('./repository');
 
 const ADD_RELAY_PROTOTYPE = 'addRelay';
 const REMOVE_RELAY_PROTOTYPE = 'removeRelay';
@@ -11,6 +17,7 @@ const ADD_RELAY_PARAMS_STRUCTURE = ['string', 'address[]'];
 const REMOVE_RELAY_PARAMS_STRUCTURE = ['string', 'address'];
 const SUCCESS_ACTION = 'Returned';
 const FAILED_ACTION = 'Reverted';
+let relayAddressSet;
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
@@ -58,18 +65,20 @@ async function handleAddRelayAction(relayInput, transaction, block) {
       logger.debug('Register the relay again');
     } else {
       await createRelay(relay);
+      relayAddressSet.add(relay.address);
       logger.debug('Create new a relay');
     }
   }
 }
 
 async function handleRemoveRelayAction(relayInput, transaction, block) {
-  let addresse = relayInput[1];
+  let address = relayInput[1];
   await updateRelay({
-    address: addresse,
+    address: address,
     unregisteredTime: new Date(Number(block.extrinsics[0].args.now)),
     serverStatus: 'Inactive',
   });
+  relayAddressSet.delete(address);
 }
 
 async function handleRelayAction(transaction, block) {
@@ -77,6 +86,7 @@ async function handleRelayAction(transaction, block) {
   if ('ethereum' !== transaction.method.pallet || 'transact' !== transaction.method.method)
     return false;
 
+  await handleRelayTransaction(transaction);
   let transactionInside = transaction.args.transaction;
   if (
     transactionInside &&
@@ -109,6 +119,22 @@ async function handleRelayAction(transaction, block) {
   return true;
 }
 
+async function handleRelayTransaction(transaction) {
+  let eventData = transaction.events[0].data;
+  if (!relayAddressSet) {
+    const relays = await getRelayAddresses();
+    relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
+  }
+
+  if (eventData) {
+    const relayAddress = eventData[0];
+    let transactionStatus;
+    if (relayAddressSet.has(relayAddress) && eventData[3]) {
+      eventData[3].succeed === SUCCESS_ACTION ? (transactionStatus = 1) : 0;
+      await updateRelayTransaction(relayAddress, transactionStatus);
+    }
+  }
+}
 module.exports = {
   handleRelayAction,
 };

@@ -74,8 +74,45 @@ async function getRelayByAddress(address) {
   }
 }
 
+async function updateRelayTransaction(address, transactionStatus) {
+  let query = `UPDATE relays
+    SET
+      updated_at = NOW()`;
+
+  if (transactionStatus === 1) {
+    query += ', total_transferred_tx = total_transferred_tx + 1';
+  } else {
+    query += ', total_failed_tx = total_failed_tx + 1';
+  }
+
+  query += ' WHERE address = $1 ';
+  try {
+    await pgPool.query(query, [address]);
+  } catch (error) {
+    logger.error('updateRelayTransaction fails', { error });
+  }
+}
+
+async function getRelayAddresses() {
+  const query = `SELECT
+                    address
+                  FROM relays`;
+  try {
+    const { rows } = await pgPool.query(query);
+    if (rows.length > 0) {
+      const addesses = rows.map((item) => item.address);
+      return addesses;
+    }
+  } catch (error) {
+    logger.error('getRelayDetailList fails', { error });
+    return [];
+  }
+}
+
 module.exports = {
   getRelayByAddress,
   updateRelay,
   createRelay,
+  getRelayAddresses,
+  updateRelayTransaction,
 };
