@@ -109,7 +109,6 @@ const TokenSelector = styled(Select)`
   border: solid 1px ${grayLine};
   padding: 4px 8px;
   margin-left: 10px;
-  background-color: transparent !important;
   display: inline-flex;
   height: 32px;
 
