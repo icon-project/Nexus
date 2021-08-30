@@ -104,7 +104,7 @@ class Ethereum {
     try {
       const balance = await this.contract.getBalanceOf(address, symbol);
       return refundable
-        ? balance._refundableBalance
+        ? convertToICX(balance._refundableBalance._hex)
         : roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
@@ -123,11 +123,9 @@ class Ethereum {
         localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
-        const refundableBalance = await account.getRefundableBalance({ address, wallet });
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
-          refundableBalance,
           wallet,
           unit: 'DEV',
           currentNetwork,
