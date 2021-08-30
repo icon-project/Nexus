@@ -1,12 +1,21 @@
 const { v4: uuidv4 } = require('uuid');
 const { logger } = require('../../common');
-const { updateRelay, createRelay, getRelayByAddress } = require('./repository');
+const {
+  updateRelay,
+  createRelay,
+  getRelayAddresses,
+  updateRelayTransaction,
+  getRelayByAddress,
+} = require('./repository');
 
 const ADD_RELAY_PROTOTYPE = 'addRelay';
 const REMOVE_RELAY_PROTOTYPE = 'removeRelay';
+let relayAddressSet;
 
 async function handleRelayAction(txResult, transaction) {
   let transData = transaction.data;
+  await handleRelayTransaction(txResult.status, transaction.from);
+
   if (transData && txResult.status == 1) {
     if (ADD_RELAY_PROTOTYPE == transData.method) {
       let params = transData.params;
@@ -26,6 +35,10 @@ async function handleRelayAction(txResult, transaction) {
         logger.debug('Register the relay again');
       } else {
         await createRelay(relay);
+
+        // add address to set
+        relayAddressSet.add(relay.address);
+
         logger.debug('Create new a relay');
       }
     } else if (REMOVE_RELAY_PROTOTYPE == transData.method) {
@@ -35,7 +48,20 @@ async function handleRelayAction(txResult, transaction) {
         unregisteredTime: new Date(transaction.timestamp / 1000),
         serverStatus: 'Inactive',
       });
+      // remove address from set
+      relayAddressSet.delete(params._addr);
     }
+  }
+}
+
+async function handleRelayTransaction(txResultStatus, relayAddress) {
+  if (!relayAddressSet) {
+    const relays = await getRelayAddresses();
+    relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
+  }
+
+  if (relayAddressSet.has(relayAddress)) {
+    await updateRelayTransaction(relayAddress, txResultStatus);
   }
 }
 
