@@ -1,9 +1,5 @@
 import { ethers } from 'ethers';
-import {
-  ADDRESS_LOCAL_STORAGE,
-  METAMASK_LOCAL_ADDRESS,
-  CONNECTED_WALLET_LOCAL_STORAGE,
-} from 'connectors/constants';
+import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { roundNumber } from 'utils/app';
 import { getService } from 'services/transfer';
 
@@ -34,7 +30,6 @@ const account = {
     },
     resetAccountInfo() {
       localStorage.removeItem(ADDRESS_LOCAL_STORAGE);
-      localStorage.removeItem(METAMASK_LOCAL_ADDRESS);
       localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
       return initState;
     },

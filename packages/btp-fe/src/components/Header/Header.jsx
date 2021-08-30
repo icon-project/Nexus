@@ -12,7 +12,7 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
-import { METAMASK_LOCAL_ADDRESS, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 import { Header as Heading, SubTitle, Text } from '../Typography';
@@ -139,39 +139,25 @@ const hashShortener = (hashStr) => {
   return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
 };
 
-const defaultUser = {
-  id: 'test',
-  userName: '@dsng',
-  authorized: false,
-  avatar: defaultAvatar,
-};
 const mockWallets = {
-  metamask: {
+  [wallets.metamask]: {
     id: 'metamask',
     title: 'MetaMask Wallet',
-    network: 'Etherum Mainnet',
-    hash: '123afx123afa4aweasdfasdf',
-    amount: 10,
-    unit: 'ETH',
     icon: MetaMask,
   },
-  iconex: {
+  [wallets.iconex]: {
     id: 'iconex',
     title: 'ICONex Wallet',
-    network: 'Etherum Mainnet',
-    hash: '123afx123afa4aweasdfasdf',
-    amount: 10,
-    unit: 'ETH',
     icon: ICONex,
   },
-  hana: {
+  [wallets.hana]: {
     id: 'hana',
     title: 'Hana Wallet',
     icon: Hana,
   },
 };
 
-const Header = ({ userStatus = defaultUser }) => {
+const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
   const [loading, setLoading] = useState(false);
@@ -180,18 +166,16 @@ const Header = ({ userStatus = defaultUser }) => {
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
+    if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
       EthereumInstance.getEthereumAccounts();
+    } else {
+      // wait after 2s for initial addICONexListener
+      setTimeout(() => {
+        checkICONexInstalled(() => {
+          setCheckingICONexInstalled(false);
+        });
+      }, 2001);
     }
-  }, []);
-
-  useEffect(() => {
-    // wait after 2s for initial addICONexListener
-    setTimeout(() => {
-      checkICONexInstalled(() => {
-        setCheckingICONexInstalled(false);
-      });
-    }, 2001);
   }, []);
 
   const {
@@ -279,7 +263,7 @@ const Header = ({ userStatus = defaultUser }) => {
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
               <WalletDetails
                 networkName={currentNetwork}
-                userAvatar={userStatus.avatar}
+                userAvatar={defaultAvatar}
                 balance={balance}
                 refundableBalance={refundableBalance}
                 unit={unit}
@@ -341,7 +325,7 @@ const Header = ({ userStatus = defaultUser }) => {
             <SubTitle className="sm">{currentNetwork}</SubTitle>
             <Avatar
               className="user-avatar"
-              src={userStatus.avatar}
+              src={defaultAvatar}
               size={48}
               onClick={onAvatarClicked}
             />
