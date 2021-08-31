@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import store from 'store';
 import {
-  METAMASK_LOCAL_ADDRESS,
+  ADDRESS_LOCAL_STORAGE,
   MOON_BEAM_NODE,
   allowedNetworkIDs,
   currentICONexNetwork,
@@ -104,7 +104,7 @@ class Ethereum {
     try {
       const balance = await this.contract.getBalanceOf(address, symbol);
       return refundable
-        ? balance._refundableBalance
+        ? convertToICX(balance._refundableBalance._hex)
         : roundNumber(convertToICX(balance[0]._hex), 6);
     } catch (err) {
       console.log('Err: ', err);
@@ -120,14 +120,12 @@ class Ethereum {
         const wallet = wallets.metamask;
         const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
         const address = toChecksumAddress(accounts[0]);
-        localStorage.setItem(METAMASK_LOCAL_ADDRESS, address);
+        localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
-        const refundableBalance = await account.getRefundableBalance({ address, wallet });
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
-          refundableBalance,
           wallet,
           unit: 'DEV',
           currentNetwork,
@@ -212,7 +210,7 @@ class Ethereum {
   async isApprovedForAll(address) {
     try {
       const result = await this.contract.isApprovedForAll(
-        address || localStorage.getItem(METAMASK_LOCAL_ADDRESS),
+        address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
         MOON_BEAM_NODE.BSHCore,
       );
       return result;

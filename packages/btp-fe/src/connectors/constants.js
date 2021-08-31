@@ -13,7 +13,6 @@ export const TYPES = {
 };
 
 export const ADDRESS_LOCAL_STORAGE = 'address';
-export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
 export const CONNECTED_WALLET_LOCAL_STORAGE = 'connected-wallet';
 
 export const signingActions = {

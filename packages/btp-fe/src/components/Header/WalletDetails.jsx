@@ -11,7 +11,6 @@ import { tokenOptionList } from 'utils/constants';
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
-// import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 
@@ -96,7 +95,6 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
-      //margin-top: 27px;
       > .disconnect-btn {
         margin-right: 10px;
       }
@@ -156,8 +154,6 @@ const RefundSelector = styled(Select)`
 export const WalletDetails = ({
   networkName,
   userAvatar,
-  // balance,
-  refundableBalance,
   unit,
   address,
   shortedAddress,
@@ -166,6 +162,7 @@ export const WalletDetails = ({
 }) => {
   const [selectedToken, setSelectedToken] = useState(unit);
   const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
+  const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
 
@@ -181,7 +178,17 @@ export const WalletDetails = ({
   };
 
   const onChangeRefundSelect = async (e) => {
-    setSelectedRefundToken(e.target.value);
+    const { value } = e.target;
+    setSelectedRefundToken(value);
+    getService()
+      .getBalanceOf({
+        address,
+        refundable: true,
+        symbol: value,
+      })
+      .then((refund) => {
+        setRefund(refund);
+      });
   };
 
   return (
@@ -202,13 +209,13 @@ export const WalletDetails = ({
             options={tokens}
             onChange={onChangeRefundSelect}
           />
-          <Text className="md">{refundableBalance[selectedRefundToken]}</Text>
+          <Text className="md">{refund}</Text>
         </div>
         <div
           onClick={() => {
             getService().reclaim({
               coinName: selectedRefundToken,
-              value: refundableBalance[selectedRefundToken],
+              value: refund,
             });
           }}
         >

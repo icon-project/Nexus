@@ -108,6 +108,7 @@ export const setApprovalForAll = async () => {
   window[signingActions.globalName] = signingActions.transfer;
   signTx(transaction, options);
 };
+
 export const reclaim = async ({ coinName, value }) => {
   const transaction = {
     to: currentICONexNetwork.BSHAddress,
@@ -256,8 +257,8 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     const balance = await makeICXCall(params);
 
     return refundable
-      ? balance.refundable
-      : roundNumber(ethers.utils.formatUnits(balance, 'ether'), 6);
+      ? convertToICX(balance.refundable)
+      : roundNumber(ethers.utils.formatEther(balance), 6);
   } catch (err) {
     console.log('err', err);
   }
