@@ -146,9 +146,9 @@ export const HistoryDetails = ({ id, onClose }) => {
             <div className="content">
               <Text className="md">Time</Text>
               <Text className="md">
-                {dayjs(details.blockTime / 1000).fromNow()}{' '}
+                {dayjs(details.blockTime).fromNow()}{' '}
                 <span className="hide-in-mobile">
-                  ({dayjs(details.blockTime / 1000).format('MMM-DD-YYYY hh:mm:ss A Z')})
+                  ({dayjs(details.blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
                 </span>
               </Text>
             </div>
