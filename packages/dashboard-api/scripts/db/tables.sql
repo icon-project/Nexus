@@ -353,3 +353,17 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.token_prices
     OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.indexer_stats
+(
+    network_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    block_height integer NOT NULL,
+    updated_time timestamp without time zone NOT NULL,
+    CONSTRAINT indexer_stats_pkey PRIMARY KEY (network_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.indexer_stats
+    OWNER to postgres;

@@ -1,8 +1,8 @@
 {
   "env": {
     "NODE_ENV": "development",
-    "DEBUG": "app,indexer,icon,block,db,moonbeam_tx,evmlog",
-    "DEBUG_DEPTH": 7
+    "DEBUG": "app,indexer,icon,moonbeam,bsc,bsc_tx",
+    "DEBUG_DEPTH": 5
   },
   "execMap": {
     "js": "node --unhandled-rejections=strict"

@@ -143,9 +143,11 @@ async function start() {
   const eventMap = buildEventMap();
   const eventMapBSHScore = buildBSHScoreEventMap();
   const actionMap = buildActionMap();
+
   logger.info('Moonbeam event map: %O', eventMap);
   logger.info('Moonbeam BSH SCORE event map: %O', eventMapBSHScore);
   logger.info('Moonbeam BMC Management action map: %O', actionMap);
+
   if (-1 === blockHeight) {
     const block = await getLastSavedBlock();
 
