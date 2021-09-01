@@ -233,5 +233,7 @@ async function handleTransactionEvents(transaction, block) {
 }
 
 module.exports = {
-  handleTransactionEvents
+  handleTransactionEvents,
+  getTransferStartEvent,
+  getTransferEndEvent
 };
