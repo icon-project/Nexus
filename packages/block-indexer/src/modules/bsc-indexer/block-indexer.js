@@ -26,11 +26,15 @@ const watchedTxReceipt = {
   ])
 };
 
+// All transaction handlers go here.
 async function runTransactionHandlers(tx, txReceipt, block) {
   try {
-    await testEventHandler(tx, txReceipt);
-
-    // More transaction handlers go here.
+    if (txReceipt) {
+      // handlers need tx receipt go here.
+      await testEventHandler(tx, txReceipt);
+    } else {
+      // handlers don't need tx receipt go here.
+    }
   } catch (error) {
     logger.error('bsc:runTransactionHandlers fails %O', error);
   }
