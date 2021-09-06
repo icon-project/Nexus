@@ -54,9 +54,10 @@ async function saveRelayer(relayer) {
           registered_time = $7,
           unregistered_time = $8,
           updated_time = NOW()`;
+
     const values = [
       relayer.id,
-      null,
+      0,
       relayer.name,
       relayer.address,
       relayer.destAddress,

@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const debug = require('debug')('icon');
+const debug = require('debug')('auctions');
 const IconService = require('icon-sdk-js');
 const { HttpProvider, IconBuilder, IconConverter, IconAmount, IconWallet, SignedTransaction } = require('icon-sdk-js');
 const { logger, hexToFixedAmount, numberToFixedAmount } = require('../../common');

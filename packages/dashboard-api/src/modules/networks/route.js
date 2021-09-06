@@ -1,5 +1,5 @@
 const express = require('express');
-const debug = require('debug')('api:btpnetwork');
+const debug = require('debug')('api:networks');
 const { asyncMiddleware, debugLogMiddleware } = require('../../middlewares');
 const { getNetworksInfo, getNetworkInfoById } = require('./controller');
 

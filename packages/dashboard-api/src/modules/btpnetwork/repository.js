@@ -107,10 +107,12 @@ async function getTotalTokensMintedLast24h() {
   }
 }
 
+// Bug: https://github.com/icon-project/btp-dashboard/issues/282#issuecomment-914030451
 async function getTotalBondedIcx() {
   try {
-    const { rows } = await pgPool.query('SELECT SUM(bonded_icx) as total_icx FROM bonded_icx WHERE server_status=$1', ['Active']);
-    return rows[0].total_icx ? Number(rows[0].total_icx) : 0;
+    return 0;
+    // const { rows } = await pgPool.query('SELECT SUM(bonded_icx) as total_icx FROM bonded_icx WHERE server_status=$1', ['Active']);
+    // return rows[0].total_icx ? Number(rows[0].total_icx) : 0;
   } catch (error) {
     logger.error('getTotalBondedIcx fails', { error });
     throw error;

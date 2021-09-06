@@ -56,12 +56,11 @@ async function getBySerialNumber(serialNumber, networkId) {
         UPDATE ${TRANSACTION_TBL_NAME}
         SET
           ${TRANSACTION_TBL.status} = $1,
-          block_height_end = $2,
-          tx_hash_end = $3,
-          tx_error = $4,
+          tx_hash_end = $2,
+          tx_error = $3,
           ${TRANSACTION_TBL.updateAt} = NOW()
-        WHERE ${TRANSACTION_TBL.id} = $5`;
-      const values = [status, txInfo.blockHeight, txInfo.txHash, txInfo.error, transt.id];
+        WHERE ${TRANSACTION_TBL.id} = $4`;
+      const values = [status, txInfo.txHash, txInfo.error, transt.id];
 
       await client.query(query, values);
       debug('saveTransaction SQL %s %O:', query, values);
@@ -80,7 +79,7 @@ async function saveTransaction(transaction) {
 
     const insertStatement = `INSERT INTO transactions (
       ${TRANSACTION_TBL.id}, ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
-      ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress}, ${TRANSACTION_TBL.blockHeight},
+      ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
       ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
       ${TRANSACTION_TBL.updateAt})
@@ -88,7 +87,7 @@ async function saveTransaction(transaction) {
       $1, $2, $3, $4,
       $5, $6, $7, $8,
       $9, $10, $11, $12,
-      $13, $14, NOW(), NOW())`;
+      $13, NOW(), NOW())`;
 
     const insertValues = [
       transaction.id,
@@ -97,7 +96,6 @@ async function saveTransaction(transaction) {
       transaction.serialNumber,
       transaction.value,
       transaction.toAddress,
-      transaction.blockHeight,
       transaction.txHash,
       transaction.blockTime,
       transaction.networkId,
