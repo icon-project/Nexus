@@ -159,7 +159,9 @@ const mockWallets = {
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
+  const [selectedWallet, setSelectedWallet] = useState(
+    localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) || wallets.metamask,
+  );
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
