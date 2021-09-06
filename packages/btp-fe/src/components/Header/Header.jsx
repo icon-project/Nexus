@@ -168,14 +168,13 @@ const Header = () => {
   useEffect(() => {
     if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
       EthereumInstance.getEthereumAccounts();
-    } else {
-      // wait after 2s for initial addICONexListener
-      setTimeout(() => {
-        checkICONexInstalled(() => {
-          setCheckingICONexInstalled(false);
-        });
-      }, 2001);
     }
+    // wait after 2s for initial addICONexListener
+    setTimeout(() => {
+      checkICONexInstalled(() => {
+        setCheckingICONexInstalled(false);
+      });
+    }, 2001);
   }, []);
 
   const {

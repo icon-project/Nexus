@@ -79,6 +79,10 @@ class Ethereum {
   }
 
   async connectMetaMaskWallet() {
+    if (!this.isMetaMaskInstalled()) {
+      window.open(metamaskURL);
+      return;
+    }
     try {
       const isAllowedNetwork = this.isAllowedNetwork();
 
