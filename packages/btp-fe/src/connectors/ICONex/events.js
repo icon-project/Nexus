@@ -34,6 +34,7 @@ export const requestAddress = () => {
     // handle if the ICONex extension is not installed
     // https://github.com/icon-project/icon-sdk-js/issues/12#issuecomment-781446159
     const selectedWallet = localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE);
+    localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
     if (selectedWallet === wallets.hana) {
       window.open(
         'https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl',
