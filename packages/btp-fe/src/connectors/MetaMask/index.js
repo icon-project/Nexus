@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import store from 'store';
 import {
   ADDRESS_LOCAL_STORAGE,
+  CONNECTED_WALLET_LOCAL_STORAGE,
   MOON_BEAM_NODE,
   allowedNetworkIDs,
   currentICONexNetwork,
@@ -79,6 +80,11 @@ class Ethereum {
   }
 
   async connectMetaMaskWallet() {
+    if (!this.isMetaMaskInstalled()) {
+      localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
+      window.open(metamaskURL);
+      return;
+    }
     try {
       const isAllowedNetwork = this.isAllowedNetwork();
 
