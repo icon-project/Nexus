@@ -3,7 +3,8 @@
 
 set -x
 
-HOST=http://localhost:8000
+# HOST=http://localhost:8000
+# HOST=http://54.251.114.18:8000
 
 # auctions
 
@@ -35,15 +36,13 @@ curl $HOST/v1/networks/0x501 | jq
 # relay-candidates
 
 curl $HOST/v1/relay-candidates | jq
-curl $HOST/v1/relay-candidates\?page=1 | jq
-curl $HOST/v1/relay-candidates\?limit=5 | jq
+curl $HOST/v1/relay-candidates\?page=1\&limit=3 | jq
 curl $HOST/v1/relay-candidates/reward | jq
 
 # relays
 
 curl $HOST/v1/relays | jq
-curl $HOST/v1/relays\?page=1 | jq
-curl $HOST/v1/relays\?limit=5 | jq
+curl $HOST/v1/relays\?page=1\&limit=3 | jq
 
 # transactions
 
@@ -54,3 +53,4 @@ curl $HOST/v1/transactions\?to=0x3 | jq
 curl $HOST/v1/transactions\?from\=0x501 | jq
 curl $HOST/v1/transactions\?assetName\=icx | jq
 curl $HOST/v1/transactions/11610175-955e-44b7-bab8-1cf690cc9a7c | jq
+curl $HOST/v1/transactions/02c892aa-0ff5-4cc2-832b-4c7f613d983f | jq
