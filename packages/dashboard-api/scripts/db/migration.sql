@@ -153,9 +153,7 @@ ALTER TABLE public.minted_tokens
     ALTER COLUMN mint_to TYPE character varying(100),
     ALTER COLUMN mint_to SET NOT NULL,
     ALTER COLUMN token_id TYPE character varying(100),
-    ALTER COLUMN token_id SET NOT NULL,
-    DROP COLUMN block_height,
-    DROP COLUMN block_hash;
+    ALTER COLUMN token_id SET NOT NULL;
 
 ALTER TABLE public.burned_tokens
     ALTER COLUMN network_id TYPE character varying(20),
@@ -199,11 +197,9 @@ ALTER TABLE public.transactions
     ALTER COLUMN block_time SET NOT NULL,
     ALTER COLUMN btp_fee SET NOT NULL,
     ALTER COLUMN network_fee SET NOT NULL,
-    ALTER COLUMN status SET NOT NULL;
+    ALTER COLUMN status SET NOT NULL,
     DROP COLUMN block_height,
     DROP COLUMN block_height_end;
-
-DROP TABLE public.tokens_info;
 
 CREATE TABLE IF NOT EXISTS public.token_info
 (
@@ -218,6 +214,12 @@ CREATE TABLE IF NOT EXISTS public.token_info
     CONSTRAINT token_info_network_id_fkey FOREIGN KEY (network_id)
         REFERENCES public.networks (id) MATCH SIMPLE
 )
+
+INSERT INTO token_info (id, network_id, token_name, token_id, tx_hash, create_at)
+    SELECT id, network_id, token_name, token_id, tx_hash, create_at
+    FROM tokens_info;
+
+DROP TABLE public.tokens_info;
 
 ALTER TABLE public.bids
     ADD CONSTRAINT bids_auction_id_fkey FOREIGN KEY (auction_id) REFERENCES public.auctions(id);

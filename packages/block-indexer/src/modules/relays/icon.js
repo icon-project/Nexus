@@ -57,10 +57,12 @@ async function handleRelayAction(txResult, transaction) {
 async function handleRelayTransaction(txResultStatus, relayAddress) {
   if (!relayAddressSet) {
     const relays = await getRelayAddresses();
-    relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
+
+    if (relays)
+      relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
   }
 
-  if (relayAddressSet.has(relayAddress)) {
+  if (relayAddressSet && relayAddressSet.has(relayAddress)) {
     await updateRelayTransaction(relayAddress, txResultStatus);
   }
 }
