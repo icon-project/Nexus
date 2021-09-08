@@ -139,3 +139,117 @@ ALTER TABLE ONLY public.relay_candidates
 
 -- drop relay_rewards
 -- create relay_candidate_rewards
+
+-- Issue #282
+
+ALTER TABLE public.minted_tokens
+    ALTER COLUMN network_id TYPE character varying(20),
+    ALTER COLUMN network_id SET NOT NULL,
+    ALTER COLUMN token_name TYPE character varying(50),
+    ALTER COLUMN token_name SET NOT NULL,
+    ALTER COLUMN token_value SET NOT NULL,
+    ALTER COLUMN block_time SET NOT NULL,
+    ALTER COLUMN tx_hash SET NOT NULL,
+    ALTER COLUMN mint_to TYPE character varying(100),
+    ALTER COLUMN mint_to SET NOT NULL,
+    ALTER COLUMN token_id TYPE character varying(100),
+    ALTER COLUMN token_id SET NOT NULL,
+    DROP COLUMN block_height,
+    DROP COLUMN block_hash;
+
+ALTER TABLE public.burned_tokens
+    ALTER COLUMN network_id TYPE character varying(20),
+    ALTER COLUMN network_id SET NOT NULL,
+    ALTER COLUMN token_name TYPE character varying(50),
+    ALTER COLUMN token_name SET NOT NULL,
+    ALTER COLUMN token_value SET NOT NULL,
+    ALTER COLUMN block_time SET NOT NULL,
+    ALTER COLUMN tx_hash SET NOT NULL,
+    ALTER COLUMN burn_from TYPE character varying(100),
+    ALTER COLUMN burn_from SET NOT NULL,
+    ALTER COLUMN token_id TYPE character varying(100),
+    ALTER COLUMN token_id SET NOT NULL,
+    DROP COLUMN block_height,
+    DROP COLUMN block_hash;
+
+ALTER TABLE public.networks
+    ALTER COLUMN name TYPE character varying(50),
+    ALTER COLUMN path_logo SET NOT NULL,
+    ALTER COLUMN url SET NOT NULL,
+    ALTER COLUMN mint_fee SET NOT NULL,
+    ALTER COLUMN mint_fee SET DEFAULT 0,
+    ALTER COLUMN burn_fee SET NOT NULL,
+    ALTER COLUMN burn_fee SET DEFAULT 0,
+    ALTER COLUMN native_token TYPE character varying(50),
+    ALTER COLUMN native_token SET NOT NULL;
+
+ALTER TABLE public.relay_candidates
+    ALTER COLUMN rank SET NOT NULL,
+    ALTER COLUMN address TYPE character varying(100),
+    ALTER COLUMN dest_address TYPE character varying(100);
+
+ALTER TABLE public.relays
+    ALTER COLUMN address TYPE character varying(100);
+
+ALTER TABLE public.transactions
+    ALTER COLUMN token_name SET NOT NULL,
+    ALTER COLUMN value SET NOT NULL,
+    ALTER COLUMN create_at SET NOT NULL,
+    ALTER COLUMN network_id SET NOT NULL,
+    ALTER COLUMN block_time SET NOT NULL,
+    ALTER COLUMN btp_fee SET NOT NULL,
+    ALTER COLUMN network_fee SET NOT NULL,
+    ALTER COLUMN status SET NOT NULL;
+    DROP COLUMN block_height,
+    DROP COLUMN block_height_end;
+
+DROP TABLE public.tokens_info;
+
+CREATE TABLE IF NOT EXISTS public.token_info
+(
+    id character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    network_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    token_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    create_at timestamp without time zone NOT NULL,
+    CONSTRAINT token_info_pkey PRIMARY KEY (id),
+    CONSTRAINT token_info_network_id_token_name UNIQUE (network_id, token_name),
+    CONSTRAINT token_info_network_id_fkey FOREIGN KEY (network_id)
+        REFERENCES public.networks (id) MATCH SIMPLE
+)
+
+ALTER TABLE public.bids
+    ADD CONSTRAINT bids_auction_id_fkey FOREIGN KEY (auction_id) REFERENCES public.auctions(id);
+
+ALTER TABLE public.burned_tokens
+    ADD CONSTRAINT burned_tokens_network_id_fkey FOREIGN KEY (network_id) REFERENCES public.networks(id);
+
+ALTER TABLE public.indexer_stats
+    ADD CONSTRAINT indexer_stats_name_key UNIQUE (name);
+
+ALTER TABLE public.minted_tokens
+    ADD CONSTRAINT minted_tokens_network_id_fkey FOREIGN KEY (network_id) REFERENCES public.networks(id);
+
+ALTER TABLE public.networks
+    ADD CONSTRAINT networks_name_key UNIQUE (name),
+    ADD CONSTRAINT native_token_key UNIQUE (native_token);
+
+CREATE INDEX minted_tokens_token_name ON minted_tokens (token_name);
+CREATE INDEX burned_tokens_token_name ON burned_tokens (token_name);
+CREATE INDEX minted_tokens_create_at ON minted_tokens (create_at DESC);
+CREATE INDEX burned_tokens_create_at ON burned_tokens (create_at DESC);
+CREATE INDEX token_info_token_id ON token_info (token_id);
+CREATE INDEX relay_candidates_address ON relay_candidates (address);
+CREATE INDEX transfer_fees_token_name ON transfer_fees (token_name);
+CREATE INDEX transfer_fees_created_time ON transfer_fees (created_time DESC);
+CREATE INDEX relays_address ON relays (address);
+CREATE INDEX relays_registered_time ON relays (registered_time);
+CREATE INDEX transactions_token_name ON transactions (token_name);
+CREATE INDEX transactions_update_at ON transactions (update_at DESC);
+CREATE INDEX transactions_serial_number ON transactions (serial_number);
+CREATE INDEX transactions_network_id ON transactions (network_id);
+CREATE INDEX transactions_block_time ON transactions (block_time);
+CREATE INDEX bids_auction_id ON bids (auction_id);
+CREATE INDEX bids_created_time ON bids (created_time DESC);
+CREATE INDEX relay_candidate_rewards_created_time ON relay_candidate_rewards (created_time DESC);

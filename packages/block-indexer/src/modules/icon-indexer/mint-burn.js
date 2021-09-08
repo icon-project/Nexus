@@ -89,7 +89,7 @@ async function getTotalTokenBurnAmount(name) {
 }
 
 async function getTokenNameById(id) {
-  const { rows } = await pgPool.query('SELECT token_name FROM tokens_info WHERE token_id = $1', [id]);
+  const { rows } = await pgPool.query('SELECT token_name FROM token_info WHERE token_id = $1', [id]);
   return rows[0] ? rows[0].token_name : false;
 }
 
@@ -98,8 +98,8 @@ async function saveMintToken(mintObj, totalToken) {
     preSave(mintObj);
 
     const totalTokenAmount = totalToken + mintObj.tokenValue;
-    const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, token_id, mint_to, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())';
-    const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash, mintObj.tokenId , mintObj.to];
+    const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, tx_hash, token_id, mint_to, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
+    const values = [mintObj.id, mintObj.networkId, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.txHash, mintObj.tokenId, mintObj.to];
 
     await pgPool.query(query, values);
   } catch (error) {
@@ -112,8 +112,8 @@ async function saveBurnToken(burnObj, totalToken) {
     preSave(burnObj);
 
     const totalTokenAmount = totalToken + burnObj.tokenValue;
-    const query = 'INSERT INTO burned_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, token_id, burn_from, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())';
-    const values = [burnObj.id, burnObj.networkId, burnObj.tokenName, burnObj.tokenValue, totalTokenAmount, burnObj.blockTime, burnObj.blockHeight , burnObj.blockHash , burnObj.txHash, burnObj.tokenId, burnObj.from];
+    const query = 'INSERT INTO burned_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, tx_hash, token_id, burn_from, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
+    const values = [burnObj.id, burnObj.networkId, burnObj.tokenName, burnObj.tokenValue, totalTokenAmount, burnObj.blockTime, burnObj.txHash, burnObj.tokenId, burnObj.from];
 
     await pgPool.query(query, values);
   } catch (error) {

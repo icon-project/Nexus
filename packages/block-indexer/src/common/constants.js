@@ -13,7 +13,6 @@ const TRANSACTION_TBL = {
   serialNumber: 'serial_number',
   value: 'value',
   toAddress: 'to_address',
-  blockHeight: 'block_height',
   txHash: 'tx_hash',
   blockTime: 'block_time',
   networkId: 'network_id',

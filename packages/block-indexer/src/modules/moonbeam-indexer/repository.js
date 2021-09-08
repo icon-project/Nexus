@@ -34,8 +34,8 @@ async function saveMintEvent(mintObj, totalToken) {
   preSave(mintObj);
 
   const totalTokenAmount = totalToken + mintObj.tokenValue;
-  const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, mint_to, token_id, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())';
-  const values = [mintObj.id, process.env.MOONBEAM_NETWORK_ID, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.blockHeight , mintObj.blockHash , mintObj.txHash, mintObj.to, mintObj.tokenId];
+  const query = 'INSERT INTO minted_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, tx_hash, mint_to, token_id, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
+  const values = [mintObj.id, process.env.MOONBEAM_NETWORK_ID, mintObj.tokenName, mintObj.tokenValue, totalTokenAmount, mintObj.blockTime, mintObj.txHash, mintObj.to, mintObj.tokenId];
 
   await pgPool.query(query, values);
 }
@@ -44,8 +44,8 @@ async function saveBurnEvent(burnObj, totalToken) {
   preSave(burnObj);
 
   const totalTokenAmount = totalToken + burnObj.tokenValue;
-  const query = 'INSERT INTO burned_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, block_height, block_hash, tx_hash, burn_from, token_id, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())';
-  const values = [burnObj.id, process.env.MOONBEAM_NETWORK_ID, burnObj.tokenName, burnObj.tokenValue, totalTokenAmount, burnObj.blockTime, burnObj.blockHeight , burnObj.blockHash , burnObj.txHash, burnObj.from, burnObj.tokenId];
+  const query = 'INSERT INTO burned_tokens (id, network_id, token_name, token_value, total_token_amount, block_time, tx_hash, burn_from, token_id, create_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())';
+  const values = [burnObj.id, process.env.MOONBEAM_NETWORK_ID, burnObj.tokenName, burnObj.tokenValue, totalTokenAmount, burnObj.blockTime, burnObj.txHash, burnObj.from, burnObj.tokenId];
 
   await pgPool.query(query, values);
 }

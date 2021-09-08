@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # chmod +x cmc_conversion.sh
 
 COIN_MARKET_CAP_URL=https://sandbox-api.coinmarketcap.com/v1 \

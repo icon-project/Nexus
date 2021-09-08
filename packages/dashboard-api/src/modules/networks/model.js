@@ -26,7 +26,6 @@ async function getTokensRegisteredMoonbeam() {
 
   try {
     const listTokens = await BSHContract.methods.coinNames().call();
-
     return listTokens;
   } catch (error) {
     logger.error('getTokensRegisteredMoonbeam failed', { error });
@@ -40,7 +39,6 @@ async function getListTokensRegisteredIcon() {
 
   try {
     const listTokens = await iconService.call(call).execute();
-
     return listTokens;
   } catch (error) {
     logger.error('getListTokensRegisteredIcon failed', { error });

@@ -3,7 +3,7 @@ const { pgPool, logger } = require('../../common');
 async function createRelay(relay) {
   try {
     await pgPool.query(
-      `INSERT INTO relays(
+      `INSERT INTO relays (
       id,
       address,
       link,

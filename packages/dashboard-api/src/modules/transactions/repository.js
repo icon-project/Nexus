@@ -80,8 +80,6 @@ async function getTransactionById(id) {
         value: numberToFixedAmount(Number(row.value)),
         toAddress: row.to_address,
         fromAddress: row.from_address,
-        blockHeight: row.block_height,
-        blockHash: row.block_hash,
         txHash: row.tx_hash,
         status: Number(row.status),
         createAt: Number(row.create_at),
