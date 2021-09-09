@@ -16,3 +16,8 @@ values('0x4', 'Binance', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www
 -- Issue #280
 
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x61', 'BSC', 0, NOW());
+
+-- Issue #315
+
+INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x3', 'ICON', 0, NOW());
+INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x501', 'Moonbeam', 0, NOW());

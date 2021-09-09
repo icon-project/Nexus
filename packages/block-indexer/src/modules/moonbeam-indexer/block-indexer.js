@@ -4,7 +4,7 @@ const debug = require('debug')('moonbeam');
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
-const { saveBlock, getLastSavedBlock } = require('./repository');
+const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleMintBurnEvents } = require('./mint-burn');
@@ -72,9 +72,10 @@ async function getBlockData() {
         logger.info(`Received Moonbeam block ${block.number}, ${block.hash}`);
         debug('Block: %O', block);
 
-        await saveBlock(block);
+        await saveIndexedBlockHeight(block.number, process.env.MOONBEAM_NETWORK_ID);
         await runBlockHandlers(block);
       }
+
       ++blockHeight;
     }
 
@@ -149,10 +150,10 @@ async function start() {
   logger.info('Moonbeam BMC Management action map: %O', actionMap);
 
   if (-1 === blockHeight) {
-    const block = await getLastSavedBlock();
+    blockHeight = await getIndexedBlockHeight(process.env.MOONBEAM_NETWORK_ID);
 
-    if (block) blockHeight = Number(block.number) + 1;
-    else blockHeight = 0;
+    if (blockHeight > 0)
+      ++ blockHeight;
   }
 
   if (0 === blockHeight) {
