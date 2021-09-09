@@ -255,3 +255,8 @@ CREATE INDEX transactions_block_time ON transactions (block_time);
 CREATE INDEX bids_auction_id ON bids (auction_id);
 CREATE INDEX bids_created_time ON bids (created_time DESC);
 CREATE INDEX relay_candidate_rewards_created_time ON relay_candidate_rewards (created_time DESC);
+
+-- Issue #315
+
+DROP TABLE public.icon_blocks;
+DROP TABLE public.moonbeam_blocks;

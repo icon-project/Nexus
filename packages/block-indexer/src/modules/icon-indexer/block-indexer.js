@@ -4,7 +4,7 @@ const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger } = require('../../common');
-const { saveBlock, getLastSavedBlock } = require('./repository');
+const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
 const { handleTransactionEvents } = require('../transactions/icon');
@@ -96,7 +96,7 @@ async function getBlockData() {
         logger.info(`Received ICON block ${block.height}, ${block.blockHash}`);
         debug('Block: %O', block);
 
-        await saveBlock(block);
+        await saveIndexedBlockHeight(block.height, process.env.ICON_NETWORK_ID);
         await runBlockHandlers(block);
       }
 
@@ -118,10 +118,10 @@ async function retryGetBlockData() {
 
 async function start() {
   if (-1 === blockHeight) {
-    const block = await getLastSavedBlock();
+    blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
 
-    if (block) blockHeight = block.height + 1;
-    else blockHeight = 0;
+    if (blockHeight > 0)
+      ++ blockHeight;
   }
 
   if (0 === blockHeight) {
