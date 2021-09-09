@@ -3,7 +3,7 @@
 
 set -x
 
-# HOST=http://localhost:8000
+HOST=http://localhost:8000
 # HOST=http://54.251.114.18:8000
 
 # auctions
@@ -19,6 +19,7 @@ curl $HOST/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids\?limit=
 # btpnetworks
 
 curl $HOST/v1/btpnetwork | jq
+curl $HOST/v1/btpnetwork\?stats=1 | jq
 curl $HOST/v1/btpnetwork\?volumeLast24h=true\&mintLast24h=true | jq
 curl $HOST/v1/btpnetwork/converter\?token=btc\&amount=100\&convert_to=usd | jq
 

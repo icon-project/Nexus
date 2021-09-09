@@ -5,6 +5,7 @@ const model = require('./model');
 const { tokenToUsd } = require('../../common');
 
 // curl http://localhost:8000/v1/btpnetwork | jq
+// curl http://localhost:8000/v1/btpnetwork?stats=1 | jq
 async function getNetworkInfo(request, response) {
   let volumeLast24hChange;
 
@@ -15,6 +16,14 @@ async function getNetworkInfo(request, response) {
   let mintVolumeLast24hChange;
   if (request.query.mintLast24h === 'true') {
     mintVolumeLast24hChange = await model.getPercentsMintVolumeLast24h();
+  }
+
+  let stats;
+
+  if (request.query.stats) {
+    stats = {
+      indexers: [...await model.getIndexerStats()]
+    };
   }
 
   const currentFeeAssets = await model.getAmountFeeAggregationSCORE();
@@ -40,6 +49,7 @@ async function getNetworkInfo(request, response) {
       totalTransactions,
       minted: mintedNetworks,
       mintVolumeLast24hChange,
+      stats
     },
   });
 }

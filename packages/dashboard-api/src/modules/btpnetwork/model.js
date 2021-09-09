@@ -8,7 +8,8 @@ const {
   getVolumeMintedNetworks,
   getLatestTokensMinted,
   getTotalTokensMintedLast24h,
-  getTotalBondedIcx
+  getTotalBondedIcx,
+  getAllIndexerStats
 } = require('./repository');
 
 const { getNetworkInfo } = require('../networks/repository');
@@ -241,6 +242,10 @@ async function totalTokensToUSD(tokens) {
   return totalUSD;
 }
 
+async function getIndexerStats() {
+  return await getAllIndexerStats();
+}
+
 module.exports = {
   getAmountFeeAggregationSCORE,
   getTotalNetworks,
@@ -251,4 +256,5 @@ module.exports = {
   getMintedNetworks,
   calculateVolumePercents,
   getPercentsMintVolumeLast24h,
+  getIndexerStats
 };

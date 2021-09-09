@@ -119,6 +119,16 @@ async function getTotalBondedIcx() {
   }
 }
 
+async function getAllIndexerStats() {
+  try {
+    const { rows } = await pgPool.query('SELECT * FROM indexer_stats ORDER BY network_id');
+    return rows;
+  } catch (error) {
+    logger.error('getAllIndexerStats fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   countNetwork,
   countTransaction,
@@ -126,5 +136,6 @@ module.exports = {
   getVolumeMintedNetworks,
   getLatestTokensMinted,
   getTotalTokensMintedLast24h,
-  getTotalBondedIcx
+  getTotalBondedIcx,
+  getAllIndexerStats
 };
