@@ -10,4 +10,5 @@ let router = express.Router();
 router.use(debugLogMiddleware(debug));
 router.get('/', asyncMiddleware(getNetworkInfo));
 router.get('/converter', asyncMiddleware(getPriceConversion));
+
 module.exports = router;
