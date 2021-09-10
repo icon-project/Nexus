@@ -16,7 +16,7 @@ HOST=http://localhost:8000
 # curl $HOST/v1/auctions/cx12387cb688a2c89bcf999c3ec28ca4cb7ac08b3e_3/bids\?limit=3\&offset=3 | jq
 # curl -X POST $HOST/v1/auctions -H 'Content-Type: application/json' -d '{"tokenName":"Sample2", "tokenAmount": 10.0906224229}'
 
-# btpnetworks
+# btpnetwork
 
 curl $HOST/v1/btpnetwork | jq
 curl $HOST/v1/btpnetwork\?stats=1 | jq
