@@ -25,7 +25,9 @@ jobs:
           pm2 stop ./packages/block-indexer/pm2.json
           pm2 stop ./packages/dashboard-api/pm2.json
           cd ./packages/block-indexer && yarn
+          yarn test
           cd ../dashboard-api && yarn
+          yarn test
           cd ../..
           pm2 start ./packages/block-indexer/pm2.json
           pm2 start ./packages/dashboard-api/pm2.json

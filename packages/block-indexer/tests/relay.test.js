@@ -439,3 +439,6 @@ const removeRelayMoonbeamTrans = {
   onFinalize: { events: [] },
   finalized: false,
 };
+
+test('No tests found. Sang should add tests', () => {
+});
