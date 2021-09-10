@@ -17,6 +17,7 @@ async function getTokensInfo(idEncode, valueEncode) {
   const name = await getTokenNameById(id);
   const value = IconConverter.toNumber('0x' + valueDecoded[0].toString('hex'));
 
+  console.log(id);
   return {
     tokenValue: value,
     tokenName: name,

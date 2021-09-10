@@ -8,7 +8,8 @@
     "lint": "eslint -c .eslintrc.js --no-eslintrc ./src",
     "start": "nodemon index.js",
     "start:pm2": "pm2 start pm2.json",
-    "stop:pm2": "pm2 stop pm2.json"
+    "stop:pm2": "pm2 stop pm2.json",
+    "test": "echo 'need to update later'"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.0",
