@@ -105,11 +105,7 @@ CREATE TABLE IF NOT EXISTS public.token_info
     tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
     create_at timestamp without time zone NOT NULL,
     CONSTRAINT token_info_pkey PRIMARY KEY (id),
-    CONSTRAINT token_info_network_id_token_name UNIQUE (network_id, token_name),
-    CONSTRAINT token_info_network_id_fkey FOREIGN KEY (network_id)
-        REFERENCES public.networks (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT token_info_network_id_token_name UNIQUE (network_id, token_name)
 )
 
 TABLESPACE pg_default;
@@ -323,11 +319,7 @@ CREATE TABLE IF NOT EXISTS public.minted_tokens
     create_at timestamp without time zone NOT NULL,
     mint_to character varying(100) COLLATE pg_catalog."default" NOT NULL,
     token_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT minted_tokens_pkey PRIMARY KEY (id),
-    CONSTRAINT minted_tokens_network_id_fkey FOREIGN KEY (network_id)
-        REFERENCES public.networks (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT minted_tokens_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;
@@ -366,11 +358,7 @@ CREATE TABLE IF NOT EXISTS public.burned_tokens
     tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
     create_at timestamp without time zone NOT NULL,
     burn_from character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    token_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT burned_tokens_network_id_fkey FOREIGN KEY (network_id)
-        REFERENCES public.networks (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    token_id character varying(100) COLLATE pg_catalog."default" NOT NULL
 )
 
 TABLESPACE pg_default;

@@ -94,17 +94,19 @@ async function updateRelayTransaction(address, transactionStatus) {
 }
 
 async function getRelayAddresses() {
-  const query = `SELECT
-                    address
-                  FROM relays`;
+  const query = `SELECT address FROM relays`;
+
   try {
     const { rows } = await pgPool.query(query);
+
     if (rows.length > 0) {
       const addesses = rows.map((item) => item.address);
       return addesses;
     }
+
+    return [];
   } catch (error) {
-    logger.error('getRelayDetailList fails', { error });
+    logger.error('getRelayAddresses fails', { error });
     return [];
   }
 }
