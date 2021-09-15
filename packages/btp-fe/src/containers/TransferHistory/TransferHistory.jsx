@@ -20,11 +20,12 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
 import { tokenOptionList } from 'utils/constants';
+import { toSeparatedNumberString } from 'utils/app';
 
 import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
-  margin-top: 34px;
+  margin-top: 18px;
   overflow-x: auto;
 
   .select-asset-container {
@@ -88,7 +89,7 @@ const TransferHistoryStyled = styled.div`
 
   .control-group {
     align-items: center;
-    margin-top: 60px;
+    margin: 60px 0 42px;
 
     .selector-group {
       display: flex;
@@ -292,6 +293,11 @@ const TransferHistory = () => {
           </div>
         </div>
       </div>
+
+      <Text className="md">
+        {toSeparatedNumberString(pagination.totalItem)} transaction
+        {pagination.totalItem !== 1 ? 's' : ''} found
+      </Text>
 
       <TableStyled
         headerColor={colors.grayAccent}
