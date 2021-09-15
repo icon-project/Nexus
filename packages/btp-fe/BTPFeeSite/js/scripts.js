@@ -9,7 +9,7 @@ const {
 
 const BTPNetwork = {
   endpoint: 'http://54.251.114.18:9080/api/v3',
-  BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82',
+  BSHAddress: 'cx489ed02580ce5cab57925317373310205417c2b7',
 };
 const httpProvider = new HttpProvider(BTPNetwork.endpoint);
 const FROM_ADDRESS = 'from-address';
