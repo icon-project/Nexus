@@ -260,3 +260,8 @@ CREATE INDEX relay_candidate_rewards_created_time ON relay_candidate_rewards (cr
 
 DROP TABLE public.icon_blocks;
 DROP TABLE public.moonbeam_blocks;
+
+-- Issue #339
+
+ALTER TABLE public.transactions
+    ADD CONSTRAINT transactions_serial_number_network_id_key UNIQUE (serial_number, network_id);

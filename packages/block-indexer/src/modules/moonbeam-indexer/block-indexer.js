@@ -1,6 +1,7 @@
 'use strict';
 
 const debug = require('debug')('moonbeam');
+const debugTx = require('debug')('moonbeam_tx');
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
@@ -30,7 +31,7 @@ async function runBlockHandlers(block) {
   for (const tx of block.extrinsics) {
     // Ignore timestamp transactions.
     if ('timestamp' !== tx.method.pallet) {
-      debug('Transaction: %O', tx);
+      debugTx('Transaction: %O', tx);
       await runTransactionHandlers(tx, block);
     }
   }
