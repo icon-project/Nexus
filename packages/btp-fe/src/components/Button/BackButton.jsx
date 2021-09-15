@@ -20,11 +20,17 @@ const StyledBackButton = styled.button`
   }
 `;
 
-export const BackButton = ({ children, onClick }) => {
-  const { goBack } = useHistory();
+export const BackButton = ({ children, onClick, url }) => {
+  const { goBack, push } = useHistory();
+
+  const onBack = url
+    ? () => {
+        push(url);
+      }
+    : goBack;
 
   return (
-    <StyledBackButton type="button" onClick={onClick || goBack}>
+    <StyledBackButton type="button" onClick={onClick || onBack}>
       <Header className="md bold">{children}</Header>
     </StyledBackButton>
   );
