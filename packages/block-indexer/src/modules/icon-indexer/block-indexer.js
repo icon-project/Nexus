@@ -1,6 +1,7 @@
 'use strict';
 
 const debug = require('debug')('icon');
+const debugTx = require('debug')('icon_tx');
 const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger } = require('../../common');
@@ -41,7 +42,7 @@ async function getTransactionResult(txHash) {
     return result;
   } catch (error) {
     if ('[RPC ERROR] Executing' === error) {
-      debug(`${txHash}: ${error}`);
+      debugTx(`${txHash}: ${error}`);
       return null;
     }
 
@@ -53,7 +54,7 @@ async function retryGetTransactionResult(tx, block) {
   const txResult = await getTransactionResult(tx.txHash);
 
   if (txResult) {
-    debug('Transaction result: %O', txResult);
+    debugTx('Transaction result: %O', txResult);
 
     // await saveTransaction(tx, txResult);
     await runTransactionHandlers(tx, txResult, block);
@@ -64,7 +65,7 @@ async function retryGetTransactionResult(tx, block) {
 
 async function runBlockHandlers(block) {
   for (const tx of block.confirmedTransactionList) {
-    debug('Transaction: %O', tx);
+    debugTx('Transaction: %O', tx);
 
     await retryGetTransactionResult(tx, block);
   }

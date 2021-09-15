@@ -161,7 +161,7 @@ event TransferEnd(
 */
 async function handleTransferEndEvent(transferEnd, evmLogEvent, transaction, block) {
   try {
-    logger.info(`handleTransferEndEvent in tx hash: ${transaction.hash}`);
+    logger.info(`moonbeam:handleTransferEndEvent in tx hash: ${transaction.hash}`);
 
     const event = getTransferEndEvent(transferEnd.event.inputs, evmLogEvent.data[0]);
 
@@ -201,10 +201,12 @@ async function handleTransactionEvents(transaction, block) {
     return false;
 
   const eventMap = getEventMap();
+  const bshCoreAddress = process.env.MOONBEAM_BSH_CORE_ADDRESS.toLowerCase();
+  const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
 
   // Only interested in transaction of a specific contract
   // BSH core for TransferStart event.
-  if (transaction.args.transaction && process.env.MOONBEAM_BSH_CORE_ADDRESS === transaction.args.transaction.action.call) {
+  if (transaction.args.transaction && bshCoreAddress === transaction.args.transaction.action.call.toLowerCase()) {
     debug('Transaction: %O', transaction);
 
     // Is it TransferStart?
@@ -215,7 +217,7 @@ async function handleTransactionEvents(transaction, block) {
       logger.info(`Get TransferStart event in tx ${transaction.hash}, block ${block.hash}`);
       await handleTransferStartEvent(transferStart, event, transaction, block);
     }
-  } else if (transaction.args.transaction && process.env.MOONBEAM_BMC_ADDRESS === transaction.args.transaction.action.call) {
+  } else if (transaction.args.transaction && bmcAddress === transaction.args.transaction.action.call.toLowerCase()) {
     // BMC for TransferEnd event.
     debug('Transaction: %O', transaction);
 

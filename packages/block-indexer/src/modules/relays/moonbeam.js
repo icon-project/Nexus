@@ -121,6 +121,7 @@ async function handleRelayAction(transaction, block) {
 
 async function handleRelayTransaction(transaction) {
   let eventData = transaction.events[0].data;
+
   if (!relayAddressSet) {
     const relays = await getRelayAddresses();
     relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
