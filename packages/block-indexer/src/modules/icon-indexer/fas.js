@@ -17,7 +17,7 @@ const registeredTokens = new Map();
 async function loadRegisteredTokens(iconService) {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('tokens')
     .build();
 

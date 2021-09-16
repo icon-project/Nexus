@@ -90,7 +90,7 @@ async function handleRelayAction(transaction, block) {
   let transactionInside = transaction.args.transaction;
   if (
     transactionInside &&
-    process.env.MOONBEAM_BMC_CORE_ADDRESS === transactionInside.action.call
+    process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS === transactionInside.action.call
   ) {
     debug('Transaction: %O', transaction);
 

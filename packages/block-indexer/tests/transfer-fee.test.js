@@ -25,7 +25,7 @@ let txResult = {
 };
 
 beforeAll(() => {
-  txResult.eventLogs[0].indexed[2] = process.env.FEE_AGGREGATION_SCORE_ADDRESS;
+  txResult.eventLogs[0].indexed[2] = process.env.ICON_FAS_ADDRESS;
 });
 
 test('should return Transfer event from tx result', async () => {

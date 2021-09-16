@@ -54,7 +54,7 @@ async function rankRelayer(relayersOnchain) {
 
 async function getRelayerInfoOnChain() {
   const callBuilder = new IconBuilder.CallBuilder();
-  const call = callBuilder.to(process.env.ICON_BMC_SCORE).method('getRelayers').build();
+  const call = callBuilder.to(process.env.ICON_BMC_ADDRESS).method('getRelayers').build();
   try {
     const relayers = await iconService.call(call).execute();
 

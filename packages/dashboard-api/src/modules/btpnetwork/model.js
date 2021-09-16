@@ -33,7 +33,7 @@ async function getAmountFeeAggregationSCORE() {
   const callBuilder = new IconBuilder.CallBuilder();
 
   try {
-    const call = callBuilder.to(process.env.FEE_AGGREGATION_SCORE_ADDRESS).method('tokens').build();
+    const call = callBuilder.to(process.env.ICON_FAS_ADDRESS).method('tokens').build();
     const tokens = await iconService.call(call).execute();
 
     let assets = [];
@@ -70,7 +70,7 @@ async function getAmountFeeAggregationSCORE() {
 async function getAvailableBalance(tokenName) {
   const callBuilder = new IconBuilder.CallBuilder();
   const call = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('availableBalance')
     .params({ _tokenName: tokenName })
     .build();
