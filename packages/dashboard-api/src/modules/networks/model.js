@@ -18,11 +18,10 @@ const { abiBSHScore } = require('../../../scripts/bsh_score.json');
 const { HttpProvider, IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
-
-const web3 =  new Web3(process.env.MOONBEAM_RPC_PROVIDER_URL);
+const web3 =  new Web3(process.env.MOONBEAM_API_URL);
 
 async function getTokensRegisteredMoonbeam() {
-  const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.BSH_SCORE_MOONBEAM);
+  const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
 
   try {
     const listTokens = await BSHContract.methods.coinNames().call();
@@ -35,7 +34,7 @@ async function getTokensRegisteredMoonbeam() {
 
 async function getListTokensRegisteredIcon() {
   const callBuilder = new IconBuilder.CallBuilder();
-  const call = callBuilder.to(process.env.NATIVE_COIN_BSH_SCORE).method('coinNames').build();
+  const call = callBuilder.to(process.env.ICON_NATIVE_COIN_BSH_ADDRESS).method('coinNames').build();
 
   try {
     const listTokens = await iconService.call(call).execute();

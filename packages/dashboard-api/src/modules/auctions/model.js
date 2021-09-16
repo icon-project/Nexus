@@ -12,13 +12,13 @@ const iconService = new IconService(httpProvider);
 
 // Ref: block-indexer/src/modules/icon-indexer/auctions.js
 function createAuctionId(id) {
-  return process.env.FEE_AGGREGATION_SCORE_ADDRESS + '_' + id;
+  return process.env.ICON_FAS_ADDRESS + '_' + id;
 }
 
 async function getAuctionByName(name) {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('getCurrentAuction')
     .params({ _tokenName: name })
     .build();
@@ -37,7 +37,7 @@ async function getAuctionByName(name) {
 async function getAvailableBalance(name) {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('availableBalance')
     .params({ _tokenName: name })
     .build();
@@ -57,7 +57,7 @@ async function getAvailableBalance(name) {
 async function getCurrentAuctions() {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('tokens')
     .build();
 
@@ -110,7 +110,7 @@ async function getAuctionDetail(auctionId) {
 async function getRegisteredTokens() {
   const callBuilder = new IconBuilder.CallBuilder();
   const txObject = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('tokens')
     .build();
 
@@ -134,7 +134,7 @@ async function transferToken(tokenContract, tokenAmount) {
     .timestamp((new Date()).getTime() * 1000)
     .method('transfer')
     .params({
-      _to: process.env.FEE_AGGREGATION_SCORE_ADDRESS,
+      _to: process.env.ICON_FAS_ADDRESS,
       _value: IconConverter.toHex(IconAmount.of(tokenAmount, IconAmount.Unit.ICX).toLoop())
     })
     .build();
@@ -152,7 +152,7 @@ async function placeBid(tokenName, bidAmount) {
 
   const txObj = new CallTransactionBuilder()
     .from(wallet.getAddress())
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .value(IconConverter.toHex(IconAmount.of(bidAmount, IconAmount.Unit.ICX).toLoop())) // minimum bid 100 ICX
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(3))

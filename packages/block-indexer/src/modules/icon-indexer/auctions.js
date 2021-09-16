@@ -16,7 +16,7 @@ const nanoId = customAlphabet('1234567890abcdef', 10);
 // Reason: FAS reset auction ID to 1 with new deployment.
 // https://git.baikal.io/btp-dashboard/pm/-/issues/41#note_198166
 function createAuctionId(id) {
-  return process.env.FEE_AGGREGATION_SCORE_ADDRESS + '_' + id;
+  return process.env.ICON_FAS_ADDRESS + '_' + id;
 }
 
 // Ref: https://stackoverflow.com/questions/42876071/how-to-save-js-date-now-in-postgresql
@@ -121,7 +121,7 @@ function getBidInfoEvent(eventLogs) {
 }
 
 async function handleAuctionEvents(txResult) {
-  if (1 !== txResult.status || process.env.FEE_AGGREGATION_SCORE_ADDRESS !== txResult.to || 0 === txResult.eventLogs.length)
+  if (1 !== txResult.status || process.env.ICON_FAS_ADDRESS !== txResult.to || 0 === txResult.eventLogs.length)
     return false;
 
   try {

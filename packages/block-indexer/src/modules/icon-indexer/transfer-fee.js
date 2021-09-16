@@ -16,7 +16,7 @@ function isRegisteredToken(address) {
 function getTransferEvent(eventLogs) {
   try {
     for (const event of eventLogs) {
-      if (TRANSFER_EVENT_PROTOTYPE === event.indexed[0] && process.env.FEE_AGGREGATION_SCORE_ADDRESS === event.indexed[2]) {
+      if (TRANSFER_EVENT_PROTOTYPE === event.indexed[0] && process.env.ICON_FAS_ADDRESS === event.indexed[2]) {
         const data = {
           tokenAmount: hexToIcxUnit(event.indexed[3])
         };
