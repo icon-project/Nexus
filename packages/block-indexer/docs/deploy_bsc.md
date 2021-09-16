@@ -7,13 +7,43 @@
 - These verifications should be included in the guide (https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916697472)
 - Is it fixed? (https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916713424)
 
+## Requirements
+
+[Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+[Docker Compose](https://docs.docker.com/compose/install/)
+[OpenJDK 11](https://linuxize.com/post/install-java-on-ubuntu-18-04/)
+[NodeJS](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+
+sudo apt-get install gcc g++ make
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
+
+[Go](https://golang.org/doc/install)
+curl -L -o go1.17.1.linux-amd64.tar.gz https://golang.org/dl/go1.17.1.linux-amd64.tar.gz
+
+go install github.com/icon-project/goloop/cmd/goloop@v0.9.7
+
+For install commands: https://github.com/icon-project/btp/tree/icondao/docker-compose/goloop2moonbeam
+
+## Build
+
+### 1. Build goloop image.
+
+### 2. Build Binance Smart Chain docker
+
+https://github.com/icon-project/btp/tree/btp_web3labs/devnet
+
+git clone -b btp_web3labs https://github.com/icon-project/btp
+cd btp
+docker build --tag bsc-node ./devnet/docker/bsc-node --build-arg KEYSTORE_PASS=Perlia0
+bsc-node image created but this is an [error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920558438)
+
+go mod download github.com/ethereum/go-ethereum
+make
+[error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920561474)
 
 ===
-before make btp
-go mod download github.com/ethereum/go-ethereum
-
-Build Binance Smart Chain docker
-Secret here is "Perlia0"
 
 once everything starts, the icon-bsc node will take some time to provision, once all the containers are up, you can get the keystores from the devnet/work folder.
 bsc.ks.json - for Binancesmartchain
