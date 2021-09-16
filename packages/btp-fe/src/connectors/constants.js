@@ -37,10 +37,10 @@ export const NETWORKS = {
   cloud: {
     name: connectedNetWorks.icon,
     endpoint: 'http://54.251.114.18:9080/api/v3',
-    nid: 3,
-    networkAddress: '0x3.icon',
-    irc31token: 'cx8cefe5b2d97d15223f474e1aaab35bcb87450885',
-    BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82', // used to get the BTP fee from getBTPfee()
+    nid: '0x58eb1c',
+    networkAddress: '0x58eb1c.icon',
+    irc31token: 'cxbac7add3adffb4ca43426ede92662da7dcc0453f',
+    BSHAddress: 'cx489ed02580ce5cab57925317373310205417c2b7', // used to get the BTP fee from getBTPfee()
   },
   sejong: {
     name: 'Sejong Testnet',
