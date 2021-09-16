@@ -196,7 +196,7 @@ export const WalletDetails = ({
       <Text className="md network-name">{networkName}</Text>
       <Avatar className="user-avatar" src={userAvatar} size={120} />
       <Header className="md bold wallet-balance">
-        {currentBalance}
+        {toSeparatedNumberString(currentBalance)}
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
       </Header>
 

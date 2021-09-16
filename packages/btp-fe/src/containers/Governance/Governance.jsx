@@ -11,6 +11,7 @@ import { media } from 'components/Styles/Media';
 import { UpDownPercent } from 'components/UpDownPercent';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
+import { toSeparatedNumberString } from 'utils/app';
 
 const columns = [
   {
@@ -26,11 +27,13 @@ const columns = [
   {
     title: 'Transferred transaction',
     dataIndex: 'transferredTransactions',
+    render: (value) => toSeparatedNumberString(value),
     width: '214px',
   },
   {
     title: 'Failed transaction',
     dataIndex: 'failedTransactions',
+    render: (value) => toSeparatedNumberString(value),
     width: '214px',
   },
 ];
@@ -49,7 +52,7 @@ const candidatesColumns = [
   {
     title: 'Bonded ICX',
     dataIndex: 'bondedICX',
-    render: (value) => value.toFixed(20).replace(/(\.0+|0+)$/, ''),
+    render: (value) => toSeparatedNumberString(value),
     width: '620px',
   },
 ];

@@ -39,7 +39,8 @@ export const roundNumber = (num, digit = 2) => {
 const toSeparatedNumberString = (number) => {
   if (!number && number !== 0) return '';
 
-  return number.toLocaleString();
+  // prevent rounding and drop ending zero
+  return number.toLocaleString(undefined, { minimumFractionDigits: 10 }).replace(/(\.0+|0+)$/, '');
 };
 
 const shortenNumber = (num) => {
