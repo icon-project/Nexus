@@ -1,15 +1,7 @@
 'use strict';
 
 const debug = require('debug')('db');
-const { v4: uuidv4 } = require('uuid');
 const { pgPool, logger, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
-
-function preSave(transfer) {
-  if (!transfer.id) {
-    transfer.id = uuidv4();
-  }
-  transfer.deleteAt = 0;
-}
 
 async function getLatestTransactionByToken(tokenName) {
   try {
@@ -50,8 +42,6 @@ async function getBySerialNumber(serialNumber, networkId) {
     await client.query('BEGIN');
 
     for (let transt of transactions) {
-      preSave(transt);
-
       const query = `
         UPDATE ${TRANSACTION_TBL_NAME}
         SET
@@ -59,8 +49,9 @@ async function getBySerialNumber(serialNumber, networkId) {
           tx_hash_end = $2,
           tx_error = $3,
           ${TRANSACTION_TBL.updateAt} = NOW()
-        WHERE ${TRANSACTION_TBL.id} = $4`;
-      const values = [status, txInfo.txHash, txInfo.error, transt.id];
+        WHERE ${TRANSACTION_TBL.txHash} = $4`;
+
+      const values = [status, txInfo.txHash, txInfo.error, transt.tx_hash];
 
       await client.query(query, values);
       debug('saveTransaction SQL %s %O:', query, values);
@@ -75,10 +66,8 @@ async function getBySerialNumber(serialNumber, networkId) {
 
 async function saveTransaction(transaction) {
   try {
-    preSave(transaction);
-
     const insertStatement = `INSERT INTO transactions (
-      ${TRANSACTION_TBL.id}, ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
+      ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
       ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
@@ -87,10 +76,9 @@ async function saveTransaction(transaction) {
       $1, $2, $3, $4,
       $5, $6, $7, $8,
       $9, $10, $11, $12,
-      $13, NOW(), NOW())`;
+      NOW(), NOW())`;
 
     const insertValues = [
-      transaction.id,
       transaction.fromAddress,
       transaction.tokenName,
       transaction.serialNumber,

@@ -7,7 +7,6 @@ const TRANSACTION_STATUS = {
 const TRANSACTION_TBL_NAME = 'transactions';
 
 const TRANSACTION_TBL = {
-  id: 'id',
   fromAddress: 'from_address',
   tokenName: 'token_name',
   serialNumber: 'serial_number',

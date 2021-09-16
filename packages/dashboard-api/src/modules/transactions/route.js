@@ -9,6 +9,6 @@ let router = express.Router();
 
 router.use(debugLogMiddleware(debug));
 router.get('/', asyncMiddleware(getTransHistory));
-router.get('/:id', asyncMiddleware(getTransaction));
+router.get('/:hash', asyncMiddleware(getTransaction));
 
 module.exports = router;
