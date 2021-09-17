@@ -54,8 +54,8 @@ export const getTransferHistory = (page, limit = 20, assetName, from, to) => {
   );
 };
 
-export const getTransferHistoryBytxHash = (hash) => {
-  return fetchAPI(`/transactions/${hash}`);
+export const getTransferHistoryByTxHash = (txHash) => {
+  return fetchAPI(`/transactions/${txHash}`);
 };
 
 export const tokenToUsd = async (token, amount) => {

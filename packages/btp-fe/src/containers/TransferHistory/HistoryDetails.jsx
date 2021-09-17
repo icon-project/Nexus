@@ -11,7 +11,7 @@ import { Icon } from 'components/Icon/Icon';
 import { Loader } from 'components/Loader';
 import { Modal } from 'components/NotificationModal';
 
-import { getTransferHistoryBytxHash } from 'services/btpServices';
+import { getTransferHistoryByTxHash } from 'services/btpServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 
 import { Text } from 'components/Typography';
@@ -107,7 +107,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
-        const transferData = await getTransferHistoryBytxHash(txHash);
+        const transferData = await getTransferHistoryByTxHash(txHash);
         setDetails(transferData.content);
         setIsFetching(false);
       } catch (error) {
