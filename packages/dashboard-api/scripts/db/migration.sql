@@ -265,3 +265,9 @@ DROP TABLE public.moonbeam_blocks;
 
 ALTER TABLE public.transactions
     ADD CONSTRAINT transactions_serial_number_network_id_key UNIQUE (serial_number, network_id);
+
+-- Issue #322
+
+ALTER TABLE public.transactions
+    DROP COLUMN id,
+    ADD CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash);

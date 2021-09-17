@@ -61,20 +61,19 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName) {
   }
 }
 
-async function getTransactionById(id) {
-  let transaction = {};
+async function getTransactionByTxHash(hash) {
   const query = `SELECT  ${TRANSACTION_TBL_NAME}.*, name, native_token FROM ${TRANSACTION_TBL_NAME}
                     INNER JOIN ${NETWORK_TBL_NAME}
                       ON ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.networkId} = ${NETWORK_TBL_NAME}.id
-                    WHERE ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.id} = $1 `;
+                    WHERE ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.txHash} = $1 `;
 
   try {
-    const { rows } = await pgPool.query(query, [id]);
+    const { rows } = await pgPool.query(query, [hash]);
+
     if (rows.length > 0) {
       let row = rows[0];
 
-      transaction = {
-        id: row.id,
+      const transaction = {
         serialNumber: row.serial_number,
         tokenName: row.token_name,
         value: numberToFixedAmount(Number(row.value)),
@@ -92,11 +91,11 @@ async function getTransactionById(id) {
         nativeToken: row.native_token,
         txError: row.tx_error
       };
-    }
 
-    return transaction;
+      return transaction;
+    }
   } catch (error) {
-    logger.error('getTransactionById fails', { error });
+    logger.error('getTransactionByTxHash fails', { error });
     throw error;
   }
 }
@@ -151,7 +150,7 @@ async function countAllTransaction() {
 
 module.exports = {
   getTransactions,
-  getTransactionById,
+  getTransactionByTxHash,
   getTotalTransactionVolume,
   countAllTransaction,
 };

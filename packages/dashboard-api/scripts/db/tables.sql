@@ -405,7 +405,7 @@ CREATE TABLE IF NOT EXISTS public.transactions
     total_volume numeric NOT NULL DEFAULT 0,
     tx_hash_end character varying(100) COLLATE pg_catalog."default",
     tx_error character varying(100) COLLATE pg_catalog."default",
-    CONSTRAINT transactions_pkey PRIMARY KEY (id),
+    CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT transactions_serial_number_network_id_key UNIQUE (serial_number, network_id)
 )
 

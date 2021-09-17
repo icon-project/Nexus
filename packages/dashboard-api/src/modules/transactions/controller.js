@@ -24,23 +24,19 @@ async function getTransHistory(request, response) {
 }
 
 // Show the list of transactions.
-// GET /transactions/:id
+// GET /transactions/:hash
 async function getTransaction(request, response) {
-  let id = request.params.id;
-  if (!id) {
-    return response.sendStatus(HttpStatus.BadRequest);
-  }
+  let transaction = await model.getTransactionByHash(request.params.hash);
 
-  let trans = await model.getTransById(id);
-
-  if (!trans) return response.sendStatus(HttpStatus.NotFound);
+  if (!transaction)
+    return response.sendStatus(HttpStatus.NotFound);
 
   response.status(HttpStatus.OK).json({
-    content: { ...trans }
+    content: { ...transaction }
   });
 }
 
 module.exports = {
   getTransHistory,
-  getTransaction,
+  getTransaction
 };
