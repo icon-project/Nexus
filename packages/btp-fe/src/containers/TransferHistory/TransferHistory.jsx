@@ -307,7 +307,10 @@ const TransferHistory = () => {
         getItemsHandler={(page) => () => fetchDataHandler({ page, assetName, from, to })}
       />
       {showDetails && (
-        <HistoryDetails id={selectedRow.id} onClose={() => setShowDetails(false)}></HistoryDetails>
+        <HistoryDetails
+          txHash={selectedRow.txHash}
+          onClose={() => setShowDetails(false)}
+        ></HistoryDetails>
       )}
     </TransferHistoryStyled>
   );
