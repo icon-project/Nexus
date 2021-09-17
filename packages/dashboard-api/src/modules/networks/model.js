@@ -105,29 +105,29 @@ async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime, 
   return networks;
 }
 
-/*===
- *  TODO: Using function BSH contract to get list tokens registered in network.
- *  Currently BSH contract not available to use, now this function just for test
-===*/
 async function getListTokenRegisteredNetwork(networkId) {
   switch (networkId) {
-  case '0x1':
-    return ['icx', 'xrp', 'eth', 'bnb'];
-  case '0x501':
-    return await getTokensRegisteredMoonbeam();
-  case '0x3':
-    return await getListTokensRegisteredIcon();
-  case '0x4':
-    return ['sol', 'pol', 'eth', 'bnb'];
-  default:
-    logger.debug(`"getListTokenRegisteredNetwork" invalid network id: ${networkId}`);
-    return [];
+    case process.env.MOONBEAM_NETWORK_ID:
+      return await getTokensRegisteredMoonbeam();
+
+    case process.env.ICON_NETWORK_ID:
+      return await getListTokensRegisteredIcon();
+
+    case process.env.BSC_NETWORK_ID:
+      return [];
+
+    default:
+      logger.warn(`getListTokenRegisteredNetwork: invalid network id: ${networkId}`);
   }
 }
 
 async function getNetworkById(networkId) {
   const tokens = await getListTokenRegisteredNetwork(networkId);
-  let result = [];
+
+  if (!tokens)
+    return null;
+
+  const result = [];
 
   for (let name of tokens) {
     //getVolumeToken24hByNid, getVolumeTokenAllTimeByNid
@@ -152,6 +152,7 @@ async function getNetworkById(networkId) {
       volumeAlTimeUSD: numberToFixedAmount(USDAllTime),
     });
   }
+
   return result;
 }
 

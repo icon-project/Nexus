@@ -14,19 +14,19 @@ async function getNetworksInfo(request, response) {
 }
 
 async function getNetworkInfoById(request, response) {
-  if (!request.params && !request.params.id) {
-    return response.sendStatus(HttpStatus.BadRequest);
-  }
-  const networkId = request.params.id;
-  const networkInfo = await model.getNetworkById(networkId);
+  const networkInfo = await model.getNetworkById(request.params.id);
+
+  if (!networkInfo)
+    return response.sendStatus(HttpStatus.NotFound);
+
   response.status(HttpStatus.OK).json({
     content: {
-      network: networkInfo,
+      tokens: [...networkInfo]
     }
   });
 }
 
 module.exports = {
   getNetworksInfo,
-  getNetworkInfoById,
+  getNetworkInfoById
 };
