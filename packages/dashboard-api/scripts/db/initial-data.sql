@@ -11,7 +11,7 @@ INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee,
 values('0x1', 'NEARProtocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org/', 0.02, 0.02, NOW(), NOW());
 
 INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-values('0x4', 'Binance', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com/', 0.01, 0.02, NOW(), NOW());
+values('0x61', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com/', 0.01, 0.02, NOW(), NOW());
 
 -- Issue #280
 
