@@ -4,23 +4,48 @@
 
 http://demo-static-web.lecle.vn.s3-website-ap-southeast-1.amazonaws.com/transfer
 
-### Connect wallets to testnet
+### Connect wallets to testnet 
 
-#### 1. ICONex
+#### 1. ICONex (BSH Address: cx489ed02580ce5cab57925317373310205417c2b7)
 
 **Does not require extra setup to connect this wallet to the testnet for transfer testing**. Just install, and load a wallet (using a keystore or a private key). Here is a ready-to-go account:
 
 **alice.ks.json**
 ```json
-{"address":"hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262","id":"1f9dc34f-3f02-46e3-8119-3d6129006c7b","version":3,"coinType":"icx","crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"076ee1d73509fd71f25910612a0238a4"},"ciphertext":"74e4b9f0fde7ded1019cd43c786921f5eb030df6a3df8ca711a1a2232a5fd375","kdf":"scrypt","kdfparams":{"dklen":32,"n":65536,"r":8,"p":1,"salt":"245e74f679274316"},"mac":"9a0ead7b1082945dc0f337a345b3827eec756e0be9e6b64ef9f549dcfa1859e0"}}
+{
+  "address": "hx548a976f8eda5d7c0afcb99110ca49434cdf921b",
+  "id": "85883325-f892-43f4-9545-1ef91fe4cba0",
+  "version": 3,
+  "coinType": "icx",
+  "crypto": {
+    "cipher": "aes-128-ctr",
+    "cipherparams": {
+      "iv": "6e1a2d777be3a36e90a934d1c82c77f5"
+    },
+    "ciphertext": "e19de1ed07d4fd380ce5f7775a1f54f07b4058bf6174deb99d7705c2996ef9f5",
+    "kdf": "scrypt",
+    "kdfparams": {
+      "dklen": 32,
+      "n": 65536,
+      "r": 8,
+      "p": 1,
+      "salt": "6e05017a64f67f0e"
+    },
+    "mac": "1b92ae5a7e7e8303367d346b7bc788d96ad6da5c2c17dae2df07b31052499e78"
+  }
+}
 ```
 
-- pw: a8042ac1f8db288a
+- pw: f085f57a6e4f89eb
 
 
 #### 2. MetaMask
 
-- Install & load wallet: https://docs.moonbeam.network/getting-started/local-node/using-metamask/ (You can use any development account as: Alith / Baltathar / ...)
+- Install & load wallet: https://docs.moonbeam.network/getting-started/local-node/using-metamask/ 
+
+- Testing account: BOB - Private key: 0x1477fb360c00fd580829d22d842d69034df1e54c563e5f56b8b21a88a36c9678
+
+Ref: https://github.com/icon-project/btp-dashboard/issues/339#issuecomment-919652107
 
 - Switch to Moonbeam network: https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-custom-Network-RPC
 
