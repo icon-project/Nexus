@@ -11,7 +11,7 @@ import { Icon } from 'components/Icon/Icon';
 import { Loader } from 'components/Loader';
 import { Modal } from 'components/NotificationModal';
 
-import { getTransferHistoryById } from 'services/btpServices';
+import { getTransferHistoryBytxHash } from 'services/btpServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 
 import { Text } from 'components/Typography';
@@ -101,13 +101,13 @@ const CopyAddress = ({ text }) => {
     </CopyToClipboard>
   );
 };
-export const HistoryDetails = ({ id, onClose }) => {
+export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
-        const transferData = await getTransferHistoryById(id);
+        const transferData = await getTransferHistoryBytxHash(txHash);
         setDetails(transferData.content);
         setIsFetching(false);
       } catch (error) {
@@ -115,7 +115,7 @@ export const HistoryDetails = ({ id, onClose }) => {
       }
     };
     getTransactionDetails();
-  }, [id]);
+  }, [txHash]);
   const tokenPrice = useTokenToUsd(details.tokenName, 1);
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
