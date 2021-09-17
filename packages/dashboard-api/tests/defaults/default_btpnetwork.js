@@ -5,7 +5,7 @@ const functions_btpnetwork = {
   btpnetwork: () => {
     return {
       content: {
-        volume: 1993.27,
+        volume: 70.05,
         bondedValue: 0,
         fee: {
           cumulativeAmount: 0,
@@ -14,17 +14,12 @@ const functions_btpnetwork = {
           allTimeAmount: [],
         },
         totalNetworks: 4,
-        totalTransactions: 104,
+        totalTransactions: 11,
         minted: [
-          {
-            networkId: '0x3',
-            networkName: 'Icon',
-            mintedVolume: 34.12,
-          },
           {
             networkId: '0x501',
             networkName: 'Moonbeam',
-            mintedVolume: 1181.07,
+            mintedVolume: 2350.71,
           },
           {
             networkId: '0x1',
@@ -32,8 +27,13 @@ const functions_btpnetwork = {
             mintedVolume: 0,
           },
           {
-            networkId: '0x4',
-            networkName: 'Binance',
+            networkId: '0x58eb1c',
+            networkName: 'Icon',
+            mintedVolume: 12.91,
+          },
+          {
+            networkId: '0x61',
+            networkName: 'BSC',
             mintedVolume: 0,
           },
         ],
