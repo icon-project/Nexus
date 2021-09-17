@@ -12,6 +12,7 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
+import { toSeparatedNumberString } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
@@ -257,7 +258,6 @@ const Header = () => {
               <WalletDetails
                 networkName={currentNetwork}
                 userAvatar={defaultAvatar}
-                balance={balance}
                 unit={unit}
                 address={address}
                 shortedAddress={shortedAddress}
@@ -324,7 +324,7 @@ const Header = () => {
             <span className="wallet-info">
               <Text className="sm address">{shortedAddress}</Text>
               <SubTitle className="md bold">
-                {balance} {unit}
+                {toSeparatedNumberString(balance)} {unit}
               </SubTitle>
             </span>
           </div>

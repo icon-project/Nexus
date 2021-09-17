@@ -14,6 +14,7 @@ import { TextMixin } from 'components/Typography/Text';
 import { media } from 'components/Styles/Media';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
+import { toSeparatedNumberString } from 'utils/app';
 
 const Network = ({ iconUrl, name, url }) => {
   return (
@@ -52,21 +53,25 @@ const columns = [
   {
     title: 'Volume (24hr)',
     dataIndex: 'usd24h',
+    render: (value) => toSeparatedNumberString(value),
     width: '256px',
   },
   {
     title: 'Volume (All time)',
     dataIndex: 'usdAllTime',
+    render: (value) => toSeparatedNumberString(value),
     width: '256px',
   },
   {
     title: 'Mint fee',
     dataIndex: 'mintFee',
+    render: (value) => toSeparatedNumberString(value),
     width: '128px',
   },
   {
     title: 'Burn fee',
     dataIndex: 'burnFee',
+    render: (value) => toSeparatedNumberString(value),
     width: '128px',
   },
 ];
