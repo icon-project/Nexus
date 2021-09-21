@@ -10,6 +10,7 @@ import { tokenOptionList } from 'utils/constants';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
+import { xsBold } from 'components/Typography/Text/mixins';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
@@ -65,15 +66,6 @@ const Wrapper = styled.div`
 
     .padding-content {
       padding: 10px 0 10px 16px;
-    }
-    .action {
-      padding: 10px 16px 10px 0;
-      color: ${tertiaryBase};
-      cursor: pointer;
-
-      &:active {
-        color: #5093ab;
-      }
     }
 
     img {
@@ -151,6 +143,18 @@ const RefundSelector = styled(Select)`
   }
 `;
 
+const ActionBtn = styled.button`
+  ${xsBold};
+  padding: 10px 16px 10px 0;
+  color: ${tertiaryBase};
+  background-color: transparent;
+  cursor: pointer;
+
+  &:active {
+    color: #5093ab;
+  }
+`;
+
 export const WalletDetails = ({
   networkName,
   userAvatar,
@@ -211,19 +215,19 @@ export const WalletDetails = ({
           />
           <Text className="md">{refund}</Text>
         </div>
-        <div
+
+        <ActionBtn
           onClick={() => {
-            getService().reclaim({
-              coinName: selectedRefundToken,
-              value: refund,
-            });
+            if (refund > 0)
+              getService().reclaim({
+                coinName: selectedRefundToken,
+                value: refund,
+              });
           }}
         >
-          <Text className="xs bold action">
-            <img src={refundIcon} alt="refund-icon" />
-            Receive
-          </Text>
-        </div>
+          <img src={refundIcon} alt="refund-icon" />
+          Receive
+        </ActionBtn>
       </div>
       <Text className="sm sub-title">Wallet Address</Text>
       <div className="box-container">
@@ -231,12 +235,10 @@ export const WalletDetails = ({
           {shortedAddress}
         </Text>
         <CopyToClipboard text={address}>
-          <div>
-            <Text className="xs bold action">
-              <img src={copyIcon} alt="icon" />
-              Copy address
-            </Text>
-          </div>
+          <ActionBtn>
+            <img src={copyIcon} alt="icon" />
+            Copy address
+          </ActionBtn>
         </CopyToClipboard>
       </div>
       <div className="control-buttons">
