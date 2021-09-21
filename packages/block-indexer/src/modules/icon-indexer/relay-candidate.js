@@ -75,7 +75,7 @@ async function saveRelayer(relayer) {
 async function unregisterRelayer(relayer) {
   try {
     const query = `
-      UPDATE SET
+      UPDATE relay_candidates SET
         unregistered_time = $1,
         updated_time = NOW()
       WHERE
