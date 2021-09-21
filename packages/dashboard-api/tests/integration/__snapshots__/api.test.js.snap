@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test btpNetwork GET /btpnetwork 1`] = `
+Object {
+  "bondedValue": Any<Number>,
+  "fee": Any<Object>,
+  "minted": Any<Array>,
+  "totalNetworks": Any<Number>,
+  "totalTransactions": Any<Number>,
+  "volume": Any<Number>,
+}
+`;
+
+exports[`Test btpNetwork GET /btpnetwork 2`] = `
+Object {
+  "mintedVolume": Any<Number>,
+  "networkId": Any<String>,
+  "networkName": Any<String>,
+}
+`;
+
+exports[`Test btpNetwork GET /btpnetwork 3`] = `
+Object {
+  "mintedVolume": Any<Number>,
+  "networkId": Any<String>,
+  "networkName": Any<String>,
+}
+`;
+
+exports[`Test btpNetwork GET /btpnetwork 4`] = `
+Object {
+  "mintedVolume": Any<Number>,
+  "networkId": Any<String>,
+  "networkName": Any<String>,
+}
+`;
+
+exports[`Test btpNetwork GET /btpnetwork 5`] = `
+Object {
+  "mintedVolume": Any<Number>,
+  "networkId": Any<String>,
+  "networkName": Any<String>,
+}
+`;
+
+exports[`Test btpNetwork GET /btpnetwork?stats=1 1`] = `
+Object {
+  "bondedValue": Any<Number>,
+  "fee": Object {
+    "allTimeAmount": Any<Array>,
+    "assets": Any<Array>,
+    "cumulativeAmount": Any<Number>,
+    "currentAmount": Any<Number>,
+  },
+  "minted": Array [
+    Object {
+      "mintedVolume": 2350.71,
+      "networkId": "0x501",
+      "networkName": "Moonbeam",
+    },
+    Object {
+      "mintedVolume": 0,
+      "networkId": "0x1",
+      "networkName": "NEARProtocol",
+    },
+    Object {
+      "mintedVolume": 12.91,
+      "networkId": "0x58eb1c",
+      "networkName": "Icon",
+    },
+    Object {
+      "mintedVolume": 0,
+      "networkId": "0x61",
+      "networkName": "BSC",
+    },
+  ],
+  "stats": Object {
+    "indexers": Array [
+      Object {
+        "block_height": 89527,
+        "name": "Moonbeam",
+        "network_id": "0x501",
+        "updated_time": "2021-09-16T23:40:15.502Z",
+      },
+      Object {
+        "block_height": 267107,
+        "name": "ICON",
+        "network_id": "0x58eb1c",
+        "updated_time": "2021-09-16T23:40:17.644Z",
+      },
+      Object {
+        "block_height": 12375250,
+        "name": "BSC",
+        "network_id": "0x61",
+        "updated_time": "2021-09-14T19:31:07.749Z",
+      },
+    ],
+  },
+  "totalNetworks": 4,
+  "totalTransactions": 11,
+  "volume": 70.05,
+}
+`;
