@@ -67,15 +67,6 @@ const Wrapper = styled.div`
     .padding-content {
       padding: 10px 0 10px 16px;
     }
-    .action {
-      padding: 10px 16px 10px 0;
-      color: ${tertiaryBase};
-      cursor: pointer;
-
-      &:active {
-        color: #5093ab;
-      }
-    }
 
     img {
       margin-right: 8.83px;
