@@ -143,7 +143,7 @@ const RefundSelector = styled(Select)`
   }
 `;
 
-const ReceiveBtn = styled.button`
+const ActionBtn = styled.button`
   ${xsBold};
   padding: 10px 16px 10px 0;
   color: ${tertiaryBase};
@@ -216,7 +216,7 @@ export const WalletDetails = ({
           <Text className="md">{refund}</Text>
         </div>
 
-        <ReceiveBtn
+        <ActionBtn
           onClick={() => {
             if (refund > 0)
               getService().reclaim({
@@ -227,7 +227,7 @@ export const WalletDetails = ({
         >
           <img src={refundIcon} alt="refund-icon" />
           Receive
-        </ReceiveBtn>
+        </ActionBtn>
       </div>
       <Text className="sm sub-title">Wallet Address</Text>
       <div className="box-container">
@@ -235,12 +235,10 @@ export const WalletDetails = ({
           {shortedAddress}
         </Text>
         <CopyToClipboard text={address}>
-          <div>
-            <Text className="xs bold action">
-              <img src={copyIcon} alt="icon" />
-              Copy address
-            </Text>
-          </div>
+          <ActionBtn>
+            <img src={copyIcon} alt="icon" />
+            Copy address
+          </ActionBtn>
         </CopyToClipboard>
       </div>
       <div className="control-buttons">
