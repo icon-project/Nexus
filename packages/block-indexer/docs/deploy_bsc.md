@@ -20,7 +20,9 @@ echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/deb
 sudo apt-get update && sudo apt-get install yarn
 
 [Go](https://golang.org/doc/install)
-curl -L -o go1.17.1.linux-amd64.tar.gz https://golang.org/dl/go1.17.1.linux-amd64.tar.gz
+
+curl -L -o go1.16.8.linux-amd64.tar.gz https://golang.org/dl/go1.16.8.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.8.linux-amd64.tar.gz
 
 go install github.com/icon-project/goloop/cmd/goloop@v0.9.7
 
@@ -32,6 +34,7 @@ For install commands: https://github.com/icon-project/btp/tree/icondao/docker-co
 
 ### 2. Build Binance Smart Chain docker
 
+```bash
 https://github.com/icon-project/btp/tree/btp_web3labs/devnet
 
 git clone -b btp_web3labs https://github.com/icon-project/btp
@@ -40,21 +43,56 @@ docker build --tag bsc-node ./devnet/docker/bsc-node --build-arg KEYSTORE_PASS=P
 bsc-node image created but this is an [error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920558438)
 
 go mod download github.com/ethereum/go-ethereum
+go mod tidy
 make
+
 [error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920561474)
 
-===
+[error with go 1.17.x](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920561474)
 
-once everything starts, the icon-bsc node will take some time to provision, once all the containers are up, you can get the keystores from the devnet/work folder.
-bsc.ks.json - for Binancesmartchain
+make dist-javascore
+[error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-921604124)
+
+clean up on error:
+docker rm -f javascore-dist
+
+make dist-sol
+make btpsimple-image
+cd devnet/docker/icon-bsc
+./build.sh
+docker-compose up -d
+```
+
+once everything starts, the icon-bsc node will take some time to provision, once all the containers are up, you can get the keystores from the devnet/work folder. bsc.ks.json - for Binancesmartchain
 
 btp-icon container might take sometime, it usually takes around 15 minutes, but certainly not an hour or so.
 To check if the btp-icon container is started, you can check the logs to see if "provision is now complete" is present.
 
-"please try to manually stop and start the "btp-icon" container from the docker dashboard. and see if it tries to connect to goloop then.
+And please keep an eye on the btp-icon logs, cause untill "Provision is now complete" there should be no errors.
 
-// to fix some icon docker issues https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916589551
-Yes, I resolved this problem by remove folder work and run docker-compose up -d again, so now I'm stuck with the token guide
+```bash
+ubuntu@ip-172-31-19-19:~/testnet/btp/devnet/docker/icon-bsc$ docker-compose up
+Creating network "icon-bsc_default" with the default driver
+Creating binancesmartchain ... done
+Creating goloop            ... done
+Creating btp-icon          ... done
+
+ERROR: for btp-bsc  Container "5eafacd5d129" is unhealthy.
+ERROR: Encountered errors while bringing up the project.
+```
+
+[logged error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-922638506)
+
+```bash
+# if you still need a clean setup, you can do manually
+
+docker-compose down
+rm -rf work/*
+docker rmi -f icon-bsc_btp-icon
+docker rm -f javascore-dist
+docker rmi -f btpsimple
+docker rmi -f btp/javascore
+```
 
 verify JSON files https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916687302
 Could you also please verify if other folders "bmc"& "bmv" under /contracts/solidity has build folder?
@@ -68,5 +106,3 @@ You can use these commands to clean
 docker-compose down
 rm -rf work/*
 docker rmi -f icon-bsc_btp-icon
-
-And please keep an eye on the btp-icon logs, cause untill "Provision is now complete" there should be no errors
