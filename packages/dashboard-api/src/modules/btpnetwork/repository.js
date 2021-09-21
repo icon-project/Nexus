@@ -1,5 +1,11 @@
 'use strict';
-const { pgPool, logger, NETWORK_TBL_NAME, TRANSACTION_TBL, TRANSACTION_TBL_NAME } = require('../../common');
+const {
+  pgPool,
+  logger,
+  NETWORK_TBL_NAME,
+  TRANSACTION_TBL,
+  TRANSACTION_TBL_NAME,
+} = require('../../common');
 
 async function countNetwork() {
   const {
@@ -18,7 +24,8 @@ async function countTransaction() {
 }
 
 async function getAllTimeFeeOfAssets() {
-  const query = 'SELECT token_name, SUM(token_amount) AS total_token_amount FROM transfer_fees GROUP BY token_name';
+  const query =
+    'SELECT token_name, SUM(token_amount) AS total_token_amount FROM transfer_fees GROUP BY token_name';
 
   try {
     const { rows } = await pgPool.query(query);
@@ -28,7 +35,7 @@ async function getAllTimeFeeOfAssets() {
       for (const row of rows) {
         assets.push({
           name: row.token_name,
-          value: Number(row.total_token_amount)
+          value: Number(row.total_token_amount),
         });
       }
     }
@@ -41,7 +48,8 @@ async function getAllTimeFeeOfAssets() {
 }
 
 async function getVolumeMintedNetworks() {
-  const query = 'SELECT network_id, token_name,  SUM(token_value) AS token_volume FROM minted_tokens GROUP BY(network_id, token_name)';
+  const query =
+    'SELECT network_id, token_name,  SUM(token_value) AS token_volume FROM minted_tokens GROUP BY(network_id, token_name)';
 
   try {
     const { rows } = await pgPool.query(query);
@@ -66,17 +74,19 @@ async function getVolumeMintedNetworks() {
 
 async function getLatestTokensMinted() {
   try {
-    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond
+    const at24hAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // millisecond
 
-    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
+    let results = await pgPool.query(
+      `SELECT DISTINCT ON (token_name) token_name, total_token_amount
       FROM minted_tokens
       WHERE create_at >= $1
-      ORDER BY token_name, create_at DESC`, [at24hAgo.toISOString()]);
+      ORDER BY token_name, create_at DESC`,
+      [at24hAgo.toISOString()],
+    );
 
-    if (0 === results.rows.length)
-      return null;
+    if (0 === results.rows.length) return null;
 
-    return results.rows.map(row => ({
+    return results.rows.map((row) => ({
       tokenName: row.token_name,
       tokenAmount: row.total_token_amount,
     }));
@@ -88,33 +98,23 @@ async function getLatestTokensMinted() {
 
 async function getTotalTokensMintedLast24h() {
   try {
-    const at24hAgo = new Date(Date.now()  - (24 * 60 * 60 * 1000)); // millisecond
-    let results = await pgPool.query(`SELECT DISTINCT ON (token_name) token_name, total_token_amount
+    const at24hAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // millisecond
+    let results = await pgPool.query(
+      `SELECT DISTINCT ON (token_name) token_name, total_token_amount
     FROM minted_tokens
     WHERE create_at <= $1
-    ORDER BY token_name, create_at DESC`, [at24hAgo.toISOString()]);
+    ORDER BY token_name, create_at DESC`,
+      [at24hAgo.toISOString()],
+    );
 
-    if (0 === results.rows.length)
-      return null;
+    if (0 === results.rows.length) return null;
 
-    return results.rows.map(row => ({
+    return results.rows.map((row) => ({
       tokenName: row.token_name,
       tokenAmount: row.total_token_amount,
     }));
   } catch (error) {
     logger.error('getTotalUSDMintedLast24h fails', { error });
-    throw error;
-  }
-}
-
-// Bug: https://github.com/icon-project/btp-dashboard/issues/282#issuecomment-914030451
-async function getTotalBondedIcx() {
-  try {
-    return 0;
-    // const { rows } = await pgPool.query('SELECT SUM(bonded_icx) as total_icx FROM bonded_icx WHERE server_status=$1', ['Active']);
-    // return rows[0].total_icx ? Number(rows[0].total_icx) : 0;
-  } catch (error) {
-    logger.error('getTotalBondedIcx fails', { error });
     throw error;
   }
 }
@@ -136,6 +136,5 @@ module.exports = {
   getVolumeMintedNetworks,
   getLatestTokensMinted,
   getTotalTokensMintedLast24h,
-  getTotalBondedIcx,
-  getAllIndexerStats
+  getAllIndexerStats,
 };

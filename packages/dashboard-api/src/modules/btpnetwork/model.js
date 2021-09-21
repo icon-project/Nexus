@@ -8,11 +8,11 @@ const {
   getVolumeMintedNetworks,
   getLatestTokensMinted,
   getTotalTokensMintedLast24h,
-  getTotalBondedIcx,
-  getAllIndexerStats
+  getAllIndexerStats,
 } = require('./repository');
 
 const { getNetworkInfo } = require('../networks/repository');
+const { getTotalBondedRelayCandidates } = require('../relay-candidates/repository');
 const {
   logger,
   CURRENCIES,
@@ -139,7 +139,7 @@ async function getTotalTransaction() {
 
 async function getBondedVolumeByRelayCandidates() {
   try {
-    return await getTotalBondedIcx();
+    return await getTotalBondedRelayCandidates();
   } catch (error) {
     logger.error('getBondedVolumeByRelayCandidates failed', { error });
     throw error;
@@ -256,5 +256,5 @@ module.exports = {
   getMintedNetworks,
   calculateVolumePercents,
   getPercentsMintVolumeLast24h,
-  getIndexerStats
+  getIndexerStats,
 };
