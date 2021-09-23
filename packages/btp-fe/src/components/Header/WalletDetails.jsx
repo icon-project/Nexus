@@ -103,7 +103,7 @@ const TokenSelector = styled(Select)`
   height: 32px;
 
   > .md {
-    font-weight: 600;
+    font-weight: 500;
   }
 
   &::after {
