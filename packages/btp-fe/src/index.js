@@ -10,11 +10,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store, { history } from './store';
 
-const defaultFonts = ['Poppins:300,500&display=swap'].filter(Boolean);
-
 WebFont.load({
   google: {
-    families: defaultFonts,
+    families: ['Poppins:300,500&display=swap'],
   },
 });
 
