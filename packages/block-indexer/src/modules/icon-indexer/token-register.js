@@ -43,7 +43,7 @@ async function getTokenId(name) {
   const txObject = callBuilder
     .to(process.env.ICON_NATIVE_COIN_BSH_ADDRESS)
     .method('coinId')
-    .params({ _coinName: name})
+    .params({ _coinName: name })
     .build();
 
   const tokenId = await iconService.call(txObject).execute();

@@ -132,9 +132,10 @@ async function start() {
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
-  logger.info('Loading registered token list...');
-  const tokens = await loadRegisteredTokens(iconService);
-  logger.info('Loaded registered token list', { tokens });
+  // Issue: FAS is not available on BSC testnet.
+  // logger.info('Loading registered token list...');
+  // const tokens = await loadRegisteredTokens(iconService);
+  // logger.info('Loaded registered token list', { tokens });
 
   await retryGetBlockData();
 

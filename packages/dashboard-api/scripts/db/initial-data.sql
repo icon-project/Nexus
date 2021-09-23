@@ -21,3 +21,17 @@ INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES 
 
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x3', 'ICON', 0, NOW());
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x501', 'Moonbeam', 0, NOW());
+
+-- Issue #371
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (1, 'BTC', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (1027, 'ETH', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (52, 'DEV', 1, 1, NOW(), NOW());
+
+INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+VALUES (2099, 'ICX', 1, 1, NOW(), NOW());
