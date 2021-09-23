@@ -88,8 +88,7 @@ const GovernanceStyled = styled.div`
   .vl {
     border-left: 1px solid ${colors.grayLine};
     height: 50px;
-    margin-left: 77px;
-    margin-right: 100px;
+    margin: 0 63px 0 94px;
   }
   .total {
     display: flex;
