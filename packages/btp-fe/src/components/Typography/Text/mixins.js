@@ -2,7 +2,7 @@ import { css } from 'styled-components/macro';
 import { colors } from 'components/Styles/Colors';
 
 export const normal = css`
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0.75px;
   color: ${colors.grayText};
 `;
@@ -32,11 +32,11 @@ export const lg = css`
 export const smBold = css`
   ${normal}
   ${sm};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 export const xsBold = css`
   ${normal};
   ${xs};
-  font-weight: 600;
+  font-weight: 500;
 `;

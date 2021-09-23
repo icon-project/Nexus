@@ -20,7 +20,7 @@ const StyledSubTitle = styled.h4`
   }
 
   &.bold {
-    font-weight: 600;
+    font-weight: 500;
   }
 `;
 

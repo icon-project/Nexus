@@ -3,7 +3,7 @@ import { colors } from 'components/Styles/Colors';
 
 export const normal = css`
   letter-spacing: 1px;
-  font-weight: 400;
+  font-weight: 300;
   color: ${colors.grayText};
 `;
 
@@ -25,11 +25,11 @@ export const lg = css`
 export const smBold = css`
   ${normal};
   ${sm};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 export const mdBold = css`
   ${normal};
   ${md};
-  font-weight: 600;
+  font-weight: 500;
 `;

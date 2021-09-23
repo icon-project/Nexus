@@ -29,7 +29,7 @@ const StyledHeader = styled.h3`
   }
 
   &.bold {
-    font-weight: 600;
+    font-weight: 500;
   }
 
   &.center {

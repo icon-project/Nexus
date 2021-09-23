@@ -26,7 +26,7 @@ export const StyledText = styled.p`
   }
 
   &.bold {
-    font-weight: 600;
+    font-weight: 500;
   }
 
   &.center {
