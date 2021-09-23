@@ -10,7 +10,7 @@ import { tokenOptionList } from 'utils/constants';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
-import { xsBold } from 'components/Typography/Text/mixins';
+import { TextMixin } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
@@ -144,7 +144,7 @@ const RefundSelector = styled(Select)`
 `;
 
 const ActionBtn = styled.button`
-  ${xsBold};
+  ${TextMixin.xsBold};
   padding: 10px 16px 10px 0;
   color: ${tertiaryBase};
   background-color: transparent;
