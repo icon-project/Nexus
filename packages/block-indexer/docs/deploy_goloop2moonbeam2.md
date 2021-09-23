@@ -152,6 +152,22 @@ goloop rpc sendtx transfer --uri http://localhost:9080/api/v3/icon \
 
 goloop rpc balance hx0a349be9845c75f8c8945451e212b86110b36e2c --uri http://localhost:9080/api/v3/icon | jq -r
 goloop rpc balance hx548a976f8eda5d7c0afcb99110ca49434cdf921b --uri http://localhost:9080/api/v3/icon | jq -r
+
+# Tien send 5 ICX to Bob
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
+  --to $(cat ./config/nativeCoinBsh.icon) --method transferNativeCoin \
+  --param _to=btp://0x501.pra/0xDC70A1b79415034Ba08fa235b09f6b3f75c1e1d4 --value 0x4563918244f40000 \
+  --key_store tiendq.ks.json --key_password test12345 --step_limit 10000000000 --nid 0x58eb1c
+
+# Bob send 5 DEV to Tien
+encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transferNativeCoin('btp://0x58eb1c.icon/hx0a349be9845c75f8c8945451e212b86110b36e2c')")
+
+eth transaction:send --network http://localhost:9933 \
+  --pk 0x1477fb360c00fd580829d22d842d69034df1e54c563e5f56b8b21a88a36c9678 \
+  --gas 6721975 \
+  --to $(cat ./config/bsh_core.moonbeam) \
+  --data $encoded_data \
+  --value 5000000000000000000 | jq -r
 ```
 
 ## Configuration
