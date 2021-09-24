@@ -42,7 +42,9 @@ const candidatesColumns = [
   {
     title: '#',
     dataIndex: 'rank',
+    render: (text, record, index) => index + 1,
     width: '100px',
+    align: 'center',
   },
   {
     title: 'Name',
