@@ -6,6 +6,7 @@ const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 const { logger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
+const { getTokenContractMap } = require('../transactions/model');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleMintBurnEvents } = require('./mint-burn');
@@ -161,6 +162,8 @@ async function start() {
     const block = await getHeadBlock();
     blockHeight = block.number;
   }
+
+  getTokenContractMap();
 
   logger.info('Starting Moonbeam block indexer at block %d...', blockHeight);
   await retryGetBlockData();

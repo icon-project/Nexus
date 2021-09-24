@@ -62,3 +62,8 @@ INSERT INTO public.relay_candidate_rewards(
 INSERT INTO public.relay_candidate_rewards(
 	id, rc_id, rc_address, reward_value, total_reward, created_time)
 	VALUES ('2c37741fac', '2c37741ffc', 'hxeb62be05a3f276039e40b3e1bbb3c358d157de29', 300, 900, NOW());
+
+-- Issue #385
+
+INSERT INTO token_info (id, network_id, token_name, token_id, tx_hash, create_at, contract_address, token_address)
+	VALUES ('2c645591-26ef-4652-a4eb-2475d1043261', '0x101c5b', 'ETH', '0x8f7ce30203eb1ff1d26492c94d9ab04d63f4e54f1f9e677e8d4a0d6daaab2dd', '0x8fabd9ad200497d59f0e2528772d2df8e98093ca3645b821d78286056e9a7c9e', NOW(), 'cx77622c6d0bcd80048eb159aa99fd30df2f38c97f', 'cxe32aa9a25c3a934134db8dd6749832fee8b45834');

@@ -104,6 +104,8 @@ CREATE TABLE IF NOT EXISTS public.token_info
     token_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
     tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
     create_at timestamp without time zone NOT NULL,
+    token_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT token_info_pkey PRIMARY KEY (id),
     CONSTRAINT token_info_network_id_token_name UNIQUE (network_id, token_name)
 )
