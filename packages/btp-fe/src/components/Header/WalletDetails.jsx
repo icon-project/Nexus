@@ -101,6 +101,7 @@ const TokenSelector = styled(Select)`
   margin-left: 10px;
   display: inline-flex;
   height: 32px;
+  min-width: 72px;
 
   > .md {
     font-weight: 600;
