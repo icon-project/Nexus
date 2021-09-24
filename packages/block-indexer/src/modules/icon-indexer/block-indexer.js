@@ -6,11 +6,11 @@ const IconService = require('icon-sdk-js');
 const { HttpProvider } = require('icon-sdk-js');
 const { logger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
-const { loadRegisteredTokens } = require('./fas');
-const { handleAuctionEvents } = require('./auctions');
+// FAS: const { loadRegisteredTokens } = require('./fas');
+// FAS: const { handleAuctionEvents } = require('./auctions');
 const { handleTransactionEvents } = require('../transactions/icon');
 const { getTokenContractMap } = require('../transactions/model');
-const { handleTransferFeeEvents } = require('./transfer-fee');
+// FAS: const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { handleTokenRegister } = require('./token-register');
 const { handleRelayerAction } = require('./relay-candidate');
@@ -25,12 +25,13 @@ let isWaitToStop = false;
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
     await handleTransactionEvents(txResult, transaction);
-    await handleAuctionEvents(txResult);
-    await handleTransferFeeEvents(txResult);
+    // FAS: await handleAuctionEvents(txResult);
+    // FAS: await handleTransferFeeEvents(txResult);
     await handleMintBurnEvents(txResult, transaction);
     await handleTokenRegister(txResult, transaction);
     await handleRelayAction(txResult, transaction);
     await handleRelayerAction(txResult, transaction);
+
     // More transaction handlers go here.
   } catch (error) {
     logger.error('icon:runTransactionHandlers fails %O', error);
@@ -136,10 +137,9 @@ async function start() {
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
-  // Issue: FAS is not available on BSC testnet.
-  // logger.info('Loading registered token list...');
-  // const tokens = await loadRegisteredTokens(iconService);
-  // logger.info('Loaded registered token list', { tokens });
+  // FAS: logger.info('Loading registered token list...');
+  // FAS: const tokens = await loadRegisteredTokens(iconService);
+  // FAS: logger.info('Loaded registered token list', { tokens });
 
   await retryGetBlockData();
 

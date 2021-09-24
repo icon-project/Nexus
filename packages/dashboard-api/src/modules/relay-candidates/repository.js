@@ -19,7 +19,7 @@ async function getTotalReward() {
     const { rows } = await pgPool.query(
       'SELECT total_reward FROM relay_candidate_rewards ORDER BY created_time DESC LIMIT 1',
     );
-    return rows[0].total_reward ? Number(rows[0].total_reward) : 0;
+    return rows[0] ? Number(rows[0].total_reward) : 0;
   } catch (error) {
     logger.error('getTotalReward fails', { error });
     throw error;
@@ -37,7 +37,7 @@ async function getTotalRewardLast30Days() {
       [timeToCompare.toISOString()],
     );
 
-    return rows[0].total_reward ? Number(rows[0].total_reward) : 0;
+    return rows[0] ? Number(rows[0].total_reward) : 0;
   } catch (error) {
     logger.error('getTotalRewardLast30Days fails', { error });
     throw error;

@@ -10,12 +10,10 @@ const {
   getTotalTokensMintedLast24h,
   getAllIndexerStats,
 } = require('./repository');
-
 const { getNetworkInfo } = require('../networks/repository');
 const { getTotalBondedRelayCandidates } = require('../relay-candidates/repository');
 const {
   logger,
-  CURRENCIES,
   hexToFixedAmount,
   hexToIcxUnit,
   tokenToUsd,
@@ -30,7 +28,11 @@ const iconService = new IconService(provider);
 
 // Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
-  const callBuilder = new IconBuilder.CallBuilder();
+  return {
+    assets: [],
+    totalUSD: 0
+  };
+  /*const callBuilder = new IconBuilder.CallBuilder();
 
   try {
     const call = callBuilder.to(process.env.ICON_FAS_ADDRESS).method('tokens').build();
@@ -63,7 +65,7 @@ async function getAmountFeeAggregationSCORE() {
   } catch (error) {
     logger.error('getAmountFeeAggregationSCORE failed', { error });
     throw error;
-  }
+  }*/
 }
 
 // Get available of token registered in FAS by name of token
