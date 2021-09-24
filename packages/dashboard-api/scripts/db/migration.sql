@@ -271,3 +271,9 @@ ALTER TABLE public.transactions
 ALTER TABLE public.transactions
     DROP COLUMN id,
     ADD CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash);
+
+-- Issue #385
+
+ALTER TABLE ONLY public.token_info
+    ADD COLUMN token_address character varying(100) NOT NULL DEFAULT '',
+    ADD COLUMN contract_address character varying(100) NOT NULL DEFAULT '';

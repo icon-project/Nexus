@@ -101,9 +101,19 @@ async function saveTransaction(transaction) {
   }
 }
 
+async function getTokenContractAddresses() {
+  try {
+    const { rows } = await pgPool.query('SELECT DISTINCT(contract_address) FROM token_info');
+    return rows.map(row => row.contract_address);
+  } catch (error) {
+    logger.error('getTokenContractAddresses fails: %O', error);
+  }
+}
+
 module.exports = {
   getLatestTransactionByToken,
   getBySerialNumber,
   setTransactionConfirmed,
-  saveTransaction
+  saveTransaction,
+  getTokenContractAddresses
 };

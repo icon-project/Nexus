@@ -5,7 +5,7 @@ const debug = require('debug')('moonbeam_tx');
 const debugEvmLog = require('debug')('evmlog');
 const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { getEventMap } = require('../moonbeam-indexer/events');
-const { calculateTotalVolume } = require('./model');
+const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
   getLatestTransactionByToken,
   getBySerialNumber,
@@ -201,12 +201,12 @@ async function handleTransactionEvents(transaction, block) {
     return false;
 
   const eventMap = getEventMap();
-  const bshCoreAddress = process.env.MOONBEAM_BSH_CORE_ADDRESS.toLowerCase();
+  const tokenContractMap = await getTokenContractMap();
   const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
 
   // Only interested in transaction of a specific contract
   // BSH core for TransferStart event.
-  if (transaction.args.transaction && bshCoreAddress === transaction.args.transaction.action.call.toLowerCase()) {
+  if (transaction.args.transaction && tokenContractMap.has(transaction.args.transaction.action.call.toLowerCase())) {
     debug('Transaction: %O', transaction);
 
     // Is it TransferStart?

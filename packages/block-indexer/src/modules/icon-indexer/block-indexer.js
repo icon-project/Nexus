@@ -9,6 +9,7 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 const { loadRegisteredTokens } = require('./fas');
 const { handleAuctionEvents } = require('./auctions');
 const { handleTransactionEvents } = require('../transactions/icon');
+const { getTokenContractMap } = require('../transactions/model');
 const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { handleTokenRegister } = require('./token-register');
@@ -93,9 +94,10 @@ async function getBlockData() {
     const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
     if (block) {
+      debug('Block: %O', block);
+
       if (block.confirmedTransactionList.length > 0) {
         logger.info(`Received ICON block ${block.height}, ${block.blockHash}`);
-        debug('Block: %O', block);
 
         await saveIndexedBlockHeight(block.height, process.env.ICON_NETWORK_ID);
         await runBlockHandlers(block);
@@ -129,6 +131,8 @@ async function start() {
     const block = await iconService.getLastBlock().execute();
     blockHeight = block.height;
   }
+
+  getTokenContractMap();
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 

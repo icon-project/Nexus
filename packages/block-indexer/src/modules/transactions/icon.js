@@ -4,7 +4,7 @@ const { decode } = require('rlp');
 const { IconConverter } = require('icon-sdk-js');
 const Web3 = require('web3');
 const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
-const { calculateTotalVolume } = require('./model');
+const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
   getLatestTransactionByToken,
   getBySerialNumber,
@@ -65,10 +65,15 @@ async function handleTransactionEvents(txResult, transaction) {
   if (1 !== txResult.status || 0 === txResult.eventLogs.length)
     return false;
 
-  if (process.env.ICON_NATIVE_COIN_BSH_ADDRESS === txResult.to) {
+  const tokenContractMap = await getTokenContractMap();
+
+  if (tokenContractMap.has(txResult.to)) {
     for (const event of txResult.eventLogs) {
       if (TRANFER_START_PROTOTYPE !== event.indexed[0])
         continue;
+
+      // Issue: BSC event is different.
+      console.log(event.data);
 
       const data = event.data;
       const details = decode(data[2])[0];

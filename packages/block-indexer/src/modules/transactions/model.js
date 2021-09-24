@@ -1,5 +1,9 @@
 'use strict';
 
+const { getTokenContractAddresses } = require('./repository');
+
+const tokenContractMap = new Map();
+
 function calculateTotalVolume(newTransaction, latestTransaction) {
   let totalVolume = newTransaction.value || 0;
 
@@ -11,6 +15,19 @@ function calculateTotalVolume(newTransaction, latestTransaction) {
   return totalVolume;
 }
 
+// Get list of BSH contract addresses of registered tokens.
+async function getTokenContractMap() {
+  if (0 === tokenContractMap.size) {
+    const addresses = await getTokenContractAddresses();
+
+    for (const address of addresses)
+      tokenContractMap.set(address, address);
+  }
+
+  return tokenContractMap;
+}
+
 module.exports = {
-  calculateTotalVolume
+  calculateTotalVolume,
+  getTokenContractMap
 };
