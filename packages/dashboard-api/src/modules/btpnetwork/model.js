@@ -101,7 +101,11 @@ async function getTotalNetworks() {
 async function calculateVolumePercents() {
   let totalVolume = await getTotalTransactionAmount(false);
   let totalVolume24hAgo = await getTotalTransactionAmount(true);
-  return +(((totalVolume - totalVolume24hAgo) / totalVolume) * 100).toFixed(2);
+
+  if (totalVolume && totalVolume24hAgo)
+    return ((totalVolume - totalVolume24hAgo) / totalVolume * 100).toFixed(2);
+  else
+    return 0;
 }
 
 async function getTotalTransactionAmount(is24hAgo) {

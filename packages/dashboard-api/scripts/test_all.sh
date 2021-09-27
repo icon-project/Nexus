@@ -3,8 +3,9 @@
 
 set -x
 
-HOST=http://localhost:8000
+# HOST=http://localhost:8000
 # HOST=http://54.251.114.18:8000
+# HOST=http://18.141.139.244:8000
 
 # auctions
 
