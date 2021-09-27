@@ -37,6 +37,7 @@ const columns = [
     dataIndex: 'index',
     render: (text, record, index) => index + 1,
     width: '64px',
+    align: 'center',
   },
   {
     title: 'Network',

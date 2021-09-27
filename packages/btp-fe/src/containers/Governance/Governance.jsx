@@ -42,7 +42,9 @@ const candidatesColumns = [
   {
     title: '#',
     dataIndex: 'rank',
+    render: (text, record, index) => index + 1,
     width: '100px',
+    align: 'center',
   },
   {
     title: 'Name',
@@ -88,8 +90,7 @@ const GovernanceStyled = styled.div`
   .vl {
     border-left: 1px solid ${colors.grayLine};
     height: 50px;
-    margin-left: 77px;
-    margin-right: 100px;
+    margin: 0 63px 0 94px;
   }
   .total {
     display: flex;
