@@ -104,7 +104,7 @@ const TokenSelector = styled(Select)`
   min-width: 72px;
 
   > .md {
-    font-weight: 500;
+    ${TextMixin.bold};
   }
 
   &::after {

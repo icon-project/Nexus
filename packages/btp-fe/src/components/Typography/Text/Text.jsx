@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { normal, sm, xs, md, lg } from './mixins';
+import { normal, sm, xs, md, lg, bold } from './mixins';
 import { colors } from 'components/Styles/Colors';
 
 export const StyledText = styled.p`
@@ -26,7 +26,7 @@ export const StyledText = styled.p`
   }
 
   &.bold {
-    font-weight: 500;
+    ${bold}
   }
 
   &.center {

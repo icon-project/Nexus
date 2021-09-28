@@ -1,10 +1,9 @@
 import { css } from 'styled-components/macro';
-import { colors } from 'components/Styles/Colors';
+import * as commonMixins from '../commonMixnins';
 
 export const normal = css`
-  font-weight: 300;
   letter-spacing: 0.75px;
-  color: ${colors.grayText};
+  ${commonMixins.normal}
 `;
 
 export const xs = css`
@@ -29,14 +28,18 @@ export const lg = css`
   line-height: 68px;
 `;
 
+export const bold = css`
+  ${commonMixins.bold}
+`;
+
 export const smBold = css`
   ${normal}
   ${sm};
-  font-weight: 500;
+  ${commonMixins.bold}
 `;
 
 export const xsBold = css`
   ${normal};
   ${xs};
-  font-weight: 500;
+  ${commonMixins.bold}
 `;

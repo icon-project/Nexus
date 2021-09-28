@@ -1,21 +1,18 @@
 import styled from 'styled-components/macro';
 import { Link as RouterLink } from 'react-router-dom';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
+import { TextMixin } from 'components/Typography/Text';
 
 import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.p`
   > a.md {
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 1px;
+    ${SubTitleMixin.md};
     color: ${colors.tertiaryBase};
   }
 
   > a.xs {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 16px;
-    letter-spacing: 0.75px;
+    ${TextMixin.xsBold};
     color: ${colors.tertiaryBase};
   }
 
@@ -25,7 +22,7 @@ const Wrapper = styled.p`
   }
 
   > a.bold {
-    font-weight: 500;
+    ${TextMixin.bold};
   }
 
   ${({ block, center }) => `

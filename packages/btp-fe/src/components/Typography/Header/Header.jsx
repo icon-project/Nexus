@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
-import { normal, sm, xs, md, lg } from './mixins';
+import { normal, sm, xs, md, lg, bold } from './mixins';
 
 const StyledHeader = styled.h3`
   ${normal};
@@ -29,7 +29,7 @@ const StyledHeader = styled.h3`
   }
 
   &.bold {
-    font-weight: 500;
+    ${bold};
   }
 
   &.center {
