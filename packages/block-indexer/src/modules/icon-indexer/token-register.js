@@ -29,7 +29,7 @@ async function handleTokenRegister(txResult, transaction) {
 
 async function saveTokenInfo(tokenObj) {
   try {
-    const query = 'INSERT INTO token_info (id, network_id, token_id, token_name, tx_hash, create_at, contract_address, token_address) VALUES ($1, $2, $3, $4, $5, NOW(), $7, $8)';
+    const query = 'INSERT INTO token_info (id, network_id, token_id, token_name, tx_hash, create_at, contract_address, token_address) VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7)';
     const values = [uuidv4(), process.env.ICON_NETWORK_ID, tokenObj.tokenId, tokenObj.tokenName, tokenObj.txHash, tokenObj.contractAddress, tokenObj.contractAddress];
 
     await pgPool.query(query, values);

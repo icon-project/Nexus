@@ -57,8 +57,6 @@ async function retryGetTransactionResult(tx, block) {
 
   if (txResult) {
     debugTx('Transaction result: %O', txResult);
-
-    // await saveTransaction(tx, txResult);
     await runTransactionHandlers(tx, txResult, block);
   } else {
     setTimeout(async () => await retryGetTransactionResult(tx, block), 5000);
@@ -133,7 +131,8 @@ async function start() {
     blockHeight = block.height;
   }
 
-  getTokenContractMap();
+  const tokenContractMap = await getTokenContractMap();
+  logger.info('ICON registered tokens: %O', tokenContractMap);
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
