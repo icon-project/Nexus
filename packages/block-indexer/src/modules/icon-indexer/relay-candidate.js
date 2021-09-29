@@ -34,27 +34,12 @@ async function handleRelayerAction(txResult, transaction) {
 
 async function saveRelayer(relayer) {
   try {
-    const query = `INSERT INTO relay_candidates (
-        id,
-        rank,
-        name,
-        address,
-        dest_address,
-        bonded_icx,
-        registered_time,
-        unregistered_time,
-        created_time,
-        updated_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
-      ON CONFLICT (address)
-      DO
-        UPDATE SET
-          rank = $2
-          dest_address = $5,
-          bonded_icx = $6,
-          registered_time = $7,
-          unregistered_time = $8,
-          updated_time = NOW()`;
-
+    const query =
+      'INSERT INTO relay_candidates' +
+      ' ( id, rank, name, address, dest_address, bonded_icx, registered_time, unregistered_time, created_time, updated_time)' +
+      ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())' +
+      ' ON CONFLICT (address)' +
+      ' DO UPDATE SET rank = $2 dest_address = $5, bonded_icx = $6, registered_time = $7, unregistered_time = $8, updated_time = NOW()';
     const values = [
       relayer.id,
       0,
@@ -74,12 +59,8 @@ async function saveRelayer(relayer) {
 
 async function unregisterRelayer(relayer) {
   try {
-    const query = `
-      UPDATE relay_candidates SET
-        unregistered_time = $1,
-        updated_time = NOW()
-      WHERE
-        address = $2`;
+    const query =
+      'UPDATE relay_candidates SET unregistered_time = $1, updated_time = NOW() WHERE address = $2';
     await pgPool.query(query, [relayer.unregisteredTime, relayer.address]);
   } catch (error) {
     logger.error('unregisterRelayer failed', { error });

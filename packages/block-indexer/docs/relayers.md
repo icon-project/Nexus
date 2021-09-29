@@ -12,3 +12,16 @@ goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --method claimRel
 
 goloop rpc txresult 0xfb0bb38bcf092398c7a333ae9f1f217d64db078fd428c63fd451fa1179b3bdee --uri http://localhost:9080/api/v3/icon
 ```
+
+
+# Command
+## ICON
+### Register Relayer
+```bash
+goloop rpc --uri https://localhost/api/v3/ sendtx call --to <BMC_address> --method registerRelayer --param _desc="<relayer_name>" --value 1000000000000000000 --key_store <your_wallet.json> --key_password <your_wallet_password> --nid <network_id> --step_limit 3519157719
+```
+### Unregister Relayer
+```bash
+goloop rpc --uri https://localhost/api/v3/ sendtx call --to <BMC_address> --method unregisterRelayer --key_store <your_wallet.json> --key_password <your_wallet_password> --nid <network_id> --step_limit 3519157719
+```
+

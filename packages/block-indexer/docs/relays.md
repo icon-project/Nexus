@@ -63,3 +63,37 @@ icon Transaction: e {
   icon   ],
   icon   logsBloom: '0x00000000000000000000000100000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000020000002000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000204000000000000000000000002000000000000000000000000000000000000000000100000000001000000000000000000000000000000000000000000000000000080000000000000000001000000000000000000000000000000000000000000000800000000200000000000000000000'
   icon } +9ms
+
+# Command
+## ICON
+### Add relay
+```bash
+goloop rpc --uri https://localhost/api/v3/ sendtx call --to <BMC_address> --method addRelay --param _link=<link_to_pra_chain> --param _addr=<relay_address> --key_store <godwallet.json> --key_password <godwallet_password> --nid <network_id> --step_limit 3519157719
+```
+### Remove relay
+```bash
+goloop rpc --uri https://localhost/api/v3/ sendtx call --to <BMC_address> --method removeRelay --param _link=<link_to_pra_chain> --param _addr=<relay_address> --key_store <godwallet.json> --key_password <godwallet_password> --nid <network_id> --step_limit 3519157719
+```
+
+##MOONBEAM
+
+- Access to docker of moonbeam and run `truffle console`
+```bash
+$ truffle(moonbeamlocal)> let bmcManagement = await BMCManagement.deployed()
+```
+## Add relay
+
+
+```bash
+$ truffle(moonbeamlocal)> await bmcManagement.addRelay("<link_to_icon_chain>", ["<realy_address>"])
+
+// check result
+$ truffle(moonbeamlocal)> await bmcManagement.getRelays("<link_to_icon_chain>")
+```
+## Remove relay
+```bash
+$ truffle(moonbeamlocal)> await bmcManagement.removeRelay("<link_to_icon_chain>","<realy_address>")
+
+// check result
+$ truffle(moonbeamlocal)> await bmcManagement.getRelays("<link_to_icon_chain>")
+```

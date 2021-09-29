@@ -1,3 +1,8 @@
+const { Pool } = require('pg');
+const RelayICON = require('../src/modules/relays/icon');
+const RelayMoonBeam = require('../src/modules/relays/moonbeam');
+const { buildActionMap } = require('../src/modules/moonbeam-indexer/actions');
+
 const addRelayICONTrans = {
   timestamp: 1629099103257950,
   nid: '3',
@@ -40,7 +45,7 @@ const removeRelayICONTrans = {
   // blockNumber: 493470
 };
 
-const addRelayMoonbeamTrans = {
+const addRelayMoonbeamBlock = {
   number: '505848',
   hash: '0x1bbdc5261da7169caddd25ebb2868bb0cdfe39787020344432690cb73b86dff5',
   parentHash: '0xa3f14e5c5f23510a0e81a884a3b3575e0e5e9f8f4e5437667bc7ed705b8c0eba',
@@ -268,7 +273,7 @@ const addRelayMoonbeamTrans = {
   finalized: false,
 };
 
-const removeRelayMoonbeamTrans = {
+const removeRelayMoonbeamBlock = {
   number: '542284',
   hash: '0x0106755a1c7cf1f264c2125c02c93a8605440f2497fae27ed65101b967ccabcf',
   parentHash: '0x47c44d60b296c122fc6f1c08d5615806776f8bf0e76d1894e296956ce1bc9815',
@@ -440,5 +445,121 @@ const removeRelayMoonbeamTrans = {
   finalized: false,
 };
 
-test('No tests found. Sang should add tests', () => {
+jest.mock('pg', () => {
+  const mPool = {
+    connect: function () {
+      return { query: jest.fn() };
+    },
+    query: jest.fn(),
+    end: jest.fn(),
+    on: jest.fn(),
+  };
+  return { Pool: jest.fn(() => mPool) };
+});
+
+describe('test for handle relay action', () => {
+  const OLD_ENV = process.env;
+  let pool;
+
+  beforeAll(() => {
+    buildActionMap();
+  });
+  beforeEach(() => {
+    pool = new Pool();
+    // Most important - it clears the cache
+    jest.resetModules();
+    // Make a copy
+    process.env = { ...OLD_ENV };
+  });
+
+  afterEach(() => {
+    process.env = OLD_ENV;
+    jest.clearAllMocks();
+  });
+
+  test('should add relay to icon', async () => {
+    let relay = addRelayICONTrans.data.params;
+    pool.query.mockResolvedValue({ rows: [] });
+    await RelayICON.handleRelayAction({ status: 1 }, addRelayICONTrans);
+    expect(pool.query).toBeCalledTimes(3);
+    expect(pool.query).toHaveBeenCalledWith('SELECT address FROM relays');
+    expect(pool.query).toHaveBeenCalledWith('SELECT id, address FROM relays WHERE address = $1', [
+      relay._addr,
+    ]);
+    expect(
+      pool.query,
+    ).toHaveBeenCalledWith(
+      'INSERT INTO relays ( id, address, link, server_status, total_transferred_tx, total_failed_tx, registered_time, unregistered_time, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())',
+      [expect.anything(), relay._addr, relay._link, 'Active', 0, 0, expect.anything(), null],
+    );
+  });
+
+  test('should remove relay to icon', async () => {
+    let relay = removeRelayICONTrans.data.params;
+    pool.query.mockResolvedValue({ rows: [] });
+    await RelayICON.handleRelayAction({ status: 1 }, removeRelayICONTrans);
+    expect(pool.query).toBeCalledTimes(1);
+    expect(
+      pool.query,
+    ).toHaveBeenCalledWith(
+      'UPDATE relays SET updated_at = NOW(), server_status = $2, unregistered_time = $3 WHERE address = $1',
+      [relay._addr, 'Inactive', new Date(removeRelayICONTrans.timestamp / 1000)],
+    );
+    // If run this test case individually. Expectations should be
+    // expect(pool.query).toBeCalledTimes(2);
+    // expect(pool.query).toHaveBeenCalledWith("SELECT address FROM relays");
+  });
+
+  test('should add relay to moonbeam', async () => {
+    let relay = {
+      address: '0x6146476784655d589BfF5d0eE36593D3Ef788567',
+      link: 'btp://0x3.icon/cx26cdb2d9cf33dee078056532175a696b8a9fcc71',
+    };
+    process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS = '0x3ed62137c5db927cb137c26455969116bf0c23cb';
+    pool.query.mockResolvedValue({ rows: [] });
+    await RelayMoonBeam.handleRelayAction(
+      addRelayMoonbeamBlock.extrinsics[3],
+      addRelayMoonbeamBlock,
+    );
+
+    expect(pool.query).toBeCalledTimes(3);
+    expect(pool.query).toHaveBeenCalledWith('SELECT address FROM relays');
+    expect(pool.query).toHaveBeenCalledWith('SELECT id, address FROM relays WHERE address = $1', [
+      relay.address,
+    ]);
+    expect(
+      pool.query,
+    ).toHaveBeenCalledWith(
+      'INSERT INTO relays ( id, address, link, server_status, total_transferred_tx, total_failed_tx, registered_time, unregistered_time, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())',
+      [expect.anything(), relay.address, relay.link, 'Active', 0, 0, expect.anything(), null],
+    );
+  });
+
+  test('should add remove to moonbeam', async () => {
+    let relay = {
+      address: '0x6146476784655d589BfF5d0eE36593D3Ef788567',
+      link: 'btp://0x3.icon/cx26cdb2d9cf33dee078056532175a696b8a9fcc71',
+    };
+    process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS = '0x3ed62137c5db927cb137c26455969116bf0c23cb';
+    pool.query.mockResolvedValue({ rows: [] });
+    await RelayMoonBeam.handleRelayAction(
+      removeRelayMoonbeamBlock.extrinsics[3],
+      removeRelayMoonbeamBlock,
+    );
+
+    expect(pool.query).toBeCalledTimes(1);
+    expect(
+      pool.query,
+    ).toHaveBeenCalledWith(
+      'UPDATE relays SET updated_at = NOW(), server_status = $2, unregistered_time = $3 WHERE address = $1',
+      [
+        relay.address,
+        'Inactive',
+        new Date(Number(removeRelayMoonbeamBlock.extrinsics[0].args.now)),
+      ],
+    );
+    // If run this test case individually. Expectations should be
+    // expect(pool.query).toBeCalledTimes(2);
+    // expect(pool.query).toHaveBeenCalledWith("SELECT address FROM relays");
+  });
 });

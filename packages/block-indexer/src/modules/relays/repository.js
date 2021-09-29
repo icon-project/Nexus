@@ -3,17 +3,7 @@ const { pgPool, logger } = require('../../common');
 async function createRelay(relay) {
   try {
     await pgPool.query(
-      `INSERT INTO relays (
-      id,
-      address,
-      link,
-      server_status,
-      total_transferred_tx,
-      total_failed_tx,
-      registered_time,
-      unregistered_time,
-      created_at,
-      updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())`,
+      'INSERT INTO relays ( id, address, link, server_status, total_transferred_tx, total_failed_tx, registered_time, unregistered_time, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())',
       [
         relay.id,
         relay.address,
@@ -33,12 +23,7 @@ async function createRelay(relay) {
 
 async function updateRelay(relay) {
   let params = [relay.address, relay.serverStatus, relay.unregisteredTime];
-  let query = `UPDATE relays
-    SET
-      updated_at = NOW(),
-      server_status = $2,
-      unregistered_time = $3
-    `;
+  let query = 'UPDATE relays SET updated_at = NOW(), server_status = $2, unregistered_time = $3';
 
   if (relay.registeredTime) {
     query += `, registered_time = $${params.length + 1}`;
@@ -58,13 +43,9 @@ async function updateRelay(relay) {
 
 async function getRelayByAddress(address) {
   try {
-    const { rows } = await pgPool.query(
-      `
-    SELECT id, address
-      FROM relays
-      WHERE address = $1`,
-      [address],
-    );
+    const { rows } = await pgPool.query('SELECT id, address FROM relays WHERE address = $1', [
+      address,
+    ]);
 
     if (rows[0]) {
       return rows[0];
@@ -75,9 +56,7 @@ async function getRelayByAddress(address) {
 }
 
 async function updateRelayTransaction(address, transactionStatus) {
-  let query = `UPDATE relays
-    SET
-      updated_at = NOW()`;
+  let query = 'UPDATE relays SET updated_at = NOW()';
 
   if (transactionStatus === 1) {
     query += ', total_transferred_tx = total_transferred_tx + 1';
@@ -94,7 +73,7 @@ async function updateRelayTransaction(address, transactionStatus) {
 }
 
 async function getRelayAddresses() {
-  const query = `SELECT address FROM relays`;
+  const query = 'SELECT address FROM relays';
 
   try {
     const { rows } = await pgPool.query(query);
