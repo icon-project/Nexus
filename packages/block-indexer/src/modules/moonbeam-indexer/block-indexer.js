@@ -151,6 +151,9 @@ async function start() {
   logger.info('Moonbeam BSH SCORE event map: %O', eventMapBSHScore);
   logger.info('Moonbeam BMC Management action map: %O', actionMap);
 
+  const tokenContractMap = await getTokenContractMap();
+  logger.info('Moonbeam registered tokens: %O', tokenContractMap);
+
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.MOONBEAM_NETWORK_ID);
 
@@ -162,8 +165,6 @@ async function start() {
     const block = await getHeadBlock();
     blockHeight = block.number;
   }
-
-  getTokenContractMap();
 
   logger.info('Starting Moonbeam block indexer at block %d...', blockHeight);
   await retryGetBlockData();

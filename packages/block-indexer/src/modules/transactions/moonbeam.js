@@ -206,7 +206,7 @@ async function handleTransactionEvents(transaction, block) {
 
   // Only interested in transaction of a specific contract
   // BSH core for TransferStart event.
-  if (transaction.args.transaction && tokenContractMap.has(transaction.args.transaction.action.call.toLowerCase())) {
+  if (transaction.args.transaction.action.call && tokenContractMap.has(transaction.args.transaction.action.call.toLowerCase())) {
     debug('Transaction: %O', transaction);
 
     // Is it TransferStart?
@@ -217,7 +217,7 @@ async function handleTransactionEvents(transaction, block) {
       logger.info(`Get TransferStart event in tx ${transaction.hash}, block ${block.hash}`);
       await handleTransferStartEvent(transferStart, event, transaction, block);
     }
-  } else if (transaction.args.transaction && bmcAddress === transaction.args.transaction.action.call.toLowerCase()) {
+  } else if (transaction.args.transaction.action.call && bmcAddress === transaction.args.transaction.action.call.toLowerCase()) {
     // BMC for TransferEnd event.
     debug('Transaction: %O', transaction);
 

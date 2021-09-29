@@ -27,9 +27,6 @@ async function getLastSavedBlock() {
   }
 }
 
-async function saveTransaction(transaction) {
-}
-
 async function saveMintEvent(mintObj, totalToken) {
   preSave(mintObj);
 
@@ -73,7 +70,6 @@ async function getTotalTokenBurned(name) {
 
 module.exports = {
   saveBlock,
-  saveTransaction,
   getLastSavedBlock,
   saveBurnEvent,
   saveMintEvent,

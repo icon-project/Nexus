@@ -19,7 +19,7 @@ INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES 
 
 -- Issue #315
 
-INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x3', 'ICON', 0, NOW());
+INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x58eb1c', 'ICON', 0, NOW());
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x501', 'Moonbeam', 0, NOW());
 
 -- Issue #371

@@ -15,7 +15,6 @@ async function getTokensInfo(idEncode, valueEncode) {
   const valueDecoded = decode(valueEncode);
   const idDecoded = decode(idEncode);
   const id = '0x' + idDecoded[0].toString('hex').substring(1);
-
   const name = await getTokenNameById(id);
   const value = IconConverter.toNumber('0x' + valueDecoded[0].toString('hex'));
 
@@ -26,46 +25,11 @@ async function getTokensInfo(idEncode, valueEncode) {
   };
 }
 
-async function handleMintBurnEvents(txResult, transaction) {
-  if (
-    0 === txResult.eventLogs.length ||
-    1 !== txResult.status ||
-    TRANSFER_BATCH_PROTOTYPE !== txResult.eventLogs[0].indexed[0]
-  )
-    return false;
-
-  try {
-    const eventObj = await getMintBurnEvent(txResult, transaction);
-
-    if (!eventObj.tokenName) {
-      logger.debug('handleMintBurnEvents Token not registered with Icon blockchain');
-      return false;
-    }
-
-    if (ZERO_ADDRESS === txResult.eventLogs[0].indexed[2]) {
-      // mint when _from value is ZERO
-      const totalMintToken = await getTotalTokenAmount(eventObj.tokenName, MINT);
-
-      await saveToken(eventObj, totalMintToken, MINT);
-    } else if (ZERO_ADDRESS === txResult.eventLogs[0].indexed[3]) {
-      // burn when _to value is ZERO
-      const totalBurnToken = await getTotalTokenAmount(eventObj.tokenName, BURN);
-
-      await saveToken(eventObj, totalBurnToken, BURN);
-    } else {
-      return false;
-    }
-  } catch (error) {
-    logger.error('handleMintBurnEvents failed', { error });
-    throw error;
-  }
-}
-
 async function getMintBurnEvent(txResult, transaction) {
   try {
     for (let event of txResult.eventLogs) {
       if (TRANSFER_BATCH_PROTOTYPE === event.indexed[0]) {
-        let token = await getTokensInfo(event.data[0], event.data[1]);
+        const token = await getTokensInfo(event.data[0], event.data[1]);
 
         return {
           tokenName: token.tokenName,
@@ -82,7 +46,39 @@ async function getMintBurnEvent(txResult, transaction) {
       }
     }
   } catch (error) {
-    throw Error(`getMintBurnEvent incorrect eventLogs ${error.message}`);
+    logger.error('icon:getMintBurnEvent incorrect eventLogs %O', error);
+  }
+}
+
+// Mint: Alice on ICON got a DEV from Moonbeam (a DEV minted to Alice).
+// Burn: Alice on ICON send a DEV (which she got from Bob earlier) to Bob on Moonbeam (a DEV burned from Alice).
+async function handleMintBurnEvents(txResult, transaction) {
+  if (
+    0 === txResult.eventLogs.length ||
+    1 !== txResult.status ||
+    TRANSFER_BATCH_PROTOTYPE !== txResult.eventLogs[0].indexed[0]
+  )
+    return false;
+
+  try {
+    const eventObj = await getMintBurnEvent(txResult, transaction);
+
+    if (!eventObj || !eventObj.tokenName) {
+      logger.error('icon:handleMintBurnEvents Token not registered, tx_hash: %s', transaction.txHash);
+      return false;
+    }
+
+    // mint when _from value is ZERO
+    // burn when _to value is ZERO
+    if (ZERO_ADDRESS === txResult.eventLogs[0].indexed[2]) {
+      const totalMintToken = await getTotalTokenAmount(eventObj.tokenName, MINT);
+      await saveToken(eventObj, totalMintToken, MINT);
+    } else if (ZERO_ADDRESS === txResult.eventLogs[0].indexed[3]) {
+      const totalBurnToken = await getTotalTokenAmount(eventObj.tokenName, BURN);
+      await saveToken(eventObj, totalBurnToken, BURN);
+    }
+  } catch (error) {
+    logger.error('icon:handleMintBurnEvents failed %O', error);
   }
 }
 
@@ -156,6 +152,5 @@ function preSave(data) {
 }
 
 module.exports = {
-  handleMintBurnEvents,
-  getMintBurnEvent,
+  handleMintBurnEvents
 };

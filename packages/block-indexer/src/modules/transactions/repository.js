@@ -54,7 +54,7 @@ async function getBySerialNumber(serialNumber, networkId) {
       const values = [status, txInfo.txHash, txInfo.error, transt.tx_hash];
 
       await client.query(query, values);
-      debug('saveTransaction SQL %s %O:', query, values);
+      debug('setTransactionConfirmed SQL %s %O:', query, values);
     }
 
     await client.query('COMMIT');
