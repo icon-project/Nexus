@@ -1,40 +1,60 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { logger, pgPool } = require('../../common');
-const { v4: uuidv4 } = require('uuid');
+const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
 const { IconBuilder, HttpProvider } = require('icon-sdk-js');
+const { saveTokenInfo } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 
 async function handleTokenRegister(txResult, transaction) {
-  // Handle native coin.
-  if (1 === txResult.status && process.env.ICON_NATIVE_COIN_BSH_ADDRESS === transaction.to) {
+  if (1 !== txResult.status)
+    return false;
+
+  // Native coins (IRC31)
+  if (process.env.ICON_NATIVE_COIN_BSH_ADDRESS === transaction.to) {
     if ('register' === transaction.data.method) {
+      debug('Found coin register on %s', transaction.txHash);
+
       const id = await getTokenId(transaction.data.params._name);
 
       const tokenObj = {
         tokenId: id,
         tokenName: transaction.data.params._name,
         txHash: transaction.txHash,
-        contractAddress: transaction.to
+        contractAddress: transaction.to,
+        tokenAddress: transaction.to
       };
 
-      await saveTokenInfo(tokenObj);
+      if (await saveTokenInfo(tokenObj))
+        logger.info(`icon:handleTokenRegister saved coin ${tokenObj.tokenName} on tx ${tokenObj.txHash}`);
+    }
+  } else {
+    // IRC2 tokens
+    if ('register' === transaction.data.method) {
+      debug('Found token register on %s', transaction.txHash);
+      await registerIRC2Token(transaction);
     }
   }
 }
 
-async function saveTokenInfo(tokenObj) {
+// TODO: handle BMS's addService to only check against added BSH transactions.
+async function registerIRC2Token(transaction) {
   try {
-    const query = 'INSERT INTO token_info (id, network_id, token_id, token_name, tx_hash, create_at, contract_address, token_address) VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7)';
-    const values = [uuidv4(), process.env.ICON_NETWORK_ID, tokenObj.tokenId, tokenObj.tokenName, tokenObj.txHash, tokenObj.contractAddress, tokenObj.contractAddress];
+    const token = {
+      tokenId: transaction.data.params.symbol,
+      tokenName: transaction.data.params.name,
+      txHash: transaction.txHash,
+      contractAddress: transaction.to,
+      tokenAddress: transaction.data.params.address
+    };
 
-    await pgPool.query(query, values);
+    if (await saveTokenInfo(token))
+      logger.info(`icon:registerIRC2Token saved token ${token.tokenName} on tx ${token.txHash}`);
   } catch (error) {
-    logger.error('saveTokenInfo failed %O', error);
+    logger.error('icon:registerIRC2Token fails on tx %s %O', transaction.txHash, error);
   }
 }
 

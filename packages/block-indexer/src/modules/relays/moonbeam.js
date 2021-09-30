@@ -58,15 +58,16 @@ async function handleAddRelayAction(relayInput, transaction, block) {
       id: uuidv4(),
       serverStatus: 'Active',
     };
+
     const relayResult = await getRelayByAddress(relay.address);
 
     if (relayResult) {
       await updateRelay(relay);
-      logger.debug('Register the relay again');
+      logger.info('moonbeam:handleAddRelayAction updates relay %s at tx %s', relay.link, transaction.hash);
     } else {
       await createRelay(relay);
       relayAddressSet.add(relay.address);
-      logger.debug('Create new a relay');
+      logger.info('moonbeam:handleAddRelayAction registers relay %s at tx %s', relay.link, transaction.hash);
     }
   }
 }
@@ -74,11 +75,13 @@ async function handleAddRelayAction(relayInput, transaction, block) {
 async function handleRemoveRelayAction(relayInput, transaction, block) {
   let address = relayInput[1];
   await updateRelay({
-    address: address,
+    address,
     unregisteredTime: new Date(Number(block.extrinsics[0].args.now)),
     serverStatus: 'Inactive',
   });
   relayAddressSet.delete(address);
+
+  logger.info('moonbeam:handleRemoveRelayAction unregisters relay %s at tx %s', address, transaction.hash);
 }
 
 async function handleRelayAction(transaction, block) {

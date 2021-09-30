@@ -5,7 +5,7 @@
 ```json
   icon_tx Transaction result: e {
   icon_tx   status: 1,
-  icon_tx   to: 'cx439c888f491198c800b2e2c5566282b93e6fdab9',
+  icon_tx   to: 'cx439c888f491198c800b2e2c5566282b93e6fdab9', // ICON_BMC_ADDRESS
   icon_tx   txHash: '0x0bf8083bdf17667c9f91c0d321f1c64a775868441a71cae6ca0656b64fbab933',
   icon_tx   txIndex: 0,
   icon_tx   blockHeight: 600,
@@ -55,7 +55,7 @@ eth_tx {
   eth_tx       nonce: '93',
   eth_tx       gasPrice: '1000000000',
   eth_tx       gasLimit: '10000000',
-  eth_tx       action: { call: '0x5cc307268a1393ab9a764a20dace848ab8275c46' },
+  eth_tx       action: { call: '0x5cc307268a1393ab9a764a20dace848ab8275c46' }, // MOONBEAM_BMC_ADDRESS
   eth_tx       value: '0',
   eth_tx       input: '0x6f4779cc000000000000000000000000000000...',
   eth_tx       signature: {
