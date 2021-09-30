@@ -66,7 +66,6 @@ async function retryGetTransactionResult(tx, block) {
 async function runBlockHandlers(block) {
   for (const tx of block.confirmedTransactionList) {
     debugTx('Transaction: %O', tx);
-
     await retryGetTransactionResult(tx, block);
   }
 

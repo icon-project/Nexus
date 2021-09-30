@@ -32,22 +32,26 @@ async function handleRelayAction(txResult, transaction) {
 
       if (relayResult) {
         await updateRelay(relay);
-        logger.debug('Register the relay again');
+        logger.info('icon:handleRelayAction updates relay %s at tx %s', relay.link, transaction.txHash);
       } else {
         await createRelay(relay);
 
         // add address to set
         relayAddressSet.add(relay.address);
 
-        logger.debug('Create new a relay');
+        logger.info('icon:handleRelayAction registers relay %s at tx %s', relay.link, transaction.txHash);
       }
     } else if (REMOVE_RELAY_PROTOTYPE == transData.method) {
       let params = transData.params;
+
       await updateRelay({
         address: params._addr,
         unregisteredTime: new Date(transaction.timestamp / 1000),
         serverStatus: 'Inactive',
       });
+
+      logger.info('icon:handleRelayAction unregisters relay %s at tx %s', params._addr, transaction.txHash);
+
       // remove address from set
       relayAddressSet.delete(params._addr);
     }
