@@ -4,11 +4,12 @@ const { findLogEventByName, decodeEventLog, bscEventMap } = require('../common/e
 
 const web3 = new Web3(process.env.BSC_API_URL);
 
-async function testEventHandler(tx, txReceipt) {
+async function testEventHandler(tx, txReceipt, block) {
   const mint = findLogEventByName('CoinMinted', bscEventMap, txReceipt.logs);
 
   if (mint) {
     const log = decodeEventLog(web3, bscEventMap, 'CoinMinted', mint);
+    console.log(web3.utils.hexToUtf8(log.notes));
     debugTx(log);
   }
 

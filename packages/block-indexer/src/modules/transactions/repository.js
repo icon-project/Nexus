@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('db');
-const { pgPool, logger, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+const { pgPool, logger, logDbError, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
 
 async function getLatestTransactionByToken(tokenName) {
   try {
@@ -41,17 +41,19 @@ async function getBySerialNumber(serialNumber, networkId) {
     const client = await pgPool.connect();
     await client.query('BEGIN');
 
-    for (let transt of transactions) {
+    for (const tx of transactions) {
       const query = `
         UPDATE ${TRANSACTION_TBL_NAME}
         SET
           ${TRANSACTION_TBL.status} = $1,
           tx_hash_end = $2,
           tx_error = $3,
-          ${TRANSACTION_TBL.updateAt} = NOW()
+          ${TRANSACTION_TBL.updateAt} = NOW(),
+          block_hash_end = $5
         WHERE ${TRANSACTION_TBL.txHash} = $4`;
 
-      const values = [status, txInfo.txHash, txInfo.error, transt.tx_hash];
+      // blockHash is needed for Moonbeam since Sidecar can only query blocks.
+      const values = [status, txInfo.txHash, txInfo.error, tx.tx_hash, txInfo.blockHash];
 
       await client.query(query, values);
       debug('setTransactionConfirmed SQL %s %O:', query, values);
@@ -71,13 +73,10 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
       ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
-      ${TRANSACTION_TBL.updateAt})
-    VALUES (
-      $1, $2, $3, $4,
-      $5, $6, $7, $8,
-      $9, $10, $11, $12,
-      NOW(), NOW())`;
+      ${TRANSACTION_TBL.updateAt}, block_hash)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13)`;
 
+    // blockHash is needed for Moonbeam since Sidecar can only query blocks.
     const insertValues = [
       transaction.fromAddress,
       transaction.tokenName,
@@ -90,7 +89,8 @@ async function saveTransaction(transaction) {
       transaction.btpFee,
       transaction.networkFee,
       transaction.status,
-      transaction.totalVolume
+      transaction.totalVolume,
+      transaction.blockHash
     ];
 
     debug('saveTransaction SQL %s %O:', insertStatement, insertValues);
@@ -106,7 +106,7 @@ async function getTokenContractAddresses() {
     const { rows } = await pgPool.query('SELECT DISTINCT(contract_address) FROM token_info');
     return rows.map(row => row.contract_address);
   } catch (error) {
-    logger.error('getTokenContractAddresses fails: %O', error);
+    logger.error('getTokenContractAddresses fails: %s, %s', error.message, error.detail);
   }
 }
 

@@ -36,11 +36,13 @@ function findLogEventByName(eventName, eventMap, eventLogs) {
 }
 
 function buildBscEventMap() {
-  const web3 = new Web3(process.env.BSC_API_URL);
-  const testEvents = getEventInfoFromAbi(web3, testAbi, ['CoinMinted', 'CoinSent']);
+  if (0 === bscEventMap.size) {
+    const web3 = new Web3(process.env.BSC_API_URL);
+    const testEvents = getEventInfoFromAbi(web3, testAbi, ['CoinMinted', 'CoinSent']);
 
-  for (const event of testEvents)
-    bscEventMap.set(event.event.name, event);
+    for (const event of testEvents)
+      bscEventMap.set(event.event.name, event);
+  }
 
   return bscEventMap;
 }
@@ -48,6 +50,5 @@ function buildBscEventMap() {
 module.exports = {
   decodeEventLog,
   buildBscEventMap,
-  findLogEventByName,
-  bscEventMap
+  findLogEventByName
 };

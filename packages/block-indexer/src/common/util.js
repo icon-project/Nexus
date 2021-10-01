@@ -43,9 +43,14 @@ async function tokenToUsd(name, value) {
   }
 }
 
+function logDbError(message, error) {
+  logger.error(`${message}: (${error.message}, ${error.detail})`);
+}
+
 module.exports = {
   getCurrentTimestamp,
   hexToFixedAmount,
   hexToIcxUnit,
-  tokenToUsd
+  tokenToUsd,
+  logDbError
 };

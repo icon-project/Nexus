@@ -344,6 +344,9 @@ CREATE TABLE IF NOT EXISTS public.transactions
     to_address character varying(100),
     from_address character varying(100),
     tx_hash character varying(100),
+    tx_hash_end character varying(100),
+    block_hash character varying(100),
+    block_hash_end character varying(100),
     create_at timestamp without time zone NOT NULL,
     update_at timestamp without time zone,
     network_id character varying(20) NOT NULL,
@@ -352,7 +355,6 @@ CREATE TABLE IF NOT EXISTS public.transactions
     network_fee numeric NOT NULL,
     status integer NOT NULL DEFAULT 0,
     total_volume numeric NOT NULL DEFAULT 0,
-    tx_hash_end character varying(100),
     tx_error character varying(100),
     CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT transactions_serial_number_network_id_key UNIQUE (serial_number, network_id)

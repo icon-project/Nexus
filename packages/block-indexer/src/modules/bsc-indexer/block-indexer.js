@@ -6,7 +6,8 @@ const Web3 = require('web3');
 const { logger } = require('../../common');
 const { buildBscEventMap } = require('../common/evmlog');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
-const { testEventHandler } = require('./testhandler');
+const { getTokenContractMap } = require('../transactions/model');
+const { handleTransactionEvents } = require('../transactions/bsc');
 
 const web3 = new Web3(process.env.BSC_API_URL);
 
@@ -22,16 +23,17 @@ const watchedTxReceipt = {
   ]),
   toAddress: new Map([
     ['0xa6A2E181b4e981b036aB8A787A3E348ABdfcFc96', true], // my Tien test address
-    ['0x61852aA6049336319Cceab16F5796Bcc64fC2348', true] // my Hoa test address
+    ['0x61852aA6049336319Cceab16F5796Bcc64fC2348', true], // my Hoa test address
+    ['0xcd87416886D4422968D007e9752FF7ee959B675D', true] // TiendqCoin contract
   ])
 };
 
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, txReceipt, block) {
   try {
-    if (txReceipt) {
+    if (txReceipt && txReceipt.status) {
       // handlers need tx receipt go here.
-      await testEventHandler(tx, txReceipt);
+      await handleTransactionEvents(tx, txReceipt, block);
     } else {
       // handlers don't need tx receipt go here.
     }
@@ -72,9 +74,10 @@ async function getBlockData() {
     const timeout = block ? 3000 : 15000; // Block time ~3 seconds, wait longer for new blocks created.
 
     if (block) {
+      debug('Block: %O', block);
+
       if (block.transactions.length > 0) {
         logger.info(`Received BSC block ${block.number}, ${block.hash}`);
-        debug('Block: %O', block);
 
         await saveIndexedBlockHeight(block.number, process.env.BSC_NETWORK_ID);
         await runBlockHandlers(block);
@@ -100,6 +103,12 @@ async function start() {
   const eventMap = buildBscEventMap();
   logger.info('BSC event map: %O', eventMap);
 
+  const contractMap = await getTokenContractMap();
+  logger.info('BSC registered tokens: %O', contractMap);
+
+  for (const [key, value] of contractMap.entries())
+    watchedTxReceipt.toAddress.set(key, value);
+
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.BSC_NETWORK_ID);
 
@@ -107,9 +116,8 @@ async function start() {
       ++ blockHeight;
   }
 
-  if (0 === blockHeight) {
+  if (0 === blockHeight)
     blockHeight = await web3.eth.getBlockNumber();
-  }
 
   logger.info('Starting BSC block indexer at block %d...', blockHeight);
   await retryGetBlockData();

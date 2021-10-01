@@ -42,7 +42,7 @@ async function confirmTransferEnd(event, txInfo) {
     txInfo.error = TRANSACTION_STATUS.failed === statusCode ? web3.utils.hexToUtf8(data[2]) : '';
     await setTransactionConfirmed([transaction], txInfo, statusCode);
   } catch (error) {
-    logger.error('confirmTransferEnd failed confirm transaction %O', error);
+    logger.error('icon:confirmTransferEnd failed confirm transaction %O', error);
   }
 }
 
@@ -72,9 +72,6 @@ async function handleTransactionEvents(txResult, transaction) {
       if (TRANFER_START_PROTOTYPE !== event.indexed[0])
         continue;
 
-      // Issue: BSC event is different.
-      console.log(event.data);
-
       const data = event.data;
       const details = decode(data[2])[0];
       const tokenName = details[0].toString('utf8');
@@ -89,7 +86,7 @@ async function handleTransactionEvents(txResult, transaction) {
         value: value,
         toAddress: data[0],
         txHash: txResult.txHash,
-        blockHeight: txResult.blockHeight,
+        blockHash: '',
         status: TRANSACTION_STATUS.pending,
         blockTime: Math.floor(transaction.timestamp / 1000), // microsecond to millisecond
         networkId: process.env.ICON_NETWORK_ID,
@@ -111,7 +108,7 @@ async function handleTransactionEvents(txResult, transaction) {
 
       confirmTransferEnd(event, {
         txHash: txResult.txHash,
-        blockHeight: txResult.blockHeight
+        blockHash: ''
       });
     }
   }
