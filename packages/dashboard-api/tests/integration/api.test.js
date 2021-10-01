@@ -134,63 +134,50 @@ describe('Test /relays', () => {
 });
 
 describe('Test /networks', () => {
-/*
-+ curl http://localhost:8000/v1/networks
-+ jq
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   343  100   343    0     0   1383      0 --:--:-- --:--:-- --:--:--  1383
-{
-  "content": {
-    "networks": [
-      {
-        "name": "Icon",
-        "id": "0x101c5b",
-        "pathLogo": "./image/logo/icon-icx-logo.png",
-        "url": "https://iconrepublic.org/",
-        "usd24h": 0,
-        "usdAllTime": 0,
-        "mintFee": 0,
-        "burnFee": 0
-      },
-      {
-        "name": "BSC",
-        "id": "0x97",
-        "pathLogo": "./image/logo/binance-bnb-logo.png",
-        "url": "https://www.binance.com/",
-        "usd24h": 0,
-        "usdAllTime": 0,
-        "mintFee": 0,
-        "burnFee": 0
-      }
-    ]
-  }
-}
+  test('GET /networks', async () => {
+    const expected = {
+      networks: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          pathLogo: expect.any(String),
+          url: expect.any(String),
+          usd24h: expect.any(Number),
+          usdAllTime: expect.any(Number),
+          mintFee: expect.any(Number),
+          burnFee: expect.any(Number)
+        })
+      ])
+    };
 
-+ curl http://localhost:8000/v1/networks/0x501
-+ jq
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   202  100   202    0     0    567      0 --:--:-- --:--:-- --:--:--   567
-{
-  "content": {
-    "tokens": [
-      {
-        "nameToken": "DEV",
-        "volume24h": 0,
-        "volume24hUSD": 0,
-        "volumeAllTime": 0,
-        "volumeAlTimeUSD": 0
-      },
-      {
-        "nameToken": "ICX",
-        "volume24h": 0,
-        "volume24hUSD": 0,
-        "volumeAllTime": 0,
-        "volumeAlTimeUSD": 0
-      }
-    ]
-  }
-}
-*/
+    const response = await request(app)
+      .get('/v1/networks')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body.content).toMatchObject(expected);
+  });
+
+  test('GET /networks/0x501', async () => {
+    const expected = {
+      tokens: expect.arrayContaining([
+        expect.objectContaining({
+          nameToken: expect.any(String),
+          volume24h: expect.any(Number),
+          volume24hUSD: expect.any(Number),
+          volumeAllTime: expect.any(Number),
+          volumeAlTimeUSD: expect.any(Number)
+        })
+      ])
+    };
+
+    const response = await request(app)
+      .get('/v1/networks/0x501')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body.content).toMatchObject(expected);
+  });
 });
