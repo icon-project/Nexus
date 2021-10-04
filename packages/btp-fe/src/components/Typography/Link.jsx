@@ -1,40 +1,34 @@
 import styled from 'styled-components/macro';
 import { Link as RouterLink } from 'react-router-dom';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
+import { TextMixin } from 'components/Typography/Text';
 
 import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.p`
-  > a.medium {
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 1px;
+  > a.md {
+    ${SubTitleMixin.md};
     color: ${colors.tertiaryBase};
   }
 
-  > a.x-small {
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 16px;
-    letter-spacing: 0.75px;
+  > a.xs {
+    ${TextMixin.xsBold};
     color: ${colors.tertiaryBase};
   }
 
-  > a.small {
+  > a.sm {
     font-size: 14px;
     line-height: 20px;
   }
 
   > a.bold {
-    font-weight: 600;
+    ${TextMixin.bold};
   }
 
   ${({ block, center }) => `
     ${!block ? 'display: inline-block;' : ''}
     ${center ? 'text-align: center;' : ''}
   `}
-  > a.bold {
-    font-weight: 600;
-  }
 `;
 
 export const Link = ({ children, to, className, block = true, center, ...props }) => {

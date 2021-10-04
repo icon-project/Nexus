@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 import { colors } from 'components/Styles/Colors';
 
-import { normal, sm, md, lg } from './mixins';
+import { normal, sm, md, lg, bold } from './mixins';
 
 const StyledSubTitle = styled.h4`
   ${normal};
@@ -20,7 +20,7 @@ const StyledSubTitle = styled.h4`
   }
 
   &.bold {
-    font-weight: 600;
+    ${bold};
   }
 `;
 

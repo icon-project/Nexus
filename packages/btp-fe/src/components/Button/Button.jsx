@@ -2,16 +2,13 @@ import { Button as AntButton } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { colors } from '../Styles/Colors';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
+import { colors } from 'components/Styles/Colors';
 
 const ButtonStyle = styled(AntButton)`
+  ${SubTitleMixin.mdBold};
   border-radius: ${(props) => props.$borderRadius};
   border: none;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 1px;
   background-color: ${(props) => props.$backgroundColor};
   color: ${(props) => props.$textColor};
   width: ${(props) => props.width};

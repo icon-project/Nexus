@@ -322,7 +322,7 @@ const Header = () => {
               onClick={onAvatarClicked}
             />
             <span className="wallet-info">
-              <Text className="sm address">{shortedAddress}</Text>
+              <Text className="xs address">{shortedAddress}</Text>
               <SubTitle className="md bold">
                 {toSeparatedNumberString(balance)} {unit}
               </SubTitle>
