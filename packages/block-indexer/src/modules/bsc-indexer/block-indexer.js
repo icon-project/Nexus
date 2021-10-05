@@ -7,6 +7,7 @@ const { logger } = require('../../common');
 const { buildBscEventMap } = require('../common/evmlog');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
 const { testEventHandler } = require('./testhandler');
+const { handleTokenRegister } = require('./tokens');
 
 const web3 = new Web3(process.env.BSC_API_URL);
 
@@ -29,9 +30,10 @@ const watchedTxReceipt = {
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, txReceipt, block) {
   try {
-    if (txReceipt) {
+    if (txReceipt && txReceipt.status) {
       // handlers need tx receipt go here.
       await testEventHandler(tx, txReceipt);
+      // await handleTokenRegister(tx, txReceipt);
     } else {
       // handlers don't need tx receipt go here.
     }
