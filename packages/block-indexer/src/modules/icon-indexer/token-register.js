@@ -5,6 +5,7 @@ const { logger } = require('../../common');
 const IconService = require('icon-sdk-js');
 const { IconBuilder, HttpProvider } = require('icon-sdk-js');
 const { saveTokenInfo } = require('./repository');
+const { updateTokenContractMap } = require('../transactions/model');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -28,8 +29,10 @@ async function handleTokenRegister(txResult, transaction) {
         tokenAddress: transaction.to
       };
 
-      if (await saveTokenInfo(tokenObj))
+      if (await saveTokenInfo(tokenObj)) {
         logger.info(`icon:handleTokenRegister saved coin ${tokenObj.tokenName} on tx ${tokenObj.txHash}`);
+        updateTokenContractMap(tokenObj.contractAddress);
+      }
     }
   } else {
     // IRC2 tokens
@@ -51,8 +54,10 @@ async function registerIRC2Token(transaction) {
       tokenAddress: transaction.data.params.address
     };
 
-    if (await saveTokenInfo(token))
+    if (await saveTokenInfo(token)) {
       logger.info(`icon:registerIRC2Token saved token ${token.tokenName} on tx ${token.txHash}`);
+      updateTokenContractMap(token.contractAddress);
+    }
   } catch (error) {
     logger.error('icon:registerIRC2Token fails on tx %s %O', transaction.txHash, error);
   }

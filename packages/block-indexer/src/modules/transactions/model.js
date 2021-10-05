@@ -28,7 +28,12 @@ async function getTokenContractMap() {
   return tokenContractMap;
 }
 
+function updateTokenContractMap(newContract) {
+  tokenContractMap.set(newContract.toLowerCase(), newContract);
+}
+
 module.exports = {
   calculateTotalVolume,
-  getTokenContractMap
+  getTokenContractMap,
+  updateTokenContractMap
 };

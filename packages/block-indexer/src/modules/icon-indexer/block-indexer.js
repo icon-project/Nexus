@@ -132,7 +132,6 @@ async function start() {
 
   const tokenContractMap = await getTokenContractMap();
   logger.info('ICON registered tokens: %O', tokenContractMap);
-
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
   // FAS: logger.info('Loading registered token list...');
@@ -140,10 +139,9 @@ async function start() {
   // FAS: logger.info('Loaded registered token list', { tokens });
 
   await retryGetBlockData();
-
   logger.info('Started ICON block indexer');
 }
 
 module.exports = {
-  start,
+  start
 };
