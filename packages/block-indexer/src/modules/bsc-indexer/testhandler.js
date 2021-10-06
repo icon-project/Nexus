@@ -1,11 +1,11 @@
 const debugTx = require('debug')('bsc_tx');
 const Web3 = require('web3');
-const { findLogEventByName, decodeEventLog, bscEventMap } = require('../common/evmlog');
+const { findEventByName, decodeEventLog, bscEventMap } = require('../common/events');
 
 const web3 = new Web3(process.env.BSC_API_URL);
 
-async function testEventHandler(tx, txReceipt, block) {
-  const mint = findLogEventByName('CoinMinted', bscEventMap, txReceipt.logs);
+async function testEventHandler(tx, txReceipt) {
+  const mint = findEventByName('CoinMinted', bscEventMap, txReceipt.logs);
 
   if (mint) {
     const log = decodeEventLog(web3, bscEventMap, 'CoinMinted', mint);
@@ -27,7 +27,7 @@ async function testEventHandler(tx, txReceipt, block) {
   bsc_tx } +0ms
 */
 
-  const sent = findLogEventByName('CoinSent', bscEventMap, txReceipt.logs);
+  const sent = findEventByName('CoinSent', bscEventMap, txReceipt.logs);
 
   if (sent) {
     const log = decodeEventLog(web3, bscEventMap, 'CoinSent', sent);

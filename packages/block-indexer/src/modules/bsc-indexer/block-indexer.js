@@ -4,29 +4,24 @@ const debug = require('debug')('bsc');
 const debugTx = require('debug')('bsc_tx');
 const Web3 = require('web3');
 const { logger } = require('../../common');
-const { buildBscEventMap } = require('../common/evmlog');
+const { getBscEventMap } = require('../common/events');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/bsc');
-
-const web3 = new Web3(process.env.BSC_API_URL);
-
-let blockHeight = Number(process.env.BSC_BLOCK_HEIGHT);
-let isWaitToStop = false;
+const { handleMintBurnEvents } = require('./mint-burn');
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
   fromAddress: new Map([
-    ['0xa6A2E181b4e981b036aB8A787A3E348ABdfcFc96', true], // my Tien test address
-    ['0x61852aA6049336319Cceab16F5796Bcc64fC2348', true], // my Hoa test address
-    ['0xaa25Aa7a19f9c426E07dee59b12f944f4d9f1DD3', true] // faucet address
+    ['0xaa25Aa7a19f9c426E07dee59b12f944f4d9f1DD3', true] // e.g. faucet address
   ]),
   toAddress: new Map([
-    ['0xa6A2E181b4e981b036aB8A787A3E348ABdfcFc96', true], // my Tien test address
-    ['0x61852aA6049336319Cceab16F5796Bcc64fC2348', true], // my Hoa test address
-    ['0xcd87416886D4422968D007e9752FF7ee959B675D', true] // TiendqCoin contract
+    ['0xcd87416886D4422968D007e9752FF7ee959B675D', true] // e.g. TiendqCoin contract
   ])
 };
+
+const web3 = new Web3(process.env.BSC_API_URL);
+let blockHeight = Number(process.env.BSC_BLOCK_HEIGHT);
 
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, txReceipt, block) {
@@ -34,6 +29,7 @@ async function runTransactionHandlers(tx, txReceipt, block) {
     if (txReceipt && txReceipt.status) {
       // handlers need tx receipt go here.
       await handleTransactionEvents(tx, txReceipt, block);
+      await handleMintBurnEvents(tx, txReceipt);
     } else {
       // handlers don't need tx receipt go here.
     }
@@ -67,27 +63,24 @@ async function runBlockHandlers(block) {
 }
 
 async function getBlockData() {
-  if (!isWaitToStop) {
-    // ISSUE: it requires a manual fix to work with web3 1.5.0
-    // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
-    const block = await web3.eth.getBlock(blockHeight, true);
-    const timeout = block ? 3000 : 15000; // Block time ~3 seconds, wait longer for new blocks created.
+  // ISSUE: it requires a manual fix to work with web3 1.5.0
+  // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
+  const block = await web3.eth.getBlock(blockHeight, true);
+  const timeout = block ? 3000 : 15000; // Block time ~3 seconds, wait longer for new blocks created.
 
-    if (block) {
+  if (block) {
+    if (block.transactions.length > 0) {
+      logger.info(`Received BSC block ${block.number}, ${block.hash}`);
       debug('Block: %O', block);
 
-      if (block.transactions.length > 0) {
-        logger.info(`Received BSC block ${block.number}, ${block.hash}`);
-
-        await saveIndexedBlockHeight(block.number, process.env.BSC_NETWORK_ID);
-        await runBlockHandlers(block);
-      }
-
-      ++ blockHeight;
+      await saveIndexedBlockHeight(block.number, process.env.BSC_NETWORK_ID);
+      await runBlockHandlers(block);
     }
 
-    setTimeout(async () => await retryGetBlockData(), timeout);
+    ++ blockHeight;
   }
+
+  setTimeout(async () => await retryGetBlockData(), timeout);
 }
 
 async function retryGetBlockData() {
@@ -100,7 +93,7 @@ async function retryGetBlockData() {
 }
 
 async function start() {
-  const eventMap = buildBscEventMap();
+  const eventMap = getBscEventMap(web3);
   logger.info('BSC event map: %O', eventMap);
 
   const contractMap = await getTokenContractMap();

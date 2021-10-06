@@ -188,7 +188,7 @@ goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
 ### Bob to Alice
 
 ```bash
-# Bob sends 10 DEV to Alice
+# Bob sends 1 DEV to Alice
 encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transferNativeCoin('btp://0x58eb1c.icon/hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab')")
 
 eth transaction:send --network http://localhost:9933 \
@@ -196,7 +196,7 @@ eth transaction:send --network http://localhost:9933 \
   --gas 6721975 \
   --to $(cat ./config/bsh_core.moonbeam) \
   --data $encoded_data \
-  --value 10000000000000000000 | jq -r
+  --value 1000000000000000000 | jq -r
 
 # Bob sends 0.1 ICX to Alice
 encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transfer('ICX', '0x16345785D8A0000', 'btp://0x58eb1c.icon/hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab')")

@@ -55,6 +55,7 @@ async function handleTransferSingleEvent(transferSingle, evmLogEvent, transactio
         tokenId: event.id.startsWith('0x') ? event.id : '0x' + event.id,
         to: event.to,
         from: event.from,
+        networkId: process.env.MOONBEAM_NETWORK_ID,
         txHash: transaction.hash,
         blockHash: block.hash,
         blockHeight: Number(block.number),
@@ -72,7 +73,7 @@ async function handleTransferSingleEvent(transferSingle, evmLogEvent, transactio
       if (ZERO_ADDRESS === txMintBurnObj.from) {
         const totalToken = await getTotalTokenAmount(txMintBurnObj.tokenName, MINT);
         await saveToken(txMintBurnObj, totalToken, MINT);
-      } else if (process.env.MOONBEAM_BSH_CORE_ADDRESS === txMintBurnObj.to) {
+      } else if (bshCoreAddress === txMintBurnObj.to) {
         const totalToken = await getTotalTokenAmount(txMintBurnObj.tokenName, BURN);
         await saveToken(txMintBurnObj, totalToken, BURN);
       }

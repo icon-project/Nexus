@@ -3,7 +3,7 @@
 const Web3 = require('web3');
 const debug = require('debug')('bsc_tx');
 const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
-const { findLogEventByName, decodeEventLog, buildBscEventMap } = require('../common/evmlog');
+const { findEventByName, decodeEventLog, getBscEventMap } = require('../common/events');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
   getLatestTransactionByToken,
@@ -15,12 +15,12 @@ const {
 const web3 = new Web3(process.env.BSC_API_URL);
 
 async function handleTransactionEvents(tx, receipt, block) {
-  const eventMap = buildBscEventMap();
+  const eventMap = getBscEventMap();
   const tokenMap = await getTokenContractMap();
   const bmcAddress = process.env.BSC_BMC_ADDRESS.toLowerCase();
 
   if (tokenMap.has(tx.to.toLowerCase())) {
-    const tsEvent = findLogEventByName('TransferStart', eventMap, receipt.logs);
+    const tsEvent = findEventByName('TransferStart', eventMap, receipt.logs);
 
     if (tsEvent) {
       logger.info(`bsc:handleTransactionEvents get TransferStart event in tx ${tx.hash}`);
@@ -29,7 +29,7 @@ async function handleTransactionEvents(tx, receipt, block) {
       await handleTransferStartEvent(ts, tx, block);
     }
   } else if (bmcAddress === tx.to.toLowerCase()) {
-    const teEvent = findLogEventByName('TransferEnd', eventMap, receipt.logs);
+    const teEvent = findEventByName('TransferEnd', eventMap, receipt.logs);
 
     if (teEvent) {
       logger.info(`bsc:handleTransactionEvents get TransferEnd event in tx ${tx.hash}`);

@@ -97,7 +97,7 @@ async function saveTransaction(transaction) {
     await pgPool.query(insertStatement, insertValues);
     logger.info(`saveTransaction saved transaction in txHash ${transaction.txHash}`);
   } catch (error) {
-    logger.error('saveTransaction fails %s', error.message);
+    logger.error('saveTransaction fails: %s, %s', error.message, error.detail);
   }
 }
 
