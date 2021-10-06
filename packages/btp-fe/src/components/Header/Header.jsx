@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { Layout, Avatar } from 'antd';
+import { Avatar } from 'antd';
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
@@ -12,7 +12,7 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
-import { toSeparatedNumberString } from 'utils/app';
+import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
@@ -28,7 +28,7 @@ import Hana from 'assets/images/hana-wallet.png';
 
 const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
 
-const StyledHeader = styled(Layout.Header)`
+const StyledHeader = styled.header`
   height: 80px;
   width: 100%;
   padding: 0 160px 0 40.5px;
@@ -129,16 +129,6 @@ const StyledHeader = styled(Layout.Header)`
     }
   `}
 `;
-
-const hashShortener = (hashStr) => {
-  if (!hashStr) return '';
-  const len = hashStr.length;
-  if (len <= 10) {
-    return hashStr;
-  }
-
-  return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
-};
 
 const mockWallets = {
   [wallets.metamask]: {
