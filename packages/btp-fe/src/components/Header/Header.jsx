@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Layout, Avatar } from 'antd';
 
 import Nav from './Nav';

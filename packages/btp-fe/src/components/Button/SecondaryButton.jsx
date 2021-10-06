@@ -1,5 +1,5 @@
 import Button from './Button';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { colors } from 'components/Styles/Colors';
 
 const { primaryBrandLight, primaryBrand } = colors;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Table as antdTable } from 'antd';
 
 import { Pagination } from './Pagination';

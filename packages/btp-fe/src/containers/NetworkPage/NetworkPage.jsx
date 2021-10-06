@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Helmet } from 'components/Helmet';
 import { Table } from 'components/Table';

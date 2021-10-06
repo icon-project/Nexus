@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';

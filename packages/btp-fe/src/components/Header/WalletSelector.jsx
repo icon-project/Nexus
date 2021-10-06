@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { CheckOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 

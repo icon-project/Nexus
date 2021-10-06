@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from 'components/Styles/Colors';
