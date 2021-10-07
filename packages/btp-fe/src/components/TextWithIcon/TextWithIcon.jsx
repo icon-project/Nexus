@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Icon } from 'components/Icon';
 import { TextMixin } from 'components/Typography/Text';
 

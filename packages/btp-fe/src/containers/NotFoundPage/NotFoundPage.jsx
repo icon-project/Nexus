@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Link, Header } from 'components/Typography';
 import { Helmet } from 'components/Helmet';

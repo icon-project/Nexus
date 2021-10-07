@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Text } from 'components/Typography';
 import { Loader } from 'components/Loader';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';

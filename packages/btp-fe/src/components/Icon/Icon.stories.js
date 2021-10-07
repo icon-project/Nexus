@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { Icon } from './Icon';

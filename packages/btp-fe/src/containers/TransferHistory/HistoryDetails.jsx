@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
