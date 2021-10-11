@@ -37,7 +37,7 @@ const auction = {
         this.setAuctionState(['auctions', auctions.content || []]);
         return auctions;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getAuctionDetails(auctionId) {
@@ -46,7 +46,7 @@ const auction = {
         this.setAuctionState(['currentAuction', auction.content || {}]);
         return auction;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getBids({ pageIndex, auctionId }) {
@@ -55,7 +55,7 @@ const auction = {
         const bids = await getAuctionBids(auctionId, pageIndex - 1);
         this.setAuctionState(['bids', bids]);
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getAvailableAssets() {
@@ -63,7 +63,7 @@ const auction = {
         const availableAssets = await getAvailableAssets();
         this.setAuctionState(['availableAssets', availableAssets.content]);
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getAvailableAssetsLast24h() {
@@ -74,7 +74,7 @@ const auction = {
           availableAmountLast24h?.content.last24hChange,
         ]);
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getFees() {
@@ -83,7 +83,7 @@ const auction = {
         this.setAuctionState(['fees', fees.content]);
         return fees;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
   }),
