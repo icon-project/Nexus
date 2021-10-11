@@ -43,8 +43,8 @@ export const NETWORKS = {
     endpoint: icon.endpoint || 'http://54.251.114.18:9080/api/v3',
     nid: icon.nid || '0x58eb1c',
     networkAddress: icon.networkAddress || '0x58eb1c.icon',
-    irc31token: icon.irc31token || 'cxbac7add3adffb4ca43426ede92662da7dcc0453f',
-    BSHAddress: icon.BSHAddress || 'cx489ed02580ce5cab57925317373310205417c2b7', // used to get the BTP fee from getBTPfee()
+    irc31token: icon.irc31token || 'cxa1229bef36fbdc2d75c8d4ec4b39102586f81eab',
+    BSHAddress: icon.BSHAddress || 'cxc53d35b4cd28150ee1bd9a36a6d882a5af37b7fd', // used to get the BTP fee from getBTPfee()
   },
   sejong: {
     name: 'Sejong Testnet',
