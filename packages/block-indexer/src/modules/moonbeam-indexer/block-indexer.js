@@ -9,7 +9,7 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 const { getTokenContractMap } = require('../transactions/model');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
-const { handleMintBurnEvents } = require('./mint-burn');
+const { handleMintBurnEvents } = require('../min-burn/moonbeam');
 const { buildActionMap } = require('./actions');
 const { handleRelayActions } = require('../relays/moonbeam');
 
@@ -157,8 +157,7 @@ async function start() {
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.MOONBEAM_NETWORK_ID);
 
-    if (blockHeight > 0)
-      ++ blockHeight;
+    if (blockHeight > 0) ++blockHeight;
   }
 
   if (0 === blockHeight) {

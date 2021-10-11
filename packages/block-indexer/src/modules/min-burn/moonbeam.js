@@ -1,4 +1,3 @@
-
 'use strict';
 
 const Web3 = require('web3');
@@ -6,10 +5,12 @@ const debug = require('debug')('moonbeam_tx');
 const debugEvmLog = require('debug')('evmlog');
 const debugEthTx = require('debug')('eth_tx');
 const { logger, ICX_LOOP_UNIT } = require('../../common');
-const { getEventMapBSHScore } = require('./events');
-const { saveBurnEvent, saveMintEvent, getTotalTokenBurned, getTotalTokenMinted } = require('./repository');
-const abiBSHScore= require('./abi/BSHScore.abi.json');
+const { getEventMapBSHScore } = require('../moonbeam-indexer/events');
+const abiBSHScore = require('../moonbeam-indexer/abi/BSHScore.abi.json');
+const { saveToken, getTotalTokenAmount } = require('./repository');
 
+const MINT = 'mint';
+const BURN = 'burn';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const bshCoreAddress = process.env.MOONBEAM_BSH_CORE_ADDRESS.toLowerCase();
@@ -26,7 +27,9 @@ async function handleMintBurnEvents(transaction, block) {
     const event = findEvmLogByEventHash(transferSingle.hash, transaction.events);
 
     if (event) {
-      logger.info(`moonbeam: handleMintBurnEvents get TransferSingle event in tx ${transaction.hash}`);
+      logger.info(
+        `moonbeam: handleMintBurnEvents get TransferSingle event in tx ${transaction.hash}`,
+      );
       await handleTransferSingleEvent(transferSingle, event, transaction, block);
     }
   }
@@ -34,13 +37,11 @@ async function handleMintBurnEvents(transaction, block) {
 
 function findEvmLogByEventHash(hash, events) {
   for (const event of events) {
-    if ('evm' !== event.method.pallet || 'Log' !== event.method.method)
-      continue;
+    if ('evm' !== event.method.pallet || 'Log' !== event.method.method) continue;
 
     debugEvmLog('evm.Log: %O', event);
 
-    if (hash === event.data[0].topics[0])
-      return event;
+    if (hash === event.data[0].topics[0]) return event;
   }
 }
 
@@ -69,11 +70,11 @@ async function handleTransferSingleEvent(transferSingle, evmLogEvent, transactio
       }
 
       if (ZERO_ADDRESS === txMintBurnObj.from) {
-        const totalToken = await getTotalTokenMinted(txMintBurnObj.tokenName);
-        await saveMintEvent(txMintBurnObj, totalToken);
-      } else if (bshCoreAddress === txMintBurnObj.to) {
-        const totalToken = await getTotalTokenBurned(txMintBurnObj.tokenName);
-        await saveBurnEvent(txMintBurnObj, totalToken);
+        const totalToken = await getTotalTokenAmount(txMintBurnObj.tokenName, MINT);
+        await saveToken(txMintBurnObj, totalToken, MINT);
+      } else if (process.env.MOONBEAM_BSH_CORE_ADDRESS === txMintBurnObj.to) {
+        const totalToken = await getTotalTokenAmount(txMintBurnObj.tokenName, BURN);
+        await saveToken(txMintBurnObj, totalToken, BURN);
       }
     }
   } catch (error) {
@@ -89,8 +90,7 @@ async function getTokenNameById(id) {
 
   for (let name of tokenNames) {
     const tokenId = await BSHContract.methods.coinId(name).call();
-    if (id === tokenId)
-      return name;
+    if (id === tokenId) return name;
   }
 
   return false;
@@ -122,7 +122,7 @@ function getTransferSingleEvent(inputs, evmLogData) {
         from: result.from.toLowerCase(),
         to: result.to.toLowerCase(),
         id: result.id,
-        value: Number(result.value) / ICX_LOOP_UNIT
+        value: Number(result.value) / ICX_LOOP_UNIT,
       };
 
       return data;
@@ -133,5 +133,5 @@ function getTransferSingleEvent(inputs, evmLogData) {
 }
 
 module.exports = {
-  handleMintBurnEvents
+  handleMintBurnEvents,
 };
