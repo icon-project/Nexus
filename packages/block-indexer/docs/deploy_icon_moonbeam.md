@@ -135,65 +135,87 @@ Alice balance: .989999999999950000 (DEV)
 ```bash
 # Alice ICX
 goloop rpc balance hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab --uri http://localhost:9080/api/v3/icon | jq -r
+# 9899.89467937500000000
 
 # Alice DEV
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method coinId --param _coinName=DEV
 
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/irc31token.icon) --method balanceOf --param _owner=hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab --param _id=0x8f7ce30203eb1ff1d26492c94d9ab04d63f4e54f1f9e677e8d4a0d6daaab2dd
+# 10.889999999999900000
 
 # it doesn't work, responses 0
-goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method balanceOf --param _owner=hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab --param _coinName=DEV
+# goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method balanceOf --param _owner=hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab --param _coinName=DEV
 
 # Bob DEV
 eth address:balance --network http://localhost:9933 0xF8aC273f62F2D1D7283be823400e05Aeddc389F5
+# 1008.999468423
 
 # Bob ICX
 eth abi:add bshcore ./config/abi.bsh_core.json
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "getBalanceOf('0xF8aC273f62F2D1D7283be823400e05Aeddc389F5', 'ICX')"
+# 9.900000000000000000
 ```
 
 ## Test accounts
 
+### Alice to Bob
+
 ```bash
-# DEV from Alice to Bob
-goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
-  --to $(cat ./config/nativeCoinBsh.icon) --method transfer \
-  --param _to=btp://0x501.pra/0xF8aC273f62F2D1D7283be823400e05Aeddc389F5 --param _value=100000 \
-  --param _coinName=DEV \
-  --key_store config/alice.ks.json --key_password $(cat ./config/alice.secret) --step_limit 10000000000 --nid 0x58eb1c
-
-# Tien
-goloop ks gen -o tiendq.ks.json -p test12345
-# hx0a349be9845c75f8c8945451e212b86110b36e2c
-
-# deposite Tien 100K ICX
-goloop rpc sendtx transfer --uri http://localhost:9080/api/v3/icon \
---to hx0a349be9845c75f8c8945451e212b86110b36e2c --value 0xd3c21bcecceda1000000 \
---key_store ./config/goloop.keystore.json --key_password gochain --step_limit 10000000000 --nid 0x58eb1c
-
-goloop rpc txresult 0x7de58745bdee55e487784de9f23d311cf628808bc5955c124d1e9af7a6c196fc --uri http://localhost:9080/api/v3/icon
-
-# deposite Alice 100K ICX
-goloop rpc sendtx transfer --uri http://localhost:9080/api/v3/icon \
---to hx548a976f8eda5d7c0afcb99110ca49434cdf921b --value 0xd3c21bcecceda1000000 \
---key_store ./config/goloop.keystore.json --key_password gochain --step_limit 10000000000 --nid 0x58eb1c
-
-goloop rpc balance hx0a349be9845c75f8c8945451e212b86110b36e2c --uri http://localhost:9080/api/v3/icon | jq -r
-goloop rpc balance hx548a976f8eda5d7c0afcb99110ca49434cdf921b --uri http://localhost:9080/api/v3/icon | jq -r
-
-# Tien send 5 ICX to Bob
+# Alice sends 1 ICX to Bob
 goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
   --to $(cat ./config/nativeCoinBsh.icon) --method transferNativeCoin \
-  --param _to=btp://0x501.pra/0xDC70A1b79415034Ba08fa235b09f6b3f75c1e1d4 --value 0x4563918244f40000 \
-  --key_store tiendq.ks.json --key_password test12345 --step_limit 10000000000 --nid 0x58eb1c
+  --param _to=btp://0x501.pra/0xF8aC273f62F2D1D7283be823400e05Aeddc389F5 --value 1000000000000000000 \
+  --key_store config/alice.ks.json --key_password $(cat ./config/alice.secret) --step_limit 10000000000 --nid 0x58eb1c
 
-# Bob send 5 DEV to Tien
-encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transferNativeCoin('btp://0x58eb1c.icon/hx0a349be9845c75f8c8945451e212b86110b36e2c')")
+# setApprovalForAll
+goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/irc31token.icon) --method isApprovedForAll --param _owner=hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab --param _operator=$(cat ./config/nativeCoinBsh.icon)
+
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
+  --to $(cat ./config/irc31token.icon) --method setApprovalForAll \
+  --param _operator=$(cat ./config/nativeCoinBsh.icon) --param _approved=0x1 \
+  --key_store config/alice.ks.json --key_password $(cat ./config/alice.secret) --step_limit 10000000000 --nid 0x58eb1c
+
+goloop rpc txresult 0x69b5cc4d7c37ecbe4fcd42a4aa3fbc53a34eef977d4f4bad03b53e4f787bbccb --uri http://localhost:9080/api/v3/icon
+
+# Alice sends 0.1 DEV to Bob
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
+  --to $(cat ./config/nativeCoinBsh.icon) --method transfer \
+  --param _to=btp://0x501.pra/0xF8aC273f62F2D1D7283be823400e05Aeddc389F5 --param _value=100000000000000000 \
+  --param _coinName=DEV \
+  --key_store config/alice.ks.json --key_password $(cat ./config/alice.secret) --step_limit 10000000000 --nid 0x58eb1c
+```
+
+### Bob to Alice
+
+```bash
+# Bob sends 10 DEV to Alice
+encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transferNativeCoin('btp://0x58eb1c.icon/hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab')")
 
 eth transaction:send --network http://localhost:9933 \
-  --pk 0x1477fb360c00fd580829d22d842d69034df1e54c563e5f56b8b21a88a36c9678 \
+  --pk 0xb7de716a085c14b353dec6c516c508bff76b0ac82ec96d854b9d66e58737c22e \
   --gas 6721975 \
   --to $(cat ./config/bsh_core.moonbeam) \
   --data $encoded_data \
-  --value 5000000000000000000 | jq -r
+  --value 10000000000000000000 | jq -r
+
+# Bob sends 0.1 ICX to Alice
+encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transfer('ICX', '0x16345785D8A0000', 'btp://0x58eb1c.icon/hxfa47ea3eaa7ac1bebb6f9dc26a489e6759eb6dab')")
+
+eth transaction:send --network http://localhost:9933 \
+  --pk 0xb7de716a085c14b353dec6c516c508bff76b0ac82ec96d854b9d66e58737c22e \
+  --gas 6721975 \
+  --to $(cat ./config/bsh_core.moonbeam) \
+  --data $encoded_data | jq -r
+```
+
+```bash
+# https://docs.openzeppelin.com/contracts/3.x/api/token/erc1155#IERC1155-setApprovalForAll-address-bool-
+# setApprovalForAll with eth-cli REPL
+eth repl --network http://localhost:9933 --pk 0xb7de716a085c14b353dec6c516c508bff76b0ac82ec96d854b9d66e58737c22e ./config/bsh_core_abi.json@0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963
+
+bshCoreAbi.methods.isApprovedForAll('0xF8aC273f62F2D1D7283be823400e05Aeddc389F5', '0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963').call()
+
+bshCoreAbi.methods.setApprovalForAll('0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963', true).send({ from: '0xF8aC273f62F2D1D7283be823400e05Aeddc389F5', gas: 6721975 }).then(console.log)
+
+.exit
 ```

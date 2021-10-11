@@ -53,19 +53,17 @@ async function getMintBurnEvent(txResult, transaction) {
 // Mint: Alice on ICON got a DEV from Moonbeam (a DEV minted to Alice).
 // Burn: Alice on ICON send a DEV (which she got from Bob earlier) to Bob on Moonbeam (a DEV burned from Alice).
 async function handleMintBurnEvents(txResult, transaction) {
-  if (
-    0 === txResult.eventLogs.length ||
-    1 !== txResult.status ||
-    TRANSFER_BATCH_PROTOTYPE !== txResult.eventLogs[0].indexed[0]
-  )
+  if (0 === txResult.eventLogs.length || 1 !== txResult.status || TRANSFER_BATCH_PROTOTYPE !== txResult.eventLogs[0].indexed[0])
     return false;
 
   try {
     const eventObj = await getMintBurnEvent(txResult, transaction);
 
     if (!eventObj || !eventObj.tokenName) {
-      logger.error('icon:handleMintBurnEvents Token not registered, tx_hash: %s', transaction.txHash);
+      logger.error('icon:handleMintBurnEvents get unregistered token in tx_hash: %s', transaction.txHash);
       return false;
+    } else {
+      logger.info(`icon:handleMintBurnEvents get TransferBatch event in tx ${transaction.txHash}`);
     }
 
     // mint when _from value is ZERO

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.4;
 
+// https://remix.ethereum.org/
 // https://testnet.bscscan.com/address/0x03a323c620fa7690469351d0b86bdc3b2b6ebfe6
 
 contract TiendqCoin {

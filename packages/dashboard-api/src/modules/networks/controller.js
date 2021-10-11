@@ -4,11 +4,11 @@ const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
 
 async function getNetworksInfo(request, response) {
-  const networkConnectedIcon = await model.getListNetworkConnectedIcon();
+  const networks = await model.getListNetworkConnectedIcon();
 
   response.status(HttpStatus.OK).json({
     content:{
-      networks: networkConnectedIcon,
+      networks
     }
   });
 }

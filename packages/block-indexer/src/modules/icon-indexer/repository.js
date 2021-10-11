@@ -1,6 +1,6 @@
 'use strict';
 
-const { pgPool, logger } = require('../../common');
+const { pgPool, logger, logDbError } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
 
 async function saveBlock(block) {
@@ -35,7 +35,7 @@ async function saveTokenInfo(tokenObj) {
     await pgPool.query(query, values);
     return true;
   } catch (error) {
-    logger.error('saveTokenInfo failed %O', error);
+    logger.error('saveTokenInfo fails: %s, %s', error.message, error.detail);
   }
 }
 

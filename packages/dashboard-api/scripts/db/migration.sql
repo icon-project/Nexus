@@ -277,3 +277,9 @@ ALTER TABLE public.transactions
 ALTER TABLE ONLY public.token_info
     ADD COLUMN token_address character varying(100) NOT NULL DEFAULT '',
     ADD COLUMN contract_address character varying(100) NOT NULL DEFAULT '';
+
+-- Issue #312
+
+ALTER TABLE ONLY public.transactions
+    ADD COLUMN block_hash character varying(100),
+    ADD COLUMN block_hash_end character varying(100);

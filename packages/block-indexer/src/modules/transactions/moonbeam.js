@@ -128,7 +128,7 @@ async function handleTransferStartEvent(transferStart, evmLogEvent, transaction,
         btpFee: event.fee,
         serialNumber: event.sn,
         txHash: transaction.hash,
-        blockHeight: Number(block.number),
+        blockHash: block.hash,
         status: TRANSACTION_STATUS.pending,
         blockTime: Number(block.extrinsics[0].args.now),
         networkId: process.env.MOONBEAM_NETWORK_ID,
@@ -142,7 +142,7 @@ async function handleTransferStartEvent(transferStart, evmLogEvent, transaction,
       await saveTransaction(txData);
     }
   } catch (error) {
-    logger.error(`moonbeam:handleTransferStartEvent fails: ${error.message} in tx ${transaction.hash}, block ${block.hash}`);
+    logger.error(`moonbeam:handleTransferStartEvent fails: ${error.message} in tx ${transaction.hash}`);
   }
 }
 
@@ -172,14 +172,14 @@ async function handleTransferEndEvent(transferEnd, evmLogEvent, transaction, blo
       // Issue: need to keep hashes of both start and end transactions.
       const txData = {
         txHash: transaction.hash,
-        blockHeight: Number(block.number),
+        blockHash: block.hash,
         error: TRANSACTION_STATUS.failed === statusCode ? event.response : ''
       };
 
       await setTransactionConfirmed([updatingTx], txData, statusCode);
     }
   } catch (error) {
-    logger.error(`moonbeam:handleTransferEndEvent fails: ${error.message} in tx ${transaction.hash}, block ${block.hash}`);
+    logger.error(`moonbeam:handleTransferEndEvent fails: ${error.message} in tx ${transaction.hash}`);
   }
 }
 
@@ -214,7 +214,7 @@ async function handleTransactionEvents(transaction, block) {
     const event = findEvmLogByEventHash(transferStart.hash, transaction.events);
 
     if (event) {
-      logger.info(`Get TransferStart event in tx ${transaction.hash}, block ${block.hash}`);
+      logger.info(`Get TransferStart event in tx ${transaction.hash}`);
       await handleTransferStartEvent(transferStart, event, transaction, block);
     }
   } else if (transaction.args.transaction.action.call && bmcAddress === transaction.args.transaction.action.call.toLowerCase()) {
@@ -226,7 +226,7 @@ async function handleTransactionEvents(transaction, block) {
     const event = findEvmLogByEventHash(transferEnd.hash, transaction.events);
 
     if (event) {
-      logger.info(`Get TransferEnd event in tx ${transaction.hash}, block ${block.hash}`);
+      logger.info(`Get TransferEnd event in tx ${transaction.hash}`);
       await handleTransferEndEvent(transferEnd, event, transaction, block);
     }
   }
