@@ -30,7 +30,7 @@ const network = {
           this.setNetworks(networks.content.networks || []);
           return networks;
         } catch (error) {
-          dispatch.modal.handleError();
+          dispatch.modal.handleError(error);
         }
       }
     },
@@ -40,7 +40,7 @@ const network = {
         this.setNetworkDetails(network.content.network);
         return network;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
   }),

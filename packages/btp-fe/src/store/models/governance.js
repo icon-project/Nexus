@@ -29,7 +29,7 @@ const governance = {
         this.setGovernanceState(['relays', relays || {}]);
         return relays;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getRelayCandidates({ page, limit }) {
@@ -38,7 +38,7 @@ const governance = {
         this.setGovernanceState(['relayCandidates', relayCandidates || []]);
         return relayCandidates;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
     async getTotalRewardFund() {
@@ -54,7 +54,7 @@ const governance = {
         ]);
         return totalRewardFund;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
   }),

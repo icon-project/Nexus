@@ -24,7 +24,7 @@ const app = {
         this.setAppState(['appInfo', appInfo || {}]);
         return appInfo;
       } catch (error) {
-        dispatch.modal.handleError();
+        dispatch.modal.handleError(error);
       }
     },
   }),
