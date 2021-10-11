@@ -1,7 +1,7 @@
+const debug = require('debug')('moonbeam_tx');
 const Web3 = require('web3');
 const { v4: uuidv4 } = require('uuid');
 const { logger } = require('../../common');
-const { debug } = require('../../common/logger');
 const { getActionMap } = require('../moonbeam-indexer/actions');
 const {
   getRelayByAddress,
@@ -16,17 +16,20 @@ const REMOVE_RELAY_PROTOTYPE = 'removeRelay';
 const ADD_RELAY_PARAMS_STRUCTURE = ['string', 'address[]'];
 const REMOVE_RELAY_PARAMS_STRUCTURE = ['string', 'address'];
 const SUCCESS_ACTION = 'Returned';
-const FAILED_ACTION = 'Reverted';
+const bmcMgmtAddress = process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS.toLowerCase();
+
 let relayAddressSet;
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
-function destructureTransactionInput(transaction, transactionInside, actionName, structure) {
+function destructureTransactionInput(transaction, innerTx, actionName, structure) {
   const actionMap = getActionMap();
   const relayAction = actionMap.get(actionName);
   let regrex = new RegExp(`(${relayAction.hash})|\\w+`, 'g');
+
   // split the function name hashed and action params
-  let transInputs = transactionInside.input.match(regrex);
+  let transInputs = innerTx.input.match(regrex);
+
   /**
    *  Event data of an action succeed
    * ["0xf24ff3a9cf04c71dbc94d0b566f7a27b94566cac",
@@ -35,6 +38,7 @@ function destructureTransactionInput(transaction, transactionInside, actionName,
    * {"succeed":"Returned"}]
    */
   let eventData = transaction.events[0].data;
+
   if (
     transInputs[0] === relayAction.hash &&
     eventData[3] &&
@@ -42,6 +46,7 @@ function destructureTransactionInput(transaction, transactionInside, actionName,
   ) {
     return web3.eth.abi.decodeParameters(structure, transInputs[1]);
   }
+
   return null;
 }
 
@@ -51,7 +56,7 @@ async function handleAddRelayAction(relayInput, transaction, block) {
 
   for (const relayAddress of addresses) {
     let relay = {
-      address: relayAddress,
+      address: relayAddress.toLowerCase(),
       link: linkToBMC,
       registeredTime: new Date(Number(block.extrinsics[0].args.now)),
       unregisteredTime: null,
@@ -74,48 +79,50 @@ async function handleAddRelayAction(relayInput, transaction, block) {
 
 async function handleRemoveRelayAction(relayInput, transaction, block) {
   let address = relayInput[1];
+
   await updateRelay({
-    address,
+    address: address.toLowerCase(),
     unregisteredTime: new Date(Number(block.extrinsics[0].args.now)),
     serverStatus: 'Inactive',
   });
-  relayAddressSet.delete(address);
 
+  relayAddressSet.delete(address);
   logger.info('moonbeam:handleRemoveRelayAction unregisters relay %s at tx %s', address, transaction.hash);
 }
 
-async function handleRelayAction(transaction, block) {
+async function handleRelayActions(transaction, block) {
   // Only interested in Ethereum transactions.
   if ('ethereum' !== transaction.method.pallet || 'transact' !== transaction.method.method)
     return false;
 
+  // Cache relay addresses and count tx handled by relays.
   await handleRelayTransaction(transaction);
-  let transactionInside = transaction.args.transaction;
-  if (
-    transactionInside &&
-    process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS === transactionInside.action.call
-  ) {
-    debug('Transaction: %O', transaction);
 
-    let addRelayInput = destructureTransactionInput(
+  const innerTx = transaction.args.transaction;
+
+  if (innerTx && bmcMgmtAddress === innerTx.action.call) {
+    debug('BMC transaction: %O', transaction);
+
+    const addRelayInput = destructureTransactionInput(
       transaction,
-      transactionInside,
+      innerTx,
       ADD_RELAY_PROTOTYPE,
       ADD_RELAY_PARAMS_STRUCTURE,
-    );
-    let removeRelayInput = destructureTransactionInput(
-      transaction,
-      transactionInside,
-      REMOVE_RELAY_PROTOTYPE,
-      REMOVE_RELAY_PARAMS_STRUCTURE,
     );
 
     if (addRelayInput) {
       await handleAddRelayAction(addRelayInput, transaction, block);
-    }
+    } else {
+      const removeRelayInput = destructureTransactionInput(
+        transaction,
+        innerTx,
+        REMOVE_RELAY_PROTOTYPE,
+        REMOVE_RELAY_PARAMS_STRUCTURE,
+      );
 
-    if (removeRelayInput) {
-      await handleRemoveRelayAction(removeRelayInput, transaction, block);
+      if (removeRelayInput) {
+        await handleRemoveRelayAction(removeRelayInput, transaction, block);
+      }
     }
   }
 
@@ -123,22 +130,23 @@ async function handleRelayAction(transaction, block) {
 }
 
 async function handleRelayTransaction(transaction) {
-  let eventData = transaction.events[0].data;
-
   if (!relayAddressSet) {
     const relays = await getRelayAddresses();
     relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
   }
 
+  const eventData = transaction.events[0].data;
+
   if (eventData) {
     const relayAddress = eventData[0];
-    let transactionStatus;
+
     if (relayAddressSet.has(relayAddress) && eventData[3]) {
-      eventData[3].succeed === SUCCESS_ACTION ? (transactionStatus = 1) : 0;
+      const transactionStatus = eventData[3].succeed === SUCCESS_ACTION ? 1 : 0;
       await updateRelayTransaction(relayAddress, transactionStatus);
     }
   }
 }
+
 module.exports = {
-  handleRelayAction,
+  handleRelayActions
 };

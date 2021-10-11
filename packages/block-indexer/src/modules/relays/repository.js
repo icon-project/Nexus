@@ -65,6 +65,7 @@ async function updateRelayTransaction(address, transactionStatus) {
   }
 
   query += ' WHERE address = $1 ';
+
   try {
     await pgPool.query(query, [address]);
   } catch (error) {
@@ -73,21 +74,18 @@ async function updateRelayTransaction(address, transactionStatus) {
 }
 
 async function getRelayAddresses() {
-  const query = 'SELECT address FROM relays';
-
   try {
-    const { rows } = await pgPool.query(query);
+    const { rows } = await pgPool.query('SELECT address FROM relays ORDER BY registered_time DESC');
 
     if (rows.length > 0) {
       const addesses = rows.map((item) => item.address);
       return addesses;
     }
-
-    return [];
   } catch (error) {
     logger.error('getRelayAddresses fails', { error });
-    return [];
   }
+
+  return [];
 }
 
 module.exports = {

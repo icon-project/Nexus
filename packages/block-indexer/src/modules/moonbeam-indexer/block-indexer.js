@@ -11,7 +11,7 @@ const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleMintBurnEvents } = require('./mint-burn');
 const { buildActionMap } = require('./actions');
-const { handleRelayAction } = require('../relays/moonbeam');
+const { handleRelayActions } = require('../relays/moonbeam');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let isWaitToStop = false;
@@ -20,7 +20,7 @@ async function runTransactionHandlers(transaction, block) {
   try {
     await handleTransactionEvents(transaction, block);
     await handleMintBurnEvents(transaction, block);
-    await handleRelayAction(transaction, block);
+    await handleRelayActions(transaction, block);
 
     // More transaction handlers go here.
   } catch (error) {
