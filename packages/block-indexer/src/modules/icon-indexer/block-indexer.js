@@ -11,7 +11,7 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 const { handleTransactionEvents } = require('../transactions/icon');
 const { getTokenContractMap } = require('../transactions/model');
 // FAS: const { handleTransferFeeEvents } = require('./transfer-fee');
-const { handleMintBurnEvents } = require('./mint-burn');
+const { handleMintBurnEvents } = require('../min-burn/icon');
 const { handleTokenRegister } = require('./token-register');
 const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
@@ -121,8 +121,7 @@ async function start() {
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
 
-    if (blockHeight > 0)
-      ++ blockHeight;
+    if (blockHeight > 0) ++blockHeight;
   }
 
   if (0 === blockHeight) {
