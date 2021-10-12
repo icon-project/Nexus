@@ -1,18 +1,18 @@
-- No goloop branch v0.9.7 (command doesn't work with tag).
-- Are they different, OpenJDK 11 vs. JDK11? Our current testnet requires JDK11
-- Is NodeJS 14.x LTS fine? Requiring the latest NodeJS version might affect our web apps and other JS tools.
-- I see this guide creates its own ICON network, can it be configured to integrate to our existing local ICON network?
-- It needs to be included in the guide (https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-915049744)
-- It needs to be included in the guide (https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-915100350)
-- These verifications should be included in the guide (https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916697472)
-- Is it fixed? (https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916713424)
+# Deploy BSC testnet notes
+
+## General
+
+goloop branch v0.9.7
+
+[Deployment guide](https://github.com/icon-project/btp/blob/btp_web3labs/doc/bsc-guide.md)
+[Transfer guide](https://github.com/icon-project/btp/blob/btp_web3labs/doc/token-transfer-guide.md)
 
 ## Requirements
 
 [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
 [Docker Compose](https://docs.docker.com/compose/install/)
 [OpenJDK 11](https://linuxize.com/post/install-java-on-ubuntu-18-04/)
-[NodeJS](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+[NodeJS 14.x LTS](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
 
 sudo apt-get install gcc g++ make
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
@@ -32,26 +32,22 @@ For install commands: https://github.com/icon-project/btp/tree/icondao/docker-co
 
 ### 1. Build goloop image.
 
+https://github.com/icon-project/btp/blob/btp_web3labs/doc/bsc-guide.md#build-goloop
+
 ### 2. Build Binance Smart Chain docker
 
-https://github.com/icon-project/btp/tree/btp_web3labs/devnet
+https://github.com/icon-project/btp/blob/btp_web3labs/doc/bsc-guide.md#build-binance-smart-chain-docker
 
 ```bash
 git clone -b btp_web3labs https://github.com/icon-project/btp
 cd btp
 docker build --tag bsc-node ./devnet/docker/bsc-node --build-arg KEYSTORE_PASS=Perlia0
 
-bsc-node image created but this is an [error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920558438)
-
-go mod download github.com/ethereum/go-ethereum
-go mod tidy
+# check for notes if it fails
 make
 
-[error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920561474)
-[error with go 1.17.x](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-920561474)
-
+# build dist contract jars for bmc, bmv, bsh and example irc2 token
 make dist-javascore
-[error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-921604124)
 
 make dist-sol
 make btpsimple-image
@@ -60,60 +56,28 @@ cd devnet/docker/icon-bsc
 docker-compose up -d
 ```
 
-once everything starts, the icon-bsc node will take some time to provision, once all the containers are up, you can get the keystores from the devnet/work folder. bsc.ks.json - for Binancesmartchain
+If all successful, this should start docker network containing provisioned goloop, binance smart chain and BSC ICON BTP relayer.
+
+You can get the keystores from the devnet/work folder. bsc.ks.json - for Binancesmartchain
 
 btp-icon container might take sometime, it usually takes around 15 minutes, but certainly not an hour or so.
 To check if the btp-icon container is started, you can check the logs to see if "provision is now complete" is present.
 
 And please keep an eye on the btp-icon logs, cause untill "Provision is now complete" there should be no errors.
 
-```bash
-ubuntu@ip-172-31-19-19:~/testnet/btp/devnet/docker/icon-bsc$ docker-compose up
-Creating network "icon-bsc_default" with the default driver
-Creating binancesmartchain ... done
-Creating goloop            ... done
-Creating btp-icon          ... done
-
-ERROR: for btp-bsc  Container "5eafacd5d129" is unhealthy.
-ERROR: Encountered errors while bringing up the project.
-```
-
-[logged error](https://github.com/icon-project/btp-dashboard/issues/308#issuecomment-922638506)
+### Clean up
 
 ```bash
-# if you still need a clean setup, you can do manually
-
-docker-compose down
+# clean up all manually
+cd ~/testnet/btp/devnet/docker/icon-bsc && docker-compose down
 sudo rm -rf work
-docker rmi -f icon-bsc_goloop
-docker rmi -f icon-bsc_btp-icon
-docker rm -f javascore-dist
-docker rmi -f btpsimple
+docker rm javascore-dist
+docker rmi -f bsc-node
 docker rmi -f btp/javascore
+docker rmi -f btpsimple
+docker rmi -f icon-bsc_btp-icon
+docker rmi -f icon-bsc_goloop
 ```
-
-verify JSON files https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916687302
-Could you also please verify if other folders "bmc"& "bmv" under /contracts/solidity has build folder?
-also if you can confirm if "Funding BSH" logs present at the end of the provision
-
-generate missing files https://github.com/icon-project/btp-dashboard/issues/273#issuecomment-916700815
-
-Restart at:
-
-REPOSITORY             TAG                 IMAGE ID       CREATED         SIZE
-goloop                 latest              253ece31904a   5 days ago      516MB
-goloop/java-deps       latest              e33e33c4e846   5 days ago      779MB
-goloop/go-deps         latest              7fc8a647901e   5 days ago      723MB
-goloop/py-deps         latest              fc07485bf8ab   5 days ago      300MB
-alpine                 3.12                48b8ec4ed9eb   2 weeks ago     5.58MB
-iconloop/goloop-icon   v0.9.7              2348df1648dc   3 months ago    516MB
-alpine                 3.14.0              d4ff818577bc   3 months ago    5.6MB
-node                   16.1-alpine         50389f7769d0   4 months ago    113MB
-hello-world            latest              d1165f221234   6 months ago    13.3kB
-python                 3.7.9-alpine3.12    b9aa0352c160   7 months ago    41.8MB
-golang                 1.14.7-alpine3.12   cf2ff089aa2c   12 months ago   287MB
-
-docker logs -f btp-icon &> btp-icon.log &
 
 ## Test
 
