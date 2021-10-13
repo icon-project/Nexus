@@ -44,6 +44,8 @@ cd btp
 docker build --tag bsc-node ./devnet/docker/bsc-node --build-arg KEYSTORE_PASS=Perlia0
 
 # check for notes if it fails
+go mod download github.com/ethereum/go-ethereum
+go mod tidy
 make
 
 # build dist contract jars for bmc, bmv, bsh and example irc2 token
