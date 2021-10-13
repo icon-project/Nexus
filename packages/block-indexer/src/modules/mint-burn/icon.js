@@ -1,10 +1,9 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { logger, ICX_LOOP_UNIT, pgPool } = require('../../common');
-const { v4: uuidv4 } = require('uuid');
 const { IconConverter } = require('icon-sdk-js');
 const { decode } = require('rlp');
+const { logger, ICX_LOOP_UNIT } = require('../../common');
 const { getTotalTokenAmount, getTokenNameById, saveToken } = require('./repository');
 
 const ZERO_ADDRESS = 'hx0000000000000000000000000000000000000000';
@@ -65,7 +64,7 @@ async function handleMintBurnEvents(txResult, transaction) {
     const eventObj = await getMintBurnEvent(txResult, transaction);
 
     if (!eventObj || !eventObj.tokenName) {
-      logger.error(
+      logger.warn(
         'icon:handleMintBurnEvents Token not registered, tx_hash: %s',
         transaction.txHash,
       );

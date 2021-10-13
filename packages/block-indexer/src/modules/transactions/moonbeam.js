@@ -14,6 +14,7 @@ const {
 } = require('./repository');
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
+const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
 
 /*
 {
@@ -202,7 +203,6 @@ async function handleTransactionEvents(transaction, block) {
 
   const eventMap = getEventMap();
   const tokenContractMap = await getTokenContractMap();
-  const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
 
   // Only interested in transaction of a specific contract
   // BSH core for TransferStart event.

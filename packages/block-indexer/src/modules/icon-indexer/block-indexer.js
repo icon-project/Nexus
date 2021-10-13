@@ -11,16 +11,14 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 const { handleTransactionEvents } = require('../transactions/icon');
 const { getTokenContractMap } = require('../transactions/model');
 // FAS: const { handleTransferFeeEvents } = require('./transfer-fee');
-const { handleMintBurnEvents } = require('../min-burn/icon');
+const { handleMintBurnEvents } = require('../mint-burn/icon');
 const { handleTokenRegister } = require('./token-register');
 const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
-
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
-let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
@@ -87,25 +85,23 @@ async function getBlockByHeight(height) {
 }
 
 async function getBlockData() {
-  if (!isWaitToStop) {
-    const block = await getBlockByHeight(blockHeight);
-    const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
+  const block = await getBlockByHeight(blockHeight);
+  const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
-    if (block) {
-      debug('Block: %O', block);
+  if (block) {
+    debug('Block: %O', block);
 
-      if (block.confirmedTransactionList.length > 0) {
-        logger.info(`Received ICON block ${block.height}, ${block.blockHash}`);
+    if (block.confirmedTransactionList.length > 0) {
+      logger.info(`Received ICON block ${block.height}, ${block.blockHash}`);
 
-        await saveIndexedBlockHeight(block.height, process.env.ICON_NETWORK_ID);
-        await runBlockHandlers(block);
-      }
-
-      ++blockHeight;
+      await saveIndexedBlockHeight(block.height, process.env.ICON_NETWORK_ID);
+      await runBlockHandlers(block);
     }
 
-    setTimeout(async () => await retryGetBlockData(), timeout);
+    ++blockHeight;
   }
+
+  setTimeout(async () => await retryGetBlockData(), timeout);
 }
 
 async function retryGetBlockData() {
@@ -118,6 +114,9 @@ async function retryGetBlockData() {
 }
 
 async function start() {
+  const tokenContractMap = await getTokenContractMap();
+  logger.info('ICON registered tokens: %O', tokenContractMap);
+
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
 
@@ -129,9 +128,6 @@ async function start() {
     blockHeight = block.height;
   }
 
-  const tokenContractMap = await getTokenContractMap();
-  logger.info('ICON registered tokens: %O', tokenContractMap);
-
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
   // FAS: logger.info('Loading registered token list...');
@@ -139,7 +135,6 @@ async function start() {
   // FAS: logger.info('Loaded registered token list', { tokens });
 
   await retryGetBlockData();
-
   logger.info('Started ICON block indexer');
 }
 

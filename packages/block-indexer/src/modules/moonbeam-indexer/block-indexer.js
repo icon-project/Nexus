@@ -9,12 +9,11 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 const { getTokenContractMap } = require('../transactions/model');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
-const { handleMintBurnEvents } = require('../min-burn/moonbeam');
+const { handleMintBurnEvents } = require('../mint-burn/moonbeam');
 const { buildActionMap } = require('./actions');
 const { handleRelayActions } = require('../relays/moonbeam');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
-let isWaitToStop = false;
 
 async function runTransactionHandlers(transaction, block) {
   try {
@@ -64,25 +63,23 @@ async function getBlockByHeight(height) {
 }
 
 async function getBlockData() {
-  if (!isWaitToStop) {
-    const block = await getBlockByHeight(blockHeight);
-    const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
+  const block = await getBlockByHeight(blockHeight);
+  const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
 
-    if (block) {
-      // Block always has one extrinsics of set timestamp.
-      if (block.extrinsics.length > 1) {
-        logger.info(`Received Moonbeam block ${block.number}, ${block.hash}`);
-        debug('Block: %O', block);
+  if (block) {
+    // Block always has one extrinsics of set timestamp.
+    if (block.extrinsics.length > 1) {
+      logger.info(`Received Moonbeam block ${block.number}, ${block.hash}`);
+      debug('Block: %O', block);
 
-        await saveIndexedBlockHeight(block.number, process.env.MOONBEAM_NETWORK_ID);
-        await runBlockHandlers(block);
-      }
-
-      ++blockHeight;
+      await saveIndexedBlockHeight(block.number, process.env.MOONBEAM_NETWORK_ID);
+      await runBlockHandlers(block);
     }
 
-    setTimeout(async () => await retryGetBlockData(), timeout);
+    ++blockHeight;
   }
+
+  setTimeout(async () => await retryGetBlockData(), timeout);
 }
 
 // Issue: Sidecar /blocks/head always return 0 so need to call RPC directly.
