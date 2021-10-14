@@ -67,6 +67,8 @@ async function getTransactionByTxHash(hash) {
                       ON ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.networkId} = ${NETWORK_TBL_NAME}.id
                     WHERE ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.txHash} = $1 `;
 
+  debug('getTransactionByTxHash:', query, hash);
+
   try {
     const { rows } = await pgPool.query(query, [hash]);
 

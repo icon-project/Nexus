@@ -13,7 +13,7 @@ const {
   getTotalBurnValue
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
-const { abiBSHScore } = require('../../../scripts/bsh_score.json');
+const abiBshScore = require('./abi/abi.bsh_core.json');
 
 const { HttpProvider, IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.ICON_API_URL);
@@ -21,7 +21,7 @@ const iconService = new IconService(provider);
 const web3 =  new Web3(process.env.MOONBEAM_API_URL);
 
 async function getTokensRegisteredMoonbeam() {
-  const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
+  const BSHContract = new web3.eth.Contract(abiBshScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
 
   try {
     const listTokens = await BSHContract.methods.coinNames().call();

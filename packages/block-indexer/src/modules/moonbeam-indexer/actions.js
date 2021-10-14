@@ -1,7 +1,7 @@
 'use strict';
 
 const Web3 = require('web3');
-const abiBMCManagement = require('./abi/BMCManagement.abi.json');
+const abiBmcManagement = require('./abi/abi.bmc_management.json');
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const actionMap = new Map();
@@ -23,7 +23,7 @@ function getActionInfoFromAbi(abi, actionNames) {
 }
 
 function buildActionMap() {
-  const bmcActions = getActionInfoFromAbi(abiBMCManagement, ['addRelay', 'removeRelay']);
+  const bmcActions = getActionInfoFromAbi(abiBmcManagement, ['addRelay', 'removeRelay']);
 
   for (const action of bmcActions) actionMap.set(action.action.name, action);
 
