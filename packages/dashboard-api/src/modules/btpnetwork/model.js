@@ -102,10 +102,12 @@ async function calculateVolumePercents() {
   let totalVolume = await getTotalTransactionAmount(false);
   let totalVolume24hAgo = await getTotalTransactionAmount(true);
 
-  if (totalVolume && totalVolume24hAgo)
-    return ((totalVolume - totalVolume24hAgo) / totalVolume * 100).toFixed(2);
-  else
-    return 0;
+  if (totalVolume && totalVolume24hAgo) {
+    const percentage = (totalVolume - totalVolume24hAgo) / totalVolume * 100;
+    return Number(percentage.toFixed(2));
+  }
+
+  return 0;
 }
 
 async function getTotalTransactionAmount(is24hAgo) {
@@ -127,7 +129,7 @@ async function getTotalTransactionAmount(is24hAgo) {
     const results = await Promise.all(promises);
     results.forEach((item) => (totalUSD += item));
 
-    return totalUSD;
+    return Number(totalUSD.toFixed(2));
   } catch (error) {
     logger.error('getTotalTransactionAmount failed', { error });
     throw error;
@@ -209,41 +211,38 @@ async function getMintedNetworks() {
 }
 
 async function getPercentsMintVolumeLast24h() {
-  const tokensCurrently = await getLatestTokensMinted();
+  const tokensCurrent = await getLatestTokensMinted();
   const tokensLast24h = await getTotalTokensMintedLast24h();
 
   // in the first 23 hours
-  if (0 === tokensLast24h) return 0;
+  if (0 === tokensLast24h)
+    return 0;
 
-  if (tokensCurrently && tokensLast24h) {
+  if (tokensCurrent && tokensLast24h) {
     try {
-      const totalUSD = await totalTokensToUSD(tokensCurrently);
+      const totalUSD = await totalTokensToUSD(tokensCurrent);
       const last24hUSD = await totalTokensToUSD(tokensLast24h);
+      const percentage = (totalUSD - last24hUSD) / last24hUSD * 100;
 
-      let percentage = (totalUSD - last24hUSD) / last24hUSD;
-
-      return Number((percentage * 100).toFixed(2));
+      return Number(percentage.toFixed(2));
     } catch (error) {
       logger.error('Fails to convert tokens to usd', { error });
       return 0;
     }
   }
+
   return 0;
 }
 
 async function totalTokensToUSD(tokens) {
   let promises = [];
-  let totalUSD = 0;
 
   for (let item of tokens) {
     promises.push(tokenToUsd(item.tokenName, item.tokenAmount));
   }
 
-  let totalAssets = await Promise.all(promises);
-
-  totalAssets.forEach((item) => {
-    totalUSD += item['USD'] ? item['USD'] : 0;
-  });
+  const totalAssets = await Promise.all(promises);
+  const totalUSD = totalAssets.reduce((total, value) => total + value, 0);
 
   return totalUSD;
 }
