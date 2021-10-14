@@ -6,7 +6,7 @@ const debugEvmLog = require('debug')('evmlog');
 const debugEthTx = require('debug')('eth_tx');
 const { logger, ICX_LOOP_UNIT } = require('../../common');
 const { getEventMapBSHScore } = require('../moonbeam-indexer/events');
-const abiBSHScore = require('../moonbeam-indexer/abi/BSHScore.abi.json');
+const abiBshScore = require('../moonbeam-indexer/abi/abi.bsh_core.json');
 const { saveToken, getTotalTokenAmount } = require('./repository');
 
 const MINT = 'mint';
@@ -86,7 +86,7 @@ async function handleTransferSingleEvent(transferSingle, evmLogEvent, transactio
 // Issue: it needs to query db of registered tokens.
 // Need to be changed in https://github.com/icon-project/btp-dashboard/issues/386
 async function getTokenNameById(id) {
-  const BSHContract = new web3.eth.Contract(abiBSHScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
+  const BSHContract = new web3.eth.Contract(abiBshScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
   const tokenNames = await BSHContract.methods.coinNames().call();
 
   for (let name of tokenNames) {

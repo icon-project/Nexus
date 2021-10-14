@@ -1,12 +1,12 @@
 'use strict';
 
 const Web3 = require('web3');
-const abiBSHPeriphery = require('./abi/BSHPeriphery.abi.json');
-const abiBSHScore= require('./abi/BSHScore.abi.json');
+const abiBshPeriphery = require('./abi/abi.bsh_periphery.json');
+const abiBshScore= require('./abi/abi.bsh_core.json');
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const eventMap = new Map();
-const eventMapBSHScore = new Map(); 
+const eventMapBSHScore = new Map();
 
 function getEventInfoFromAbi(abi, eventNames) {
   const events = abi.filter(e => 'event' === e.type && eventNames.includes(e.name));
@@ -25,7 +25,7 @@ function getEventInfoFromAbi(abi, eventNames) {
 }
 
 function buildEventMap() {
-  const bshEvents = getEventInfoFromAbi(abiBSHPeriphery, ['TransferStart', 'TransferEnd']);
+  const bshEvents = getEventInfoFromAbi(abiBshPeriphery, ['TransferStart', 'TransferEnd']);
 
   for (const event of bshEvents)
     eventMap.set(event.event.name, event);
@@ -34,7 +34,7 @@ function buildEventMap() {
 }
 
 function buildBSHScoreEventMap() {
-  const bshEvents = getEventInfoFromAbi(abiBSHScore, ['TransferBatch', 'TransferSingle']);
+  const bshEvents = getEventInfoFromAbi(abiBshScore, ['TransferBatch', 'TransferSingle']);
 
   for (const event of bshEvents)
     eventMapBSHScore.set(event.event.name, event);

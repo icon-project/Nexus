@@ -2,16 +2,16 @@
 -- Note: run script in migration.sql to update table networks before run scrips bellow
 
 INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-values('0x3', 'Icon', 'ICX', './image/logo/icon-icx-logo.png', 'https://iconrepublic.org/', 0.01, 0.01, NOW(), NOW());
+  VALUES('0x58eb1c', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://iconrepublic.org/', 0, 0, NOW(), NOW());
 
 INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-values('0x501', 'Moonbeam', 'GLMR','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network/', 0.02, 0.01, NOW(), NOW());
+  VALUES('0x501', 'Moonbeam', 'GLMR','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network/', 0, 0, NOW(), NOW());
 
 INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-values('0x1', 'NEARProtocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org/', 0.02, 0.02, NOW(), NOW());
+  VALUES('0x1', 'NEARProtocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org/', 0.02, 0.02, NOW(), NOW());
 
 INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-values('0x61', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com/', 0.01, 0.02, NOW(), NOW());
+  VALUES('0x61', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com/', 0.01, 0.02, NOW(), NOW());
 
 -- Issue #280
 
