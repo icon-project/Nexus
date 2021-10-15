@@ -10,14 +10,14 @@ async function getRegisteredTokens() {
     const tokens = await findAllTokens();
 
     for (const token of tokens)
-      registeredTokens.set(token.token_id, token);
+      registeredTokens.set(`${token.network_id}_${token.token_id}`, token);
   }
 
   return registeredTokens;
 }
 
-async function getTokenName(tokenId) {
-  const token = registeredTokens.get(tokenId);
+function getTokenName(networkId, tokenId) {
+  const token = registeredTokens.get(`${networkId}_${tokenId}`);
   return token ? token.token_name : '';
 }
 

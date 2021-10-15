@@ -119,7 +119,6 @@ const txResultMint = {
 };
 
 // Test case for mint event
-// Issue: getTokenNameById(id); should not query db.
 test.skip('should return mint event from tx result', async () => {
   const event = await getMintBurnEvent(txResultMint, transactionMint);
 
@@ -138,7 +137,6 @@ test.skip('should return mint event from tx result', async () => {
 });
 
 // Test case for burn event
-// Issue: getTokenNameById(id); should not query db.
 test.skip('should return burn event from tx result', async () => {
     const event = await getMintBurnEvent(txResultBurn, transactionBurn);
 

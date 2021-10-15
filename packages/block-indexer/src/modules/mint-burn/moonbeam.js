@@ -8,6 +8,7 @@ const { logger, ICX_LOOP_UNIT } = require('../../common');
 const { getEventMapBSHScore } = require('../moonbeam-indexer/events');
 const abiBshScore = require('../moonbeam-indexer/abi/abi.bsh_core.json');
 const { saveToken, getTotalTokenAmount } = require('./repository');
+const { getTokenName } = require('../tokens/model');
 
 const MINT = 'mint';
 const BURN = 'burn';
@@ -62,11 +63,10 @@ async function handleTransferSingleEvent(transferSingle, evmLogEvent, transactio
         blockTime: Number(block.extrinsics[0].args.now),
       };
 
-      // It's weird that ID returned here from contract does not have 0x prefix.
-      // Will be fixed in $402
-      txMintBurnObj.tokenName = await getTokenNameById(event.id);
+      txMintBurnObj.tokenName = getTokenName(process.env.MOONBEAM_NETWORK_ID, txMintBurnObj.tokenId);
 
       if (!txMintBurnObj.tokenName) {
+        logger.warn('moonbeam: handleTransferSingleEvent found an unregistered token ID=%s', txMintBurnObj.tokenId);
         return false;
       }
 
@@ -81,20 +81,6 @@ async function handleTransferSingleEvent(transferSingle, evmLogEvent, transactio
   } catch (error) {
     logger.error('moonbeam:handleTransferSingleEvent fails %O', error);
   }
-}
-
-// Issue: it needs to query db of registered tokens.
-// Need to be changed in https://github.com/icon-project/btp-dashboard/issues/386
-async function getTokenNameById(id) {
-  const BSHContract = new web3.eth.Contract(abiBshScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
-  const tokenNames = await BSHContract.methods.coinNames().call();
-
-  for (let name of tokenNames) {
-    const tokenId = await BSHContract.methods.coinId(name).call();
-    if (id === tokenId) return name;
-  }
-
-  return false;
 }
 
 /*
