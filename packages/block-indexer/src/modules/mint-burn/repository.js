@@ -24,13 +24,6 @@ async function getTotalTokenAmount(tokenName, tokenType) {
   }
 }
 
-async function getTokenNameById(id) {
-  const { rows } = await pgPool.query('SELECT token_name FROM token_info WHERE token_id = $1', [
-    id,
-  ]);
-  return rows[0] ? rows[0].token_name : false;
-}
-
 async function saveToken(object, totalToken, tokenType) {
   try {
     preSave(object);
@@ -77,6 +70,5 @@ function preSave(data) {
 
 module.exports = {
   saveToken,
-  getTokenNameById,
-  getTotalTokenAmount,
+  getTotalTokenAmount
 };

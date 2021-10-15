@@ -4,7 +4,8 @@ const debug = require('debug')('icon');
 const { IconConverter } = require('icon-sdk-js');
 const { decode } = require('rlp');
 const { logger, ICX_LOOP_UNIT } = require('../../common');
-const { getTotalTokenAmount, getTokenNameById, saveToken } = require('./repository');
+const { getTokenName } = require('../tokens/model');
+const { getTotalTokenAmount, saveToken } = require('./repository');
 
 const ZERO_ADDRESS = 'hx0000000000000000000000000000000000000000';
 const TRANSFER_BATCH_PROTOTYPE = 'TransferBatch(Address,Address,Address,bytes,bytes)';
@@ -15,7 +16,7 @@ async function getTokensInfo(idEncode, valueEncode) {
   const valueDecoded = decode(valueEncode);
   const idDecoded = decode(idEncode);
   const id = '0x' + idDecoded[0].toString('hex').substring(1);
-  const name = await getTokenNameById(id);
+  const name = getTokenName(process.env.ICON_NETWORK_ID, id);
   const value = IconConverter.toNumber('0x' + valueDecoded[0].toString('hex'));
 
   return {

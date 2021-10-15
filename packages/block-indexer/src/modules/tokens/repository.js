@@ -1,12 +1,17 @@
 'use strict';
 
+const debug = require('debug')('db');
 const { logger, pgPool } = require('../../common');
 
-async function getTokenNameById(tokenId) {
-  // const { rows } = await pgPool.query('SELECT total_token_amount FROM minted_tokens WHERE token_name = $1 ORDER BY create_at DESC LIMIT 1', [name]);
-  // return rows[0] ? Number(rows[0].total_token_amount) : 0;
+async function findAllTokens() {
+  try {
+    const { rows } = await pgPool.query('SELECT * FROM token_info ORDER BY create_at DESC');
+    return rows;
+  } catch (error) {
+    logger.error('findAllTokens fails: %s, %s', error.message, error.detail);
+  }
 }
 
 module.exports = {
-  getTokenNameById
+  findAllTokens
 };
