@@ -4,9 +4,6 @@ const http = require('http');
 const { logger } = require('../common');
 const app = require('./app');
 const blockIndexer = require('./block-indexer');
-const iconIndexer = require('../modules/icon-indexer');
-const moonbeamIndexer = require('../modules/moonbeam-indexer');
-const bscIndexer = require('../modules/bsc-indexer');
 
 async function start() {
   // Separate Express 'app' and 'server'
@@ -19,18 +16,6 @@ async function start() {
   });
 
   await blockIndexer.start();
-
-  if ('true' === process.env.ICON_INDEXER_ENABLED) {
-    iconIndexer.start();
-  }
-
-  if ('true' === process.env.MOONBEAM_INDEXER_ENABLED) {
-    moonbeamIndexer.start();
-  }
-
-  if ('true' === process.env.BSC_INDEXER_ENABLED) {
-    bscIndexer.start();
-  }
 }
 
 module.exports = {
