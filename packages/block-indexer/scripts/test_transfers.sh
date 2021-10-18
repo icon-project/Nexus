@@ -13,7 +13,7 @@ goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
   --param _to=$(cat bob.btp.address) --value 1000000000000000000 \
   --key_store alice.ks.json --key_password $(cat alice.secret) --step_limit 10000000000 --nid $(cat nid.icon)
 
-sleep 10s
+sleep 5s
 
 # Alice sends 0.1 DEV to Bob
 goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
@@ -22,7 +22,7 @@ goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
   --param _coinName=DEV \
   --key_store alice.ks.json --key_password $(cat alice.secret) --step_limit 10000000000 --nid $(cat nid.icon)
 
-sleep 10s
+sleep 5s
 
 # Bob sends 1 DEV to Alice
 alice_btp=$(cat alice.btp.address)
@@ -35,7 +35,7 @@ eth transaction:send --network http://localhost:9933 \
   --data $encoded_data \
   --value 1000000000000000000 | jq -r
 
-sleep 10s
+sleep 5s
 
 # Bob sends 0.1 ICX to Alice
 encoded_data=$(eth method:encode abi.bsh_core.json "transfer('ICX', '0x16345785D8A0000', '$alice_btp')")
