@@ -219,3 +219,27 @@ bshCoreAbi.methods.setApprovalForAll('0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963
 
 .exit
 ```
+
+## BSC
+
+1. Transfer Token(ETH) from ICON (Alice) -> BSC (BOB)
+
+```bash
+# deposit 10 ETH to Alice
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
+  --to $(cat work/irc2_token.icon) --method transfer \
+  --param _to=$(cat work/alice.ks.json | jq -r '.address') --param _value=10000000000000000000 \
+  --key_store work/goloop.keystore.json --key_password $(cat work/goloop.secret) --step_limit 10000000000 --nid 0x58eb1c
+
+# Alice send 10 ETH to BSH
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
+  --to $(cat work/irc2_token.icon) --method transfer \
+  --param _to=$(cat work/token_bsh.icon) --param _value=10000000000000000000 \
+  --key_store work/alice.ks.json --key_password $(cat work/alice.secret) --step_limit 10000000000 --nid 0x58eb1c
+
+# Alice send 10 ETH to Bob
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
+  --to $(cat work/token_bsh.icon) --method transfer \
+  --param tokenName=ETH --param to=$(cat work/bsc.ks.json | jq -r '.address') --param value=10000000000000000000 \
+  --key_store work/alice.ks.json --key_password $(cat work/alice.secret) --step_limit 10000000000 --nid 0x58eb1c
+```

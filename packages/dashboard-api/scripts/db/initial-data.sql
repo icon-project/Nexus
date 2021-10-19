@@ -3,17 +3,17 @@
 
 -- ### Supported networks ###
 
-INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-  VALUES('0x58eb1c', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://iconrepublic.org/', 0, 0, NOW(), NOW());
+INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
+  VALUES ('0x58eb1c', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://iconrepublic.org/', 0, 0, NOW(), NOW());
 
-INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-  VALUES('0x501', 'Moonbeam', 'GLMR','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network/', 0, 0, NOW(), NOW());
+INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
+  VALUES ('0x501', 'Moonbeam', 'DEV','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network/', 0, 0, NOW(), NOW());
 
 --INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
 --  VALUES('0x1', 'NEARProtocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org/', 0, 0, NOW(), NOW());
 
-INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-  VALUES('0x97', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com/', 0, 0, NOW(), NOW());
+INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
+  VALUES ('0x97', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com/', 0, 0, NOW(), NOW());
 
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x58eb1c', 'ICON', 0, NOW());
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x501', 'Moonbeam', 0, NOW());
@@ -21,19 +21,16 @@ INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES 
 
 -- ### Token prices ###
 
---INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
---  VALUES (1, 'BTC', 62836.14, 1, NOW(), NOW());
-
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+INSERT INTO public.token_prices (cmc_id, name, price, active, created_time, updated_time)
   VALUES (1027, 'ETH', 3823.55, 1, NOW(), NOW());
 
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+INSERT INTO public.token_prices (cmc_id, name, price, active, created_time, updated_time)
   VALUES (52, 'DEV', 0.01, 1, NOW(), NOW());
 
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+INSERT INTO public.token_prices (cmc_id, name, price, active, created_time, updated_time)
   VALUES (2099, 'ICX', 2.09, 1, NOW(), NOW());
 
-INSERT INTO public.token_prices(cmc_id, name, price, active, created_time, updated_time)
+INSERT INTO public.token_prices (cmc_id, name, price, active, created_time, updated_time)
   VALUES (1839, 'BNB', 493.95, 1, NOW(), NOW());
 
 -- ### Registered tokens ###
