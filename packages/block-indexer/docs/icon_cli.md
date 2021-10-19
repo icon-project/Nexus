@@ -29,3 +29,5 @@ eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_cor
 eth transaction:get --network http://localhost:9933 0xb5b49cd71c1d403db3cb0e7a0a8eeddf8fba93eb15930709ca5583912fc64d6c
 
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "coinNames()"
+
+eth block:get --network http://localhost:8545 246
