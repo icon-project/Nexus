@@ -16,7 +16,7 @@ import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-import { Header as Heading, SubTitle, Text } from '../Typography';
+import { SubTitle, Text } from '../Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -25,8 +25,9 @@ import defaultAvatar from 'assets/images/avatar.svg';
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
+import logo from 'assets/images/logo-nexus-white.png';
 
-const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
+const { darkBG, grayText, grayLine } = colors;
 
 const StyledHeader = styled.header`
   height: 80px;
@@ -128,6 +129,10 @@ const StyledHeader = styled.header`
       }
     }
   `}
+`;
+
+const Logo = styled.img`
+  width: 42.65px;
 `;
 
 const mockWallets = {
@@ -291,11 +296,8 @@ const Header = () => {
           )}
         </>
       )}
-      <div className="left-side">
-        <Heading className="xs bold" color={primaryBrandLight}>
-          BTP Dashboard
-        </Heading>
-      </div>
+      <Logo src={logo} alt="btp logo" />
+
       <HamburgerButton
         className={`menu-icon ${showMenu && 'active'}`}
         onClick={() => setShowMenu(!showMenu)}
