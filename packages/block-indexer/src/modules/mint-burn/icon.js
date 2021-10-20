@@ -38,10 +38,8 @@ async function getMintBurnEvent(txResult, transaction) {
           to: event.indexed[3],
           from: event.indexed[2],
           txHash: txResult.txHash,
-          blockHash: txResult.blockHash,
-          blockHeight: txResult.blockHeight,
           blockTime: Math.floor(transaction.timestamp / 1000),
-          networkId: process.env.ICON_NETWORK_ID,
+          networkId: process.env.ICON_NETWORK_ID
         };
       }
     }
@@ -53,11 +51,8 @@ async function getMintBurnEvent(txResult, transaction) {
 // Mint: Alice on ICON got a DEV from Moonbeam (a DEV minted to Alice).
 // Burn: Alice on ICON send a DEV (which she got from Bob earlier) to Bob on Moonbeam (a DEV burned from Alice).
 async function handleMintBurnEvents(txResult, transaction) {
-  if (
-    0 === txResult.eventLogs.length ||
-    1 !== txResult.status ||
-    TRANSFER_BATCH_PROTOTYPE !== txResult.eventLogs[0].indexed[0]
-  )
+  if (process.env.ICON_BMC_ADDRESS !== transaction.to || 1 !== txResult.status || 0 === txResult.eventLogs.length
+    || TRANSFER_BATCH_PROTOTYPE !== txResult.eventLogs[0].indexed[0])
     return false;
 
   try {
@@ -73,9 +68,13 @@ async function handleMintBurnEvents(txResult, transaction) {
     // mint when _from value is ZERO
     // burn when _to value is ZERO
     if (ZERO_ADDRESS === txResult.eventLogs[0].indexed[2]) {
+      logger.info(`icon:Mint ${eventObj.tokenValue} ${eventObj.tokenName} in tx ${transaction.txHash}`);
+
       const totalMintToken = await getTotalTokenAmount(eventObj.tokenName, MINT);
       await saveToken(eventObj, totalMintToken, MINT);
     } else if (ZERO_ADDRESS === txResult.eventLogs[0].indexed[3]) {
+      logger.info(`icon:Burn ${eventObj.tokenValue} ${eventObj.tokenName} in tx ${transaction.txHash}`);
+
       const totalBurnToken = await getTotalTokenAmount(eventObj.tokenName, BURN);
       await saveToken(eventObj, totalBurnToken, BURN);
     }

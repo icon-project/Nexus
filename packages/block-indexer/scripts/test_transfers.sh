@@ -1,35 +1,49 @@
 #!/bin/sh
+# chmod +x test_transfers.sh
+# scp scripts/test_transfers.sh ubuntu@54.251.114.18:testnet/btp/docker-compose/goloop2moonbeam
 
-# Tien: hx0a349be9845c75f8c8945451e212b86110b36e2c
-# Dorothy: 0x773539d4Ac0e786233D90A233654ccEE26a613D9
-# 0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68
+set -x
 
-cd testnet/btp/docker-compose/goloop2moonbeam
+# cd ~/testnet/btp/docker-compose/goloop2moonbeam
+cd config
 
-# Tien send Dorothy 1 ICX
+# Alice sends 1 ICX to Bob
 goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
-  --to $(cat ./config/nativeCoinBsh.icon) --method transferNativeCoin \
-  --param _to=btp://0x501.pra/0x773539d4Ac0e786233D90A233654ccEE26a613D9 --value 1000000000000000000 \
-  --key_store tiendq.ks.json --key_password test12345 --step_limit 10000000000 --nid 0x58eb1c
+  --to $(cat nativeCoinBsh.icon) --method transferNativeCoin \
+  --param _to=$(cat bob.btp.address) --value 1000000000000000000 \
+  --key_store alice.ks.json --key_password $(cat alice.secret) --step_limit 10000000000 --nid $(cat nid.icon)
 
-# Tien send Dorothy 5 ICX
+sleep 10s
+
+# Alice sends 0.1 DEV to Bob
 goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
-  --to $(cat ./config/nativeCoinBsh.icon) --method transferNativeCoin \
-  --param _to=btp://0x501.pra/0x773539d4Ac0e786233D90A233654ccEE26a613D9 --value 5000000000000000000 \
-  --key_store tiendq.ks.json --key_password test12345 --step_limit 10000000000 --nid 0x58eb1c
+  --to $(cat nativeCoinBsh.icon) --method transfer \
+  --param _to=$(cat bob.btp.address) --param _value=100000000000000000 \
+  --param _coinName=DEV \
+  --key_store alice.ks.json --key_password $(cat alice.secret) --step_limit 10000000000 --nid $(cat nid.icon)
 
-goloop rpc txresult 0x062ae2ada01eb19c3e38938c1618b32c4e6f4e3c295dde50cd89ca0318c18fde --uri http://localhost:9080/api/v3/icon
+sleep 10s
 
-goloop rpc balance hx0a349be9845c75f8c8945451e212b86110b36e2c --uri http://localhost:9080/api/v3/icon | jq -r
-
-# Dorothy send Tien 1 DEV
-encoded_data=$(eth method:encode ./config/abi.bsh_core.json "transferNativeCoin('btp://0x58eb1c.icon/hx0a349be9845c75f8c8945451e212b86110b36e2c')")
+# Bob sends 1 DEV to Alice
+alice_btp=$(cat alice.btp.address)
+encoded_data=$(eth method:encode abi.bsh_core.json "transferNativeCoin('$alice_btp')")
 
 eth transaction:send --network http://localhost:9933 \
-  --pk 0x39539ab1876910bbf3a223d84a29e28f1cb4e2e456503e7e91ed39b2e7223d68 \
+  --pk $(cat bob.account | jq -r .privateKey) \
   --gas 6721975 \
-  --to $(cat ./config/bsh_core.moonbeam) \
+  --to $(cat bsh_core.moonbeam) \
   --data $encoded_data \
   --value 1000000000000000000 | jq -r
 
-eth transaction:get --network http://localhost:9933 0x4ccd5b5c217cc315bdae5694e2aa2b302052a6f62e9620651cdaa88fca3d0f02
+sleep 10s
+
+# Bob sends 0.1 ICX to Alice
+encoded_data=$(eth method:encode abi.bsh_core.json "transfer('ICX', '0x16345785D8A0000', '$alice_btp')")
+
+eth transaction:send --network http://localhost:9933 \
+  --pk $(cat bob.account | jq -r .privateKey) \
+  --gas 6721975 \
+  --to $(cat bsh_core.moonbeam) \
+  --data $encoded_data | jq -r
+
+cd ..

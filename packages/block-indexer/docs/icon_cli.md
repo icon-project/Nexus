@@ -1,8 +1,8 @@
 ## ICON
 
-goloop rpc txbyhash 0xbcc2f6841359c5069a7e7d42af1db0402c911f67e360b695d2cad27b5f7fab03 --uri http://localhost:9080/api/v3/icon
+goloop rpc txbyhash 0x21e82864d512107b7541094f1466f48142fac0416497555dae6a29f81c1763b1 --uri http://localhost:9080/api/v3/icon
 
-goloop rpc txresult 0x8d0f452b0a44deeb58ae03486d29124ca45252cfff7ca648caefd7bfd6e0f495 --uri http://localhost:9080/api/v3/icon
+goloop rpc txresult 0xa6c041a0c7ec952cfbbf4c335de46051d803fecea9dcbe419c7bde8a79afcaf7 --uri http://localhost:9080/api/v3/icon
 
 ./goloop rpc blockbyhash 0x7b8275119cb9735ac04f6f1da991bb04b8a4605f5ae2bdb604ef70bb09deaba0 --uri http://localhost:9082/api/v3
 
@@ -10,9 +10,13 @@ goloop rpc scoreapi --uri http://localhost:9080/api/v3/icon cxa1229bef36fbdc2d75
 
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method coinId --param _coinName=DEV
 
+goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat nativebsh.icon) --method coinId --param _coinName=BNB
+
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method coinNames
 
 goloop rpc lastblock --uri http://localhost:9080/api/v3/icon
+
+goloop rpc balance hxf6f258fdf3d090bce14f0073f9e5a5587384cc0c --uri http://localhost:9080/api/v3/icon
 
 curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "icx_getLastBlock"}' https://btp.net.solidwallet.io/api/v3 | jq
 
@@ -37,4 +41,8 @@ eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_cor
 
 eth block:get --network http://localhost:8545 246
 
+eth contract:call --network http://localhost:8545 bshcore@$(cat bsh.core.bsc) "coinNames()"
+eth contract:call --network http://localhost:8545 bshcore@$(cat bsh.core.bsc) "coinId('ICX')"
 eth block:number --network http://localhost:8545
+
+eth address:balance 0x70e789d2f5d469ea30e0525dbfdd5515d6ead30d
