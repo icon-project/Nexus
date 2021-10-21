@@ -7,7 +7,7 @@ const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
   getLatestTransactionByToken,
-  getBySerialNumber,
+  findTxBySerialNumber,
   setTransactionConfirmed,
   saveTransaction
 } = require('./repository');
@@ -24,7 +24,7 @@ async function confirmTransferEnd(event, txInfo) {
   const data = event.data;
 
   try {
-    const transaction = await getBySerialNumber(IconConverter.toNumber(data[0]), process.env.ICON_NETWORK_ID);
+    const transaction = await findTxBySerialNumber(IconConverter.toNumber(data[0]), process.env.ICON_NETWORK_ID, event.scoreAddress);
     let statusCode = transaction.status;
 
     switch (IconConverter.toNumber(data[1])) {
@@ -79,7 +79,7 @@ async function handleTransactionEvents(txResult, transaction) {
       const btpFee = parseInt(details[2].toString('hex'), 16) / ICX_LOOP_UNIT;
 
       // Ref: https://www.icondev.io/docs/step-estimation#transaction-fee
-      let transObj = {
+      const transObj = {
         fromAddress: event.indexed[1],
         tokenName: tokenName,
         serialNumber: IconConverter.toNumber(data[1]),
@@ -91,7 +91,8 @@ async function handleTransactionEvents(txResult, transaction) {
         blockTime: Math.floor(transaction.timestamp / 1000), // microsecond to millisecond
         networkId: process.env.ICON_NETWORK_ID,
         btpFee: btpFee,
-        networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT
+        networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT,
+        contractAddress: event.scoreAddress // Ref: #426
       };
 
       // Calculating total volume when the system has a new transaction.

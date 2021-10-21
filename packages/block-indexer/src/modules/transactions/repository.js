@@ -20,14 +20,10 @@ async function getLatestTransactionByToken(tokenName) {
   }
 }
 
-async function getBySerialNumber(serialNumber, networkId) {
-  let {
-    rows,
-  } = await pgPool.query(
-    `SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.serialNumber}=$1 AND ${TRANSACTION_TBL.networkId}=$2`,
-    [serialNumber, networkId],
-  );
-
+// Ref: #426
+async function findTxBySerialNumber(serialNumber, networkId, contractAddress) {
+  const query = 'SELECT * FROM transactions WHERE serial_number=$1 AND network_id=$2 AND contract_address=$3';
+  const { rows } = await pgPool.query(query, [serialNumber, networkId, contractAddress]);
   return rows[0];
 }
 
@@ -73,8 +69,8 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
       ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
-      ${TRANSACTION_TBL.updateAt}, block_hash)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13)`;
+      ${TRANSACTION_TBL.updateAt}, block_hash, contract_address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13, $14)`;
 
     // blockHash is needed for Moonbeam since Sidecar can only query blocks.
     const insertValues = [
@@ -90,7 +86,8 @@ async function saveTransaction(transaction) {
       transaction.networkFee,
       transaction.status,
       transaction.totalVolume,
-      transaction.blockHash
+      transaction.blockHash,
+      transaction.contractAddress
     ];
 
     debug('saveTransaction SQL %s %O:', insertStatement, insertValues);
@@ -112,7 +109,7 @@ async function getTokenContractAddresses() {
 
 module.exports = {
   getLatestTransactionByToken,
-  getBySerialNumber,
+  findTxBySerialNumber,
   setTransactionConfirmed,
   saveTransaction,
   getTokenContractAddresses

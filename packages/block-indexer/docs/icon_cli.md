@@ -2,7 +2,7 @@
 
 goloop rpc txbyhash 0xbcc2f6841359c5069a7e7d42af1db0402c911f67e360b695d2cad27b5f7fab03 --uri http://localhost:9080/api/v3/icon
 
-goloop rpc txresult 0xbcc2f6841359c5069a7e7d42af1db0402c911f67e360b695d2cad27b5f7fab03 --uri http://localhost:9080/api/v3/icon
+goloop rpc txresult 0xae12ab8d046bf739f1d25edd1bb55878a0a1a35670326143bad81383fe076826 --uri http://localhost:9080/api/v3/icon
 
 ./goloop rpc blockbyhash 0x7b8275119cb9735ac04f6f1da991bb04b8a4605f5ae2bdb604ef70bb09deaba0 --uri http://localhost:9082/api/v3
 
