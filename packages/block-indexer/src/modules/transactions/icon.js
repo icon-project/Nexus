@@ -16,9 +16,10 @@ const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,bytes)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
-/**
- * * TransferEnd(Address string, serialNumber int, status int, message str)
- */
+/*
+TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
+Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NCSEvents.java#L46
+*/
 async function confirmTransferEnd(event, txInfo) {
   const data = event.data;
 
@@ -46,9 +47,11 @@ async function confirmTransferEnd(event, txInfo) {
   }
 }
 
-/**
- * TransferStart(Address,str,int,bytes)
- * TransferStart(owner, to.account(), sn, encode(assetTransferDetails));
+/*
+TransferStart(Address _from, String _to, BigInteger _sn, byte[] _assets);
+
+Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NCSEvents.java#L35
+
  * // struct of assetTransferDetails after decoding
  * [
  *      [
@@ -57,9 +60,6 @@ async function confirmTransferEnd(event, txInfo) {
  *         fee
  *      ]
  * ]
- */
-/**
- * Handle TransferStart and TransferEnd events
  */
 async function handleTransactionEvents(txResult, transaction) {
   if (1 !== txResult.status || 0 === txResult.eventLogs.length)
