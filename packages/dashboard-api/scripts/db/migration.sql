@@ -283,3 +283,10 @@ ALTER TABLE ONLY public.token_info
 ALTER TABLE ONLY public.transactions
     ADD COLUMN block_hash character varying(100),
     ADD COLUMN block_hash_end character varying(100);
+
+-- Issue #426
+
+ALTER TABLE ONLY public.transactions
+    ADD COLUMN contract_address character varying(100) NOT NULL DEFAULT '',
+    DROP CONSTRAINT transactions_serial_number_network_id_key,
+    ADD CONSTRAINT transactions_serial_network_contract_key UNIQUE (serial_number, network_id, contract_address);

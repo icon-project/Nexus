@@ -338,26 +338,27 @@ CREATE INDEX burned_tokens_token_name
 
 CREATE TABLE IF NOT EXISTS public.transactions
 (
-    serial_number character varying(50) NOT NULL,
-    token_name character varying(50) NOT NULL,
+    serial_number character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
     value numeric NOT NULL,
-    to_address character varying(100),
-    from_address character varying(100),
-    tx_hash character varying(100),
-    tx_hash_end character varying(100),
-    block_hash character varying(100),
-    block_hash_end character varying(100),
+    to_address character varying(100) COLLATE pg_catalog."default",
+    from_address character varying(100) COLLATE pg_catalog."default",
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
     create_at timestamp without time zone NOT NULL,
     update_at timestamp without time zone,
-    network_id character varying(20) NOT NULL,
+    network_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
     block_time bigint NOT NULL,
     btp_fee numeric NOT NULL,
     network_fee numeric NOT NULL,
     status integer NOT NULL DEFAULT 0,
     total_volume numeric NOT NULL DEFAULT 0,
-    tx_error character varying(100),
+    tx_hash_end character varying(100) COLLATE pg_catalog."default",
+    tx_error character varying(100) COLLATE pg_catalog."default",
+    block_hash character varying(100) COLLATE pg_catalog."default",
+    block_hash_end character varying(100) COLLATE pg_catalog."default",
+    contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
     CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash),
-    CONSTRAINT transactions_serial_number_network_id_key UNIQUE (serial_number, network_id)
+    CONSTRAINT transactions_serial_network_contract_key UNIQUE (serial_number, network_id, contract_address)
 );
 
 -- Index: transactions_block_time

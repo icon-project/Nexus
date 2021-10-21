@@ -19,7 +19,7 @@ curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method":
 curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "chain_getBlock", "params":["0xf4dd90b0ac8911eb95844c072ad0fbf31350ba568e1ce744d16f86a3fd4f6aad"]}' http://54.251.114.18:9933 | jq
 
 curl http://54.251.114.18:8080/blocks/head | jq
-curl http://54.251.114.18:8080/blocks/0x5bb874ca42c26400b3e2f0768eee6ddaddefb2e5d5e3e46ce2b086affa1613cc | jq
+curl http://54.251.114.18:8080/blocks/0x39ff409c55197e9ef1e258e71a1294effe6e09f103be6ae8263f666caafcb4ea | jq
 
 eth abi:add bshcore ./config/abi.bsh_core.json
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "getBalanceOf('0xF8aC273f62F2D1D7283be823400e05Aeddc389F5', 'ICX')"
