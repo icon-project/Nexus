@@ -1,6 +1,6 @@
 'use strict';
 
-const bshAbi = require('../bsc-indexer/abi/bsh.abi.json');
+// const bshAbi = require('../bsc-indexer/abi/bsh.abi.json');
 
 const bscEventMap = new Map();
 

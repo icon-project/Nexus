@@ -8,7 +8,7 @@ const { getEventMap } = require('../moonbeam-indexer/events');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
   getLatestTransactionByToken,
-  getBySerialNumber,
+  findTxBySerialNumber,
   setTransactionConfirmed,
   saveTransaction
 } = require('./repository');
@@ -133,7 +133,8 @@ async function handleTransferStartEvent(transferStart, evmLogEvent, transaction,
         status: TRANSACTION_STATUS.pending,
         blockTime: Number(block.extrinsics[0].args.now),
         networkId: process.env.MOONBEAM_NETWORK_ID,
-        networkFee: 0 // NA
+        networkFee: 0, // NA
+        contractAddress: evmLogEvent.data[0].address // Ref: #426
       };
 
       let latestTransaction = await getLatestTransactionByToken(txData.tokenName);
@@ -168,7 +169,7 @@ async function handleTransferEndEvent(transferEnd, evmLogEvent, transaction, blo
 
     if (event) {
       const statusCode = 0 === event.code ? TRANSACTION_STATUS.success : TRANSACTION_STATUS.failed;
-      let updatingTx = await getBySerialNumber(event.sn, process.env.MOONBEAM_NETWORK_ID);
+      let updatingTx = await findTxBySerialNumber(event.sn, process.env.MOONBEAM_NETWORK_ID, evmLogEvent.data[0].address);
 
       // Issue: need to keep hashes of both start and end transactions.
       const txData = {
