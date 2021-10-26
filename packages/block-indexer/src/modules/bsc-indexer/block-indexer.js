@@ -9,6 +9,7 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository'
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/bsc');
 const { handleMintBurnEvents } = require('./mint-burn');
+const { handleRelayActions } = require('../relays/bsc');
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
@@ -30,6 +31,7 @@ async function runTransactionHandlers(tx, txReceipt, block) {
       // handlers need tx receipt go here.
       await handleTransactionEvents(tx, txReceipt, block);
       await handleMintBurnEvents(tx, txReceipt);
+      await handleRelayActions(tx, txReceipt, block);
     } else {
       // handlers don't need tx receipt go here.
     }
