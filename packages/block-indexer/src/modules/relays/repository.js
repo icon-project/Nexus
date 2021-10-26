@@ -36,6 +36,18 @@ async function updateRelay(relay) {
   }
 }
 
+async function setRelayUnregistered(relay) {
+  const query = 'UPDATE relays SET updated_at = NOW(), server_status = $2, unregistered_time = $3  WHERE address = $1';
+  const params = [relay.address, relay.serverStatus, relay.unregisteredTime];
+
+  try {
+    await pgPool.query(query, params);
+    return true;
+  } catch (error) {
+    logger.error('setRelayUnregistered fails %O', error);
+  }
+}
+
 async function getRelayByAddress(address) {
   try {
     const { rows } = await pgPool.query('SELECT id, address FROM relays WHERE address = $1', [
@@ -88,5 +100,6 @@ module.exports = {
   updateRelay,
   createRelay,
   getRelayAddresses,
-  updateRelayTransaction
+  updateRelayTransaction,
+  setRelayUnregistered
 };

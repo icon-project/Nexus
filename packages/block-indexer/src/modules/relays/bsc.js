@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const { ADD_RELAY_ACTION, REMOVE_RELAY_ACTION } = require('../../common');
 const logger = require('../../common/logger');
 const { getBscActionMap, decodeActionInput } = require('../common/actions');
-const { getRelayByAddress, createRelay } = require('./repository');
+const { setRelayUnregistered, createRelay } = require('./repository');
 
 const web3 = new Web3(process.env.BSC_API_URL);
 const bmcAddress = process.env.BSC_BMC_ADDRESS.toLowerCase();
@@ -35,6 +35,22 @@ function getAddRelayAction(encodedInput) {
   }
 }
 
+function getRemoveRelayAction(encodedInput) {
+  try {
+    const actionMap = getBscActionMap(web3);
+    const result = decodeActionInput(web3, actionMap, REMOVE_RELAY_ACTION, encodedInput);
+
+    debug('removeRelay %O', result);
+
+    return {
+      link: result._link,
+      address: result._addr
+    };
+  } catch (error) {
+    logger.error('bsc:getRemoveRelayAction fails to decode input %O', error);
+  }
+}
+
 async function handleAddRelayAction(input, tx, block) {
   for (const address of input.addresses) {
     const relay = {
@@ -52,6 +68,19 @@ async function handleAddRelayAction(input, tx, block) {
   }
 }
 
+async function handleRemoveRelayAction(input, tx, block) {
+  const relay = {
+    address: input.address.toLowerCase(),
+    unregisteredTime: new Date(web3.utils.hexToNumber(block.timestamp) * 1000),
+    serverStatus: 'Inactive'
+  };
+
+  const success = await setRelayUnregistered(relay);
+
+  if (success)
+    logger.info('bsc:handleRemoveRelayAction unregisters relay %s at tx %s', relay.address, tx.hash);
+}
+
 async function handleRelayActions(tx, txReceipt, block) {
   if (bmcAddress !== tx.to.toLowerCase())
     return false;
@@ -61,6 +90,15 @@ async function handleRelayActions(tx, txReceipt, block) {
   if (actionInput) {
     logger.info('bsc:handleRelayActions addRelay %O at tx %s', actionInput, tx.hash);
     await handleAddRelayAction(actionInput, tx, block);
+    return true;
+  }
+
+  actionInput = getRemoveRelayAction(tx.input);
+
+  if (actionInput) {
+    logger.info('bsc:handleRelayActions removeRelay %O at tx %s', actionInput, tx.hash);
+    await handleRemoveRelayAction(actionInput, tx, block);
+    return true;
   }
 }
 
