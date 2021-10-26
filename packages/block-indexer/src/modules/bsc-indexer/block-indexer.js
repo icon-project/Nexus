@@ -5,6 +5,7 @@ const debugTx = require('debug')('bsc_tx');
 const Web3 = require('web3');
 const { logger } = require('../../common');
 const { getBscEventMap } = require('../common/events');
+const { getBscActionMap } = require('../common/actions');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/bsc');
@@ -97,6 +98,9 @@ async function retryGetBlockData() {
 async function start() {
   const eventMap = getBscEventMap(web3);
   logger.info('BSC event map: %O', eventMap);
+
+  const actionMap = getBscActionMap(web3);
+  logger.info('BSC action map: %O', actionMap);
 
   const contractMap = await getTokenContractMap();
   logger.info('BSC registered tokens: %O', contractMap);
