@@ -32,7 +32,15 @@ function getBscActionMap(web3) {
   return bscActionMap;
 }
 
+function decodeActionInput(web3, actionMap, actionName, encodedInput) {
+  const action = actionMap.get(actionName);
+
+  if (action && action.signature === encodedInput.slice(0, action.signature.length))
+    return web3.eth.abi.decodeParameters(action.action.inputs, encodedInput.slice(action.signature.length));
+}
+
 module.exports = {
   getActionInfoFromAbi,
-  getBscActionMap
+  getBscActionMap,
+  decodeActionInput
 };

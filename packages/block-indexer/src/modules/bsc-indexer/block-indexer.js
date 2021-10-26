@@ -18,7 +18,7 @@ const watchedTxReceipt = {
     ['0xaa25Aa7a19f9c426E07dee59b12f944f4d9f1DD3', true] // e.g. faucet address
   ]),
   toAddress: new Map([
-    ['0xcd87416886D4422968D007e9752FF7ee959B675D', true] // e.g. TiendqCoin contract
+    [process.env.BSC_BMC_ADDRESS, true] // bmc.bsc
   ])
 };
 

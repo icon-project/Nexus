@@ -1,23 +1,18 @@
+'use strict';
+
+const debug = require('debug')('db');
 const { pgPool, logger } = require('../../common');
 
 async function createRelay(relay) {
   try {
     await pgPool.query(
-      'INSERT INTO relays ( id, address, link, server_status, total_transferred_tx, total_failed_tx, registered_time, unregistered_time, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())',
-      [
-        relay.id,
-        relay.address,
-        relay.link,
-        relay.serverStatus,
-        0,
-        0,
-        relay.registeredTime,
-        relay.unregisteredTime,
-      ],
+      'INSERT INTO relays (id, address, link, server_status, registered_time, total_transferred_tx, total_failed_tx, created_at) VALUES ($1, $2, $3, $4, $5, 0, 0, NOW())',
+      [relay.id, relay.address, relay.link, relay.serverStatus, relay.registeredTime],
     );
-    logger.info('SQL statement insert Relay success');
+
+    return true;
   } catch (error) {
-    logger.error('createRelay Failed save Relay', { error });
+    logger.error('createRelay Failed save relay %O', error);
   }
 }
 
@@ -33,9 +28,9 @@ async function updateRelay(relay) {
   const whereCondition = ' WHERE address = $1';
 
   query += whereCondition;
+
   try {
     await pgPool.query(query, params);
-    logger.info('SQL statement update Relay success:');
   } catch (error) {
     logger.error('updateRelay Failed Update Relay', { error });
   }
@@ -51,7 +46,7 @@ async function getRelayByAddress(address) {
       return rows[0];
     }
   } catch (error) {
-    logger.error('getRelayByAddress Failed Delete Relay', { error });
+    logger.error('getRelayByAddress fails', { error });
   }
 }
 
@@ -93,5 +88,5 @@ module.exports = {
   updateRelay,
   createRelay,
   getRelayAddresses,
-  updateRelayTransaction,
+  updateRelayTransaction
 };
