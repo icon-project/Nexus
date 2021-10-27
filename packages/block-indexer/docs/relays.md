@@ -56,6 +56,12 @@ $ truffle(moonbeamlocal)> await bmcManagement.removeRelay("<link_to_icon_chain>"
 $ truffle(moonbeamlocal)> await bmcManagement.getRelays("<link_to_icon_chain>")
 ```
 
+eth abi:add bmc abi/BMCManagement.json
+
+eth contract:call --network http://localhost:8545 bmc@$(cat bmc.bsc) "getRelays('btp://0xd35bbb.icon/cx11db74c77d4b8ac2e30ff5d73341c8c741be75ae')"
+
+eth contract:call --network http://localhost:8545 bmc@$(cat bmc.bsc) "removeRelay('btp://0xd35bbb.icon/cx11db74c77d4b8ac2e30ff5d73341c8c741be75ae', '0x70E789D2f5D469eA30e0525DbfDD5515d6EAd30D')"
+
 ## BSC
 
 Tx from addRelay.bsc
