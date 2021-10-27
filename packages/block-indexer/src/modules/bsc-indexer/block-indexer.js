@@ -5,10 +5,12 @@ const debugTx = require('debug')('bsc_tx');
 const Web3 = require('web3');
 const { logger } = require('../../common');
 const { getBscEventMap } = require('../common/events');
+const { getBscActionMap } = require('../common/actions');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/bsc');
 const { handleMintBurnEvents } = require('./mint-burn');
+const { handleRelayActions } = require('../relays/bsc');
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
@@ -16,7 +18,7 @@ const watchedTxReceipt = {
     ['0xaa25Aa7a19f9c426E07dee59b12f944f4d9f1DD3', true] // e.g. faucet address
   ]),
   toAddress: new Map([
-    ['0xcd87416886D4422968D007e9752FF7ee959B675D', true] // e.g. TiendqCoin contract
+    [process.env.BSC_BMC_ADDRESS, true] // bmc.bsc
   ])
 };
 
@@ -30,6 +32,7 @@ async function runTransactionHandlers(tx, txReceipt, block) {
       // handlers need tx receipt go here.
       await handleTransactionEvents(tx, txReceipt, block);
       await handleMintBurnEvents(tx, txReceipt);
+      await handleRelayActions(tx, txReceipt, block);
     } else {
       // handlers don't need tx receipt go here.
     }
@@ -95,6 +98,9 @@ async function retryGetBlockData() {
 async function start() {
   const eventMap = getBscEventMap(web3);
   logger.info('BSC event map: %O', eventMap);
+
+  const actionMap = getBscActionMap(web3);
+  logger.info('BSC action map: %O', actionMap);
 
   const contractMap = await getTokenContractMap();
   logger.info('BSC registered tokens: %O', contractMap);

@@ -12,6 +12,11 @@ goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nati
 
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method coinNames
 
+goloop rpc lastblock --uri http://localhost:9080/api/v3/icon
+# 1051
+eth block:number --network http://localhost:8545
+# 354
+
 ## Ethereum
 
 curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "chain_getHead"}' http://54.251.114.18:9933/ | jq
