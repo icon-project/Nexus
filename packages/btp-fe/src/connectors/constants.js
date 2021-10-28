@@ -29,10 +29,10 @@ const customNetworks = localStorage.getItem('NETWORK_CONFIG');
 const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon: {}, moonbeam: {} };
 
 export const MOON_BEAM_NODE = {
-  RPCUrl: moonbeam.endpoint || 'http://54.251.114.18:9933',
-  BSHCore: moonbeam.BSHCore || '0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963',
-  networkAddress: moonbeam.networkAddress || '0x501.pra',
-  gasLimit: moonbeam.gasLimit || '6691B7',
+  RPCUrl: moonbeam.endpoint || process.env.REACT_APP_MB_RPC_URL,
+  BSHCore: moonbeam.BSHCore || process.env.REACT_APP_MB_BSH_CORE,
+  networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,
+  gasLimit: moonbeam.gasLimit || process.env.REACT_APP_MB_GAS_LIMIT,
 };
 console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 
@@ -40,11 +40,11 @@ console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 export const NETWORKS = {
   cloud: {
     name: connectedNetWorks.icon,
-    endpoint: icon.endpoint || 'http://54.251.114.18:9080/api/v3',
-    nid: icon.nid || '0x58eb1c',
-    networkAddress: icon.networkAddress || '0x58eb1c.icon',
-    irc31token: icon.irc31token || 'cxa1229bef36fbdc2d75c8d4ec4b39102586f81eab',
-    BSHAddress: icon.BSHAddress || 'cxc53d35b4cd28150ee1bd9a36a6d882a5af37b7fd', // used to get the BTP fee from getBTPfee()
+    endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
+    nid: icon.nid || process.env.REACT_APP_ICON_NID,
+    networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
+    irc31token: icon.irc31token || process.env.REACT_APP_ICON_IRC31_TOKEN,
+    BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
   sejong: {
     name: 'Sejong Testnet',
