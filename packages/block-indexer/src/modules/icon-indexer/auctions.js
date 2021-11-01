@@ -2,7 +2,7 @@
 
 const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
-const { IconConverter } = require('icon-sdk-js');
+const { IconConverter } = require('icon-sdk-js').default;
 const { logger, pgPool } = require('../../common');
 const { hexToIcxUnit } = require('../../common/util');
 

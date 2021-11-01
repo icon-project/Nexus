@@ -1,7 +1,7 @@
 'use strict';
 
 const Web3 = require('web3');
-const IconService = require('icon-sdk-js');
+const IconService = require('icon-sdk-js').default;
 const { logger } = require('../../common');
 const {
   getNetworkInfo,
@@ -10,7 +10,7 @@ const {
   getVolumeToken24hByNid,
   getVolumeTokenAllTimeByNid,
   getTotalMintValue,
-  getTotalBurnValue
+  getTotalBurnValue,
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 const abiBshScore = require('./abi/abi.bsh_core.json');
@@ -18,7 +18,7 @@ const abiBshScore = require('./abi/abi.bsh_core.json');
 const { HttpProvider, IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
-const web3 =  new Web3(process.env.MOONBEAM_API_URL);
+const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
 async function getTokensRegisteredMoonbeam() {
   const BSHContract = new web3.eth.Contract(abiBshScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
@@ -55,14 +55,26 @@ async function getListNetworkConnectedIcon() {
     const tokensVolume24h = await getTokensVolume24h();
     const tokensVolumeAllTime = await getTokenVolumeAllTime();
 
-    return await updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime, totalMintTokens, totalBurnTokens);
+    return await updateFiatVolume(
+      networks,
+      tokensVolume24h,
+      tokensVolumeAllTime,
+      totalMintTokens,
+      totalBurnTokens,
+    );
   } catch (err) {
     logger.error('"getListNetworkConnectedIcon" failed while getting total transaction', err);
     throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
   }
 }
 
-async function updateFiatVolume(networks, tokensVolume24h, tokensVolumeAllTime, totalMintTokens, totalBurnTokens) {
+async function updateFiatVolume(
+  networks,
+  tokensVolume24h,
+  tokensVolumeAllTime,
+  totalMintTokens,
+  totalBurnTokens,
+) {
   for (let networkInfo of networks) {
     let USD24h = 0;
     let USDAllTime = 0;
@@ -124,8 +136,7 @@ async function getListTokenRegisteredNetwork(networkId) {
 async function getNetworkById(networkId) {
   const tokens = await getListTokenRegisteredNetwork(networkId);
 
-  if (!tokens)
-    return null;
+  if (!tokens) return null;
 
   const result = [];
 

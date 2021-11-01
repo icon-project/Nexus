@@ -2,8 +2,15 @@
 
 const fs = require('fs');
 const debug = require('debug')('auctions');
-const IconService = require('icon-sdk-js');
-const { HttpProvider, IconBuilder, IconConverter, IconAmount, IconWallet, SignedTransaction } = require('icon-sdk-js');
+const IconService = require('icon-sdk-js').default;
+const {
+  HttpProvider,
+  IconBuilder,
+  IconConverter,
+  IconAmount,
+  IconWallet,
+  SignedTransaction,
+} = IconService;
 const { logger, hexToFixedAmount, numberToFixedAmount } = require('../../common');
 const { getAuctionById, getBidByAuctionId, getTopBidder } = require('./repository');
 
@@ -56,10 +63,7 @@ async function getAvailableBalance(name) {
 
 async function getCurrentAuctions() {
   const callBuilder = new IconBuilder.CallBuilder();
-  const txObject = callBuilder
-    .to(process.env.ICON_FAS_ADDRESS)
-    .method('tokens')
-    .build();
+  const txObject = callBuilder.to(process.env.ICON_FAS_ADDRESS).method('tokens').build();
 
   const auctions = [];
 
@@ -76,7 +80,7 @@ async function getCurrentAuctions() {
           name: token.name,
           currentBidAmount: hexToFixedAmount(auction._bidAmount),
           availableBidAmount: hexToFixedAmount(auction._tokenAmount),
-          endTime: Math.floor(IconConverter.toNumber(auction._endTime) / 1000) // _endTime in microsecond
+          endTime: Math.floor(IconConverter.toNumber(auction._endTime) / 1000), // _endTime in microsecond
         });
       }
     }
@@ -91,8 +95,7 @@ async function getCurrentAuctions() {
 async function getAuctionDetail(auctionId) {
   const auction = await getAuctionById(auctionId);
 
-  if (!auction)
-    return null;
+  if (!auction) return null;
 
   const bid = await getTopBidder(auctionId);
   const currentBidAmount = bid ? bid.newBidAmount : auction.bidAmount;
@@ -103,16 +106,13 @@ async function getAuctionDetail(auctionId) {
     currentBidAmount: numberToFixedAmount(currentBidAmount),
     availableBidAmount: numberToFixedAmount(auction.tokenAmount),
     createdTime: auction.createdTime,
-    endTime: auction.endTime
+    endTime: auction.endTime,
   };
 }
 
 async function getRegisteredTokens() {
   const callBuilder = new IconBuilder.CallBuilder();
-  const txObject = callBuilder
-    .to(process.env.ICON_FAS_ADDRESS)
-    .method('tokens')
-    .build();
+  const txObject = callBuilder.to(process.env.ICON_FAS_ADDRESS).method('tokens').build();
 
   const tokens = await iconService.call(txObject).execute();
   debug('Registered tokens: ', tokens);
@@ -131,11 +131,11 @@ async function transferToken(tokenContract, tokenAmount) {
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(3))
     .version(IconConverter.toBigNumber(3))
-    .timestamp((new Date()).getTime() * 1000)
+    .timestamp(new Date().getTime() * 1000)
     .method('transfer')
     .params({
       _to: process.env.ICON_FAS_ADDRESS,
-      _value: IconConverter.toHex(IconAmount.of(tokenAmount, IconAmount.Unit.ICX).toLoop())
+      _value: IconConverter.toHex(IconAmount.of(tokenAmount, IconAmount.Unit.ICX).toLoop()),
     })
     .build();
 
@@ -157,10 +157,10 @@ async function placeBid(tokenName, bidAmount) {
     .stepLimit(IconConverter.toBigNumber(1000000000))
     .nid(IconConverter.toBigNumber(3))
     .version(IconConverter.toBigNumber(3))
-    .timestamp((new Date()).getTime() * 1000)
+    .timestamp(new Date().getTime() * 1000)
     .method('bid')
     .params({
-      _tokenName: tokenName
+      _tokenName: tokenName,
     })
     .build();
 
@@ -171,7 +171,7 @@ async function placeBid(tokenName, bidAmount) {
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // - Get list of registered tokens
@@ -181,13 +181,11 @@ function sleep(ms) {
 async function createNewAuction(tokenName, tokenAmount) {
   let tokens = await getRegisteredTokens();
 
-  if (!tokens || 0 === tokens.length)
-    return 404; // token not found
+  if (!tokens || 0 === tokens.length) return 404; // token not found
 
-  tokens = tokens.filter(t => tokenName === t.name);
+  tokens = tokens.filter((t) => tokenName === t.name);
 
-  if (0 === tokens.length)
-    return 404; // token not found
+  if (0 === tokens.length) return 404; // token not found
 
   logger.info(`Transferring ${tokenAmount} ${tokenName}`);
   let txHash = await transferToken(tokens[0].address, tokenAmount);
@@ -196,8 +194,7 @@ async function createNewAuction(tokenName, tokenAmount) {
 
   let result = await iconService.getTransactionResult(txHash).execute();
 
-  if (1 !== result.status)
-    return result;
+  if (1 !== result.status) return result;
 
   logger.info(`Bidding 100 ${tokenName}`);
   txHash = await placeBid(tokenName, 100);
@@ -223,7 +220,7 @@ async function getAvailableAssetsToAuction() {
       if (value && value >= process.env.MINIMUM_AUCTION_AMOUNT) {
         result.push({
           name: token.name,
-          value
+          value,
         });
       }
     }
@@ -241,23 +238,23 @@ async function getBidHistory(auctionId, limit, offset) {
       pagination: {
         limit,
         offset,
-        totalItem: 0
-      }
+        totalItem: 0,
+      },
     };
   }
 
   return {
-    items: result.items.map(b => ({
+    items: result.items.map((b) => ({
       id: b.id,
       bidder: b.newBidder,
       amount: numberToFixedAmount(b.newBidAmount),
-      createdTime: b.createdTime
+      createdTime: b.createdTime,
     })),
     pagination: {
       limit,
       offset,
-      totalItem: result.totalItem
-    }
+      totalItem: result.totalItem,
+    },
   };
 }
 
@@ -266,5 +263,5 @@ module.exports = {
   getAuctionDetail,
   createNewAuction,
   getAvailableAssetsToAuction,
-  getBidHistory
+  getBidHistory,
 };

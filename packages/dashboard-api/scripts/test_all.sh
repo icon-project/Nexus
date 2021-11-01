@@ -22,7 +22,7 @@ HOST=http://localhost:8000
 curl $HOST/v1/btpnetwork | jq
 curl $HOST/v1/btpnetwork\?stats=1 | jq
 curl $HOST/v1/btpnetwork\?volumeLast24h=true\&mintLast24h=true | jq
-curl $HOST/v1/btpnetwork/converter\?token=btc\&amount=100\&convert_to=usd | jq
+curl $HOST/v1/btpnetwork/converter\?token=icx\&amount=100\&convert_to=usd | jq
 
 # fees
 

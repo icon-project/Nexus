@@ -1,6 +1,6 @@
 'use strict';
 
-const IconService = require('icon-sdk-js');
+const IconService = require('icon-sdk-js').default;
 const {
   countNetwork,
   countTransaction,
@@ -30,7 +30,7 @@ const iconService = new IconService(provider);
 async function getAmountFeeAggregationSCORE() {
   return {
     assets: [],
-    totalUSD: 0
+    totalUSD: 0,
   };
   /*const callBuilder = new IconBuilder.CallBuilder();
 
@@ -103,7 +103,7 @@ async function calculateVolumePercents() {
   let totalVolume24hAgo = await getTotalTransactionAmount(true);
 
   if (totalVolume && totalVolume24hAgo) {
-    const percentage = (totalVolume - totalVolume24hAgo) / totalVolume * 100;
+    const percentage = ((totalVolume - totalVolume24hAgo) / totalVolume) * 100;
     return Number(percentage.toFixed(2));
   }
 
@@ -215,14 +215,13 @@ async function getPercentsMintVolumeLast24h() {
   const tokensLast24h = await getTotalTokensMintedLast24h();
 
   // in the first 23 hours
-  if (0 === tokensLast24h)
-    return 0;
+  if (0 === tokensLast24h) return 0;
 
   if (tokensCurrent && tokensLast24h) {
     try {
       const totalUSD = await totalTokensToUSD(tokensCurrent);
       const last24hUSD = await totalTokensToUSD(tokensLast24h);
-      const percentage = (totalUSD - last24hUSD) / last24hUSD * 100;
+      const percentage = ((totalUSD - last24hUSD) / last24hUSD) * 100;
 
       return Number(percentage.toFixed(2));
     } catch (error) {

@@ -3,7 +3,7 @@
 const debug = require('debug')('moonbeam');
 const debugTx = require('debug')('moonbeam_tx');
 const axios = require('axios');
-const { IconConverter } = require('icon-sdk-js');
+const { IconConverter } = require('icon-sdk-js').default;
 const { logger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 const { getTokenContractMap } = require('../transactions/model');

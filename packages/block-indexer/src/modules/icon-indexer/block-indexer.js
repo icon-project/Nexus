@@ -2,8 +2,8 @@
 
 const debug = require('debug')('icon');
 const debugTx = require('debug')('icon_tx');
-const IconService = require('icon-sdk-js');
-const { HttpProvider } = require('icon-sdk-js');
+const IconService = require('icon-sdk-js').default;
+const { HttpProvider } = IconService;
 const { logger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 // FAS: const { loadRegisteredTokens } = require('./fas');
@@ -18,6 +18,7 @@ const { handleRelayAction } = require('../relays/icon');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
+
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 
 async function runTransactionHandlers(transaction, txResult, block) {
