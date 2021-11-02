@@ -141,6 +141,7 @@ const TransferHistoryStyled = styled.div`
       margin: 20px 0 0;
 
       .select-asset {
+        width: 100%;
         margin: 0 0 30px !important;
       }
 

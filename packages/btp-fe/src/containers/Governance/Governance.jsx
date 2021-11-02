@@ -74,7 +74,7 @@ const GovernanceStyled = styled.div`
   .header-text {
     padding: 48px 0 50px 0;
     ${media.md`
-      padding: 20px 0 20px 20px;
+      padding: 20px 0;
     `}
   }
   .table-name {
@@ -115,7 +115,7 @@ const GovernanceStyled = styled.div`
     }
 
     .total {
-      margin: 0px 0 24px 20px;
+      margin: 0 0 24px;
       flex-direction: column;
       align-items: flex-start;
 

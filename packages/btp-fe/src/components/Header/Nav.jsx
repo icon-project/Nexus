@@ -11,7 +11,7 @@ const NavStyled = styled.ul`
   flex-flow: nowrap;
   justify-content: flex-start;
   align-items: center;
-  margin: 0 auto 0 163.35px;
+  margin: 0 auto 0 0;
 
   > li {
     a.active {
