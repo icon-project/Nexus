@@ -51,7 +51,7 @@ const buttonContents = [
   { text: 'Overview', effect: null },
   { text: 'Network', effect: null },
   { text: 'Governance', effect: null },
-  { text: 'Auction', effect: null },
+  // { text: 'Auction', effect: null },
 ];
 const Button = ({ text, ...ots }) => {
   return (
