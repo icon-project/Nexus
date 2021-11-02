@@ -359,3 +359,10 @@ eth transaction:get --network http://localhost:8545 0x05cc036f0da8b3b660de629e6f
 scp ssh ubuntu@18.141.139.244:testnet/btp/devnet/docker/icon-bsc/work/abi/BMCManagement.json ~/Public
 scp ssh ubuntu@18.141.139.244:testnet/btp/devnet/docker/icon-bsc/work/abi/BSHCore.json ~/Public
 scp ssh ubuntu@18.141.139.244:testnet/btp/devnet/docker/icon-bsc/work/abi/BSHPeriphery.json ~/Public
+
+scp ubuntu@54.251.114.18:testnet/btp/docker-compose/goloop2moonbeam/config/abi.bmc_management.json ~/Public
+scp ubuntu@54.251.114.18:testnet/btp/docker-compose/goloop2moonbeam/config/abi.bsh_core.json ~/Public
+scp ubuntu@54.251.114.18:testnet/btp/docker-compose/goloop2moonbeam/config/abi.bsh_periphery.json ~/Public
+
+
+scp ubuntu@54.251.114.18:deploy/btp-dashboard/packages/block-indexer/logs/services.20211103.log ~/Public

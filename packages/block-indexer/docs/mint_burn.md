@@ -73,7 +73,7 @@ eth_tx {
   eth_tx       method: { pallet: 'evm', method: 'Log' },
   eth_tx       data: [
   eth_tx         {
-  eth_tx           address: '0x7d4567b7257cf869b01a47e8cf0edb3814bdb963',
+  eth_tx           address: '0x7d4567b7257cf869b01a47e8cf0edb3814bdb963', // bsh
   eth_tx           topics: [
   eth_tx             '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62',
   eth_tx             '0x0000000000000000000000009c1da847b31c0973f26b1a2a3d5c04365a867703',

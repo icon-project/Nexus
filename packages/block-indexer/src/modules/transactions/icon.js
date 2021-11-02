@@ -107,7 +107,7 @@ async function handleTransactionEvents(txResult, transaction) {
       if (TRANFER_END_PROTOTYPE !== event.indexed[0])
         continue;
 
-      confirmTransferEnd(event, {
+      await confirmTransferEnd(event, {
         txHash: txResult.txHash,
         blockHash: ''
       });

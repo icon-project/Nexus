@@ -12,7 +12,7 @@ const { handleTransactionEvents } = require('../transactions/icon');
 const { getTokenContractMap } = require('../transactions/model');
 // FAS: const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('../mint-burn/icon');
-const { handleTokenRegister } = require('./token-register');
+// const { handleTokenRegister } = require('./token-register');
 const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
 
@@ -26,7 +26,7 @@ async function runTransactionHandlers(transaction, txResult, block) {
     // FAS: await handleAuctionEvents(txResult);
     // FAS: await handleTransferFeeEvents(txResult);
     await handleMintBurnEvents(txResult, transaction);
-    await handleTokenRegister(txResult, transaction);
+    // await handleTokenRegister(txResult, transaction);
     await handleRelayAction(txResult, transaction);
     await handleRelayerAction(txResult, transaction);
 
