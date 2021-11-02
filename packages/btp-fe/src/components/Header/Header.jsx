@@ -25,7 +25,7 @@ import defaultAvatar from 'assets/images/avatar.svg';
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
-import logo from 'assets/images/logo-nexus-white.png';
+// import logo from 'assets/images/logo-nexus-white.png';
 
 const { darkBG, grayText, grayLine } = colors;
 
@@ -107,6 +107,8 @@ const StyledHeader = styled.header`
       top: 80px;
       left: 0;
       z-index: 101;
+      padding: 0 20px;
+
 
       min-height: calc(100vh - 80px);
       width: 100%;
@@ -131,9 +133,9 @@ const StyledHeader = styled.header`
   `}
 `;
 
-const Logo = styled.img`
-  width: 42.65px;
-`;
+// const Logo = styled.img`
+//   width: 42.65px;
+// `;
 
 const mockWallets = {
   [wallets.metamask]: {
@@ -296,7 +298,7 @@ const Header = () => {
           )}
         </>
       )}
-      <Logo src={logo} alt="btp logo" />
+      {/* <Logo src={logo} alt="btp logo" /> */}
 
       <HamburgerButton
         className={`menu-icon ${showMenu && 'active'}`}

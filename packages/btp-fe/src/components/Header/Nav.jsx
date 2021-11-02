@@ -11,7 +11,7 @@ const NavStyled = styled.ul`
   flex-flow: nowrap;
   justify-content: flex-start;
   align-items: center;
-  margin: 0 auto 0 163.35px;
+  margin: 0 auto 0 0;
 
   > li {
     a.active {
@@ -51,7 +51,7 @@ const buttonContents = [
   { text: 'Overview', effect: null },
   { text: 'Network', effect: null },
   { text: 'Governance', effect: null },
-  { text: 'Auction', effect: null },
+  // { text: 'Auction', effect: null },
 ];
 const Button = ({ text, ...ots }) => {
   return (
