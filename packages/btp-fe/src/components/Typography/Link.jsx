@@ -6,14 +6,16 @@ import { TextMixin } from 'components/Typography/Text';
 import { colors } from '../Styles/Colors';
 
 const Wrapper = styled.p`
+  > a {
+    color: ${colors.tertiaryBase};
+  }
+
   > a.md {
     ${SubTitleMixin.md};
-    color: ${colors.tertiaryBase};
   }
 
   > a.xs {
     ${TextMixin.xsBold};
-    color: ${colors.tertiaryBase};
   }
 
   > a.sm {
