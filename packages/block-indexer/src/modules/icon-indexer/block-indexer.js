@@ -42,12 +42,14 @@ async function getTransactionResult(txHash) {
     const result = await iconService.getTransactionResult(txHash).execute();
     return result;
   } catch (error) {
-    if ('[RPC ERROR] Executing' === error) {
-      debugTx(`${txHash}: ${error}`);
+    // Ignore pending tx to retry later.
+    // Ref: https://www.icondev.io/references/reference-manuals/icon-json-rpc-api-v3-specification#icx_gettransactionresult
+    if ('[RPC ERROR] Executing' === error || '[RPC ERROR] Invalid params txHash' === error) {
+      logger.info('icon:Query pending tx %s, %s', txHash, error);
       return null;
     }
 
-    logger.error(`Failed to get transaction result ${txHash}`, { error });
+    logger.error('icon:Fail to get transaction result %s, %s', txHash, error);
   }
 }
 
@@ -58,7 +60,8 @@ async function retryGetTransactionResult(tx, block) {
     debugTx('Transaction result: %O', txResult);
     await runTransactionHandlers(tx, txResult, block);
   } else {
-    setTimeout(async () => await retryGetTransactionResult(tx, block), 5000);
+    // TODO: limit retrying.
+    setTimeout(async () => await retryGetTransactionResult(tx, block), 2000);
   }
 }
 
@@ -73,6 +76,7 @@ async function runBlockHandlers(block) {
 
 async function getBlockByHeight(height) {
   try {
+    // Issue: it might unresponsive here on btp!!!
     const block = await iconService.getBlockByHeight(height).execute();
     return block;
   } catch (error) {
@@ -87,7 +91,7 @@ async function getBlockByHeight(height) {
 
 async function getBlockData() {
   const block = await getBlockByHeight(blockHeight);
-  const timeout = block ? 1000 : 15000; // Wait longer for new blocks created.
+  const timeout = block ? 1000 : 10000; // Wait longer for new blocks created.
 
   if (block) {
     debug('Block: %O', block);
@@ -102,6 +106,7 @@ async function getBlockData() {
     ++blockHeight;
   }
 
+  // TODO: limit retrying.
   setTimeout(async () => await retryGetBlockData(), timeout);
 }
 
@@ -109,7 +114,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('Failed to fetch ICON block data, retry in 5 minutes', { error });
+    logger.error('Failed to fetch ICON block data, retry in 5 minutes: %s', error);
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
