@@ -181,3 +181,177 @@ describe('Test /networks', () => {
     expect(response.body.content).toMatchObject(expected);
   });
 });
+
+describe('Test /transactions', () => {
+  test('GET /transactions', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          blockTime: expect.any(Number),
+          status: expect.any(Number),
+          tokenName: expect.any(String),
+          txHash: expect.any(String),
+          value: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+    const response = await request(app)
+      .get('/v1/transactions')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+  });
+
+  test('GET /transactions\?limit=3', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          tokenName: expect.any(String),
+          value: expect.any(Number),
+          txHash: expect.any(String),
+          status: expect.any(Number),
+          blockTime: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+    const response = await request(app)
+      .get('/v1/transactions\?limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toBeLessThanOrEqual(3);
+  });
+
+  test('GET /transactions\?page=1\&limit=3', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          tokenName: expect.any(String),
+          value: expect.any(Number),
+          txHash: expect.any(String),
+          status: expect.any(Number),
+          blockTime: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+    const response = await request(app)
+      .get('/v1/transactions\?page=1\&limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toBeLessThanOrEqual(3);
+  });
+
+  test('GET /transactions\?to=0x501\&limit=3', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          tokenName: expect.any(String),
+          value: expect.any(Number),
+          txHash: expect.any(String),
+          status: expect.any(Number),
+          blockTime: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+    const response = await request(app)
+      .get('/v1/transactions\?to=0x501\&limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toBeLessThanOrEqual(3);
+  });
+
+  test('GET /transactions\?from\=0x501\&limit=3', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          tokenName: expect.any(String),
+          value: expect.any(Number),
+          txHash: expect.any(String),
+          status: expect.any(Number),
+          blockTime: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+    const response = await request(app)
+      .get('/v1/transactions\?from\=0x501\&limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toBeLessThanOrEqual(3);
+  });
+
+  test('GET /transactions\?assetName\=icx\&limit=3', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          tokenName: expect.any(String),
+          value: expect.any(Number),
+          txHash: expect.any(String),
+          status: expect.any(Number),
+          blockTime: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+    const response = await request(app)
+      .get('/v1/transactions\?assetName\=icx\&limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toBeLessThanOrEqual(3);
+  });
+
+  test('GET /transactions/0x0a26af1bf487843c6993bd08e5da5db7f5f04ef7f77ce96dfd3cfd245c52c8c8', async () => {
+    const expected = {
+      content: expect.objectContaining({
+        networkNameDst: expect.any(String),
+        serialNumber: expect.any(String),
+        tokenName: expect.any(String),
+        value: expect.any(Number),
+        toAddress: expect.any(String),
+        fromAddress: expect.any(String),
+        txHash: expect.any(String),
+        status: expect.any(Number),
+        createAt: expect.any(Number),
+        updateAt: expect.any(Number),
+        networkId: expect.any(String),
+        blockTime: expect.any(Number),
+        bptFee: expect.any(Number),
+        networkFee: expect.any(Number),
+        networkNameSrc: expect.any(String),
+        nativeToken: expect.any(String),
+        txError: "",
+      })
+    };
+
+    const response = await request(app)
+      .get(`/v1/transactions/0x0a26af1bf487843c6993bd08e5da5db7f5f04ef7f77ce96dfd3cfd245c52c8c8`)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+    expect(response.body).toMatchObject(expected);
+  });
+
+  test('GET /transactions/0xe6f572ce219f-not-found', async () => {
+    const expected = 'Not Found';
+    const response = await request(app)
+      .get(`/v1/transactions/0xe6f572ce219f-not-found`)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /text\/plain/)
+      .expect(HttpStatus.NotFound);
+    expect(response.text).toBe(expected);
+  })
+});
