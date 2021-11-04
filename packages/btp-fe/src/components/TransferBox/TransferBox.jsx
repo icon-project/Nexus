@@ -83,6 +83,7 @@ export const TransferBox = () => {
                   isValidForm={valid}
                   sendingInfo={sendingInfo}
                   account={account}
+                  form={form}
                 />
               </div>
               <div className={`container ${isCurrentStep(2) && 'active'}`}>
