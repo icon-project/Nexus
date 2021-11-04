@@ -93,6 +93,7 @@ export const TransferCard = ({
       setCheckingApproval(true);
 
       const result = await getService().isApprovedForAll();
+      console.log('🚀 ~ file: TransferCard.jsx ~ line 96 ~ onNext ~ result', result);
 
       if (result) {
         setStep(1);
