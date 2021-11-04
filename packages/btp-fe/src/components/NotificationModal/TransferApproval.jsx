@@ -29,7 +29,8 @@ export const TransferApproval = ({ onOk, onCancel }) => {
   return (
     <Wrapper>
       <Text className="md">
-        You need to grant permission before sending none native coin once and only first. Proceed?
+        In case you granted your permission, please wait until it has been confirmed. Or, you need
+        to grant permission before sending none-native coins once and only first. Proceed?
       </Text>
       <div className="button-control">
         <SecondaryButton width={192} height={64} className="cancel-btn" onClick={onCancel}>
