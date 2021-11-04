@@ -16,6 +16,28 @@ const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const bshCoreAddress = process.env.MOONBEAM_BSH_CORE_ADDRESS.toLowerCase();
 
+/*
+Mint event.
+
+{
+        "method": {
+          "pallet": "evm",
+          "method": "Log"
+        },
+        "data": [
+          {
+            "address": "0x7d4567b7257cf869b01a47e8cf0edb3814bdb963", // BSH
+            "topics": [
+              "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+              "0x0000000000000000000000009c1da847b31c0973f26b1a2a3d5c04365a867703",
+              "0x0000000000000000000000007d4567b7257cf869b01a47e8cf0edb3814bdb963",
+              "0x0000000000000000000000000000000000000000000000000000000000000000"
+            ],
+            "data": "0xa507a47b174bd5e57300fc555418f6e30207d9f78a31298d1c44e17507aa81b2000000000000000000000000000000000000000000000000015fb7f9b8c2bcb0"
+          }
+        ]
+      }
+*/
 async function handleMintBurnEvents(transaction, block) {
   if ('ethereum' !== transaction.method.pallet || 'transact' !== transaction.method.method)
     return false;
@@ -23,7 +45,8 @@ async function handleMintBurnEvents(transaction, block) {
   debugEthTx(transaction);
   const eventMapBSHScore = getEventMapBSHScore();
 
-  if (bshCoreAddress === transaction.events[0].data[0].address) {
+  // Issue: it might not be 1st event in the list so the check doesn't work.
+  //if (bshCoreAddress === transaction.events[0].data[0].address) {
     const transferSingle = eventMapBSHScore.get('TransferSingle');
     const event = findEvmLogByEventHash(transferSingle.hash, transaction.events);
 
@@ -33,7 +56,7 @@ async function handleMintBurnEvents(transaction, block) {
       );
       await handleTransferSingleEvent(transferSingle, event, transaction, block);
     }
-  }
+  //}
 }
 
 function findEvmLogByEventHash(hash, events) {
