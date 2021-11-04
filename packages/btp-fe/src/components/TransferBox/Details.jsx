@@ -211,7 +211,6 @@ export const Details = memo(
           onBack={() => {
             form.resetFieldState(fields.tokenAmount);
             form.resetFieldState(fields.recipient);
-
             setStep(0);
           }}
           disabled={currentBalance === null}

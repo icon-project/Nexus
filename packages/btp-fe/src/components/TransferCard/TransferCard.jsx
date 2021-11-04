@@ -162,6 +162,7 @@ export const TransferCard = ({
               onClick={() => {
                 onNext();
               }}
+              type="button"
             >
               Next
             </PrimaryButton>
