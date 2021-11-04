@@ -18,6 +18,11 @@ async function handleTokenRegister(txResult, transaction) {
     if ('register' === transaction.data.method) {
       debug('Found coin register on %s', transaction.txHash);
 
+      // Ref: https://github.com/icon-project/btp-dashboard/issues/428
+      // Issue: ID is 64 character hex value, 0s are omitted so need to check and pad them back.
+      // e.g. 0x8f7ce30203eb1ff1d26492c94d9ab04d63f4e54f1f9e677e8d4a0d6daaab2dd is incorrect
+      //      0x08f7ce30203eb1ff1d26492c94d9ab04d63f4e54f1f9e677e8d4a0d6daaab2dd is correct.
+      // Changed coinId: https://github.com/icon-project/btp-dashboard/issues/428#issuecomment-958635165
       const id = await getTokenId(transaction.data.params._name);
 
       const tokenObj = {

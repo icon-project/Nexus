@@ -12,17 +12,16 @@ const TRANSFER_BATCH_PROTOTYPE = 'TransferBatch(Address,Address,Address,bytes,by
 const MINT = 'mint';
 const BURN = 'burn';
 
-async function getTokensInfo(idEncode, valueEncode) {
-  const valueDecoded = decode(valueEncode);
-  const idDecoded = decode(idEncode);
-  const id = '0x' + idDecoded[0].toString('hex').substring(1);
-  const name = getTokenName(process.env.ICON_NETWORK_ID, id);
-  const value = IconConverter.toNumber('0x' + valueDecoded[0].toString('hex'));
+async function getTokenInfo(encodedId, encodedValue) {
+  const decodedId = decode(encodedId);
+  const id = '0x' + decodedId[0].toString('hex');
+  const decodedValue = decode(encodedValue);
+  const value = IconConverter.toNumber('0x' + decodedValue[0].toString('hex'));
 
   return {
-    tokenValue: value,
-    tokenName: name,
     tokenId: id,
+    tokenValue: value,
+    tokenName: getTokenName(process.env.ICON_NETWORK_ID, id)
   };
 }
 
@@ -30,7 +29,7 @@ async function getMintBurnEvent(txResult, transaction) {
   try {
     for (let event of txResult.eventLogs) {
       if (TRANSFER_BATCH_PROTOTYPE === event.indexed[0]) {
-        const token = await getTokensInfo(event.data[0], event.data[1]);
+        const token = await getTokenInfo(event.data[0], event.data[1]);
 
         return {
           tokenName: token.tokenName,
