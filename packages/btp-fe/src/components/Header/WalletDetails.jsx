@@ -23,6 +23,13 @@ import refundIcon from 'assets/images/refund-icon.svg';
 const { tertiaryBase, grayScaleSubText, grayLine } = colors;
 
 const Wrapper = styled.div`
+  max-height: 80vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
   .network-name {
     margin-bottom: 42px;
   }
