@@ -2,8 +2,8 @@
 
 const debug = require('debug')('icon');
 const { logger } = require('../../common');
-const IconService = require('icon-sdk-js');
-const { IconBuilder, HttpProvider } = require('icon-sdk-js');
+const IconService = require('icon-sdk-js').default;
+const { IconBuilder, HttpProvider } = IconService;
 const { saveTokenInfo } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);

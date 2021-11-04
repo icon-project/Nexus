@@ -14,8 +14,12 @@ goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nati
 
 goloop rpc lastblock --uri http://localhost:9080/api/v3/icon
 # 1051
-eth block:number --network http://localhost:8545
-# 354
+
+curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "icx_getLastBlock"}' https://btp.net.solidwallet.io/api/v3 | jq
+
+curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "icx_getBlockByHeight", "params": { "height": "0x4f92b4" }}' https://btp.net.solidwallet.io/api/v3 | jq
+
+curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "icx_getTransactionResult", "params": { "txHash": "0x325d15a9bdf7289760ed894da9b05db6cfd196a4b73dfde49b12ed68e0f248ab" }}' https://bicon.net.solidwallet.io/api/v3 | jq
 
 ## Ethereum
 
@@ -36,3 +40,6 @@ eth transaction:get --network http://localhost:9933 0xc67c3a4d537de8d042c6631f85
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "coinNames()"
 
 eth block:get --network http://localhost:8545 246
+
+eth block:number --network http://localhost:8545
+# 354

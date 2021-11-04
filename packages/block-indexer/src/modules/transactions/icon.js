@@ -1,7 +1,7 @@
 'use strict';
 
 const { decode } = require('rlp');
-const { IconConverter } = require('icon-sdk-js');
+const { IconConverter } = require('icon-sdk-js').default;
 const Web3 = require('web3');
 const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');

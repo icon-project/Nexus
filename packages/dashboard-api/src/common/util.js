@@ -1,6 +1,6 @@
 'use strict';
 
-const { IconConverter } = require('icon-sdk-js');
+const { IconConverter } = require('icon-sdk-js').default;
 const logger = require('./logger');
 const pool = require('./postgresql');
 const { ICX_LOOP_UNIT } = require('./constants');
@@ -47,5 +47,5 @@ module.exports = {
   hexToFixedAmount,
   hexToIcxUnit,
   numberToFixedAmount,
-  tokenToUsd
+  tokenToUsd,
 };

@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { IconConverter } = require('icon-sdk-js');
+const { IconConverter } = require('icon-sdk-js').default;
 const { decode } = require('rlp');
 const { logger, ICX_LOOP_UNIT } = require('../../common');
 const { getTokenName } = require('../tokens/model');

@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { IconBuilder } = require('icon-sdk-js');
+const { IconBuilder } = require('icon-sdk-js').default;
 
 /* Example token map for testing.
 const registeredTokens = new Map([

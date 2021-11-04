@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require('axios');
-const { IconConverter } = require('icon-sdk-js');
+const { IconConverter } = require('icon-sdk-js').default;
 const { ICX_LOOP_UNIT } = require('./constants');
 const { logger } = require('./logger');
 

@@ -1,5 +1,6 @@
 'use strict';
-const IconService = require('icon-sdk-js');
+
+const IconService = require('icon-sdk-js').default;
 const { hexToIcxUnit, logger } = require('../../common');
 const {
   getRelayCandidateList,
