@@ -4,7 +4,7 @@
 -- ### Supported networks ###
 
 INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
-  VALUES ('0x58eb1c', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://iconrepublic.org/', 0, 0, NOW(), NOW());
+  VALUES ('0x58eb1c', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://icon.foundation', 0, 0, NOW(), NOW());
 
 INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at)
   VALUES ('0x501', 'Moonbeam', 'DEV','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network/', 0, 0, NOW(), NOW());
