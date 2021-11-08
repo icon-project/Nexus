@@ -223,6 +223,7 @@ const Header = () => {
   };
 
   const onSwitchWallet = () => {
+    resetTransferStep();
     setShowDetail(false);
   };
 

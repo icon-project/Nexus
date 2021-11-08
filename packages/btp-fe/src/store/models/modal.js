@@ -36,10 +36,10 @@ const modal = {
         account: { wallet },
       } = rootState;
 
-      if (wallet !== wallets.iconex) {
+      if (![wallets.iconex, wallets.hana].includes(wallet)) {
         this.openModal({
           icon: 'exclamationPointIcon',
-          desc: 'You must connect to your ICONex wallet first',
+          desc: 'You must connect to your ICONex/Hana wallet first',
           button: {
             text: 'Okay',
             onClick: () => this.setDisplay(false),
