@@ -22,7 +22,13 @@ const Network = ({ iconUrl, name, url }) => {
       <Icon className="network-icon" iconURL={iconUrl} size="s" />
       <div>
         <div className="network-name">{name}</div>
-        <a href={`https://${url}`} target="_blank" rel="noreferrer" className="url">
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          className="url"
+          onClick="$(this).stopPropagation();"
+        >
           {url}
         </a>
       </div>
