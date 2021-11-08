@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import NotFoundPage from 'containers/NotFoundPage';
 
 import { colors } from 'components/Styles/Colors';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';

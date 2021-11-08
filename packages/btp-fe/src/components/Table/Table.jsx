@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Table as antdTable } from 'antd';
 
 import { Pagination } from './Pagination';
@@ -66,13 +66,6 @@ const TableStyled = styled(antdTable)`
 
   table {
     border-spacing: 0;
-
-    tr {
-      ${({ columns }) =>
-        columns[0].width
-          ? columns.map((col, idx) => `td:nth-child(${idx + 1}){width:${col.width};}`).join()
-          : ''}
-    }
   }
 
   ${media.md`

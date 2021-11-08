@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
 
@@ -10,8 +10,8 @@ import { tokenOptionList } from 'utils/constants';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
+import { TextMixin } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
-// import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 
@@ -23,6 +23,13 @@ import refundIcon from 'assets/images/refund-icon.svg';
 const { tertiaryBase, grayScaleSubText, grayLine } = colors;
 
 const Wrapper = styled.div`
+  max-height: 80vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
   .network-name {
     margin-bottom: 42px;
   }
@@ -67,15 +74,6 @@ const Wrapper = styled.div`
     .padding-content {
       padding: 10px 0 10px 16px;
     }
-    .action {
-      padding: 10px 16px 10px 0;
-      color: ${tertiaryBase};
-      cursor: pointer;
-
-      &:active {
-        color: #5093ab;
-      }
-    }
 
     img {
       margin-right: 8.83px;
@@ -96,7 +94,6 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
-      //margin-top: 27px;
       > .disconnect-btn {
         margin-right: 10px;
       }
@@ -109,12 +106,12 @@ const TokenSelector = styled(Select)`
   border: solid 1px ${grayLine};
   padding: 4px 8px;
   margin-left: 10px;
-  background-color: transparent !important;
   display: inline-flex;
   height: 32px;
+  min-width: 73px;
 
   > .md {
-    font-weight: 600;
+    ${TextMixin.bold};
   }
 
   &::after {
@@ -154,11 +151,21 @@ const RefundSelector = styled(Select)`
   }
 `;
 
+const ActionBtn = styled.button`
+  ${TextMixin.xsBold};
+  padding: 10px 16px 10px 0;
+  color: ${tertiaryBase};
+  background-color: transparent;
+  cursor: pointer;
+
+  &:active {
+    color: #5093ab;
+  }
+`;
+
 export const WalletDetails = ({
   networkName,
   userAvatar,
-  // balance,
-  refundableBalance,
   unit,
   address,
   shortedAddress,
@@ -167,6 +174,7 @@ export const WalletDetails = ({
 }) => {
   const [selectedToken, setSelectedToken] = useState(unit);
   const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
+  const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
 
@@ -182,7 +190,17 @@ export const WalletDetails = ({
   };
 
   const onChangeRefundSelect = async (e) => {
-    setSelectedRefundToken(e.target.value);
+    const { value } = e.target;
+    setSelectedRefundToken(value);
+    getService()
+      .getBalanceOf({
+        address,
+        refundable: true,
+        symbol: value,
+      })
+      .then((refund) => {
+        setRefund(refund);
+      });
   };
 
   return (
@@ -190,7 +208,7 @@ export const WalletDetails = ({
       <Text className="md network-name">{networkName}</Text>
       <Avatar className="user-avatar" src={userAvatar} size={120} />
       <Header className="md bold wallet-balance">
-        {currentBalance}
+        {toSeparatedNumberString(currentBalance)}
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
       </Header>
 
@@ -203,21 +221,21 @@ export const WalletDetails = ({
             options={tokens}
             onChange={onChangeRefundSelect}
           />
-          <Text className="md">{refundableBalance[selectedRefundToken]}</Text>
+          <Text className="md">{refund}</Text>
         </div>
-        <div
+
+        <ActionBtn
           onClick={() => {
-            getService().reclaim({
-              coinName: selectedRefundToken,
-              value: refundableBalance[selectedRefundToken],
-            });
+            if (refund > 0)
+              getService().reclaim({
+                coinName: selectedRefundToken,
+                value: refund,
+              });
           }}
         >
-          <Text className="xs bold action">
-            <img src={refundIcon} alt="refund-icon" />
-            Receive
-          </Text>
-        </div>
+          <img src={refundIcon} alt="refund-icon" />
+          Receive
+        </ActionBtn>
       </div>
       <Text className="sm sub-title">Wallet Address</Text>
       <div className="box-container">
@@ -225,12 +243,10 @@ export const WalletDetails = ({
           {shortedAddress}
         </Text>
         <CopyToClipboard text={address}>
-          <div>
-            <Text className="xs bold action">
-              <img src={copyIcon} alt="icon" />
-              Copy address
-            </Text>
-          </div>
+          <ActionBtn>
+            <img src={copyIcon} alt="icon" />
+            Copy address
+          </ActionBtn>
         </CopyToClipboard>
       </div>
       <div className="control-buttons">

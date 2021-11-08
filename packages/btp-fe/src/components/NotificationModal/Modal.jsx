@@ -2,10 +2,12 @@ import { memo } from 'react';
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
 
-import { PrimaryButton } from '../Button';
-import { Loader } from '../Loader';
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { PrimaryButton } from 'components/Button';
+import { TextMixin } from 'components/Typography/Text';
+import { HeaderMixin } from 'components/Typography/Header';
+import { Loader } from 'components/Loader';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 import closeIcon from 'assets/images/close-icon.svg';
 import checkIcon from 'assets/images/green-checked-icon.svg';
@@ -51,11 +53,7 @@ const Content = styled.div`
       margin-bottom: 0;
 
       text-align: center;
-      font-weight: 600;
-      font-size: 25px;
-      line-height: 36px;
-      color: ${colors.grayText};
-      letter-spacing: 1px;
+      ${HeaderMixin.smBold};
     }
 
     .close-btn {
@@ -83,13 +81,8 @@ const Content = styled.div`
     p.desc {
       max-width: 392px;
       margin: 22.17px auto 0;
-
-      color: ${colors.grayText};
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 24px;
-      letter-spacing: 0.75px;
       text-align: center;
+      ${TextMixin.md}
     }
   }
 

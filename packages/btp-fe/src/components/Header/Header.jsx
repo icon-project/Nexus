@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { Layout, Avatar } from 'antd';
+import styled from 'styled-components/macro';
+import { Avatar } from 'antd';
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
@@ -12,10 +12,11 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
-import { METAMASK_LOCAL_ADDRESS, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { toSeparatedNumberString, hashShortener } from 'utils/app';
+import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-import { Header as Heading, SubTitle, Text } from '../Typography';
+import { SubTitle, Text } from '../Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from '../Styles/Colors';
 import { media } from '../Styles/Media';
@@ -24,10 +25,11 @@ import defaultAvatar from 'assets/images/avatar.svg';
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
+// import logo from 'assets/images/logo-nexus-white.png';
 
-const { darkBG, grayText, grayLine, primaryBrandLight } = colors;
+const { darkBG, grayText, grayLine } = colors;
 
-const StyledHeader = styled(Layout.Header)`
+const StyledHeader = styled.header`
   height: 80px;
   width: 100%;
   padding: 0 160px 0 40.5px;
@@ -105,6 +107,8 @@ const StyledHeader = styled(Layout.Header)`
       top: 80px;
       left: 0;
       z-index: 101;
+      padding: 0 20px;
+
 
       min-height: calc(100vh - 80px);
       width: 100%;
@@ -129,63 +133,42 @@ const StyledHeader = styled(Layout.Header)`
   `}
 `;
 
-const hashShortener = (hashStr) => {
-  if (!hashStr) return '';
-  const len = hashStr.length;
-  if (len <= 10) {
-    return hashStr;
-  }
+// const Logo = styled.img`
+//   width: 42.65px;
+// `;
 
-  return `${hashStr.substring(0, 6)}...${hashStr.substring(len - 4)}`;
-};
-
-const defaultUser = {
-  id: 'test',
-  userName: '@dsng',
-  authorized: false,
-  avatar: defaultAvatar,
-};
 const mockWallets = {
-  metamask: {
+  [wallets.metamask]: {
     id: 'metamask',
     title: 'MetaMask Wallet',
-    network: 'Etherum Mainnet',
-    hash: '123afx123afa4aweasdfasdf',
-    amount: 10,
-    unit: 'ETH',
     icon: MetaMask,
   },
-  iconex: {
+  [wallets.iconex]: {
     id: 'iconex',
     title: 'ICONex Wallet',
-    network: 'Etherum Mainnet',
-    hash: '123afx123afa4aweasdfasdf',
-    amount: 10,
-    unit: 'ETH',
     icon: ICONex,
   },
-  hana: {
+  [wallets.hana]: {
     id: 'hana',
     title: 'Hana Wallet',
     icon: Hana,
   },
 };
 
-const Header = ({ userStatus = defaultUser }) => {
+const Header = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState(wallets.metamask);
+  const [selectedWallet, setSelectedWallet] = useState(
+    localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) || wallets.metamask,
+  );
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem(METAMASK_LOCAL_ADDRESS)) {
+    if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
       EthereumInstance.getEthereumAccounts();
     }
-  }, []);
-
-  useEffect(() => {
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
       checkICONexInstalled(() => {
@@ -195,15 +178,7 @@ const Header = ({ userStatus = defaultUser }) => {
   }, []);
 
   const {
-    accountInfo: {
-      address,
-      balance,
-      refundableBalance,
-      unit,
-      wallet,
-      cancelConfirmation,
-      currentNetwork,
-    },
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -248,6 +223,7 @@ const Header = ({ userStatus = defaultUser }) => {
   };
 
   const onSwitchWallet = () => {
+    resetTransferStep();
     setShowDetail(false);
   };
 
@@ -279,9 +255,7 @@ const Header = ({ userStatus = defaultUser }) => {
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
               <WalletDetails
                 networkName={currentNetwork}
-                userAvatar={userStatus.avatar}
-                balance={balance}
-                refundableBalance={refundableBalance}
+                userAvatar={defaultAvatar}
                 unit={unit}
                 address={address}
                 shortedAddress={shortedAddress}
@@ -325,11 +299,8 @@ const Header = ({ userStatus = defaultUser }) => {
           )}
         </>
       )}
-      <div className="left-side">
-        <Heading className="xs bold" color={primaryBrandLight}>
-          BTP Dashboard
-        </Heading>
-      </div>
+      {/* <Logo src={logo} alt="btp logo" /> */}
+
       <HamburgerButton
         className={`menu-icon ${showMenu && 'active'}`}
         onClick={() => setShowMenu(!showMenu)}
@@ -341,14 +312,14 @@ const Header = ({ userStatus = defaultUser }) => {
             <SubTitle className="sm">{currentNetwork}</SubTitle>
             <Avatar
               className="user-avatar"
-              src={userStatus.avatar}
+              src={defaultAvatar}
               size={48}
               onClick={onAvatarClicked}
             />
             <span className="wallet-info">
-              <Text className="sm address">{shortedAddress}</Text>
+              <Text className="xs address">{shortedAddress}</Text>
               <SubTitle className="md bold">
-                {balance} {unit}
+                {toSeparatedNumberString(balance)} {unit}
               </SubTitle>
             </span>
           </div>

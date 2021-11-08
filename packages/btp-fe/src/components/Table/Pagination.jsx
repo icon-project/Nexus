@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Pagination as AntdPagination } from 'antd';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from 'components/Styles/Colors';

@@ -13,7 +13,6 @@ export const TYPES = {
 };
 
 export const ADDRESS_LOCAL_STORAGE = 'address';
-export const METAMASK_LOCAL_ADDRESS = 'metamask-address';
 export const CONNECTED_WALLET_LOCAL_STORAGE = 'connected-wallet';
 
 export const signingActions = {
@@ -26,22 +25,26 @@ export const allowedNetworkIDs = {
   metamask: { '0x501': connectedNetWorks.moonbeam, '0x4': 'Rinkeby' },
 };
 
+const customNetworks = localStorage.getItem('NETWORK_CONFIG');
+const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon: {}, moonbeam: {} };
+
 export const MOON_BEAM_NODE = {
-  RPCUrl: 'http://54.251.114.18:9933',
-  BSHCore: '0x7d4567B7257cf869B01a47E8cf0EDB3814bDb963',
-  networkAddress: '0x501.pra',
-  gasLimit: '6691B7',
+  RPCUrl: moonbeam.endpoint || process.env.REACT_APP_MB_RPC_URL,
+  BSHCore: moonbeam.BSHCore || process.env.REACT_APP_MB_BSH_CORE,
+  networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,
+  gasLimit: moonbeam.gasLimit || process.env.REACT_APP_MB_GAS_LIMIT,
 };
+console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 
 // https://www.icondev.io/docs/testnet
 export const NETWORKS = {
   cloud: {
     name: connectedNetWorks.icon,
-    endpoint: 'http://54.251.114.18:9080/api/v3',
-    nid: 3,
-    networkAddress: '0x3.icon',
-    irc31token: 'cx8cefe5b2d97d15223f474e1aaab35bcb87450885',
-    BSHAddress: 'cx22722ffbc83d57d78e937bb32fa16a84609f6b82', // used to get the BTP fee from getBTPfee()
+    endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
+    nid: icon.nid || process.env.REACT_APP_ICON_NID,
+    networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
+    irc31token: icon.irc31token || process.env.REACT_APP_ICON_IRC31_TOKEN,
+    BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
   sejong: {
     name: 'Sejong Testnet',
@@ -54,6 +57,7 @@ export const NETWORKS = {
     nid: '1',
   },
 };
+console.log('ICON_NODE', NETWORKS.cloud);
 
 const testnet = localStorage.getItem('dev');
 export const currentICONexNetwork =

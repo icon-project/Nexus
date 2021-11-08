@@ -1,8 +1,9 @@
 import styled from 'styled-components/macro';
-import { PrimaryButton } from '../Button';
-import { colors } from '../Styles/Colors';
+import { PrimaryButton } from 'components/Button';
+import { colors } from 'components/Styles/Colors';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
 
-import leftArrow from '../../assets/images/blue-left-arrow.svg';
+import leftArrow from 'assets/images/blue-left-arrow.svg';
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,12 +13,9 @@ const Wrapper = styled.div`
   padding: 40px 32px 32px;
 
   .back-button {
+    ${SubTitleMixin.mdBold};
     background-color: transparent;
     color: ${colors.tertiaryBase};
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 1px;
 
     display: flex;
     align-items: center;

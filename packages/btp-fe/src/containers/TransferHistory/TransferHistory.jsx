@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelect } from 'hooks/useRematch';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
@@ -20,11 +20,12 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
 import { tokenOptionList } from 'utils/constants';
+import { toSeparatedNumberString } from 'utils/app';
 
 import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
-  margin-top: 34px;
+  margin-top: 18px;
   overflow-x: auto;
 
   .select-asset-container {
@@ -88,7 +89,7 @@ const TransferHistoryStyled = styled.div`
 
   .control-group {
     align-items: center;
-    margin-top: 60px;
+    margin: 60px 0 42px;
 
     .selector-group {
       display: flex;
@@ -140,6 +141,7 @@ const TransferHistoryStyled = styled.div`
       margin: 20px 0 0;
 
       .select-asset {
+        width: 100%;
         margin: 0 0 30px !important;
       }
 
@@ -265,7 +267,7 @@ const TransferHistory = () => {
     <TransferHistoryStyled>
       <Helmet title="Transfer history" />
 
-      <BackButton>Transfer history</BackButton>
+      <BackButton url="/transfer">Transfer history</BackButton>
       <div className="control-group">
         <div className="selector-group">
           <div className="select-asset">
@@ -293,6 +295,11 @@ const TransferHistory = () => {
         </div>
       </div>
 
+      <Text className="md">
+        {toSeparatedNumberString(pagination.totalItem)} transaction
+        {pagination.totalItem !== 1 ? 's' : ''} found
+      </Text>
+
       <TableStyled
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
@@ -307,7 +314,10 @@ const TransferHistory = () => {
         getItemsHandler={(page) => () => fetchDataHandler({ page, assetName, from, to })}
       />
       {showDetails && (
-        <HistoryDetails id={selectedRow.id} onClose={() => setShowDetails(false)}></HistoryDetails>
+        <HistoryDetails
+          txHash={selectedRow.txHash}
+          onClose={() => setShowDetails(false)}
+        ></HistoryDetails>
       )}
     </TransferHistoryStyled>
   );

@@ -106,6 +106,11 @@ const Addresses = styled.div`
 `;
 
 const required = (value) => (value ? undefined : 'Required');
+const fields = {
+  tokenAmount: 'tokenAmount',
+  recipient: 'recipient',
+};
+
 export const icons = {
   [wallets.iconex]: iconexIcon,
   ICX: iconexIcon,
@@ -124,6 +129,7 @@ export const Details = memo(
     sendingInfo,
     account,
     usdRate,
+    form,
   }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet } = account;
@@ -135,7 +141,7 @@ export const Details = memo(
       <Wrapper>
         <Header className="sm bold heading">Transfer</Header>
         <Field
-          name="tokenAmount"
+          name={fields.tokenAmount}
           validate={composeValidators(required, max)}
           render={({ input, meta }) => (
             <TokenInput
@@ -155,7 +161,7 @@ export const Details = memo(
           <Text className="sm label">Recipient</Text>
 
           <Field
-            name="recipient"
+            name={fields.recipient}
             validate={required}
             render={({ input, meta }) => (
               <TextInput placeholder={`Enter a ${network} address`} {...input} meta={meta} />
@@ -202,7 +208,11 @@ export const Details = memo(
           onExecute={() => {
             if (isValidForm) setStep(2);
           }}
-          onBack={() => setStep(0)}
+          onBack={() => {
+            form.resetFieldState(fields.tokenAmount);
+            form.resetFieldState(fields.recipient);
+            setStep(0);
+          }}
           disabled={currentBalance === null}
         />
       </Wrapper>

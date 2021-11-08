@@ -1,5 +1,6 @@
 import Button from './Button';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
+import { media } from 'components/Styles/Media';
 
 const PrimaryButtonStyled = styled(Button)`
   :hover,
@@ -16,6 +17,10 @@ const PrimaryButtonStyled = styled(Button)`
       color: #878490;
     }
   }
+
+  ${media.md`
+    width: 100%;
+  `};
 `;
 
 const PrimaryButton = ({ children, ...rest }) => {

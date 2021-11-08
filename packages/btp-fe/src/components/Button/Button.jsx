@@ -1,21 +1,17 @@
-import { Button as AntButton } from 'antd';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
-import { colors } from '../Styles/Colors';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
+import { colors } from 'components/Styles/Colors';
 
-const ButtonStyle = styled(AntButton)`
+const ButtonStyle = styled.button`
+  ${SubTitleMixin.mdBold};
   border-radius: ${(props) => props.$borderRadius};
   border: none;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 1px;
   background-color: ${(props) => props.$backgroundColor};
   color: ${(props) => props.$textColor};
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  width: ${(props) => props.$width || ''};
+  height: ${(props) => props.$height || ''};
   border: solid ${({ $borderColor }) => ($borderColor ? `1px ${$borderColor}` : '0 transparent')};
 
   &:disabled {
@@ -42,8 +38,8 @@ const Button = ({
 }) => {
   return (
     <ButtonStyle
-      height={`${height}px`}
-      width={`${width}px`}
+      $height={`${height}px`}
+      $width={`${width}px`}
       $borderRadius={`${borderRadius}px`}
       $backgroundColor={backgroundColor}
       $textColor={textColor}
@@ -63,8 +59,8 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  backgroundColor: '#5465FF',
-  textColor: '#EBEDFF',
+  backgroundColor: colors.primaryBrand,
+  textColor: colors.primaryBrandBG,
   borderRadius: 4,
 };
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { Table } from 'components/Table';
 import { Header } from 'components/Typography';
@@ -11,6 +11,7 @@ import { media } from 'components/Styles/Media';
 import { UpDownPercent } from 'components/UpDownPercent';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
+import { toSeparatedNumberString } from 'utils/app';
 
 const columns = [
   {
@@ -26,11 +27,13 @@ const columns = [
   {
     title: 'Transferred transaction',
     dataIndex: 'transferredTransactions',
+    render: (value) => toSeparatedNumberString(value),
     width: '214px',
   },
   {
     title: 'Failed transaction',
     dataIndex: 'failedTransactions',
+    render: (value) => toSeparatedNumberString(value),
     width: '214px',
   },
 ];
@@ -39,7 +42,9 @@ const candidatesColumns = [
   {
     title: '#',
     dataIndex: 'rank',
+    render: (text, record, index) => index + 1,
     width: '100px',
+    align: 'center',
   },
   {
     title: 'Name',
@@ -49,7 +54,7 @@ const candidatesColumns = [
   {
     title: 'Bonded ICX',
     dataIndex: 'bondedICX',
-    render: (value) => value.toFixed(20).replace(/(\.0+|0+)$/, ''),
+    render: (value) => toSeparatedNumberString(value),
     width: '620px',
   },
 ];
@@ -69,7 +74,7 @@ const GovernanceStyled = styled.div`
   .header-text {
     padding: 48px 0 50px 0;
     ${media.md`
-      padding: 20px 0 20px 20px;
+      padding: 20px 0;
     `}
   }
   .table-name {
@@ -85,8 +90,7 @@ const GovernanceStyled = styled.div`
   .vl {
     border-left: 1px solid ${colors.grayLine};
     height: 50px;
-    margin-left: 77px;
-    margin-right: 100px;
+    margin: 0 63px 0 94px;
   }
   .total {
     display: flex;
@@ -111,7 +115,7 @@ const GovernanceStyled = styled.div`
     }
 
     .total {
-      margin: 0px 0 24px 20px;
+      margin: 0 0 24px;
       flex-direction: column;
       align-items: flex-start;
 

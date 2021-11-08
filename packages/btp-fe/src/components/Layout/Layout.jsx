@@ -1,11 +1,10 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
-import { Layout as AtndLayout } from 'antd';
 import { Header } from 'components/Header';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
-const StyledLayout = styled(AtndLayout)`
+const StyledLayout = styled.div`
   > main {
     background-color: ${colors.grayDark};
     min-height: calc(100vh - 80px); // minus header height

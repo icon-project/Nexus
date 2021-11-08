@@ -1,19 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 const NavStyled = styled.ul`
   display: flex;
   flex-flow: nowrap;
   justify-content: flex-start;
   align-items: center;
-  margin: 0 auto 0 32.5px;
+  margin: 0 auto 0 0;
 
-  li {
+  > li {
     a.active {
       .nav-link {
         background-color: ${colors.brandSecondaryBase};
@@ -28,17 +28,14 @@ const NavStyled = styled.ul`
       padding: 8px 16px;
       border-radius: 4px;
       margin-right: 4px;
-<<<<<<< HEAD
-      color: white;
-=======
 
->>>>>>> fb893cb (Feat/#13 web responsive (#17))
-      &:focus,
+      :focus,
       :hover {
         background-color: ${colors.brandSecondaryBase};
       }
     }
-    &:last-child {
+
+    :last-child {
       margin-right: 0;
     }
   }
@@ -54,7 +51,7 @@ const buttonContents = [
   { text: 'Overview', effect: null },
   { text: 'Network', effect: null },
   { text: 'Governance', effect: null },
-  { text: 'Auction', effect: null },
+  // { text: 'Auction', effect: null },
 ];
 const Button = ({ text, ...ots }) => {
   return (
