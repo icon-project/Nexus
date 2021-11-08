@@ -685,7 +685,7 @@ module.exports = function (webpackEnv) {
         cache: true,
         // ESLint class options
         cwd: paths.appPath,
-        resolvePluginsRelativeTo: path.resolve(__dirname, '../..'),
+        // resolvePluginsRelativeTo: path.resolve(__dirname, '../..'),
         baseConfig: {
           extends: [require.resolve('eslint-config-react-app/base')],
           rules: {
