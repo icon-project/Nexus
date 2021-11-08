@@ -11,6 +11,7 @@ const {
   getVolumeTokenAllTimeByNid,
   getTotalMintValue,
   getTotalBurnValue,
+  getTokensbyNetworkId
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 const abiBshScore = require('./abi/abi.bsh_core.json');
@@ -19,31 +20,6 @@ const { HttpProvider, IconBuilder } = IconService;
 const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
-
-async function getTokensRegisteredMoonbeam() {
-  const BSHContract = new web3.eth.Contract(abiBshScore, process.env.MOONBEAM_BSH_CORE_ADDRESS);
-
-  try {
-    const listTokens = await BSHContract.methods.coinNames().call();
-    return listTokens;
-  } catch (error) {
-    logger.error('getTokensRegisteredMoonbeam failed', { error });
-    throw error;
-  }
-}
-
-async function getListTokensRegisteredIcon() {
-  const callBuilder = new IconBuilder.CallBuilder();
-  const call = callBuilder.to(process.env.ICON_NATIVE_COIN_BSH_ADDRESS).method('coinNames').build();
-
-  try {
-    const listTokens = await iconService.call(call).execute();
-    return listTokens;
-  } catch (error) {
-    logger.error('getListTokensRegisteredIcon failed', { error });
-    throw error;
-  }
-}
 
 async function getListNetworkConnectedIcon() {
   try {
@@ -117,26 +93,11 @@ async function updateFiatVolume(
   return networks;
 }
 
-async function getListTokenRegisteredNetwork(networkId) {
-  switch (networkId) {
-    case process.env.MOONBEAM_NETWORK_ID:
-      return await getTokensRegisteredMoonbeam();
-
-    case process.env.ICON_NETWORK_ID:
-      return await getListTokensRegisteredIcon();
-
-    case process.env.BSC_NETWORK_ID:
-      return [];
-
-    default:
-      logger.warn(`getListTokenRegisteredNetwork: invalid network id: ${networkId}`);
-  }
-}
-
 async function getNetworkById(networkId) {
-  const tokens = await getListTokenRegisteredNetwork(networkId);
+  //	Get token_name from token_info table related to networkId
+  const tokens = (await getTokensbyNetworkId(networkId)).map(element => element.token_name);
 
-  if (!tokens) return null;
+  if (tokens.length === 0) return null;
 
   const result = [];
 
