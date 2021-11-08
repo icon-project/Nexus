@@ -1,13 +1,12 @@
 {
   "name": "block-indexer",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "Indexing data from blockchain to local database",
   "main": "index.js",
   "author": "Tien Do",
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --no-eslintrc ./src",
-    "sidecar": "pm2 start sidecar.json",
     "start": "nodemon index.js",
     "start:pm2": "pm2 start pm2.json",
     "stop:pm2": "pm2 stop pm2.json",
@@ -28,7 +27,7 @@
     "pg": "8.6.0",
     "rlp": "2.2.6",
     "uuid": "8.3.2",
-    "web3": "1.5.1",
+    "web3": "1.6.0",
     "winston": "3.3.3",
     "winston-daily-rotate-file": "4.5.5"
   },

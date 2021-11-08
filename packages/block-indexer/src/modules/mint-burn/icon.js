@@ -64,10 +64,7 @@ async function handleMintBurnEvents(txResult, transaction) {
     const eventObj = await getMintBurnEvent(txResult, transaction);
 
     if (!eventObj || !eventObj.tokenName) {
-      logger.warn(
-        'icon:handleMintBurnEvents Token not registered, tx_hash: %s',
-        transaction.txHash,
-      );
+      logger.warn('icon:handleMintBurnEvents Token not registered %s, tx_hash: %s', eventObj.tokenId, transaction.txHash);
       return false;
     } else {
       logger.info(`icon:handleMintBurnEvents get TransferBatch event in tx ${transaction.txHash}`);

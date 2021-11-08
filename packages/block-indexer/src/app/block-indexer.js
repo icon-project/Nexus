@@ -3,7 +3,7 @@
 const { logger } = require('../common');
 const { getRegisteredTokens } = require('../modules/tokens/model');
 const iconIndexer = require('../modules/icon-indexer');
-const moonbeamIndexer = require('../modules/moonbeam-indexer');
+const moonbeamIndexer = require('../modules/web3-indexer');
 const bscIndexer = require('../modules/bsc-indexer');
 
 async function start() {

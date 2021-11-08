@@ -1,8 +1,11 @@
 'use strict';
 
 const bshAbi = require('../bsc-indexer/abi/BSHCore.json');
+const moonbeamBshCoreAbi= require('../web3-indexer/abi/moonbeam/abi.bsh_core.json');
+const moonbeamBshPeripheryAbi = require('../web3-indexer/abi/moonbeam/abi.bsh_periphery.json');
 
 const bscEventMap = new Map();
+const moonbeamEventMap = new Map();
 
 // Build a map of [event hash, event]
 function getEventInfoFromAbi(web3, contractAbi, eventNames) {
@@ -46,8 +49,25 @@ function getBscEventMap(web3) {
   return bscEventMap;
 }
 
+function getMoonbeamEventMap(web3) {
+  if (0 === moonbeamEventMap.size) {
+    let events = getEventInfoFromAbi(web3, moonbeamBshCoreAbi, ['TransferSingle']);
+
+    for (const event of events)
+      moonbeamEventMap.set(event.event.name, event);
+
+    events = getEventInfoFromAbi(web3, moonbeamBshPeripheryAbi, ['TransferStart', 'TransferEnd']);
+
+    for (const event of events)
+      moonbeamEventMap.set(event.event.name, event);
+  }
+
+  return moonbeamEventMap;
+}
+
 module.exports = {
   decodeEventLog,
   getBscEventMap,
+  getMoonbeamEventMap,
   findEventByName
 };
