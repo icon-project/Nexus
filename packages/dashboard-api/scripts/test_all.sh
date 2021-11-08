@@ -35,6 +35,7 @@ curl $HOST/v1/networks | jq
 curl $HOST/v1/networks/0x00
 
 curl $HOST/v1/networks/0x501 | jq
+curl $HOST/v1/networks/0x58eb1c | jq
 
 # relay-candidates
 
