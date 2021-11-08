@@ -7,7 +7,7 @@ import { addICONexListener } from './connectors/ICONex';
 addICONexListener();
 
 function App() {
-  console.log('--version: 1.0.5');
+  console.log('--version: 1.0.1');
   return (
     <HelmetProvider>
       <Routes />
