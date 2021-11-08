@@ -13,7 +13,6 @@ goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nati
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method coinNames
 
 goloop rpc lastblock --uri http://localhost:9080/api/v3/icon
-# 1051
 
 curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "icx_getLastBlock"}' https://btp.net.solidwallet.io/api/v3 | jq
 
@@ -27,9 +26,6 @@ curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method":
 
 curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "chain_getBlock", "params":["0xf4dd90b0ac8911eb95844c072ad0fbf31350ba568e1ce744d16f86a3fd4f6aad"]}' http://54.251.114.18:9933 | jq
 
-curl http://54.251.114.18:8080/blocks/head | jq
-curl http://54.251.114.18:8080/blocks/0x8d5bfef896cf212b0d625349cdd68a69032016c5cdd5032f71bdb8e23d63108c | jq
-
 eth abi:add bshcore ./config/abi.bsh_core.json
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "getBalanceOf('0xF8aC273f62F2D1D7283be823400e05Aeddc389F5', 'ICX')"
 
@@ -42,4 +38,3 @@ eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_cor
 eth block:get --network http://localhost:8545 246
 
 eth block:number --network http://localhost:8545
-# 354
