@@ -10,4 +10,5 @@ const SortSelect = ({ onChange }) => {
   ];
   return <Select options={sortOptions} customeArrow={FilterIcon} onChange={onChange} showCheck />;
 };
+
 export default SortSelect;
