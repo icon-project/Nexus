@@ -148,7 +148,6 @@ function NetworkPage() {
           loading={loading && networks.length === 0}
           columns={columns}
           dataSource={networks}
-          pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
           bodyText={'md'}
