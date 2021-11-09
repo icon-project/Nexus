@@ -136,7 +136,7 @@ async function getNetworkById(id) {
 
 async function getVolumeToken24hByNid(name, networkId) {
   try {
-    const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
+    const at24hAgo = new Date().getTime() - 24*60*60*1000; // current_time(milisecond) - 24h(milisecond)
     const {
       rows: [result],
     } = await pgPool.query(
