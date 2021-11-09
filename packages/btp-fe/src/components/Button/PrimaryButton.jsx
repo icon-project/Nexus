@@ -1,20 +1,25 @@
 import Button from './Button';
 import styled from 'styled-components/macro';
 import { media } from 'components/Styles/Media';
+import { colors } from 'components/Styles/Colors';
+
+const { primaryBrandLight, primaryBrandBG, grayScaleLoading, graySubText } = colors;
 
 const PrimaryButtonStyled = styled(Button)`
   :hover,
   :active,
   :focus {
-    background-color: #99a3ff;
-    color: #ebedff;
+    background-color: ${primaryBrandLight};
+    color: ${primaryBrandBG};
   }
+
   :disabled {
-    background-color: #3e3c46;
-    color: #878490;
+    background-color: ${grayScaleLoading};
+    color: ${graySubText};
+
     :hover {
-      background-color: #3e3c46;
-      color: #878490;
+      background-color: ${grayScaleLoading};
+      color: ${graySubText};
     }
   }
 
