@@ -2,7 +2,6 @@ import { memo } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components/macro';
-
 import { wallets } from 'utils/constants';
 
 import { ReactComponent as metaMaskIcon } from 'assets/images/metal-mask.svg';
@@ -24,6 +23,7 @@ const StyledIcon = styled.img`
   width: ${({ width, size }) => sizes[size] || width};
   vertical-align: middle;
 
+  /* Fix image gets blur when resize */
   image-rendering: -moz-crisp-edges; /* Firefox */
   image-rendering: -o-crisp-edges; /* Opera */
   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
@@ -89,5 +89,26 @@ export const Icon = memo(
 Icon.displayName = 'Icon';
 
 Icon.propTypes = {
+  /** Available sizes */
   size: PropTypes.oneOf(['s', 'm']),
+  /** Custome width and overrride size */
+  width: PropTypes.string,
+  /** List of avalable icons */
+  icon: PropTypes.oneOf([
+    wallets.metamask,
+    wallets.iconex,
+    'ICX',
+    'ETH',
+    'copy',
+    'binance',
+    'btc',
+    'bch',
+    'DEV',
+  ]),
+  /** Display icon with URL */
+  iconURL: PropTypes.string,
+  /** Display icon with SVG component */
+  SVGComp: PropTypes.node,
+  /** Set color for icon with SVG component */
+  color: PropTypes.string,
 };
