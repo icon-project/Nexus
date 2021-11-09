@@ -59,5 +59,5 @@ Skeleton.defaultProps = {
   width: '192px',
   height: '36px',
   color: colors.grayScaleLoading,
-  bottom: 0,
+  bottom: '0',
 };
