@@ -53,9 +53,18 @@ const Button = ({
 };
 
 Button.propTypes = {
+  /** Background color */
   backgroundColor: PropTypes.string,
+  /** Text color */
   textColor: PropTypes.string,
-  size: PropTypes.number,
+  /** Border color */
+  borderColor: PropTypes.string,
+  /** Border radius */
+  borderRadius: PropTypes.number,
+  /** Button height */
+  height: PropTypes.number,
+  /** Button width */
+  width: PropTypes.number,
 };
 
 Button.defaultProps = {
