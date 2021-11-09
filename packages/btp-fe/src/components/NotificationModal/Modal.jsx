@@ -140,7 +140,7 @@ export const Modal = memo(
             {children}
           </div>
           {text && (
-            <StyledButton height="64" {...others}>
+            <StyledButton height={64} {...others}>
               {text}
             </StyledButton>
           )}

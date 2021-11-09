@@ -1,6 +1,8 @@
 import styled from 'styled-components/macro';
+import PropTypes from 'prop-types';
 import { CheckOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
+import { wallets } from 'utils/constants';
 
 import { Text } from '../Typography';
 import { Loader } from '../Loader';
@@ -73,4 +75,19 @@ export const WalletSelector = ({
       {active && <CheckOutlined />}
     </StyledWalletItem>
   );
+};
+
+WalletSelector.propTypes = {
+  /** Allowed wallets defination */
+  wallet: PropTypes.object,
+  /** Current selected wallet */
+  type: PropTypes.oneOf([wallets.metamask, wallets.iconex, wallets.hana]),
+  /** Is selected wallet */
+  active: PropTypes.bool,
+  /** Handle clicking */
+  onClick: PropTypes.func,
+  /** Is wallet installed*/
+  isInstalled: PropTypes.bool,
+  /** Is checking wallet installed */
+  isCheckingInstalled: PropTypes.bool,
 };

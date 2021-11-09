@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Avatar } from 'antd';
@@ -17,6 +18,7 @@ import { PrimaryButton, SecondaryButton } from 'components/Button';
 
 import { getService } from 'services/transfer';
 
+import defaultAvatar from 'assets/images/avatar.svg';
 import copyIcon from 'assets/images/copy-icon.svg';
 import refundIcon from 'assets/images/refund-icon.svg';
 
@@ -165,7 +167,6 @@ const ActionBtn = styled.button`
 
 export const WalletDetails = ({
   networkName,
-  userAvatar,
   unit,
   address,
   shortedAddress,
@@ -206,7 +207,7 @@ export const WalletDetails = ({
   return (
     <Wrapper>
       <Text className="md network-name">{networkName}</Text>
-      <Avatar className="user-avatar" src={userAvatar} size={120} />
+      <Avatar className="user-avatar" src={defaultAvatar} size={120} />
       <Header className="md bold wallet-balance">
         {toSeparatedNumberString(currentBalance)}
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
@@ -264,4 +265,19 @@ export const WalletDetails = ({
       </div>
     </Wrapper>
   );
+};
+
+WalletDetails.propTypes = {
+  /** Display network's name */
+  networkName: PropTypes.string,
+  /** Display network's symbol */
+  unit: PropTypes.string,
+  /** Display connected address */
+  address: PropTypes.string,
+  /** Display connected address in short */
+  shortedAddress: PropTypes.string,
+  /** Handle disconnecting */
+  onDisconnectWallet: PropTypes.func,
+  /** Handle switching network */
+  onSwitchWallet: PropTypes.func,
 };
