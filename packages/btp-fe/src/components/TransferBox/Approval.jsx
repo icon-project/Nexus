@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import PropTypes from 'prop-types';
 
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
@@ -216,7 +216,7 @@ Approval.propTypes = {
   /** Set step for transfer box */
   setStep: PropTypes.func,
   /** Transfer box values */
-  values: PropTypes.shape({ recipient: PropTypes.string, tokenAmount: PropTypes.number }),
+  values: PropTypes.shape({ recipient: PropTypes.string, tokenAmount: PropTypes.string }),
   sendingInfo: PropTypes.shape({
     token: PropTypes.string,
     network: PropTypes.string,
