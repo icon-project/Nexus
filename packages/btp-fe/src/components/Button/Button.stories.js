@@ -1,4 +1,6 @@
 import Button from './Button';
+import PrimaryButton from './PrimaryButton';
+import SecondaryButton from './SecondaryButton';
 
 export default {
   title: 'Components/Button',
@@ -7,18 +9,20 @@ export default {
 
 const Template = (args) => (
   <>
-    <h3>Primary button</h3>
-    <Button width={416} height={64} borderRadius={4} {...args}>
-      Connect wallet
-    </Button>
-    <h3>Primary button medium size</h3>
-    <Button width={304} height={64} borderRadius={4} {...args}>
-      Okay
-    </Button>
     <h3>Primary button with radius</h3>
-    <Button width={170} height={44} borderRadius={100} {...args}>
+    <Button width={416} height={64} borderRadius={100} {...args}>
       Connect a Wallet
     </Button>
+
+    <h3>PrimaryButton </h3>
+    <PrimaryButton width={416} height={64} {...args}>
+      Connect a Wallet
+    </PrimaryButton>
+
+    <h3>SecondaryButton</h3>
+    <SecondaryButton width={416} height={64} {...args}>
+      Connect a Wallet
+    </SecondaryButton>
   </>
 );
 
