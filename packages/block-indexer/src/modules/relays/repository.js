@@ -62,10 +62,10 @@ async function getRelayByAddress(address) {
   }
 }
 
-async function updateRelayTransaction(address, transactionStatus) {
+async function updateRelayTransaction(address, status) {
   let query = 'UPDATE relays SET updated_at = NOW()';
 
-  if (transactionStatus === 1) {
+  if (status === 1) {
     query += ', total_transferred_tx = total_transferred_tx + 1';
   } else {
     query += ', total_failed_tx = total_failed_tx + 1';
@@ -82,17 +82,11 @@ async function updateRelayTransaction(address, transactionStatus) {
 
 async function getRelayAddresses() {
   try {
-    const { rows } = await pgPool.query('SELECT address FROM relays ORDER BY registered_time DESC');
-
-    if (rows.length > 0) {
-      const addesses = rows.map((item) => item.address);
-      return addesses;
-    }
+    const { rows } = await pgPool.query('SELECT address FROM relays WHERE unregistered_time IS NULL ORDER BY registered_time DESC');
+    return rows.map(row => row.address);
   } catch (error) {
     logger.error('getRelayAddresses fails', { error });
   }
-
-  return [];
 }
 
 module.exports = {
