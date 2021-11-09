@@ -17,18 +17,13 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { toSeparatedNumberString } from 'utils/app';
 
 const Network = ({ iconUrl, name, url }) => {
+  const onClick = (e) => e.stopPropagation();
   return (
     <Row className="middle">
       <Icon className="network-icon" iconURL={iconUrl} size="s" />
       <div>
         <div className="network-name">{name}</div>
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="url"
-          onClick="$(this).stopPropagation();"
-        >
+        <a href={url} target="_blank" rel="noreferrer" className="url" onClick={onClick}>
           {url}
         </a>
       </div>
