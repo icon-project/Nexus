@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
 import { Select, SelectAsset } from 'components/Select';
@@ -174,4 +175,13 @@ export const TransferCard = ({
       </div>
     </StyledCard>
   );
+};
+
+TransferCard.propTypes = {
+  /** Set step for transfer box */
+  setStep: PropTypes.func,
+  setSendingInfo: PropTypes.func,
+  isConnected: PropTypes.bool,
+  isSendingNativeCoin: PropTypes.bool,
+  currentNetwork: PropTypes.string,
 };
