@@ -1,6 +1,8 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
-import { colors } from '../Styles/Colors';
+import PropTypes from 'prop-types';
+
+import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
 const Wapper = styled.div`
@@ -41,6 +43,17 @@ export const Skeleton = memo((props) => {
 });
 
 Skeleton.displayName = 'Skeleton';
+
+Skeleton.propTypes = {
+  /** Color */
+  color: PropTypes.string,
+  /** Width  */
+  width: PropTypes.string,
+  /** Height */
+  height: PropTypes.string,
+  /** Bottom margin */
+  bottom: PropTypes.string,
+};
 
 Skeleton.defaultProps = {
   width: '192px',
