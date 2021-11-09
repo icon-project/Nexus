@@ -3,22 +3,26 @@ const { logger } = require('../../common');
 const {
   updateRelay,
   createRelay,
-  getRelayAddresses,
   updateRelayTransaction,
   getRelayByAddress,
 } = require('./repository');
+const { getRegisteredRelayMap } = require('./model');
 
 const ADD_RELAY_PROTOTYPE = 'addRelay';
 const REMOVE_RELAY_PROTOTYPE = 'removeRelay';
-let relayAddressSet;
 
 async function handleRelayAction(txResult, transaction) {
-  let transData = transaction.data;
-  await handleRelayTransaction(txResult.status, transaction.from);
+  const relayMap = await getRegisteredRelayMap();
 
-  if (transData && txResult.status == 1) {
-    if (ADD_RELAY_PROTOTYPE == transData.method) {
-      let params = transData.params;
+  // Count tx handled by relays.
+  if (relayMap.has(transaction.from))
+    await updateRelayTransaction(transaction.from, txResult.status);
+
+  const txData = transaction.data;
+
+  if (txData && txResult.status == 1) {
+    if (ADD_RELAY_PROTOTYPE == txData.method) {
+      let params = txData.params;
       let relay = {
         address: params._addr,
         link: params._link,
@@ -36,13 +40,11 @@ async function handleRelayAction(txResult, transaction) {
       } else {
         await createRelay(relay);
 
-        // add address to set
-        relayAddressSet.add(relay.address);
-
+        relayMap.set(relay.address, relay.address);
         logger.info('icon:handleRelayAction registers relay %s at tx %s', relay.link, transaction.txHash);
       }
-    } else if (REMOVE_RELAY_PROTOTYPE == transData.method) {
-      let params = transData.params;
+    } else if (REMOVE_RELAY_PROTOTYPE == txData.method) {
+      let params = txData.params;
 
       await updateRelay({
         address: params._addr,
@@ -51,26 +53,11 @@ async function handleRelayAction(txResult, transaction) {
       });
 
       logger.info('icon:handleRelayAction unregisters relay %s at tx %s', params._addr, transaction.txHash);
-
-      // remove address from set
-      relayAddressSet.delete(params._addr);
+      relayMap.delete(params._addr);
     }
   }
 }
 
-async function handleRelayTransaction(txResultStatus, relayAddress) {
-  if (!relayAddressSet) {
-    const relays = await getRelayAddresses();
-
-    if (relays)
-      relays.length > 0 ? (relayAddressSet = new Set(relays)) : (relayAddressSet = new Set());
-  }
-
-  if (relayAddressSet && relayAddressSet.has(relayAddress)) {
-    await updateRelayTransaction(relayAddress, txResultStatus);
-  }
-}
-
 module.exports = {
-  handleRelayAction,
+  handleRelayAction
 };

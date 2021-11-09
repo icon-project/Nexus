@@ -24,12 +24,14 @@ function getAddRelayAction(encodedInput) {
     const actionMap = getBscActionMap(web3);
     const result = decodeActionInput(web3, actionMap, ADD_RELAY_ACTION, encodedInput);
 
-    debug('addRelay %O', result);
+    if (result) {
+      debug('addRelay %O', result);
 
-    return {
-      link: result._link,
-      addresses: result._addr
-    };
+      return {
+        link: result._link,
+        addresses: result._addr
+      };
+    }
   } catch (error) {
     logger.error('bsc:getAddRelayAction fails to decode input %O', error);
   }
@@ -40,12 +42,14 @@ function getRemoveRelayAction(encodedInput) {
     const actionMap = getBscActionMap(web3);
     const result = decodeActionInput(web3, actionMap, REMOVE_RELAY_ACTION, encodedInput);
 
-    debug('removeRelay %O', result);
+    if (result) {
+      debug('removeRelay %O', result);
 
-    return {
-      link: result._link,
-      address: result._addr
-    };
+      return {
+        link: result._link,
+        address: result._addr
+      };
+    }
   } catch (error) {
     logger.error('bsc:getRemoveRelayAction fails to decode input %O', error);
   }

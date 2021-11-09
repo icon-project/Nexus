@@ -16,9 +16,6 @@ const { handleMintBurnEvents } = require('../mint-burn/icon');
 const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
 
-console.log(IconService);
-console.log(IconService.HttpProvider);
-
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 

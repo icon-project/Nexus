@@ -9,6 +9,7 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleMintBurnEvents } = require('../mint-burn/moonbeam');
+const { handleRelayActions } = require('../relays/moonbeam');
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
@@ -29,6 +30,7 @@ async function runTransactionHandlers(tx, txReceipt, block) {
       // handlers need tx receipt go here.
       await handleTransactionEvents(tx, txReceipt, block);
       await handleMintBurnEvents(tx, txReceipt, block);
+      await handleRelayActions(tx, block);
     } else {
       // handlers don't need tx receipt go here.
     }
