@@ -1,11 +1,12 @@
 import { memo } from 'react';
 import styled from 'styled-components/macro';
+import PropTypes from 'prop-types';
 
-import { colors } from '../Styles/Colors';
-import { Text } from '../Typography';
+import { colors } from 'components/Styles/Colors';
+import { Text } from 'components/Typography';
 
-import upIcon from '../../assets/images/up-percent-icon.svg';
-import downIcon from '../../assets/images/down-percent-icon.svg';
+import upIcon from 'assets/images/up-percent-icon.svg';
+import downIcon from 'assets/images/down-percent-icon.svg';
 
 const Wrapper = styled(Text)`
   color: ${({ up }) => (up ? colors.successState : colors.errorState)} !important;
@@ -37,3 +38,9 @@ export const UpDownPercent = memo(({ percent = 0, sm = false, label = 'in 24h' }
 });
 
 UpDownPercent.displayName = 'UpDownPercent';
+
+UpDownPercent.propTypes = {
+  percent: PropTypes.number,
+  sm: PropTypes.bool,
+  label: PropTypes.string,
+};

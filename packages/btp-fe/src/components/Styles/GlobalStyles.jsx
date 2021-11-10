@@ -36,10 +36,6 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
-  p, h3, h4, ul {
-    margin: 0;
-  }
-
   p.err-msg {
     color: ${colors.errorState} !important;
     margin-top: 7px;
