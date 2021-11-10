@@ -1,14 +1,14 @@
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
-import { CheckOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { wallets } from 'utils/constants';
 
-import { Text } from '../Typography';
-import { Loader } from '../Loader';
+import { Text } from 'components/Typography';
+import { Loader } from 'components/Loader';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import checkIcon from 'assets/images/check-icon.svg';
 
 const { grayText, successState, grayAccent } = colors;
 
@@ -75,7 +75,7 @@ export const WalletSelector = ({
         {wallet[type].title}
       </Text>
       {isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
-      {active && <CheckOutlined />}
+      {active && <img src={checkIcon} alt="icon" />}
     </StyledWalletItem>
   );
 };
