@@ -1,14 +1,14 @@
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
-import { Avatar } from 'antd';
-import { wallets } from 'utils/constants';
 
 import { Text } from 'components/Typography';
 import { Loader } from 'components/Loader';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { Icon } from 'components/Icon';
 
 import checkIcon from 'assets/images/check-icon.svg';
+import { wallets } from 'utils/constants';
 
 const { grayText, successState, grayAccent } = colors;
 
@@ -69,7 +69,7 @@ export const WalletSelector = ({
       autoFocus={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
-      <Avatar className="wallet-img" src={wallet[type].icon} size={32} />
+      <Icon className="wallet-img" iconURL={wallet[type].icon} width="32px" />
       <Text className="md wallet-title">
         {!isInstalled && !isCheckingInstalled && 'Install '}
         {wallet[type].title}

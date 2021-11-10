@@ -2,12 +2,12 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 import { tokenOptionList } from 'utils/constants';
+import { getService } from 'services/transfer';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -15,10 +15,8 @@ import { TextMixin } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
+import { Avatar } from 'components/Avatar';
 
-import { getService } from 'services/transfer';
-
-import defaultAvatar from 'assets/images/avatar.svg';
 import copyIcon from 'assets/images/copy-icon.svg';
 import refundIcon from 'assets/images/refund-icon.svg';
 
@@ -207,7 +205,7 @@ export const WalletDetails = ({
   return (
     <Wrapper>
       <Text className="md network-name">{networkName}</Text>
-      <Avatar className="user-avatar" src={defaultAvatar} size={120} />
+      <Avatar className="user-avatar" size={120} />
       <Header className="md bold wallet-balance">
         {toSeparatedNumberString(currentBalance)}
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />

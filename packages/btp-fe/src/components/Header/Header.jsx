@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { Avatar } from 'antd';
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
 import { WalletDetails } from './WalletDetails';
-import { Modal } from '../NotificationModal';
-import { PrimaryButton, HamburgerButton } from '../Button';
+import { Modal } from 'components/NotificationModal';
+import { PrimaryButton, HamburgerButton } from 'components/Button';
+import { Avatar } from 'components/Avatar';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
@@ -16,12 +16,11 @@ import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-import { SubTitle, Text } from '../Typography';
+import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
-import defaultAvatar from 'assets/images/avatar.svg';
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
@@ -309,12 +308,7 @@ const Header = () => {
         {address ? (
           <div className="account-info">
             <SubTitle className="sm">{currentNetwork}</SubTitle>
-            <Avatar
-              className="user-avatar"
-              src={defaultAvatar}
-              size={48}
-              onClick={onAvatarClicked}
-            />
+            <Avatar className="user-avatar" size={48} onClick={onAvatarClicked} />
             <span className="wallet-info">
               <Text className="xs address">{shortedAddress}</Text>
               <SubTitle className="md bold">

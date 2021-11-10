@@ -160,7 +160,7 @@ Modal.propTypes = {
   /** Display description */
   desc: PropTypes.string,
   /** Display a button with text and actions */
-  button: PropTypes.objectOf({ text: PropTypes.string, onClick: PropTypes.func }),
+  button: PropTypes.object,
   /** Width */
   width: PropTypes.string,
   /** Display or not */
