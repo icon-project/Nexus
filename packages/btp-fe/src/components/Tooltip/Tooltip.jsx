@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { colors } from 'components/Styles/Colors';
 import styled from 'styled-components/macro';
 import { TextMixin } from 'components/Typography/Text';
@@ -78,6 +79,14 @@ export const Tooltip = ({ arrowPosition, direction, width, children }) => {
       <div>{children || 'Default tooltip message'}</div>
     </Wrapper>
   );
+};
+
+Tooltip.propTypes = {
+  /** Direction */
+  direction: PropTypes.oneOf(['top', 'right', 'left', 'bottom']),
+  /** Position */
+  arrowPosition: PropTypes.string,
+  width: PropTypes.number,
 };
 
 Tooltip.defaultProps = {

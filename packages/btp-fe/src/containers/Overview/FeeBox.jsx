@@ -35,9 +35,13 @@ const Wrapper = styled.div`
   .asset-fee {
     margin-bottom: 12px;
   }
+
   .fee-text {
+    color: ${colors.grayScaleSubText};
     width: 100%;
+    margin-bottom: 20px;
   }
+
   .center-skeleton {
     width: 100%;
     display: flex;
@@ -59,9 +63,7 @@ export const Feebox = ({ fee, isFetching }) => {
   const { cumulativeAmount, currentAmount, assets = [] } = fee;
   return (
     <Wrapper className="box fee">
-      <TextWithInfo className="fee-text" hasInfo={false}>
-        FEE
-      </TextWithInfo>
+      <SubTitle className="sm bold fee-text">FEE</SubTitle>
       {isFetching ? (
         <div>
           <Skeleton width="480px" height="24px" bottom="12px" />

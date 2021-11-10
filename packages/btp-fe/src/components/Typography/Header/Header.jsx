@@ -1,12 +1,11 @@
 import styled from 'styled-components/macro';
-import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
 import { normal, sm, xs, md, lg, bold } from './mixins';
 
 const StyledHeader = styled.h3`
   ${normal};
-  color: ${({ $color }) => $color};
+  ${({ $color }) => $color && `color:${$color}`};
 
   &.inline {
     display: inline-block;
@@ -43,7 +42,7 @@ const StyledHeader = styled.h3`
   `};
 `;
 
-export const Header = ({ children, className, color = colors.grayText }) => {
+export const Header = ({ children, className, color }) => {
   return (
     <StyledHeader className={`header-text ${className}`} $color={color}>
       {children}

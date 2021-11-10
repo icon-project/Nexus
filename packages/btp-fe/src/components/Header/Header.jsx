@@ -255,7 +255,6 @@ const Header = () => {
             <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
               <WalletDetails
                 networkName={currentNetwork}
-                userAvatar={defaultAvatar}
                 unit={unit}
                 address={address}
                 shortedAddress={shortedAddress}

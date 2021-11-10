@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/macro';
+import PropTypes from 'prop-types';
 
 import { Input } from './Input';
 import { Text } from 'components/Typography';
@@ -86,4 +87,19 @@ export const TokenInput = ({
       {meta.error && meta.touched && <Text className="xs err-msg">{meta.error}</Text>}
     </Wrapper>
   );
+};
+
+TokenInput.propTypes = {
+  /** The screen including TokenIput comp is displayed or not */
+  isCurrent: PropTypes.bool,
+  /** Input value */
+  value: PropTypes.string,
+  /** Token symbol */
+  token: PropTypes.string,
+  /** Token in USD rate */
+  usdRate: PropTypes.number,
+  /** Hanlde onBlur manually */
+  onBlur: PropTypes.func,
+  /** Meta object from react-final-form */
+  meta: PropTypes.object,
 };

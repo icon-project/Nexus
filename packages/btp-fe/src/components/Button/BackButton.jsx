@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { useHistory } from 'react-router-dom';
 
 import { Header } from 'components/Typography';
-import backIcon from '../../assets/images/arrow-icon.svg';
+import backIcon from 'assets/images/arrow-icon.svg';
 
 const StyledBackButton = styled.button`
   background-color: transparent;
@@ -34,4 +35,11 @@ export const BackButton = ({ children, onClick, url }) => {
       <Header className="md bold">{children}</Header>
     </StyledBackButton>
   );
+};
+
+BackButton.propTypes = {
+  /** Handle when click */
+  onClick: PropTypes.func,
+  /** If defined, push to this URL. Otherwise, redirect back */
+  url: PropTypes.string,
 };

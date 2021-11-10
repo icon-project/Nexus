@@ -1,11 +1,9 @@
 import styled from 'styled-components/macro';
-import { colors } from 'components/Styles/Colors';
-
 import { normal, sm, md, lg, bold } from './mixins';
 
 const StyledSubTitle = styled.h4`
   ${normal};
-  color: ${({ $color }) => $color};
+  ${({ $color }) => $color && `color:${$color}`};
 
   &.sm {
     ${sm};
@@ -24,7 +22,7 @@ const StyledSubTitle = styled.h4`
   }
 `;
 
-export const SubTitle = ({ children, className, color = colors.grayText }) => {
+export const SubTitle = ({ children, className, color }) => {
   return (
     <StyledSubTitle className={`subtitle-text ${className}`} $color={color}>
       {children}

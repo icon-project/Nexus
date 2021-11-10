@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import PropTypes from 'prop-types';
 import { Helmet as ReactHelmet } from 'react-helmet-async';
 
 export const Helmet = memo(({ title, children }) => {
@@ -11,3 +12,8 @@ export const Helmet = memo(({ title, children }) => {
 });
 
 Helmet.displayName = 'Helmet';
+
+Helmet.propTypes = {
+  /** Subtitle */
+  title: PropTypes.string.isRequired,
+};

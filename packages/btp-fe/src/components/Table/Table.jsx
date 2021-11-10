@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { Table as antdTable } from 'antd';
+import PropTypes from 'prop-types';
 
 import { Pagination } from './Pagination';
 import { TextMixin } from 'components/Typography/Text';
@@ -38,12 +39,12 @@ const TableStyled = styled(antdTable)`
 
   .ant-table-tbody {
     background-color: ${(props) => props.backgroundColor};
-    ${(props) => (props.bodyText === 'sm' ? TextMixin.sm : TextMixin.md)}
+    ${(props) => TextMixin[props.bodyText] || TextMixin.md}
   }
 
   .ant-table-thead > tr > th {
     background: ${(props) => props.headerColor};
-    ${(props) => (props.headerText === 'sm' ? TextMixin.sm : TextMixin.md)}
+    ${(props) => TextMixin[props.headerText] || TextMixin.md}
   }
 
   .ant-table-thead > tr > th,
@@ -148,6 +149,34 @@ export const Table = ({
       )}
     </div>
   );
+};
+
+Table.propTypes = {
+  /** Header color */
+  headerColor: PropTypes.string,
+  /** Header text size */
+  headerText: PropTypes.oneOf(['sm', 'md']),
+  /** Background color */
+  backgroundColor: PropTypes.string,
+  /** Body text size */
+  bodyText: PropTypes.oneOf(['sm', 'md']),
+  /** Hover color */
+  hoverColor: PropTypes.string,
+  /** https://ant.design/components/pagination/#API */
+  pagination: PropTypes.object,
+  /** https://ant.design/components/table/#Column */
+  columns: PropTypes.array,
+  /** Is loading */
+  loading: PropTypes.bool,
+  /** Handle fetch items */
+  getItemsHandler: PropTypes.func,
+  /** Sorting */
+  sortOptions: PropTypes.shape({
+    order: PropTypes.oneOf(['desc', 'asc']),
+    orderBy: PropTypes.string,
+  }),
+  /** List of items */
+  dataSource: PropTypes.array,
 };
 
 Table.defaultProps = {

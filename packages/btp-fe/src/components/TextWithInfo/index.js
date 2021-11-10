@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { SubTitle } from 'components/Typography';
 import { Tooltip } from 'components/Tooltip';
 import { colors } from 'components/Styles/Colors';
-import infoIcon from '../../assets/images/info-icon.svg';
+import infoIcon from 'assets/images/info-icon.svg';
 
 const StyledHeading = styled(SubTitle)`
   color: ${colors.grayScaleSubText};
@@ -31,18 +31,11 @@ const StyledHeading = styled(SubTitle)`
   }
 `;
 
-export const TextWithInfo = ({
-  children,
-  hasInfo = true,
-  className,
-  tooltip,
-  width,
-  direction = 'left',
-}) => {
+export const TextWithInfo = ({ children, className, tooltip, width, direction = 'left' }) => {
   return (
     <StyledHeading className={`sm bold ${className}`}>
       {children}
-      {hasInfo && (
+      {tooltip && (
         <div className="icon-with-tooltip">
           <img src={infoIcon} alt="icon" />
           <Tooltip width={width} direction={direction}>
