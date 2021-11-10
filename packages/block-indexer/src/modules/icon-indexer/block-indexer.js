@@ -45,23 +45,26 @@ async function getTransactionResult(txHash) {
     // Ignore pending tx to retry later.
     // Ref: https://www.icondev.io/references/reference-manuals/icon-json-rpc-api-v3-specification#icx_gettransactionresult
     if ('[RPC ERROR] Executing' === error || '[RPC ERROR] Invalid params txHash' === error) {
-      logger.info('icon:Query pending tx %s, %s', txHash, error);
+      logger.warn('icon:Pending transaction result %s, %s', txHash, error);
       return null;
     }
 
-    logger.error('icon:Fail to get transaction result %s, %s', txHash, error);
+    throw error;
   }
 }
 
 async function retryGetTransactionResult(tx, block) {
-  const txResult = await getTransactionResult(tx.txHash);
+  try {
+    const txResult = await getTransactionResult(tx.txHash);
 
-  if (txResult) {
-    debugTx('Transaction result: %O', txResult);
-    await runTransactionHandlers(tx, txResult, block);
-  } else {
-    // TODO: limit retrying.
-    setTimeout(async () => await retryGetTransactionResult(tx, block), 2000);
+    if (txResult) {
+      debugTx('Transaction result: %O', txResult);
+      await runTransactionHandlers(tx, txResult, block);
+    } else {
+      setTimeout(async () => await retryGetTransactionResult(tx, block), 1000);
+    }
+  } catch (error) {
+    logger.error('icon:Fail to get transaction result %s, %s', tx.txHash, error);
   }
 }
 
@@ -81,7 +84,7 @@ async function getBlockByHeight(height) {
     return block;
   } catch (error) {
     if ('[RPC ERROR] E1005:Not found' === error) {
-      debug(`Block height ${height} not found`);
+      logger.warn(`icon:Block ${height} not found`);
       return null;
     }
 
@@ -97,16 +100,15 @@ async function getBlockData() {
     debug('Block: %O', block);
 
     if (block.confirmedTransactionList.length > 0) {
-      logger.info(`Received ICON block ${block.height}, ${block.blockHash}`);
+      logger.info(`icon:Received block ${block.height}, ${block.blockHash}`);
 
       await saveIndexedBlockHeight(block.height, process.env.ICON_NETWORK_ID);
       await runBlockHandlers(block);
     }
 
-    ++blockHeight;
+    ++ blockHeight;
   }
 
-  // TODO: limit retrying.
   setTimeout(async () => await retryGetBlockData(), timeout);
 }
 
@@ -114,7 +116,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('Failed to fetch ICON block data, retry in 5 minutes: %s', error);
+    logger.error('icon:Failed to fetch block %d, retry in 5 minutes: %s', blockHeight, error);
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
@@ -123,16 +125,19 @@ async function start() {
   const tokenContractMap = await getTokenContractMap();
   logger.info('ICON registered tokens: %O', tokenContractMap);
 
+  // Continue from last indexed block?
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
 
-    if (blockHeight > 0) ++blockHeight;
+    if (blockHeight > 0)
+      ++ blockHeight;
   }
 
-  if (0 === blockHeight) {
-    const block = await iconService.getLastBlock().execute();
+  const block = await iconService.getLastBlock().execute();
+
+  // Start at head block, and when invalid block height.
+  if (0 === blockHeight || blockHeight > block.height)
     blockHeight = block.height;
-  }
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
@@ -145,5 +150,5 @@ async function start() {
 }
 
 module.exports = {
-  start,
+  start
 };

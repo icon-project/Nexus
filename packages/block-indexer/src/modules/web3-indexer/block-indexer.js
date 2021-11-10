@@ -108,8 +108,10 @@ async function start() {
       ++ blockHeight;
   }
 
-  if (0 === blockHeight)
-    blockHeight = await web3.eth.getBlockNumber();
+  const height = await web3.eth.getBlockNumber();
+
+  if (0 === blockHeight || blockHeight > height)
+    blockHeight = height;
 
   logger.info('Starting Moonbeam block indexer at block %d...', blockHeight);
   await retryGetBlockData();
