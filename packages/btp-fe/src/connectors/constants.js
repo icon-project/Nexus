@@ -28,7 +28,15 @@ export const allowedNetworkIDs = {
 const customNetworks = localStorage.getItem('NETWORK_CONFIG');
 const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon: {}, moonbeam: {} };
 
+export const BSC_NODE = {
+  [connectedNetWorks.bsc]: true,
+  RPCUrl: process.env.REACT_APP_BSC_RPC_URL,
+  networkAddress: process.env.REACT_APP_BSC_NETWORK_ADDRESS,
+};
+console.log('BSC_NODE', BSC_NODE);
+
 export const MOON_BEAM_NODE = {
+  [connectedNetWorks.moonbeam]: true,
   RPCUrl: moonbeam.endpoint || process.env.REACT_APP_MB_RPC_URL,
   BSHCore: moonbeam.BSHCore || process.env.REACT_APP_MB_BSH_CORE,
   networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,

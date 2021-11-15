@@ -7,6 +7,7 @@ export const wallets = {
 export const connectedNetWorks = {
   icon: 'ICON blockchain',
   moonbeam: 'Moonbase Alpha',
+  bsc: 'Binance Smart Chain',
 };
 
 export const nativeTokens = {
@@ -17,6 +18,10 @@ export const nativeTokens = {
   [connectedNetWorks.moonbeam]: {
     symbol: 'DEV',
     netWorkLabel: 'Moonbeam',
+  },
+  [connectedNetWorks.bsc]: {
+    symbol: 'BNB',
+    netWorkLabel: 'Binance',
   },
 };
 

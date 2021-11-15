@@ -122,13 +122,14 @@ export const TransferCard = ({
     }
   };
 
-  const { icon, moonbeam } = connectedNetWorks;
+  const { icon, moonbeam, bsc } = connectedNetWorks;
 
   const getCrossNetworks = () => {
     return currentNetwork
       ? [
           { value: icon, label: icon },
           { value: moonbeam, label: moonbeam },
+          { value: bsc, label: bsc },
         ].filter((network) => network.value !== currentNetwork)
       : [];
   };
