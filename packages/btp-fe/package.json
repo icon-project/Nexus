@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "node -r dotenv/config scripts/start.js dotenv_config_path=.env.bsc",
     "build:testnet": "node scripts/build.js",
     "build:mainnet": "node -r dotenv/config scripts/build.js dotenv_config_path=.env.mainnet",
     "test": "node scripts/test.js",
