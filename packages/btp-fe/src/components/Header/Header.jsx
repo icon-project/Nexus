@@ -7,11 +7,12 @@ import { WalletDetails } from './WalletDetails';
 import { Modal } from 'components/NotificationModal';
 import { PrimaryButton, HamburgerButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
+import { Select } from 'components/Select';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
-import { wallets } from 'utils/constants';
+import { wallets, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
@@ -132,6 +133,12 @@ const StyledHeader = styled.header`
   `}
 `;
 
+const PairedNetworkWrapper = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+`;
+
 // const Logo = styled.img`
 //   width: 42.65px;
 // `;
@@ -153,6 +160,8 @@ const mockWallets = {
     icon: Hana,
   },
 };
+
+const pairedChains = Object.keys(pairedNetworks).map((i) => ({ label: i, value: i }));
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
@@ -231,12 +240,23 @@ const Header = () => {
     setShowModal(true);
   };
 
+  const onChangePairedNetworks = (e) => {
+    localStorage.setItem(PAIRED_NETWORKS, e.target.value);
+  };
+
   useEffect(() => {
     if (address) {
       setLoading(false);
       setShowDetail(true);
     }
   }, [address]);
+
+  // set default paired networks
+  useEffect(() => {
+    if (!localStorage.getItem(PAIRED_NETWORKS)) {
+      localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
+    }
+  }, []);
 
   return (
     <StyledHeader $showMenu={showMenu}>
@@ -293,6 +313,12 @@ const Header = () => {
                   isInstalled={isICONexInstalled()}
                 />
               </div>
+              <PairedNetworkWrapper>
+                <Text className="xs" color={colors.graySubText}>
+                  Select the paired networks:
+                </Text>
+                <Select options={pairedChains} onChange={onChangePairedNetworks} />
+              </PairedNetworkWrapper>
             </Modal>
           )}
         </>

@@ -28,3 +28,9 @@ export const nativeTokens = {
 export const tokenOptionList = Object.values(nativeTokens);
 
 export const SUCCESS_TRANSACTION = 'SUCCESS_TRANSACTION';
+
+export const PAIRED_NETWORKS = 'PAIRED_NETWORKS';
+export const pairedNetworks = {
+  'ICON-Moonbeam': 'ICON-Moonbeam',
+  'ICON-BSC': 'ICON-BSC',
+};
