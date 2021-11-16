@@ -296,7 +296,26 @@ export const depositTokensIntoBSH = async () => {
     method: 'transfer',
     params: {
       _to: process.env.REACT_APP_ICON_TOKEN_BSH_ADDRESS,
-      _value: IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop(),
+      _value: IconConverter.toHex(IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop()),
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(transaction, options, true);
+};
+
+export const sendNoneNativeCoinBSC = async () => {
+  const transaction = {
+    to: process.env.REACT_APP_ICON_TOKEN_BSH_ADDRESS,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      tokenName: 'ETH',
+      to: `btp://0x97.bsc/ebcbd4a934a68510e21ba25b2a827138248a63e5`,
+      value: IconConverter.toHex(IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop()),
     },
   };
 

@@ -14,7 +14,7 @@ import { connectedNetWorks } from 'utils/constants';
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
-import { depositTokensIntoBSH } from 'connectors/ICONex/iconService';
+import { depositTokensIntoBSH, sendNoneNativeCoinBSC } from 'connectors/ICONex/iconService';
 
 const StyledCard = styled.div`
   width: 480px;
@@ -178,6 +178,7 @@ export const TransferCard = ({
       </div>
 
       <PrimaryButton onClick={depositTokensIntoBSH}>Deposit</PrimaryButton>
+      <PrimaryButton onClick={sendNoneNativeCoinBSC}>sendNoneNativeCoinBSC</PrimaryButton>
     </StyledCard>
   );
 };
