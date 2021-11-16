@@ -161,8 +161,6 @@ const mockWallets = {
   },
 };
 
-const pairedChains = Object.keys(pairedNetworks).map((i) => ({ label: i, value: i }));
-
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(
@@ -172,6 +170,14 @@ const Header = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
+  const currentPairedNetworks = localStorage.getItem(PAIRED_NETWORKS);
+
+  const pairedNetworksOptions = [
+    { label: currentPairedNetworks, value: currentPairedNetworks },
+    ...Object.keys(pairedNetworks)
+      .filter((i) => i !== currentPairedNetworks)
+      .map((i) => ({ label: i, value: i })),
+  ];
 
   useEffect(() => {
     if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
@@ -253,10 +259,10 @@ const Header = () => {
 
   // set default paired networks
   useEffect(() => {
-    if (!localStorage.getItem(PAIRED_NETWORKS)) {
+    if (!currentPairedNetworks) {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
     }
-  }, []);
+  }, [currentPairedNetworks]);
 
   return (
     <StyledHeader $showMenu={showMenu}>
@@ -317,7 +323,7 @@ const Header = () => {
                 <Text className="xs" color={colors.graySubText}>
                   Select the paired networks:
                 </Text>
-                <Select options={pairedChains} onChange={onChangePairedNetworks} />
+                <Select options={pairedNetworksOptions} onChange={onChangePairedNetworks} />
               </PairedNetworkWrapper>
             </Modal>
           )}
