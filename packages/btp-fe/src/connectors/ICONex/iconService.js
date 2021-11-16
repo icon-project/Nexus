@@ -15,6 +15,7 @@ import { requestSigning } from './events';
 import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
+import { nativeTokens, connectedNetWorks } from 'utils/constants';
 
 const iconService = new IconService(httpProvider);
 const rawTransaction = 'rawTransaction';
@@ -187,7 +188,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .stepLimit(IconConverter.toBigNumber(1000000000))
-    .nid(IconConverter.toBigNumber(currentICONexNetwork.nid))
+    .nid(IconConverter.toBigNumber('0xbe04ab')) // TODO: remove hard-coded nid
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000);
@@ -203,6 +204,7 @@ export const signTx = (transaction = {}, options = {}) => {
   tx = tx.build();
 
   const rawTx = IconConverter.toRawTransaction(tx);
+
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
@@ -232,7 +234,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   try {
     let balance = 0;
 
-    if (symbol === 'BNB') {
+    if (symbol === nativeTokens[connectedNetWorks.bsc].symbol) {
       balance = await makeICXCall({
         dataType: 'call',
         to: process.env.REACT_APP_ICON_IRC2_TOKEN_ADDRESS,
@@ -282,4 +284,22 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   } catch (err) {
     console.log('err', err);
   }
+};
+
+export const depositTokensIntoBSH = async () => {
+  const transaction = {
+    to: process.env.REACT_APP_ICON_IRC2_TOKEN_ADDRESS,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      _to: process.env.REACT_APP_ICON_TOKEN_BSH_ADDRESS,
+      _value: IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop(),
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(transaction, options, true);
 };
