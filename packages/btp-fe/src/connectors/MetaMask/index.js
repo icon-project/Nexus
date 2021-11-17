@@ -5,7 +5,7 @@ import {
   CONNECTED_WALLET_LOCAL_STORAGE,
   MOON_BEAM_NODE,
   allowedNetworkIDs,
-  currentICONexNetwork,
+  getCurrentICONexNetwork,
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
 import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
@@ -237,13 +237,13 @@ class Ethereum {
     let data = null;
     if (sendNativeCoin) {
       data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+        `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
       ]);
     } else {
       data = this.BSH_ABI.encodeFunctionData('transfer', [
         'ICX',
         value,
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
+        `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
       ]);
 
       delete txParams.value;

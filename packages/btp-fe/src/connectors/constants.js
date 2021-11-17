@@ -1,3 +1,4 @@
+import IconService, { HttpProvider } from 'icon-sdk-js';
 import { connectedNetWorks, pairedNetworks, PAIRED_NETWORKS } from 'utils/constants';
 
 export const TYPES = {
@@ -54,7 +55,7 @@ export const ICON_NODES = {
     BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
   [pairedNetworks['ICON-BSC']]: {
-    name: connectedNetWorks.icon,
+    name: connectedNetWorks.icon + '(BSC)',
     endpoint: process.env.REACT_APP_ICON_BSC_RPC_URL,
     nid: process.env.REACT_APP_ICON_BSC_NID,
     networkAddress: process.env.REACT_APP_ICON_BSC_NETWORK_ADDRESS,
@@ -65,8 +66,19 @@ export const ICON_NODES = {
 };
 
 const currentPairedNetworks = localStorage.getItem(PAIRED_NETWORKS);
-export const currentICONexNetwork = currentPairedNetworks
+let currentICONexNetwork = currentPairedNetworks
   ? ICON_NODES[currentPairedNetworks]
   : ICON_NODES['ICON-Moonbeam'];
+
+export const getCurrentICONexNetwork = () => currentICONexNetwork;
+
+export let httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
+export let iconService = new IconService(httpProvider);
+
+export const setCurrentICONexNetwork = (pairedNetworks) => {
+  currentICONexNetwork = ICON_NODES[pairedNetworks];
+  httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
+  iconService = new IconService(httpProvider);
+};
 
 console.log(currentPairedNetworks, currentICONexNetwork);

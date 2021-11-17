@@ -1,23 +1,23 @@
-import IconService, { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
+import { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
 import { ethers } from 'ethers';
 
 import {
-  currentICONexNetwork,
+  getCurrentICONexNetwork,
   ADDRESS_LOCAL_STORAGE,
   MOON_BEAM_NODE,
   BSC_NODE,
   signingActions,
 } from '../constants';
 import { requestSigning } from './events';
-import Request, { convertToICX, httpProvider, makeICXCall } from './utils';
+import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
 import { nativeTokens, connectedNetWorks } from 'utils/constants';
+import { iconService, httpProvider } from 'connectors/constants';
 
-const iconService = new IconService(httpProvider);
 const rawTransaction = 'rawTransaction';
 const { modal } = store.dispatch;
 
@@ -60,7 +60,7 @@ export const getTxResult = (txHash) => {
 
 export const sendNoneNativeCoin = ({ value, to }) => {
   const transaction = {
-    to: currentICONexNetwork.BSHAddress,
+    to: getCurrentICONexNetwork().BSHAddress,
   };
 
   const options = {
@@ -78,7 +78,7 @@ export const sendNoneNativeCoin = ({ value, to }) => {
 
 export const sendNativeCoin = ({ value, to }, networkAddress) => {
   const transaction = {
-    to: currentICONexNetwork.BSHAddress,
+    to: getCurrentICONexNetwork().BSHAddress,
     value,
   };
 
@@ -95,14 +95,14 @@ export const sendNativeCoin = ({ value, to }, networkAddress) => {
 
 export const setApprovalForAll = async () => {
   const transaction = {
-    to: currentICONexNetwork.irc31token,
+    to: getCurrentICONexNetwork().irc31token,
   };
 
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'setApprovalForAll',
     params: {
-      _operator: currentICONexNetwork.BSHAddress,
+      _operator: getCurrentICONexNetwork().BSHAddress,
       _approved: '0x1',
     },
   };
@@ -113,7 +113,7 @@ export const setApprovalForAll = async () => {
 
 export const reclaim = async ({ coinName, value }) => {
   const transaction = {
-    to: currentICONexNetwork.BSHAddress,
+    to: getCurrentICONexNetwork().BSHAddress,
   };
 
   const options = {
@@ -130,12 +130,12 @@ export const reclaim = async ({ coinName, value }) => {
 
 export const isApprovedForAll = async (address) => {
   const result = await makeICXCall({
-    to: currentICONexNetwork.irc31token,
+    to: getCurrentICONexNetwork().irc31token,
     dataType: 'call',
     data: {
       method: 'isApprovedForAll',
       params: {
-        _operator: currentICONexNetwork.BSHAddress,
+        _operator: getCurrentICONexNetwork().BSHAddress,
         _owner: address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
       },
     },
@@ -221,7 +221,7 @@ export const signTx = (transaction = {}, options = {}) => {
  */
 export const getBTPfee = async () => {
   const fee = await makeICXCall({
-    to: currentICONexNetwork.BSHAddress,
+    to: getCurrentICONexNetwork().BSHAddress,
     dataType: 'call',
     data: {
       method: 'feeRatio',
@@ -247,7 +247,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       });
     } else {
       const coinId = await makeICXCall({
-        to: currentICONexNetwork.BSHAddress,
+        to: getCurrentICONexNetwork().BSHAddress,
         dataType: 'call',
         data: {
           method: 'coinId',
@@ -268,10 +268,10 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       };
 
       if (refundable) {
-        params.to = currentICONexNetwork.BSHAddress;
+        params.to = getCurrentICONexNetwork().BSHAddress;
         params.data.params._coinName = coinId;
       } else {
-        params.to = currentICONexNetwork.irc31token;
+        params.to = getCurrentICONexNetwork().irc31token;
         params.data.params._id = coinId;
       }
 

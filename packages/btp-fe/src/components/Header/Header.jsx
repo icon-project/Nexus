@@ -14,7 +14,7 @@ import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connect
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
-import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { CONNECTED_WALLET_LOCAL_STORAGE, setCurrentICONexNetwork } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 import { SubTitle, Text } from 'components/Typography';
@@ -247,7 +247,9 @@ const Header = () => {
   };
 
   const onChangePairedNetworks = (e) => {
-    localStorage.setItem(PAIRED_NETWORKS, e.target.value);
+    const { value } = e.target;
+    localStorage.setItem(PAIRED_NETWORKS, value);
+    setCurrentICONexNetwork(value);
   };
 
   useEffect(() => {

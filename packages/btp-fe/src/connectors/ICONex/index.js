@@ -10,7 +10,7 @@ import {
   TYPES,
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  currentICONexNetwork,
+  getCurrentICONexNetwork,
   signingActions,
 } from '../constants';
 
@@ -156,7 +156,7 @@ const getAccountInfo = async (address) => {
       balance,
       wallet,
       unit: 'ICX',
-      currentNetwork: currentICONexNetwork.name,
+      currentNetwork: getCurrentICONexNetwork().name,
     });
   } catch (err) {
     console.log('Err: ', err);
