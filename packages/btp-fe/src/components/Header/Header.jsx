@@ -12,7 +12,7 @@ import { Select } from 'components/Select';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
-import { wallets, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
+import { wallets, PAIRED_NETWORKS, getPairedNetwork, pairedNetworks } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE, setCurrentICONexNetwork } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
@@ -170,7 +170,7 @@ const Header = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
-  const currentPairedNetworks = localStorage.getItem(PAIRED_NETWORKS);
+  const currentPairedNetworks = getPairedNetwork();
 
   const pairedNetworksOptions = [
     { label: currentPairedNetworks, value: currentPairedNetworks },

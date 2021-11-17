@@ -1,5 +1,5 @@
 import IconService, { HttpProvider } from 'icon-sdk-js';
-import { connectedNetWorks, pairedNetworks, PAIRED_NETWORKS } from 'utils/constants';
+import { connectedNetWorks, pairedNetworks, getPairedNetwork } from 'utils/constants';
 
 export const TYPES = {
   REQUEST_HAS_ACCOUNT: 'REQUEST_HAS_ACCOUNT',
@@ -65,7 +65,7 @@ export const ICON_NODES = {
   },
 };
 
-const currentPairedNetworks = localStorage.getItem(PAIRED_NETWORKS);
+const currentPairedNetworks = getPairedNetwork();
 let currentICONexNetwork = currentPairedNetworks
   ? ICON_NODES[currentPairedNetworks]
   : ICON_NODES['ICON-Moonbeam'];

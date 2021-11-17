@@ -34,3 +34,5 @@ export const pairedNetworks = {
   'ICON-Moonbeam': 'ICON-Moonbeam',
   'ICON-BSC': 'ICON-BSC',
 };
+
+export const getPairedNetwork = () => localStorage.getItem(PAIRED_NETWORKS);

@@ -9,7 +9,7 @@ import { media } from 'components/Styles/Media';
 import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks, PAIRED_NETWORKS } from 'utils/constants';
+import { connectedNetWorks, getPairedNetwork } from 'utils/constants';
 
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
@@ -127,7 +127,7 @@ export const TransferCard = ({
   const { icon, moonbeam, bsc } = connectedNetWorks;
 
   const getCrossNetworks = () => {
-    const pairedNetwork = localStorage.getItem(PAIRED_NETWORKS) || '';
+    const pairedNetwork = getPairedNetwork() || '';
 
     return currentNetwork
       ? [
