@@ -20,7 +20,7 @@ export const nativeTokens = {
     netWorkLabel: 'Moonbeam',
   },
   [connectedNetWorks.bsc]: {
-    symbol: 'BNB',
+    symbol: 'ETH',
     netWorkLabel: 'Binance',
   },
 };
@@ -36,3 +36,4 @@ export const pairedNetworks = {
 };
 
 export const getPairedNetwork = () => localStorage.getItem(PAIRED_NETWORKS);
+export const isICONAndBSHPaired = () => getPairedNetwork() === pairedNetworks['ICON-BSC'];

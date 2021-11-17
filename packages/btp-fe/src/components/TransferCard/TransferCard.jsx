@@ -9,12 +9,10 @@ import { media } from 'components/Styles/Media';
 import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks, getPairedNetwork, pairedNetworks } from 'utils/constants';
+import { connectedNetWorks, getPairedNetwork, isICONAndBSHPaired } from 'utils/constants';
 
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
-
-import { depositTokensIntoBSH, sendNoneNativeCoinBSC } from 'connectors/ICONex/iconService';
 
 const StyledCard = styled.div`
   width: 480px;
@@ -92,7 +90,7 @@ export const TransferCard = ({
 
   const onNext = async () => {
     //  We don't CheckingApproval for transfer native token and tokens on BSC, BSC uses deposit mechanism instead.
-    if (isSendingNativeCoin || pairedNetwork === pairedNetworks['ICON-BSC']) {
+    if (isSendingNativeCoin || isICONAndBSHPaired()) {
       setStep(1);
     } else {
       setCheckingApproval(true);
@@ -181,9 +179,6 @@ export const TransferCard = ({
           )}
         </div>
       </div>
-
-      <PrimaryButton onClick={depositTokensIntoBSH}>Deposit</PrimaryButton>
-      <PrimaryButton onClick={sendNoneNativeCoinBSC}>sendNoneNativeCoinBSC</PrimaryButton>
     </StyledCard>
   );
 };

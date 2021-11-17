@@ -17,7 +17,7 @@ import { requestSigning } from './events';
 import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { nativeTokens, connectedNetWorks } from 'utils/constants';
+import { nativeTokens, connectedNetWorks, isICONAndBSHPaired } from 'utils/constants';
 
 const rawTransaction = 'rawTransaction';
 const { modal } = store.dispatch;
@@ -171,7 +171,8 @@ export const transfer = (tx, isSendingNativeCoin, network) => {
   if (isSendingNativeCoin) {
     sendNativeCoin(tx, networkAddress);
   } else {
-    sendNoneNativeCoin(tx);
+    if (isICONAndBSHPaired) depositTokensIntoBSH(tx);
+    else sendNoneNativeCoin(tx);
   }
 };
 
@@ -287,7 +288,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   }
 };
 
-export const depositTokensIntoBSH = async (value) => {
+export const depositTokensIntoBSH = async ({ value }) => {
   const transaction = {
     to: getCurrentICONexNetwork().irc2token,
   };

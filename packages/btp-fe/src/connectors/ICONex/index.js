@@ -74,7 +74,7 @@ const eventHandler = async (event) => {
                 case signingActions.deposit:
                   modal.openModal({
                     icon: 'checkIcon',
-                    desc: `You've deposited your tokens successful, please click the Transfer button to continue.`,
+                    desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
                     button: {
                       text: 'Transfer',
                       onClick: () => sendNoneNativeCoinBSC(),
