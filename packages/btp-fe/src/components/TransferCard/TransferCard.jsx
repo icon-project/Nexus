@@ -9,7 +9,7 @@ import { media } from 'components/Styles/Media';
 import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks, getPairedNetwork } from 'utils/constants';
+import { connectedNetWorks, getPairedNetwork, pairedNetworks } from 'utils/constants';
 
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
@@ -74,6 +74,7 @@ export const TransferCard = ({
   currentNetwork,
 }) => {
   const [checkingApproval, setCheckingApproval] = useState(false);
+  const pairedNetwork = getPairedNetwork() || '';
 
   const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
     openModal,
@@ -90,7 +91,8 @@ export const TransferCard = ({
   };
 
   const onNext = async () => {
-    if (isSendingNativeCoin) {
+    //  We don't CheckingApproval for transfer native token and tokens on BSC, BSC uses deposit mechanism instead.
+    if (isSendingNativeCoin || pairedNetwork === pairedNetworks['ICON-BSC']) {
       setStep(1);
     } else {
       setCheckingApproval(true);
@@ -127,8 +129,6 @@ export const TransferCard = ({
   const { icon, moonbeam, bsc } = connectedNetWorks;
 
   const getCrossNetworks = () => {
-    const pairedNetwork = getPairedNetwork() || '';
-
     return currentNetwork
       ? [
           { value: icon, label: icon },
