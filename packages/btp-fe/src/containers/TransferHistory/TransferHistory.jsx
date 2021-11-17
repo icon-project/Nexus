@@ -119,13 +119,14 @@ const TransferHistoryStyled = styled.div`
     .control-group {
       flex-direction: column;
       align-items: start;
-      margin-left: 24px;
     }
 
     .selector-group {
       margin-top: 20px;
       flex-direction: column;
       align-items: center;
+      display: block !important;
+
 
       .exchange-icon {
         width: 15px;
