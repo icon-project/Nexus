@@ -67,6 +67,6 @@ export const ICON_NODES = {
 const currentPairedNetworks = localStorage.getItem(PAIRED_NETWORKS);
 export const currentICONexNetwork = currentPairedNetworks
   ? ICON_NODES[currentPairedNetworks]
-  : ICON_NODES[currentPairedNetworks['ICON-Moonbeam']];
+  : ICON_NODES['ICON-Moonbeam'];
 
 console.log(currentPairedNetworks, currentICONexNetwork);
