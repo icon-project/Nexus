@@ -237,7 +237,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     if (symbol === nativeTokens[connectedNetWorks.bsc].symbol) {
       balance = await makeICXCall({
         dataType: 'call',
-        to: process.env.REACT_APP_ICON_IRC2_TOKEN_ADDRESS,
+        to: getCurrentICONexNetwork().irc2token,
         data: {
           method: 'balanceOf',
           params: {

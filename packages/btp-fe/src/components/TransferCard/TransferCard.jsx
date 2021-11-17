@@ -9,7 +9,7 @@ import { media } from 'components/Styles/Media';
 import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks } from 'utils/constants';
+import { connectedNetWorks, PAIRED_NETWORKS } from 'utils/constants';
 
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
@@ -127,12 +127,17 @@ export const TransferCard = ({
   const { icon, moonbeam, bsc } = connectedNetWorks;
 
   const getCrossNetworks = () => {
+    const pairedNetwork = localStorage.getItem(PAIRED_NETWORKS) || '';
+
     return currentNetwork
       ? [
           { value: icon, label: icon },
           { value: moonbeam, label: moonbeam },
           { value: bsc, label: bsc },
-        ].filter((network) => network.value !== currentNetwork)
+        ].filter(
+          (network) =>
+            connectedNetWorks[pairedNetwork.split('-')[1].toLowerCase()] === network.value,
+        )
       : [];
   };
 
