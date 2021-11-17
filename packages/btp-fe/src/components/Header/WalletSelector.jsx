@@ -74,7 +74,7 @@ export const WalletSelector = ({
         {!isInstalled && !isCheckingInstalled && 'Install '}
         {wallet[type].title}
       </Text>
-      {isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
+      {!active && isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
       {active && <img src={checkIcon} alt="icon" />}
     </StyledWalletItem>
   );
