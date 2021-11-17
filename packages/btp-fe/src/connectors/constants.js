@@ -1,4 +1,4 @@
-import { connectedNetWorks } from 'utils/constants';
+import { connectedNetWorks, pairedNetworks, PAIRED_NETWORKS } from 'utils/constants';
 
 export const TYPES = {
   REQUEST_HAS_ACCOUNT: 'REQUEST_HAS_ACCOUNT',
@@ -44,9 +44,8 @@ export const MOON_BEAM_NODE = {
 };
 console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 
-// https://www.icondev.io/docs/testnet
-export const NETWORKS = {
-  cloud: {
+export const ICON_NODES = {
+  [pairedNetworks['ICON-Moonbeam']]: {
     name: connectedNetWorks.icon,
     endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
     nid: icon.nid || process.env.REACT_APP_ICON_NID,
@@ -54,19 +53,20 @@ export const NETWORKS = {
     irc31token: icon.irc31token || process.env.REACT_APP_ICON_IRC31_TOKEN,
     BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
-  sejong: {
-    name: 'Sejong Testnet',
-    endpoint: 'https://sejong.net.solidwallet.io/api/v3',
-    nid: '0x53',
-  },
-  ICONMainnet: {
-    name: 'ICON Mainnet',
-    endpoint: 'https://ctz.solidwallet.io/api/v3',
-    nid: '1',
+  [pairedNetworks['ICON-BSC']]: {
+    name: connectedNetWorks.icon,
+    endpoint: process.env.REACT_APP_ICON_BSC_RPC_URL,
+    nid: process.env.REACT_APP_ICON_BSC_NID,
+    networkAddress: process.env.REACT_APP_ICON_BSC_NETWORK_ADDRESS,
+    irc2token: process.env.REACT_APP_ICON_BSC_IRC2_TOKEN_ADDRESS,
+    BSHAddress: process.env.REACT_APP_ICON_BSC_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
+    TOKEN_BSH_ADDRESS: process.env.REACT_APP_ICON_BSC_TOKEN_BSH_ADDRESS,
   },
 };
-console.log('ICON_NODE', NETWORKS.cloud);
 
-const testnet = localStorage.getItem('dev');
-export const currentICONexNetwork =
-  (testnet ? NETWORKS[testnet] : NETWORKS.cloud) || NETWORKS.cloud;
+const currentPairedNetworks = localStorage.getItem(PAIRED_NETWORKS);
+export const currentICONexNetwork = currentPairedNetworks
+  ? ICON_NODES[currentPairedNetworks]
+  : ICON_NODES[currentPairedNetworks['ICON-Moonbeam']];
+
+console.log(currentPairedNetworks, currentICONexNetwork);
