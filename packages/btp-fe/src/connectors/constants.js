@@ -20,6 +20,7 @@ export const signingActions = {
   globalName: 'signingActions',
   transfer: 'transfer',
   bid: 'bid',
+  deposit: 'deposit',
 };
 
 export const allowedNetworkIDs = {

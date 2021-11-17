@@ -10,13 +10,14 @@ import {
   MOON_BEAM_NODE,
   BSC_NODE,
   signingActions,
-} from '../constants';
+  iconService,
+  httpProvider,
+} from 'connectors/constants';
 import { requestSigning } from './events';
 import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
 import { nativeTokens, connectedNetWorks } from 'utils/constants';
-import { iconService, httpProvider } from 'connectors/constants';
 
 const rawTransaction = 'rawTransaction';
 const { modal } = store.dispatch;
@@ -286,27 +287,27 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   }
 };
 
-export const depositTokensIntoBSH = async () => {
+export const depositTokensIntoBSH = async (value) => {
   const transaction = {
-    to: process.env.REACT_APP_ICON_IRC2_TOKEN_ADDRESS,
+    to: getCurrentICONexNetwork().irc2token,
   };
 
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: process.env.REACT_APP_ICON_TOKEN_BSH_ADDRESS,
-      _value: IconConverter.toHex(IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop()),
+      _to: getCurrentICONexNetwork().TOKEN_BSH_ADDRESS,
+      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
     },
   };
 
-  window[signingActions.globalName] = signingActions.transfer;
-  signTx(transaction, options, true);
+  window[signingActions.globalName] = signingActions.deposit;
+  signTx(transaction, options);
 };
 
-export const sendNoneNativeCoinBSC = async () => {
+export const sendNoneNativeCoinBSC = async (receiver) => {
   const transaction = {
-    to: process.env.REACT_APP_ICON_TOKEN_BSH_ADDRESS,
+    to: getCurrentICONexNetwork().TOKEN_BSH_ADDRESS,
   };
 
   const options = {
@@ -314,7 +315,7 @@ export const sendNoneNativeCoinBSC = async () => {
     method: 'transfer',
     params: {
       tokenName: 'ETH',
-      to: `btp://0x97.bsc/ebcbd4a934a68510e21ba25b2a827138248a63e5`,
+      to: `btp://${BSC_NODE.networkAddress}/${receiver}`,
       value: IconConverter.toHex(IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop()),
     },
   };
