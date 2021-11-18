@@ -18,7 +18,8 @@ const watchedTxReceipt = {
     ['0xaa25Aa7a19f9c426E07dee59b12f944f4d9f1DD3', true] // e.g. faucet address
   ]),
   toAddress: new Map([
-    [process.env.BSC_BMC_ADDRESS, true] // bmc.bsc
+    [process.env.BSC_BMC_ADDRESS.toLowerCase(), true],
+    [process.env.BSC_BMC_PERIPHERY_ADDRESS.toLowerCase(), true]
   ])
 };
 
@@ -56,7 +57,7 @@ async function runBlockHandlers(block) {
   for (const tx of block.transactions) {
     debugTx('Transaction: %O', tx);
 
-    if (watchedTxReceipt.fromAddress.has(tx.from) || watchedTxReceipt.toAddress.has(tx.to))
+    if ((tx.to && watchedTxReceipt.toAddress.has(tx.to.toLowerCase())) || watchedTxReceipt.fromAddress.has(tx.from.toLowerCase()))
       await retryGetTransactionReceipt(tx, block);
     else
       await runTransactionHandlers(tx, null, block);
@@ -69,7 +70,7 @@ async function getBlockData() {
   // ISSUE: it requires a manual fix to work with web3 1.5.0
   // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
   const block = await web3.eth.getBlock(blockHeight, true);
-  const timeout = block ? 3000 : 15000; // Block time ~3 seconds, wait longer for new blocks created.
+  const timeout = block ? 3000 : 10000; // Block time ~3 seconds, wait longer for new blocks created.
 
   if (block) {
     if (block.transactions.length > 0) {

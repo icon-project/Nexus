@@ -25,9 +25,10 @@ async function confirmTransferEnd(event, txInfo) {
 
   try {
     const transaction = await findTxBySerialNumber(IconConverter.toNumber(data[0]), process.env.ICON_NETWORK_ID, event.scoreAddress);
+    const status = IconConverter.toNumber(data[1]);
     let statusCode = transaction.status;
 
-    switch (IconConverter.toNumber(data[1])) {
+    switch (status) {
       case 0:
         statusCode = TRANSACTION_STATUS.success;
         break;
@@ -37,6 +38,7 @@ async function confirmTransferEnd(event, txInfo) {
         break;
 
       default:
+        logger.warn('icon:Unexpected TransferEnd status %d', status);
         break;
     }
 
@@ -72,6 +74,8 @@ async function handleTransactionEvents(txResult, transaction) {
       if (TRANFER_START_PROTOTYPE !== event.indexed[0])
         continue;
 
+      logger.info(`icon:handleTransactionEvents get TransferStart event in tx ${txResult.txHash}`);
+
       const data = event.data;
       const details = decode(data[2])[0];
       const tokenName = details[0].toString('utf8');
@@ -106,6 +110,8 @@ async function handleTransactionEvents(txResult, transaction) {
     for (const event of txResult.eventLogs) {
       if (TRANFER_END_PROTOTYPE !== event.indexed[0])
         continue;
+
+      logger.info(`icon:handleTransactionEvents get TransferEnd event in tx ${txResult.txHash}`);
 
       await confirmTransferEnd(event, {
         txHash: txResult.txHash,

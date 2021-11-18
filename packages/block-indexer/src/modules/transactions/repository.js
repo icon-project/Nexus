@@ -56,9 +56,9 @@ async function findTxBySerialNumber(serialNumber, networkId, contractAddress) {
     }
 
     await client.query('COMMIT');
-    logger.info(`setTransactionConfirmed saved transaction in txHash ${txInfo.txHash}`);
+    // logger.info(`setTransactionConfirmed saved transaction in txHash ${txInfo.txHash}`);
   } catch (error) {
-    logger.error('setTransactionConfirmed fails %s', error.message);
+    logger.error('setTransactionConfirmed fails: %s, %s', error.message, error.detail);
   }
 }
 
@@ -92,7 +92,7 @@ async function saveTransaction(transaction) {
 
     debug('saveTransaction SQL %s %O:', insertStatement, insertValues);
     await pgPool.query(insertStatement, insertValues);
-    logger.info(`saveTransaction saved transaction in txHash ${transaction.txHash}`);
+    // logger.info(`saveTransaction saved transaction in txHash ${transaction.txHash}`);
   } catch (error) {
     logger.error('saveTransaction fails: %s, %s', error.message, error.detail);
   }

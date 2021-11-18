@@ -140,11 +140,13 @@ PM2 `sudo npm i -g pm2`
 
 ```bash
 sudo npm i -g eth-cli
+sudo npm i -g eth-keys
 
 curl -L -o go1.16.8.linux-amd64.tar.gz https://golang.org/dl/go1.16.8.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.8.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 go version
+
 go install github.com/icon-project/goloop/cmd/goloop@v0.9.7
 export PATH=$PATH:/home/ubuntu/go/bin
 goloop version

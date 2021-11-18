@@ -27,10 +27,6 @@ bash-5.0# cat BSHPeriphery.json | jq -r .abi
 
 ## Test
 
-### make transfer_icx
-
-### make transfer_dev
-
 ### Checks
 
 ```bash
@@ -72,8 +68,6 @@ eth abi:add bshcore abi.bsh_core.json
 eth contract:call --network http://localhost:9933 bshcore@$(cat bsh_core.moonbeam) "getBalanceOf('0x9FE123AC9FC29B832c2a16DD83bcE9b509B4C22D', 'ICX')"
 # 72.96
 ```
-
-## Test accounts
 
 ### Alice to Bob
 
