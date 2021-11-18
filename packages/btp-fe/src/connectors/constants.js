@@ -48,7 +48,7 @@ console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 
 export const ICON_NODES = {
   [pairedNetworks['ICON-Moonbeam']]: {
-    name: connectedNetWorks.icon,
+    name: connectedNetWorks.icon + ' for Moonbeam',
     endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
     nid: icon.nid || process.env.REACT_APP_ICON_NID,
     networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
@@ -56,7 +56,7 @@ export const ICON_NODES = {
     BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
   [pairedNetworks['ICON-BSC']]: {
-    name: connectedNetWorks.icon + '(BSC)',
+    name: connectedNetWorks.icon + ' for BSC',
     endpoint: process.env.REACT_APP_ICON_BSC_RPC_URL,
     nid: process.env.REACT_APP_ICON_BSC_NID,
     networkAddress: process.env.REACT_APP_ICON_BSC_NETWORK_ADDRESS,
@@ -70,16 +70,27 @@ const currentPairedNetworks = getPairedNetwork();
 let currentICONexNetwork = currentPairedNetworks
   ? ICON_NODES[currentPairedNetworks]
   : ICON_NODES['ICON-Moonbeam'];
+console.log(currentPairedNetworks, currentICONexNetwork);
 
 export const getCurrentICONexNetwork = () => currentICONexNetwork;
+
+export let serverEndpoint =
+  currentPairedNetworks === pairedNetworks['ICON-BSC']
+    ? process.env.REACT_APP_BTP_ENDPOINT_BSC
+    : process.env.REACT_APP_BTP_ENDPOINT;
 
 export let httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 export let iconService = new IconService(httpProvider);
 
-export const setCurrentICONexNetwork = (pairedNetworks) => {
-  currentICONexNetwork = ICON_NODES[pairedNetworks];
+// On dev process, we now have 2 paires of networks: ICON-Moonbeam & ICON-BSC
+// This fuction will handle switching back and forth between these paired networks
+export const setCurrentICONexNetwork = (pairedNetworksValue) => {
+  currentICONexNetwork = ICON_NODES[pairedNetworksValue];
+  serverEndpoint =
+    pairedNetworksValue === pairedNetworks['ICON-BSC']
+      ? process.env.REACT_APP_BTP_ENDPOINT_BSC
+      : process.env.REACT_APP_BTP_ENDPOINT;
+
   httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
   iconService = new IconService(httpProvider);
 };
-
-console.log(currentPairedNetworks, currentICONexNetwork);

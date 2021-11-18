@@ -11,6 +11,7 @@ import { Skeleton } from 'components/Loader';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { serverEndpoint } from 'connectors/constants';
 
 import { shortenNumber } from 'utils/app';
 import tokenBg from 'assets/images/token-promotion.svg';
@@ -167,10 +168,7 @@ export const StatisticArea = ({ data, networks, isFetching }) => {
             <div className="network-list">
               {networks.map(({ pathLogo, name }) => (
                 <SubTitle className="md bold" key={name}>
-                  <Icon
-                    iconURL={process.env.REACT_APP_BTP_ENDPOINT + pathLogo.substring(1)}
-                    width="24px"
-                  />
+                  <Icon iconURL={serverEndpoint + pathLogo.substring(1)} width="24px" />
                   {name}
                 </SubTitle>
               ))}

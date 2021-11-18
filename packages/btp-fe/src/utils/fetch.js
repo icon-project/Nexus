@@ -1,6 +1,8 @@
+import { serverEndpoint } from 'connectors/constants';
+
 export const fetchAPI = (endpoint, config = {}) => {
   const { baseURL, ...rest } = config;
-  return fetch(`${baseURL || process.env.REACT_APP_BTP_ENDPOINT}${endpoint}`, {
+  return fetch(`${baseURL || serverEndpoint}${endpoint}`, {
     ...rest,
     credentials: 'omit',
   })
