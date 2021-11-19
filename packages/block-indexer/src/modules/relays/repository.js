@@ -8,8 +8,8 @@ const logger = createLogger();
 async function createRelay(relay) {
   try {
     await pgPool.query(
-      'INSERT INTO relays (id, address, link, server_status, registered_time, total_transferred_tx, total_failed_tx, created_at) VALUES ($1, $2, $3, $4, $5, 0, 0, NOW())',
-      [relay.id, relay.address, relay.link, relay.serverStatus, relay.registeredTime],
+      'INSERT INTO relays (tx_hash, address, link, server_status, registered_time) VALUES ($1, $2, $3, $4, $5)',
+      [relay.txHash, relay.address, relay.link, relay.serverStatus, relay.registeredTime],
     );
 
     return true;
@@ -52,7 +52,7 @@ async function setRelayUnregistered(relay) {
 
 async function getRelayByAddress(address) {
   try {
-    const { rows } = await pgPool.query('SELECT id, address FROM relays WHERE address = $1', [
+    const { rows } = await pgPool.query('SELECT address FROM relays WHERE address = $1', [
       address,
     ]);
 

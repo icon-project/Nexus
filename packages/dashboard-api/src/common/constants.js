@@ -20,8 +20,7 @@ const COINs = {
 
 const TRANSACTION_TBL_NAME = 'transactions';
 const NETWORK_TBL_NAME = 'networks';
-const TOKEN_INFO_TBL_NAME = 'token_info';
-
+const REGISTERED_TOKENS_TABLE = 'registered_tokens';
 
 const TRANSACTION_TBL = {
   id: 'id',
@@ -52,5 +51,5 @@ module.exports = {
   CURRENCIES,
   COINs,
   ICX_LOOP_UNIT,
-  TOKEN_INFO_TBL_NAME
+  REGISTERED_TOKENS_TABLE
 };

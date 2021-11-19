@@ -94,7 +94,7 @@ async function updateFiatVolume(
 }
 
 async function getNetworkById(networkId) {
-  //	Get token_name from token_info table related to networkId
+  //	Get token_name from registered_tokens table related to networkId
   const tokens = (await getTokensbyNetworkId(networkId)).map(element => element.token_name);
 
   if (tokens.length === 0) return null;

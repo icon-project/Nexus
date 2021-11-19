@@ -51,7 +51,6 @@ async function handleTransferStartEvent(event, tx, receipt, block) {
       btpFee: Number(event._assetDetails[0].fee) / ICX_LOOP_UNIT,
       serialNumber: event._sn,
       txHash: tx.hash,
-      blockHash: '',
       status: TRANSACTION_STATUS.pending,
       blockTime: web3.utils.hexToNumber(block.timestamp) * 1000,
       networkId: process.env.BSC_NETWORK_ID,
@@ -77,7 +76,6 @@ async function handleTransferEndEvent(event, tx) {
     // Issue: need to keep hashes of both start and end transactions.
     const txData = {
       txHash: tx.hash,
-      blockHash: '',
       error: TRANSACTION_STATUS.failed === statusCode ? event._response : ''
     };
 

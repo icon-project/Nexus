@@ -19,10 +19,22 @@ cat bsh.core.bsc
 cat token_bsh.icon
 cat token_bsh.proxy.bsc
 
+cat register.nativeCoin.icon
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat nativebsh.icon) --method coinId --param _coinName=BNB
 
+cat register.nativeCoin.bsc
 eth abi:add bshcore abi/BSHCore.json
 eth contract:call --network http://localhost:8545 bshcore@$(cat bsh.core.bsc) "coinId('ICX')"
+
+cat register.token.bsc
+cat register.token.icon
+
+# echo $((16#FF))
+# printf "%d\n" 0xFF
+add_relay_icon=$(goloop rpc txresult $(cat tx/addRelay.icon) --uri http://localhost:9080/api/v3/icon | jq -r .blockHeight)
+printf "%d\n" $add_relay_icon
+
+cat tx/addRelay.bsc
 
 echo Information for FE
 

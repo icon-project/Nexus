@@ -4,7 +4,7 @@ const { createLogger, pgPool } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
 
 const logger = createLogger();
-
+/*
 async function saveBlock(block) {
   try {
     const query = 'INSERT INTO moonbeam_blocks (block_hash, block_height, block_data, created_time) VALUES ($1, $2, $3, NOW())';
@@ -28,7 +28,7 @@ async function getLastSavedBlock() {
     logger.error('getLastSavedBlock fails', { error });
   }
 }
-
+*/
 async function saveMintEvent(mintObj, totalToken) {
   preSave(mintObj);
 
@@ -71,8 +71,6 @@ async function getTotalTokenBurned(name) {
 }
 
 module.exports = {
-  saveBlock,
-  getLastSavedBlock,
   saveBurnEvent,
   saveMintEvent,
   getTotalTokenMinted,

@@ -1,6 +1,6 @@
 'use strict';
 const { logger } = require('../../common');
-const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME, TOKEN_INFO_TBL_NAME } = require('../../common');
+const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME, REGISTERED_TOKENS_TABLE } = require('../../common');
 
 async function getTokensVolume24h() {
   const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
@@ -156,7 +156,7 @@ async function getTokensbyNetworkId(networkId) {
   try {
     const { rows } = await pgPool.query(
       `SELECT token_name
-      FROM ${TOKEN_INFO_TBL_NAME}
+      FROM ${REGISTERED_TOKENS_TABLE}
       WHERE network_id = $1`,
       [networkId]
     );

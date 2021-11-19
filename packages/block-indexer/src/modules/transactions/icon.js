@@ -21,7 +21,8 @@ const logger = createLogger();
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
 Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NCSEvents.java#L46
 */
-async function confirmTransferEnd(event, txInfo) {
+async function confirmTransferEnd
+(event, txInfo) {
   const data = event.data;
 
   try {
@@ -91,7 +92,6 @@ async function handleTransactionEvents(txResult, transaction) {
         value: value,
         toAddress: data[0],
         txHash: txResult.txHash,
-        blockHash: '',
         status: TRANSACTION_STATUS.pending,
         blockTime: Math.floor(transaction.timestamp / 1000), // microsecond to millisecond
         networkId: process.env.ICON_NETWORK_ID,
@@ -113,11 +113,7 @@ async function handleTransactionEvents(txResult, transaction) {
         continue;
 
       logger.info(`icon:handleTransactionEvents get TransferEnd event in tx ${txResult.txHash}`);
-
-      await confirmTransferEnd(event, {
-        txHash: txResult.txHash,
-        blockHash: ''
-      });
+      await confirmTransferEnd(event, { txHash: txResult.txHash });
     }
   }
 }

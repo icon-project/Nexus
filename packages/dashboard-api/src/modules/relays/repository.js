@@ -15,8 +15,7 @@ async function countTotalRelay() {
 }
 
 async function getRelayDetailList(page = 0, limit = 20) {
-  const query = `SELECT
-                    id, address,server_status, total_transferred_tx, total_failed_tx
+  const query = `SELECT tx_hash, address, server_status, total_transferred_tx, total_failed_tx
                   FROM relays
                     WHERE unregistered_time IS NULL
                     LIMIT $1 OFFSET $2`;
@@ -31,7 +30,7 @@ async function getRelayDetailList(page = 0, limit = 20) {
 
       for (const row of rows) {
         relays.push({
-          id: row.id,
+          id: row.tx_hash,
           address: row.address,
           serverStatus: row.server_status,
           transferredTransactions: Number(row.total_transferred_tx),
@@ -47,31 +46,6 @@ async function getRelayDetailList(page = 0, limit = 20) {
   }
 
   return [];
-}
-
-async function getById(id) {
-  const query = 'SELECT * FROM relay_candidates WHERE id = $1';
-
-  try {
-    const { rows } = await pgPool.query(query, [id]);
-    if (rows.length > 0) {
-      const row = rows[0];
-      const result = {
-        id: row.id,
-        rank: Number(row.rank),
-        name: row.name,
-        bondedICX: Number(row.bonded_icx),
-        serverStatus: Number(row.server_status),
-        transferredTransactions: Number(row.total_transferred_tx),
-        failedTransactions: Number(row.total_failed_tx),
-      };
-      return result;
-    }
-    return {};
-  } catch (err) {
-    logger.error('getById fails', { err });
-    throw err;
-  }
 }
 
 // timeRange in milliseconds
@@ -112,6 +86,5 @@ async function getRegisteredRelayChange(timeRange) {
 module.exports = {
   countTotalRelay,
   getRelayDetailList,
-  getById,
   getRegisteredRelayChange,
 };
