@@ -14,6 +14,8 @@ import { connectedNetWorks, getPairedNetwork, isICONAndBSHPaired } from 'utils/c
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
+import { EthereumInstance } from 'connectors/MetaMask/index';
+
 const StyledCard = styled.div`
   width: 480px;
   background-color: #1d1b22;
@@ -179,6 +181,34 @@ export const TransferCard = ({
           )}
         </div>
       </div>
+
+      <PrimaryButton
+        width={416}
+        height={64}
+        onClick={() => {
+          EthereumInstance.transferBSC();
+        }}
+      >
+        Send BNB
+      </PrimaryButton>
+      <PrimaryButton
+        width={416}
+        height={64}
+        onClick={() => {
+          EthereumInstance.getBalanceOf('0xEbCBd4a934a68510E21ba25b2A827138248A63E5', 'ETH');
+        }}
+      >
+        Get ETH balance
+      </PrimaryButton>
+      <PrimaryButton
+        width={416}
+        height={64}
+        onClick={() => {
+          EthereumInstance.approveBSH();
+        }}
+      >
+        Approve BNB
+      </PrimaryButton>
     </StyledCard>
   );
 };

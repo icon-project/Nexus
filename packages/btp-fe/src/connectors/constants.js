@@ -39,6 +39,8 @@ export const BSC_NODE = {
   [connectedNetWorks.bsc]: true,
   RPCUrl: process.env.REACT_APP_BSC_RPC_URL,
   networkAddress: process.env.REACT_APP_BSC_NETWORK_ADDRESS,
+  BSHCore: process.env.REACT_APP_BSC_BSH_CORE,
+  tokenBSHProxy: process.env.REACT_APP_BSC_TOKEN_BSH_PROXY,
 };
 console.log('BSC_NODE', BSC_NODE);
 
