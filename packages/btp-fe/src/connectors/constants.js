@@ -21,10 +21,15 @@ export const signingActions = {
   transfer: 'transfer',
   bid: 'bid',
   deposit: 'deposit',
+  receiverAdd: 'receiverAdd',
 };
 
 export const allowedNetworkIDs = {
-  metamask: { '0x501': connectedNetWorks.moonbeam, '0x4': 'Rinkeby' },
+  metamask: {
+    '0x501': connectedNetWorks.moonbeam,
+    '0x61': connectedNetWorks.bsc,
+    '0x4': 'Rinkeby',
+  },
 };
 
 const customNetworks = localStorage.getItem('NETWORK_CONFIG');

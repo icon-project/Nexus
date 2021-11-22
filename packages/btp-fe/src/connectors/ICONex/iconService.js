@@ -288,7 +288,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   }
 };
 
-export const depositTokensIntoBSH = async ({ value }) => {
+export const depositTokensIntoBSH = async ({ value, to }) => {
   const transaction = {
     to: getCurrentICONexNetwork().irc2token,
   };
@@ -302,6 +302,7 @@ export const depositTokensIntoBSH = async ({ value }) => {
     },
   };
 
+  window[signingActions.receiverAdd] = to;
   window[signingActions.globalName] = signingActions.deposit;
   signTx(transaction, options);
 };
