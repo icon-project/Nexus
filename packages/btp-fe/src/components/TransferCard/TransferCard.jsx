@@ -207,7 +207,16 @@ export const TransferCard = ({
           EthereumInstance.approveBSH();
         }}
       >
-        Approve BNB
+        Approve ETH
+      </PrimaryButton>
+      <PrimaryButton
+        width={416}
+        height={64}
+        onClick={() => {
+          EthereumInstance.transferETHfromBSC();
+        }}
+      >
+        Transfer ETH
       </PrimaryButton>
     </StyledCard>
   );

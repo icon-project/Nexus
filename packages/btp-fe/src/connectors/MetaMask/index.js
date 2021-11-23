@@ -9,6 +9,7 @@ import {
   getCurrentICONexNetwork,
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
+import { ABI_BSC } from './ABI_BSC';
 import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets, isICONAndBSHPaired } from 'utils/constants';
@@ -295,8 +296,7 @@ class Ethereum {
 
     await this.sendTransaction({
       from: this.ethereum.selectedAddress,
-      to: '0xBA34F3c6893b12fF4115ACf1b4712C6E2783aD83',
-      // gas: MOON_BEAM_NODE.gasLimit,
+      to: BSC_NODE.BEP20TKN,
       data,
     });
   }
@@ -306,11 +306,31 @@ class Ethereum {
       const balance = await this.contractBEP20TKN.balanceOf(
         '0xEbCBd4a934a68510E21ba25b2A827138248A63E5', // Bob address
       );
-      console.log('🚀 ~ file: index.js ~ line 323 ~ Ethereum ~ getETHBalance ~ balance', balance);
+      console.log(
+        '🚀 ~ file: index.js ~ line 323 ~ Ethereum ~ getETHBalance ~ balance',
+        roundNumber(convertToICX(balance._hex), 6),
+      );
     } catch (err) {
       console.log('Err: ', err);
       return 0;
     }
+  }
+
+  async transferETHfromBSC() {
+    const data = new ethers.utils.Interface(ABI_BSC).encodeFunctionData('transfer', [
+      'ETH',
+      ethers.utils.parseEther('0.1')._hex,
+      `btp://${
+        getCurrentICONexNetwork().networkAddress
+      }/hx2ad1356e017a25d53cb7dc256d01aadc619d45d7`,
+    ]);
+
+    await this.sendTransaction({
+      from: this.ethereum.selectedAddress,
+      to: BSC_NODE.tokenBSHProxy,
+      gas: MOON_BEAM_NODE.gasLimit,
+      data,
+    });
   }
 }
 
