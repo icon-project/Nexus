@@ -20,6 +20,7 @@ const { modal, account } = store.dispatch;
 
 const metamaskURL =
   'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
+
 class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
@@ -27,6 +28,7 @@ class Ethereum {
     this.BSH_ABI = new ethers.utils.Interface(MB_ABI);
     this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
     this.contractBSC = new ethers.Contract(BSC_NODE.BSHCore, MB_ABI, this.provider);
+    this.contractBEP20TKN = new ethers.Contract(BSC_NODE.BEP20TKN, MB_ABI, this.provider);
   }
 
   get getEthereum() {
@@ -111,14 +113,9 @@ class Ethereum {
   async getBalanceOf({ address, refundable = false, symbol = 'ICX' }) {
     try {
       const balance = isICONAndBSHPaired()
-        ? await this.contractBSC.getBalanceOf(address, 'ETH')
+        ? await this.contractBSC.getBalanceOf(address, symbol)
         : await this.contract.getBalanceOf(address, symbol);
       console.log('🚀 ~ file: index.js ~ line 114 ~ Ethereum ~ getBalanceOf ~ balance', balance);
-      console.log(
-        '🚀 ~ file: index.js ~ line 114 ~ Ethereum ~ getBalanceOf ~ isICONAndBSHPaired',
-        isICONAndBSHPaired(),
-      );
-
       return refundable
         ? convertToICX(balance._refundableBalance._hex)
         : roundNumber(convertToICX(balance[0]._hex), 6);
@@ -298,10 +295,22 @@ class Ethereum {
 
     await this.sendTransaction({
       from: this.ethereum.selectedAddress,
-      to: BSC_NODE.BSHCore,
+      to: '0xBA34F3c6893b12fF4115ACf1b4712C6E2783aD83',
       // gas: MOON_BEAM_NODE.gasLimit,
       data,
     });
+  }
+
+  async getETHBalance() {
+    try {
+      const balance = await this.contractBEP20TKN.balanceOf(
+        '0xEbCBd4a934a68510E21ba25b2A827138248A63E5', // Bob address
+      );
+      console.log('🚀 ~ file: index.js ~ line 323 ~ Ethereum ~ getETHBalance ~ balance', balance);
+    } catch (err) {
+      console.log('Err: ', err);
+      return 0;
+    }
   }
 }
 

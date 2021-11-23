@@ -195,7 +195,7 @@ export const TransferCard = ({
         width={416}
         height={64}
         onClick={() => {
-          EthereumInstance.getBalanceOf('0xEbCBd4a934a68510E21ba25b2A827138248A63E5', 'ETH');
+          EthereumInstance.getETHBalance();
         }}
       >
         Get ETH balance

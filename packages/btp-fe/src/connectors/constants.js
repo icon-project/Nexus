@@ -41,6 +41,7 @@ export const BSC_NODE = {
   networkAddress: process.env.REACT_APP_BSC_NETWORK_ADDRESS,
   BSHCore: process.env.REACT_APP_BSC_BSH_CORE,
   tokenBSHProxy: process.env.REACT_APP_BSC_TOKEN_BSH_PROXY,
+  BEP20TKN: process.env.REACT_APP_BSC_BEP20_TKN,
 };
 console.log('BSC_NODE', BSC_NODE);
 
