@@ -1,7 +1,7 @@
 'use strict';
 
 const Web3 = require('web3');
-const debug = require('debug')('moonbeam_tx');
+const debug = require('debug')('bsc_tx');
 const { logger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog, getMoonbeamEventMap } = require('../common/events');
 const { getTokenContractMap } = require('../transactions/model');
@@ -9,7 +9,8 @@ const { getTokenName } = require('../tokens/model');
 const { saveToken, getTotalTokenAmount } = require('./repository');
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
-const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
+const bmcAddress = process.env.BSC_BMC_ADDRESS.toLowerCase();
+const TRANSFER_SINGLE_EVENT = 'TransferSingle';
 
 async function handleMintBurnEvents(tx, receipt, block) {
   const eventMap = getMoonbeamEventMap();
@@ -19,12 +20,14 @@ async function handleMintBurnEvents(tx, receipt, block) {
   // Mint in a tx send to BSH but burn in a tx send to BMC.
   // Ref: https://github.com/icon-project/btp-dashboard/issues/465#issuecomment-966937077
   if (contractMap.has(txTo) || bmcAddress === txTo) {
-    const transferSingle = findEventByName('TransferSingle', eventMap, receipt.logs);
+    const transferSingle = findEventByName(TRANSFER_SINGLE_EVENT, eventMap, receipt.logs);
+    debug('TransferSingle %O', transferSingle);
 
     if (transferSingle) {
-      logger.info(`moonbeam:handleMintBurnEvents get TransferSingle event in tx ${tx.hash}`);
+      logger.info(`bsc:handleMintBurnEvents get ${TRANSFER_SINGLE_EVENT} event in tx ${tx.hash}`);
 
-      const eventData = decodeEventLog(web3, eventMap, 'TransferSingle', transferSingle);
+      const eventData = decodeEventLog(web3, eventMap, TRANSFER_SINGLE_EVENT, transferSingle);
+      debug('TransferSingle decoded %O', eventData);
       await handleTransferSingleEvent(eventData, tx, block);
     }
   }
@@ -50,10 +53,10 @@ Result {
 async function handleTransferSingleEvent(eventData, tx, block) {
   try {
     const tokenId = '0x' + eventData.id;
-    const tokenName = getTokenName(process.env.MOONBEAM_NETWORK_ID, tokenId);
+    const tokenName = getTokenName(process.env.BSC_NETWORK_ID, tokenId);
 
     if (!tokenName) {
-      logger.warn('moonbeam:handleTransferSingleEvent found an unregistered token ID=%s', eventData.id);
+      logger.warn('bsc:handleTransferSingleEvent found an unregistered token ID=%s', eventData.id);
       return false;
     }
 
@@ -64,19 +67,23 @@ async function handleTransferSingleEvent(eventData, tx, block) {
       to: eventData.to.toLowerCase(),
       from: eventData.from.toLowerCase(),
       txHash: tx.hash,
-      networkId: process.env.MOONBEAM_NETWORK_ID,
+      networkId: process.env.BSC_NETWORK_ID,
       blockTime: web3.utils.hexToNumber(block.timestamp) * 1000
     };
 
     if (CONTRACT_ZERO_ADDRESS === mintBurn.from) {
+      logger.info(`bsc:Mint ${mintBurn.tokenValue} ${mintBurn.tokenName} in tx ${tx.hash}`);
+
       const totalToken = await getTotalTokenAmount(mintBurn.tokenName, MINT_EVENT);
       await saveToken(mintBurn, totalToken, MINT_EVENT);
     } else {
+      logger.info(`bsc:Burn ${mintBurn.tokenValue} ${mintBurn.tokenName} in tx ${tx.hash}`);
+
       const totalToken = await getTotalTokenAmount(mintBurn.tokenName, BURN_EVENT);
       await saveToken(mintBurn, totalToken, BURN_EVENT);
     }
   } catch (error) {
-    logger.error('moonbeam:handleTransferSingleEvent fails %O', error);
+    logger.error('bsc:handleTransferSingleEvent fails %O', error);
   }
 }
 

@@ -41,7 +41,7 @@ function findEventByName(eventName, eventMap, eventLogs) {
 
 function getBscEventMap(web3) {
   if (0 === bscEventMap.size) {
-    let events = getEventInfoFromAbi(web3, bshCoreAbi, ['TransferBatch', 'TransferSingle']);
+    let events = getEventInfoFromAbi(web3, bshCoreAbi, ['TransferSingle']);
 
     for (const event of events)
       bscEventMap.set(event.event.name, event);

@@ -9,14 +9,12 @@ const { getBscActionMap } = require('../common/actions');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/bsc');
-const { handleMintBurnEvents } = require('./mint-burn');
 const { handleRelayActions } = require('../relays/bsc');
+const { Web3MintBurnHandler } = require('../mint-burn/web3');
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
-  fromAddress: new Map([
-    ['0xaa25Aa7a19f9c426E07dee59b12f944f4d9f1DD3', true] // e.g. faucet address
-  ]),
+  fromAddress: new Map(),
   toAddress: new Map([
     [process.env.BSC_BMC_ADDRESS.toLowerCase(), true],
     [process.env.BSC_BMC_PERIPHERY_ADDRESS.toLowerCase(), true]
@@ -25,6 +23,7 @@ const watchedTxReceipt = {
 
 const web3 = new Web3(process.env.BSC_API_URL);
 let blockHeight = Number(process.env.BSC_BLOCK_HEIGHT);
+let mintBurnHandler = null;
 
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, txReceipt, block) {
@@ -32,7 +31,7 @@ async function runTransactionHandlers(tx, txReceipt, block) {
     if (txReceipt && txReceipt.status) {
       // handlers need tx receipt go here.
       await handleTransactionEvents(tx, txReceipt, block);
-      await handleMintBurnEvents(tx, txReceipt);
+      await mintBurnHandler.run(tx, txReceipt, block);
       await handleRelayActions(tx, txReceipt, block);
     } else {
       // handlers don't need tx receipt go here.
@@ -108,6 +107,15 @@ async function start() {
 
   for (const [key, value] of contractMap.entries())
     watchedTxReceipt.toAddress.set(key, value);
+
+  mintBurnHandler = new Web3MintBurnHandler({
+    name: 'bsc',
+    networkId: process.env.BSC_NETWORK_ID,
+    endpointUrl: process.env.BSC_API_URL,
+    bmcAddress: process.env.BSC_BMC_ADDRESS,
+    eventMap,
+    contractMap
+  });
 
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.BSC_NETWORK_ID);

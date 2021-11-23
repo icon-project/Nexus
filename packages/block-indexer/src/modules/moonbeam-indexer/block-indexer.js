@@ -8,9 +8,9 @@ const { logger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 const { getTokenContractMap } = require('../transactions/model');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
+const { buildActionMap } = require('./actions');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleMintBurnEvents } = require('../mint-burn/moonbeam');
-const { buildActionMap } = require('./actions');
 const { handleRelayActions } = require('../relays/moonbeam');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);

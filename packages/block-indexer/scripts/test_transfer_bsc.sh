@@ -9,7 +9,7 @@ cd work
 
 alice_btp_address=btp://$(cat net.btp.icon)/$(cat alice.ks.json | jq -r .address)
 bob_btp_address=btp://0x97.bsc/0x$(cat bob.ks.json | jq -r .address)
-bob_pk=0xfd52d799e21ad6d35a4e0c1679fd82eecbe3e3ccfdeceb8a1eed3a742423f688
+bob_pk=fd52d799e21ad6d35a4e0c1679fd82eecbe3e3ccfdeceb8a1eed3a742423f688
 
 echo 1. Alice sends 1 ICX to Bob
 
@@ -51,10 +51,10 @@ encoded_data=$(eth method:encode abi/BSHCore.json "transferNativeCoin('$alice_bt
 
 eth transaction:send --network http://localhost:8545 \
   --pk $bob_pk \
-  --gas 16721975 \
+  --gas 6721975 \
   --to $(cat bsh.core.bsc) \
   --data $encoded_data \
-  --value 0x16345785D8A0000 | jq -r
+  --value 1000000000000000000 | jq -r
 
 sleep 5s
 echo 5. Bob sends 0.1 ICX to Alice
