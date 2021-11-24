@@ -10,10 +10,9 @@ import {
 import { MB_ABI } from './abi/MB_ABI';
 import { BSC_ABI } from './abi/BSC_ABI';
 
-import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
+import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
-import { wallets, isICONAndBSHPaired, nativeTokens } from 'utils/constants';
-import { roundNumber } from 'utils/app';
+import { wallets, nativeTokens } from 'utils/constants';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -111,21 +110,6 @@ class Ethereum {
         console.log('Change Network', chainId);
         window.location.reload();
       });
-    }
-  }
-
-  async getBalanceOf({ address, refundable = false, symbol = 'ICX' }) {
-    try {
-      const balance = isICONAndBSHPaired()
-        ? await this.contract_BSC.getBalanceOf(address, symbol)
-        : await this.contract.getBalanceOf(address, symbol);
-      console.log('🚀 ~ file: index.js ~ line 114 ~ Ethereum ~ getBalanceOf ~ balance', balance);
-      return refundable
-        ? convertToICX(balance._refundableBalance._hex)
-        : roundNumber(convertToICX(balance[0]._hex), 6);
-    } catch (err) {
-      console.log('Err: ', err);
-      return 0;
     }
   }
 

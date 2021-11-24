@@ -6,7 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { getTokenOptions, nativeTokens, connectedNetWorks } from 'utils/constants';
+import { getTokenOptions } from 'utils/constants';
 import { getService } from 'services/transfer';
 
 import { Select } from 'components/Select';
@@ -179,7 +179,7 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: unit, value: unit },
-    ...[nativeTokens[connectedNetWorks.icon], getTokenOptions()]
+    ...getTokenOptions()
       .map(({ symbol }) => ({ label: symbol, value: symbol }))
       .filter((item) => item.label !== unit),
   ];

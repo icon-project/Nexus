@@ -6,6 +6,11 @@ import { convertToICX } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { EthereumInstance } from 'connectors/MetaMask';
 
+export const getBalanceOf = () => {
+  console.log('TODO');
+  return Promise.resolve(true);
+};
+
 export const transferNativeCoin = async (tx = {}) => {
   const value = ethers.utils.parseEther(tx.value || '1')._hex;
   const { to } = tx;

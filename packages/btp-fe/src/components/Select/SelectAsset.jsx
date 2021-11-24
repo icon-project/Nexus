@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { nativeTokens, connectedNetWorks, getTokenOptions } from 'utils/constants';
+import { getTokenOptions } from 'utils/constants';
 
 const StyledItem = styled.div`
   display: flex;
@@ -35,25 +35,24 @@ const Item = ({ symbol, children, ...props }) => {
   );
 };
 
-const SelectAsset = ({ onChange }) => {
+const SelectAsset = ({ onChange, currentNetwork }) => {
   /* eslint-disable react/display-name */
-  const options = [nativeTokens[connectedNetWorks.icon], getTokenOptions()].map(
-    ({ symbol, netWorkLabel }) => ({
-      value: symbol,
-      label: symbol,
-      renderLabel: () => (
-        <TextWithIcon icon={symbol} width="24px">
-          {symbol}
-        </TextWithIcon>
-      ),
-      renderItem: () => (
-        <Item icon={symbol} symbol={symbol}>
-          {netWorkLabel}
-        </Item>
-      ),
-    }),
-  );
+  const options = getTokenOptions(currentNetwork).map(({ symbol, netWorkLabel }) => ({
+    value: symbol,
+    label: symbol,
+    renderLabel: () => (
+      <TextWithIcon icon={symbol} width="24px">
+        {symbol}
+      </TextWithIcon>
+    ),
+    renderItem: () => (
+      <Item icon={symbol} symbol={symbol}>
+        {netWorkLabel}
+      </Item>
+    ),
+  }));
 
   return <Select options={options} onChange={onChange} name="token" />;
 };
+
 export default SelectAsset;

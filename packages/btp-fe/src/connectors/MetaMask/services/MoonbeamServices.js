@@ -7,18 +7,14 @@ import {
 } from 'connectors/constants';
 
 import { convertToICX } from 'connectors/ICONex/utils';
-import { toChecksumAddress } from '../utils';
-import { isICONAndBSHPaired } from 'utils/constants';
+import { toChecksumAddress } from 'connectors/utils';
 import { roundNumber } from 'utils/app';
 
 import { EthereumInstance } from 'connectors/MetaMask';
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {
-    const balance = isICONAndBSHPaired()
-      ? await EthereumInstance.contract_BSC.getBalanceOf(address, symbol)
-      : await EthereumInstance.contract.getBalanceOf(address, symbol);
-    console.log('🚀 ~ file: index.js ~ line 114 ~ Ethereum ~ getBalanceOf ~ balance', balance);
+    const balance = await EthereumInstance.contract.getBalanceOf(address, symbol);
     return refundable
       ? convertToICX(balance._refundableBalance._hex)
       : roundNumber(convertToICX(balance[0]._hex), 6);

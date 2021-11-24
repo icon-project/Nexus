@@ -37,7 +37,24 @@ export const pairedNetworks = {
 
 export const getPairedNetwork = () => localStorage.getItem(PAIRED_NETWORKS);
 export const isICONAndBSHPaired = () => getPairedNetwork() === pairedNetworks['ICON-BSC'];
-export const getTokenOptions = () =>
-  isICONAndBSHPaired()
-    ? nativeTokens[connectedNetWorks.bsc]
-    : nativeTokens[connectedNetWorks.moonbeam];
+export const getTokenOptions = (currentNetwork) => {
+  if (!currentNetwork) return [];
+
+  if (isICONAndBSHPaired()) {
+    switch (currentNetwork) {
+      case connectedNetWorks.bsc:
+        return [{ symbol: 'ETH', netWorkLabel: 'Etherium' }, nativeTokens[connectedNetWorks.bsc]];
+
+      default:
+        return [nativeTokens[connectedNetWorks.icon], { symbol: 'ETH', netWorkLabel: 'Etherium' }];
+    }
+  } else {
+    switch (currentNetwork) {
+      case connectedNetWorks.icon:
+        return [nativeTokens[connectedNetWorks.icon], nativeTokens[connectedNetWorks.moonbeam]];
+
+      default:
+        return [nativeTokens[connectedNetWorks.moonbeam], nativeTokens[connectedNetWorks.icon]];
+    }
+  }
+};

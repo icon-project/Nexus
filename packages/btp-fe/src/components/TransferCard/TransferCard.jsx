@@ -156,7 +156,7 @@ export const TransferCard = ({
 
         <div className="send">
           <Text className="md">Send</Text>
-          <SelectAsset onChange={onChange} />
+          <SelectAsset onChange={onChange} currentNetwork={currentNetwork} />
         </div>
 
         <div className="devider" />
