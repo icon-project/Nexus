@@ -12,7 +12,7 @@ import { BSC_ABI } from './abi/BSC_ABI';
 
 import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
-import { wallets, isICONAndBSHPaired } from 'utils/constants';
+import { wallets, isICONAndBSHPaired, nativeTokens } from 'utils/constants';
 import { roundNumber } from 'utils/app';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
@@ -140,11 +140,12 @@ class Ethereum {
         localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
+
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
           wallet,
-          unit: 'DEV',
+          unit: nativeTokens[currentNetwork].symbol,
           currentNetwork,
         });
       }

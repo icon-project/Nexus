@@ -20,7 +20,7 @@ export const nativeTokens = {
     netWorkLabel: 'Moonbeam',
   },
   [connectedNetWorks.bsc]: {
-    symbol: 'ETH',
+    symbol: 'BNB',
     netWorkLabel: 'Binance',
   },
 };
