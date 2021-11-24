@@ -9,7 +9,8 @@ import {
   getCurrentICONexNetwork,
 } from '../constants';
 import { MB_ABI } from './moonBeamABI';
-import { ABI_BSC } from './ABI_BSC';
+import { BSC_ABI } from './BSC_ABI';
+
 import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets, isICONAndBSHPaired } from 'utils/constants';
@@ -26,10 +27,13 @@ class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
-    this.BSH_ABI = new ethers.utils.Interface(MB_ABI);
+    // Moonbeam
+    this.MB_BSH_ABI = new ethers.utils.Interface(MB_ABI);
     this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
-    this.contractBSC = new ethers.Contract(BSC_NODE.BSHCore, MB_ABI, this.provider);
-    this.contractBEP20TKN = new ethers.Contract(BSC_NODE.BEP20TKN, MB_ABI, this.provider);
+    // BSC
+    this.BSC_BSH_ABI = new ethers.utils.Interface(BSC_ABI);
+    this.contract_BSC = new ethers.Contract(BSC_NODE.BSHCore, BSC_ABI, this.provider);
+    this.contractBEP20TKN_BSC = new ethers.Contract(BSC_NODE.BEP20TKN, BSC_ABI, this.provider);
   }
 
   get getEthereum() {
@@ -114,7 +118,7 @@ class Ethereum {
   async getBalanceOf({ address, refundable = false, symbol = 'ICX' }) {
     try {
       const balance = isICONAndBSHPaired()
-        ? await this.contractBSC.getBalanceOf(address, symbol)
+        ? await this.contract_BSC.getBalanceOf(address, symbol)
         : await this.contract.getBalanceOf(address, symbol);
       console.log('🚀 ~ file: index.js ~ line 114 ~ Ethereum ~ getBalanceOf ~ balance', balance);
       return refundable
@@ -197,7 +201,7 @@ class Ethereum {
   }
 
   async setApprovalForAll() {
-    const data = this.BSH_ABI.encodeFunctionData('setApprovalForAll', [
+    const data = this.MB_BSH_ABI.encodeFunctionData('setApprovalForAll', [
       MOON_BEAM_NODE.BSHCore,
       '0x1',
     ]);
@@ -211,7 +215,7 @@ class Ethereum {
   }
 
   async reclaim({ coinName, value }) {
-    const data = this.BSH_ABI.encodeFunctionData('reclaim', [coinName, value]);
+    const data = this.MB_BSH_ABI.encodeFunctionData('reclaim', [coinName, value]);
 
     await this.sendTransaction({
       from: this.ethereum.selectedAddress,
@@ -244,11 +248,11 @@ class Ethereum {
 
     let data = null;
     if (sendNativeCoin) {
-      data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
+      data = this.MB_BSH_ABI.encodeFunctionData('transferNativeCoin', [
         `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
       ]);
     } else {
-      data = this.BSH_ABI.encodeFunctionData('transfer', [
+      data = this.MB_BSH_ABI.encodeFunctionData('transfer', [
         'ICX',
         value,
         `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
@@ -265,72 +269,6 @@ class Ethereum {
     };
 
     await this.sendTransaction(txParams);
-  }
-
-  async transferBSC(tx = {}) {
-    // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(tx.value || '1')._hex;
-    const { to } = tx;
-
-    const data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
-      `btp://${getCurrentICONexNetwork().networkAddress}/${
-        to || 'hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262'
-      }`,
-    ]);
-
-    const txParams = {
-      from: toChecksumAddress(this.ethereum.selectedAddress),
-      value,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    };
-
-    await this.sendTransaction(txParams);
-  }
-
-  async approveBSH() {
-    const data = this.BSH_ABI.encodeFunctionData('approve', [
-      BSC_NODE.tokenBSHProxy,
-      ethers.utils.parseEther('0.1')._hex,
-    ]);
-
-    await this.sendTransaction({
-      from: this.ethereum.selectedAddress,
-      to: BSC_NODE.BEP20TKN,
-      data,
-    });
-  }
-
-  async getETHBalance() {
-    try {
-      const balance = await this.contractBEP20TKN.balanceOf(
-        '0xEbCBd4a934a68510E21ba25b2A827138248A63E5', // Bob address
-      );
-      console.log(
-        '🚀 ~ file: index.js ~ line 323 ~ Ethereum ~ getETHBalance ~ balance',
-        roundNumber(convertToICX(balance._hex), 6),
-      );
-    } catch (err) {
-      console.log('Err: ', err);
-      return 0;
-    }
-  }
-
-  async transferETHfromBSC() {
-    const data = new ethers.utils.Interface(ABI_BSC).encodeFunctionData('transfer', [
-      'ETH',
-      ethers.utils.parseEther('0.1')._hex,
-      `btp://${
-        getCurrentICONexNetwork().networkAddress
-      }/hx2ad1356e017a25d53cb7dc256d01aadc619d45d7`,
-    ]);
-
-    await this.sendTransaction({
-      from: this.ethereum.selectedAddress,
-      to: BSC_NODE.tokenBSHProxy,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    });
   }
 }
 
