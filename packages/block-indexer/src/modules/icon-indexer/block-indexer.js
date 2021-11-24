@@ -23,13 +23,15 @@ let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
-    await handleTransactionEvents(txResult, transaction);
-    // FAS: await handleAuctionEvents(txResult);
-    // FAS: await handleTransferFeeEvents(txResult);
-    await handleMintBurnEvents(txResult, transaction);
-    // await handleTokenRegister(txResult, transaction);
-    await handleRelayAction(txResult, transaction);
-    await handleRelayerAction(txResult, transaction);
+    if (1 === txResult.status) {
+      await handleTransactionEvents(txResult, transaction);
+      // FAS: await handleAuctionEvents(txResult);
+      // FAS: await handleTransferFeeEvents(txResult);
+      await handleMintBurnEvents(txResult, transaction);
+      // await handleTokenRegister(txResult, transaction);
+      await handleRelayAction(txResult, transaction);
+      await handleRelayerAction(transaction);
+    }
 
     // More transaction handlers go here.
   } catch (error) {
