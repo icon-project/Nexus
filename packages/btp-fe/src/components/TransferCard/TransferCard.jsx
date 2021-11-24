@@ -14,13 +14,6 @@ import { connectedNetWorks, getPairedNetwork, isICONAndBSHPaired } from 'utils/c
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
-import {
-  getBalanceOf,
-  approve,
-  sendNoneNativeCoinBSC,
-  transferNativeCoin,
-} from 'connectors/MetaMask/services/BSCServices';
-
 const StyledCard = styled.div`
   width: 480px;
   background-color: #1d1b22;
@@ -186,43 +179,6 @@ export const TransferCard = ({
           )}
         </div>
       </div>
-
-      <PrimaryButton
-        width={416}
-        height={64}
-        onClick={() => {
-          transferNativeCoin();
-        }}
-      >
-        Send BNB
-      </PrimaryButton>
-      <PrimaryButton
-        width={416}
-        height={64}
-        onClick={() => {
-          getBalanceOf();
-        }}
-      >
-        Get ETH balance
-      </PrimaryButton>
-      <PrimaryButton
-        width={416}
-        height={64}
-        onClick={() => {
-          approve();
-        }}
-      >
-        Approve ETH
-      </PrimaryButton>
-      <PrimaryButton
-        width={416}
-        height={64}
-        onClick={() => {
-          sendNoneNativeCoinBSC();
-        }}
-      >
-        Transfer ETH
-      </PrimaryButton>
     </StyledCard>
   );
 };

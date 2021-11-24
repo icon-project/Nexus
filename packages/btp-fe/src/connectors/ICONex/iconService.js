@@ -195,7 +195,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .stepLimit(IconConverter.toBigNumber(1000000000))
-    .nid(IconConverter.toBigNumber('0xbe04ab')) // TODO: remove hard-coded nid
+    .nid(IconConverter.toBigNumber(getCurrentICONexNetwork().nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(new Date().getTime() * 1000);
@@ -330,5 +330,5 @@ export const sendNoneNativeCoinBSC = async () => {
   };
 
   window[signingActions.globalName] = signingActions.transfer;
-  signTx(transaction, options, true);
+  signTx(transaction, options);
 };
