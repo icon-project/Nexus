@@ -37,3 +37,7 @@ export const pairedNetworks = {
 
 export const getPairedNetwork = () => localStorage.getItem(PAIRED_NETWORKS);
 export const isICONAndBSHPaired = () => getPairedNetwork() === pairedNetworks['ICON-BSC'];
+export const getTokenOptions = () =>
+  isICONAndBSHPaired()
+    ? nativeTokens[connectedNetWorks.bsc]
+    : nativeTokens[connectedNetWorks.moonbeam];
