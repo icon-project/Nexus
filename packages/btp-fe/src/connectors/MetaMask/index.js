@@ -6,6 +6,7 @@ import {
   MOON_BEAM_NODE,
   BSC_NODE,
   allowedNetworkIDs,
+  signingActions,
 } from 'connectors/constants';
 import { MB_ABI } from './abi/MB_ABI';
 import { BSC_ABI } from './abi/BSC_ABI';
@@ -13,6 +14,7 @@ import { BSC_ABI } from './abi/BSC_ABI';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets, nativeTokens } from 'utils/constants';
+import { sendNoneNativeCoinBSC } from 'connectors/MetaMask/services/BSCServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -140,25 +142,57 @@ class Ethereum {
 
   async sendTransaction(txParams) {
     try {
+      modal.openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
         params: [txParams],
       });
-      if (txHash) {
-        modal.openModal({
-          icon: 'checkIcon',
-          children: <SuccessSubmittedTxContent />,
-          button: {
-            text: 'Continue transfer',
-            onClick: () => {
-              // back to transfer box
-              resetTransferStep();
-              modal.setDisplay(false);
-            },
-          },
-        });
-      }
-      return txHash;
+      let result = null;
+
+      const checkTxRs = setInterval(async () => {
+        if (result) {
+          if (result.status === 1) {
+            switch (window[signingActions.globalName]) {
+              case signingActions.deposit:
+                modal.openModal({
+                  icon: 'checkIcon',
+                  desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
+                  button: {
+                    text: 'Transfer',
+                    onClick: () => sendNoneNativeCoinBSC(),
+                  },
+                });
+                break;
+
+              default:
+                modal.openModal({
+                  icon: 'checkIcon',
+                  children: <SuccessSubmittedTxContent />,
+                  button: {
+                    text: 'Continue transfer',
+                    onClick: () => {
+                      // back to transfer box
+                      resetTransferStep();
+                      modal.setDisplay(false);
+                    },
+                  },
+                });
+                break;
+            }
+          } else {
+            clearInterval(checkTxRs);
+            throw new Error('Transaction failed');
+          }
+
+          clearInterval(checkTxRs);
+        } else {
+          result = await this.provider.getTransactionReceipt(txHash);
+        }
+      }, 4000);
     } catch (error) {
       if (error.code === 4001) {
         modal.openModal({
@@ -179,7 +213,6 @@ class Ethereum {
             onClick: () => modal.setDisplay(false),
           },
         });
-        return;
       }
     }
   }

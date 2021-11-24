@@ -21,8 +21,9 @@ export const signingActions = {
   transfer: 'transfer',
   bid: 'bid',
   deposit: 'deposit',
-  receiverAdd: 'receiverAdd',
 };
+
+export const rawTransaction = 'rawTransaction';
 
 export const allowedNetworkIDs = {
   metamask: {

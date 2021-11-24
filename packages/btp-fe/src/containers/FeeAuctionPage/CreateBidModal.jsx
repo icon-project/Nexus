@@ -31,7 +31,7 @@ const Form = styled.form`
   }
 `;
 
-export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, openModal }) => {
+export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets }) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getAvailableAssets().then(() => {
@@ -46,10 +46,6 @@ export const CreateBidModal = ({ setOpen, availableAssets, getAvailableAssets, o
   const onSubmit = (values) => {
     const { bidAmount, auctionName } = values;
     if (bidAmount && auctionName) {
-      openModal({
-        icon: 'loader',
-        desc: 'Waiting for confirmation in your wallet.',
-      });
       placeBid(auctionName, bidAmount);
     }
   };

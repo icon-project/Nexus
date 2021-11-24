@@ -77,7 +77,7 @@ const eventHandler = async (event) => {
                     desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
                     button: {
                       text: 'Transfer',
-                      onClick: () => sendNoneNativeCoinBSC(window[signingActions.receiverAdd]),
+                      onClick: () => sendNoneNativeCoinBSC(),
                     },
                   });
                   break;

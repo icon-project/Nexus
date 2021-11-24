@@ -10,6 +10,7 @@ import {
   MOON_BEAM_NODE,
   BSC_NODE,
   signingActions,
+  rawTransaction,
   iconService,
   httpProvider,
 } from 'connectors/constants';
@@ -19,7 +20,6 @@ import store from 'store';
 import { roundNumber } from 'utils/app';
 import { nativeTokens, connectedNetWorks, isICONAndBSHPaired } from 'utils/constants';
 
-const rawTransaction = 'rawTransaction';
 const { modal } = store.dispatch;
 
 export const getBalance = (address) => {
@@ -184,6 +184,11 @@ export const signTx = (transaction = {}, options = {}) => {
     return;
   }
 
+  modal.openModal({
+    icon: 'loader',
+    desc: 'Waiting for confirmation in your wallet.',
+  });
+
   const txBuilder = builder || new IcxTransactionBuilder();
 
   let tx = txBuilder
@@ -288,7 +293,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   }
 };
 
-export const depositTokensIntoBSH = async ({ value, to }) => {
+export const depositTokensIntoBSH = async (tx) => {
   const transaction = {
     to: getCurrentICONexNetwork().irc2token,
   };
@@ -298,16 +303,16 @@ export const depositTokensIntoBSH = async ({ value, to }) => {
     method: 'transfer',
     params: {
       _to: getCurrentICONexNetwork().TOKEN_BSH_ADDRESS,
-      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+      _value: IconConverter.toHex(IconAmount.of(tx.value, IconAmount.Unit.ICX).toLoop()),
     },
   };
 
-  window[signingActions.receiverAdd] = to;
+  window[rawTransaction] = tx;
   window[signingActions.globalName] = signingActions.deposit;
   signTx(transaction, options);
 };
 
-export const sendNoneNativeCoinBSC = async (receiver) => {
+export const sendNoneNativeCoinBSC = async () => {
   const transaction = {
     to: getCurrentICONexNetwork().TOKEN_BSH_ADDRESS,
   };
@@ -317,8 +322,10 @@ export const sendNoneNativeCoinBSC = async (receiver) => {
     method: 'transfer',
     params: {
       tokenName: 'ETH',
-      to: `btp://${BSC_NODE.networkAddress}/${receiver}`,
-      value: IconConverter.toHex(IconAmount.of(0.1, IconAmount.Unit.ICX).toLoop()),
+      to: `btp://${BSC_NODE.networkAddress}/${window[rawTransaction].to}`,
+      value: IconConverter.toHex(
+        IconAmount.of(window[rawTransaction].value, IconAmount.Unit.ICX).toLoop(),
+      ),
     },
   };
 

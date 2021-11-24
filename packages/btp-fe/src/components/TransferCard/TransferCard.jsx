@@ -17,7 +17,7 @@ import transferIcon from 'assets/images/vector-icon.svg';
 import {
   getBalanceOf,
   approve,
-  transferETHfromBSC,
+  sendNoneNativeCoinBSC,
   transferNativeCoin,
 } from 'connectors/MetaMask/services/BSCServices';
 
@@ -218,7 +218,7 @@ export const TransferCard = ({
         width={416}
         height={64}
         onClick={() => {
-          transferETHfromBSC();
+          sendNoneNativeCoinBSC();
         }}
       >
         Transfer ETH
