@@ -15,10 +15,10 @@ import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
 import {
-  getETHBalance,
+  getBalanceOf,
   approve,
   transferETHfromBSC,
-  transfer,
+  transferNativeCoin,
 } from 'connectors/MetaMask/services/BSCServices';
 
 const StyledCard = styled.div`
@@ -191,7 +191,7 @@ export const TransferCard = ({
         width={416}
         height={64}
         onClick={() => {
-          transfer();
+          transferNativeCoin();
         }}
       >
         Send BNB
@@ -200,7 +200,7 @@ export const TransferCard = ({
         width={416}
         height={64}
         onClick={() => {
-          getETHBalance();
+          getBalanceOf();
         }}
       >
         Get ETH balance

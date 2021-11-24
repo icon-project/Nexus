@@ -6,19 +6,17 @@ import { convertToICX } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-export const getBalanceOf = () => {
-  console.log('TODO');
-  return Promise.resolve(true);
+// get ETH balance (ERC20 contract)
+export const getBalanceOf = async ({ address }) => {
+  const balance = await EthereumInstance.contractBEP20TKN_BSC.balanceOf(address);
+  return roundNumber(convertToICX(balance._hex), 6);
 };
 
-export const transfer = async (tx = {}) => {
+export const transferNativeCoin = async (tx = {}) => {
   const value = ethers.utils.parseEther(tx.value || '1')._hex;
-  const { to } = tx;
 
   const data = EthereumInstance.BSC_BSH_ABI.encodeFunctionData('transferNativeCoin', [
-    `btp://${getCurrentICONexNetwork().networkAddress}/${
-      to || 'hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262'
-    }`,
+    `btp://${getCurrentICONexNetwork().networkAddress}/${tx.to}`,
   ]);
 
   const txParams = {
@@ -44,18 +42,11 @@ export const approve = async () => {
   });
 };
 
-export const getETHBalance = async () => {
-  try {
-    const balance = await EthereumInstance.contractBEP20TKN_BSC.balanceOf(
-      '0xEbCBd4a934a68510E21ba25b2A827138248A63E5', // Bob address
-    );
-    console.log(
-      '🚀 ~ file: index.js ~ line 323 ~ Ethereum ~ getETHBalance ~ balance',
-      roundNumber(convertToICX(balance._hex), 6),
-    );
-  } catch (err) {
-    console.log('Err: ', err);
-    return 0;
+export const transfer = (tx, isSendingNativeCoin) => {
+  if (isSendingNativeCoin) {
+    transferNativeCoin(tx);
+  } else {
+    approve();
   }
 };
 
