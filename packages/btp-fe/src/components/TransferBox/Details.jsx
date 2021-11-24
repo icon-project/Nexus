@@ -20,6 +20,7 @@ import metaMaskIcon from 'assets/images/metal-mask.svg';
 import iconexIcon from 'assets/images/icon-ex.svg';
 import moonbeamIcon from 'assets/images/moonbeam.jpeg';
 import hanaIcon from 'assets/images/hana-wallet.png';
+import binanceIcon from 'assets/images/binance-icon.svg';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -118,6 +119,7 @@ export const icons = {
   [wallets.metamask]: metaMaskIcon,
   DEV: moonbeamIcon,
   [wallets.hana]: hanaIcon,
+  BNB: binanceIcon,
 };
 
 export const Details = memo(

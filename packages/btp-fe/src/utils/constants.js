@@ -43,7 +43,7 @@ export const getTokenOptions = (currentNetwork) => {
   if (isICONAndBSHPaired()) {
     switch (currentNetwork) {
       case connectedNetWorks.bsc:
-        return [{ symbol: 'ETH', netWorkLabel: 'Etherium' }, nativeTokens[connectedNetWorks.bsc]];
+        return [nativeTokens[connectedNetWorks.bsc], { symbol: 'ETH', netWorkLabel: 'Etherium' }];
 
       default:
         return [nativeTokens[connectedNetWorks.icon], { symbol: 'ETH', netWorkLabel: 'Etherium' }];

@@ -11,7 +11,7 @@ export const getBalanceOf = () => {
   return Promise.resolve(true);
 };
 
-export const transferNativeCoin = async (tx = {}) => {
+export const transfer = async (tx = {}) => {
   const value = ethers.utils.parseEther(tx.value || '1')._hex;
   const { to } = tx;
 

@@ -18,7 +18,7 @@ import {
   getETHBalance,
   approve,
   transferETHfromBSC,
-  transferNativeCoin,
+  transfer,
 } from 'connectors/MetaMask/services/BSCServices';
 
 const StyledCard = styled.div`
@@ -141,7 +141,7 @@ export const TransferCard = ({
           { value: bsc, label: bsc },
         ].filter(
           (network) =>
-            connectedNetWorks[pairedNetwork.split('-')[1].toLowerCase()] === network.value,
+            connectedNetWorks[pairedNetwork.split('-')[1].toLowerCase()] !== network.value,
         )
       : [];
   };
@@ -191,7 +191,7 @@ export const TransferCard = ({
         width={416}
         height={64}
         onClick={() => {
-          transferNativeCoin();
+          transfer();
         }}
       >
         Send BNB
