@@ -1,9 +1,10 @@
 import { ethers } from 'ethers';
-import { MOON_BEAM_NODE, BSC_NODE, getCurrentICONexNetwork } from '../constants';
-import { toChecksumAddress } from './utils';
+
 import { roundNumber } from 'utils/app';
+import { MOON_BEAM_NODE, BSC_NODE, getCurrentICONexNetwork } from 'connectors/constants';
 import { convertToICX } from 'connectors/ICONex/utils';
-import { EthereumInstance } from './index';
+import { toChecksumAddress } from 'connectors/MetaMask/utils';
+import { EthereumInstance } from 'connectors/MetaMask';
 
 export const transferNativeCoin = async (tx = {}) => {
   const value = ethers.utils.parseEther(tx.value || '1')._hex;

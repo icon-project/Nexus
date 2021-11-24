@@ -6,10 +6,9 @@ import {
   MOON_BEAM_NODE,
   BSC_NODE,
   allowedNetworkIDs,
-  getCurrentICONexNetwork,
-} from '../constants';
-import { MB_ABI } from './moonBeamABI';
-import { BSC_ABI } from './BSC_ABI';
+} from 'connectors/constants';
+import { MB_ABI } from './abi/MB_ABI';
+import { BSC_ABI } from './abi/BSC_ABI';
 
 import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
@@ -198,77 +197,6 @@ class Ethereum {
         return;
       }
     }
-  }
-
-  async setApprovalForAll() {
-    const data = this.MB_BSH_ABI.encodeFunctionData('setApprovalForAll', [
-      MOON_BEAM_NODE.BSHCore,
-      '0x1',
-    ]);
-
-    await this.sendTransaction({
-      from: this.ethereum.selectedAddress,
-      to: MOON_BEAM_NODE.BSHCore,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    });
-  }
-
-  async reclaim({ coinName, value }) {
-    const data = this.MB_BSH_ABI.encodeFunctionData('reclaim', [coinName, value]);
-
-    await this.sendTransaction({
-      from: this.ethereum.selectedAddress,
-      to: MOON_BEAM_NODE.BSHCore,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    });
-  }
-
-  async isApprovedForAll(address) {
-    try {
-      const result = await this.contract.isApprovedForAll(
-        address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
-        MOON_BEAM_NODE.BSHCore,
-      );
-      return result;
-    } catch (err) {
-      console.log('Err: ', err);
-    }
-  }
-
-  async transfer(tx, sendNativeCoin) {
-    // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(tx.value)._hex;
-    const { to } = tx;
-    let txParams = {
-      from: toChecksumAddress(this.ethereum.selectedAddress),
-      value,
-    };
-
-    let data = null;
-    if (sendNativeCoin) {
-      data = this.MB_BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
-      ]);
-    } else {
-      data = this.MB_BSH_ABI.encodeFunctionData('transfer', [
-        'ICX',
-        value,
-        `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
-      ]);
-
-      delete txParams.value;
-    }
-
-    txParams = {
-      ...txParams,
-      to: MOON_BEAM_NODE.BSHCore,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    };
-
-    await this.sendTransaction(txParams);
   }
 }
 

@@ -19,7 +19,7 @@ import {
   approve,
   transferETHfromBSC,
   transferNativeCoin,
-} from 'connectors/MetaMask/BSCServices';
+} from 'connectors/MetaMask/services/BSCServices';
 
 const StyledCard = styled.div`
   width: 480px;

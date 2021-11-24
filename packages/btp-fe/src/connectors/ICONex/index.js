@@ -12,7 +12,7 @@ import {
   CONNECTED_WALLET_LOCAL_STORAGE,
   getCurrentICONexNetwork,
   signingActions,
-} from '../constants';
+} from 'connectors/constants';
 
 const { modal, account } = store.dispatch;
 
