@@ -6,7 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { getTokenOptions } from 'utils/constants';
+import { getBalanceToken } from 'utils/constants';
 import { getService } from 'services/transfer';
 
 import { Select } from 'components/Select';
@@ -179,8 +179,8 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: unit, value: unit },
-    ...getTokenOptions()
-      .map(({ symbol }) => ({ label: symbol, value: symbol }))
+    ...getBalanceToken()
+      .map((symbol) => ({ label: symbol, value: symbol }))
       .filter((item) => item.label !== unit),
   ];
 

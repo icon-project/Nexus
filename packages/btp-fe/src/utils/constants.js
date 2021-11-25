@@ -60,6 +60,19 @@ export const getTokenOptions = (currentNetwork) => {
   }
 };
 
+export const getBalanceToken = () => {
+  return isICONAndBSHPaired()
+    ? [
+        nativeTokens[connectedNetWorks.icon].symbol,
+        'ETH',
+        nativeTokens[connectedNetWorks.bsc].symbol,
+      ]
+    : [
+        nativeTokens[connectedNetWorks.icon].symbol,
+        nativeTokens[connectedNetWorks.moonbeam].symbol,
+      ];
+};
+
 export const getTartgetNetwork = (currentNetwork) => {
   return !currentNetwork
     ? []
