@@ -21,6 +21,7 @@ export const signingActions = {
   transfer: 'transfer',
   bid: 'bid',
   deposit: 'deposit',
+  receiver: 'receiver',
 };
 
 export const rawTransaction = 'rawTransaction';

@@ -307,6 +307,7 @@ export const depositTokensIntoBSH = (tx) => {
     },
   };
 
+  window[signingActions.receiver] = tx.to;
   window[signingActions.globalName] = signingActions.deposit;
   signTx(transaction, options);
 };
@@ -321,7 +322,7 @@ export const sendNoneNativeCoinBSC = () => {
     method: 'transfer',
     params: {
       tokenName: 'ETH',
-      to: `btp://${BSC_NODE.networkAddress}/${window[rawTransaction].to}`,
+      to: `btp://${BSC_NODE.networkAddress}/${window[signingActions.receiver]}`,
       value: window[rawTransaction].data.params._value,
     },
   };
