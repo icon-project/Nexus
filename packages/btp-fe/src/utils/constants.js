@@ -58,3 +58,14 @@ export const getTokenOptions = (currentNetwork) => {
     }
   }
 };
+
+export const getTartgetNetwork = (currentNetwork) => {
+  return !currentNetwork
+    ? []
+    : [
+        { value: connectedNetWorks.icon, label: connectedNetWorks.icon },
+        isICONAndBSHPaired()
+          ? { value: connectedNetWorks.bsc, label: connectedNetWorks.bsc }
+          : { value: connectedNetWorks.moonbeam, label: connectedNetWorks.moonbeam },
+      ].filter((network) => (currentNetwork.includes(network.label) ? false : network));
+};

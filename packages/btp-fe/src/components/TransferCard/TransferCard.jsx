@@ -9,7 +9,7 @@ import { media } from 'components/Styles/Media';
 import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks, getPairedNetwork, isICONAndBSHPaired } from 'utils/constants';
+import { isICONAndBSHPaired, getTartgetNetwork } from 'utils/constants';
 
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
@@ -72,7 +72,6 @@ export const TransferCard = ({
   currentNetwork,
 }) => {
   const [checkingApproval, setCheckingApproval] = useState(false);
-  const pairedNetwork = getPairedNetwork() || '';
 
   const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
     openModal,
@@ -124,21 +123,6 @@ export const TransferCard = ({
     }
   };
 
-  const { icon, moonbeam, bsc } = connectedNetWorks;
-
-  const getCrossNetworks = () => {
-    return currentNetwork
-      ? [
-          { value: icon, label: icon },
-          { value: moonbeam, label: moonbeam },
-          { value: bsc, label: bsc },
-        ].filter(
-          (network) =>
-            connectedNetWorks[pairedNetwork.split('-')[1].toLowerCase()] !== network.value,
-        )
-      : [];
-  };
-
   return (
     <StyledCard>
       <Header className="sm bold center">Transfer</Header>
@@ -156,7 +140,7 @@ export const TransferCard = ({
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={getCrossNetworks()} onChange={onChange} name="network" />
+          <Select options={getTartgetNetwork(currentNetwork)} onChange={onChange} name="network" />
         </div>
 
         <div className="button-section">
