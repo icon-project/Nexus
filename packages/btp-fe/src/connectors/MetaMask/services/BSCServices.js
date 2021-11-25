@@ -12,10 +12,17 @@ import { convertToICX } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-// get ETH balance (ERC20 contract)
-export const getBalanceOf = async ({ address }) => {
-  const balance = await EthereumInstance.contractBEP20TKN_BSC.balanceOf(address);
-  return roundNumber(convertToICX(balance._hex), 6);
+export const getBalanceOf = async ({ address, symbol }) => {
+  let balance = 0;
+
+  // get ETH balance (ERC20 contract)
+  if (symbol === 'ETH') {
+    balance = await EthereumInstance.contractBEP20TKN_BSC.balanceOf(address);
+  } else {
+    balance = await EthereumInstance.contract_BSC.getBalanceOf(address, symbol);
+  }
+
+  return roundNumber(convertToICX(balance._hex || balance[0]._hex), 6);
 };
 
 export const transferNativeCoin = async (tx = {}) => {
