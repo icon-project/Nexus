@@ -1,31 +1,36 @@
 # Get reward data from ICON BMC #307
 
 ## Methods on Smart Contract
+
 ### CLI Reference
+
 https://github.com/icon-project/goloop/blob/master/doc/goloop_cli.md
+
 ```bash
 # Create wallet relayer1
-./goloop ks gen -o relayer1.json -p relayer1
-#Add token into relayer1
-./goloop rpc sendtx transfer --uri http://54.251.114.18:9080/api/v3/icon --to hx69fe7ff269b3aafcc2ca1c0d2b82b2d958277880 --value 0x55d4be7c032c6d008 --key_store ./godWallet.json --key_password gochain --step_limit 1000000000 --nid 0x58eb1c
+goloop ks gen -o relayer1.json -p relayer1
 
-./goloop rpc --uri http://54.251.114.18:9080/api/v3/icon balance hx69fe7ff269b3aafcc2ca1c0d2b82b2d958277880
+# Add token into relayer1
+goloop rpc sendtx transfer --uri http://localhost:9080/api/v3/icon --to $(cat ../relayer1.json | jq -r .address) --value 0x55d4be7c032c6d008 --key_store goloop.keystore.json --key_password $(cat goloop.keysecret) --step_limit 1000000000 --nid $(cat nid.icon)
+
+# ./goloop rpc --uri http://54.251.114.18:9080/api/v3/icon balance hx69fe7ff269b3aafcc2ca1c0d2b82b2d958277880
 
 # Create wallet relayer2
-./goloop ks gen -o relayer2.json -p relayer2
-#Add token into relayer2
-./goloop rpc sendtx transfer --uri http://54.251.114.18:9080/api/v3/icon --to hx46b9171e66ed165d4459840c144f4b0fdc09788e --value 0x55d4be7c032c6d008 --key_store ./godWallet.json --key_password gochain --step_limit 1000000000 --nid 0x58eb1c
+goloop ks gen -o relayer2.json -p relayer2
 
-./goloop rpc --uri http://54.251.114.18:9080/api/v3/icon balance hx46b9171e66ed165d4459840c144f4b0fdc09788e
+# Add token into relayer2
+goloop rpc sendtx transfer --uri http://localhost:9080/api/v3/icon --to $(cat ../relayer2.json | jq -r .address) --value 0x55d4be7c032c6d008 --key_store goloop.keystore.json --key_password $(cat goloop.keysecret) --step_limit 1000000000 --nid $(cat nid.icon)
+
+# ./goloop rpc --uri http://54.251.114.18:9080/api/v3/icon balance hx46b9171e66ed165d4459840c144f4b0fdc09788e
 
 # Register relayer1 on BMC
-./goloop rpc sendtx call --uri http://54.251.114.18:9080/api/v3/icon --to cx8e2d758fbcc7f9621f87481e33402ac2819785c8 --method registerRelayer --param _desc="relayer1" --value 0x200 --key_store ./relayer1.json --key_password relayer1 --step_limit 1000000 --nid 0x58eb1c
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --to $(cat bmc.icon) --method registerRelayer --param _desc="relayer1" --value 0x200 --key_store ../relayer1.json --key_password relayer1 --step_limit 1000000 --nid $(cat nid.icon)
 
 # Get relayer after registering
-# ./goloop rpc --uri http://54.251.114.18:9080/api/v3/icon call --to cx8e2d758fbcc7f9621f87481e33402ac2819785c8 --method getRelayers
+# ./goloop rpc --uri http://localhost:9080/api/v3/icon call --to $(cat bmc.icon) --method getRelayers
 
 # Register relayer2 on BMC
-./goloop rpc sendtx call --uri http://54.251.114.18:9080/api/v3/icon --to cx8e2d758fbcc7f9621f87481e33402ac2819785c8 --method registerRelayer --param _desc="relayer2" --value 0x100 --key_store ./relayer2.json --key_password relayer2 --step_limit 1000000 --nid 0x58eb1c
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --to $(cat bmc.icon) --method registerRelayer --param _desc="relayer2" --value 1000000000000000000 --key_store ../relayer2.json --key_password relayer2 --step_limit 1000000 --nid $(cat nid.icon)
 
 #1. Set term
 # just 300 for testing
@@ -93,9 +98,9 @@ https://github.com/icon-project/goloop/blob/master/doc/goloop_cli.md
   }
 }
 ```
+
 ```bash
 # Unregister relayers from BMC
-./goloop rpc sendtx call --uri http://54.251.114.18:9080/api/v3/icon --to cx8e2d758fbcc7f9621f87481e33402ac2819785c8 --method unregisterRelayer --key_store ./relayer1.json --key_password relayer1 --step_limit 1000000 --nid 0x58eb1c
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --to $(cat bmc.icon) --method unregisterRelayer --key_store ../relayer1.json --key_password relayer1 --step_limit 1000000 --nid $(cat nid.icon)
 
-./goloop rpc sendtx call --uri http://54.251.114.18:9080/api/v3/icon --to cx8e2d758fbcc7f9621f87481e33402ac2819785c8 --method unregisterRelayer --key_store ./relayer2.json --key_password relayer2 --step_limit 1000000 --nid 0x58eb1c
-```
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --to $(cat bmc.icon) --method unregisterRelayer --key_store ../relayer2.json --key_password relayer2 --step_limit 1000000 --nid $(cat nid.icon)

@@ -290,3 +290,19 @@ ALTER TABLE ONLY public.transactions
     ADD COLUMN contract_address character varying(100) NOT NULL DEFAULT '',
     DROP CONSTRAINT transactions_serial_number_network_id_key,
     ADD CONSTRAINT transactions_serial_network_contract_key UNIQUE (serial_number, network_id, contract_address);
+
+-- Issue #488
+
+DROP TABLE relay_candidate_rewards;
+
+ALTER TABLE relay_candidates
+    DROP COLUMN id,
+    DROP COLUMN dest_address;
+
+ALTER TABLE relay_candidates
+    ADD COLUMN tx_hash character varying(100) NOT NULL,
+    ADD COLUMN tx_hash_unregistered character varying(100),
+    ALTER COLUMN created_time SET DEFAULT NOW(),
+    ALTER COLUMN rank SET DEFAULT 0,
+    ADD COLUMN total_reward numeric NOT NULL DEFAULT 0,
+    ADD CONSTRAINT relay_candidates_pkey PRIMARY KEY (tx_hash);

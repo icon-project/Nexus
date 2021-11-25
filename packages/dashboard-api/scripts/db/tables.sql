@@ -210,56 +210,20 @@ CREATE INDEX relays_registered_time
 
 CREATE TABLE IF NOT EXISTS public.relay_candidates
 (
-    id character varying(100) NOT NULL,
-    rank numeric NOT NULL,
-    name character varying(50) NOT NULL,
+    rank numeric NOT NULL DEFAULT 0,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
     bonded_icx numeric NOT NULL,
+    total_reward numeric NOT NULL DEFAULT 0,
     registered_time timestamp without time zone NOT NULL,
     unregistered_time timestamp without time zone,
-    created_time timestamp without time zone NOT NULL,
+    created_time timestamp without time zone NOT NULL DEFAULT now(),
     updated_time timestamp without time zone,
-    address character varying(100) NOT NULL,
-    dest_address character varying(100) NOT NULL,
-    CONSTRAINT relay_candidates_pkey PRIMARY KEY (id),
+    address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    tx_hash_unregistered character varying(100) COLLATE pg_catalog."default",
+    CONSTRAINT relay_candidates_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT relay_candidates_address_key UNIQUE (address)
-);
-
--- Index: relay_candidates_address
-
--- DROP INDEX public.relay_candidates_address;
-
-CREATE INDEX relay_candidates_address
-    ON public.relay_candidates USING btree
-    (address ASC NULLS LAST);
-
-
--- Table: public.relay_candidate_rewards
-
--- DROP TABLE public.relay_candidate_rewards;
-
-CREATE TABLE IF NOT EXISTS public.relay_candidate_rewards
-(
-    id character varying(50) NOT NULL,
-    rc_id character varying(50) NOT NULL,
-    rc_address character varying(100) NOT NULL,
-    reward_value numeric NOT NULL,
-    total_reward numeric NOT NULL,
-    created_time timestamp without time zone NOT NULL,
-    CONSTRAINT relay_rewards_pkey PRIMARY KEY (id),
-    CONSTRAINT relay_rewards_relay_id_fkey FOREIGN KEY (rc_id)
-        REFERENCES public.relay_candidates (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-);
-
--- Index: relay_candidate_rewards_created_time
-
--- DROP INDEX public.relay_candidate_rewards_created_time;
-
-CREATE INDEX relay_candidate_rewards_created_time
-    ON public.relay_candidate_rewards USING btree
-    (created_time DESC NULLS FIRST);
-
+));
 
 -- Table: public.minted_tokens
 
