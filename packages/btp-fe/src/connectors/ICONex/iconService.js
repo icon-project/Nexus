@@ -18,7 +18,7 @@ import { requestSigning } from './events';
 import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { nativeTokens, connectedNetWorks, isICONAndBSHPaired } from 'utils/constants';
+import { isICONAndBSHPaired } from 'utils/constants';
 
 const { modal } = store.dispatch;
 
@@ -241,7 +241,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   try {
     let balance = 0;
 
-    if (symbol === nativeTokens[connectedNetWorks.bsc].symbol) {
+    if (symbol === 'ETH') {
       balance = await makeICXCall({
         dataType: 'call',
         to: getCurrentICONexNetwork().irc2token,
@@ -293,7 +293,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   }
 };
 
-export const depositTokensIntoBSH = async (tx) => {
+export const depositTokensIntoBSH = (tx) => {
   const transaction = {
     to: getCurrentICONexNetwork().irc2token,
   };
@@ -307,12 +307,11 @@ export const depositTokensIntoBSH = async (tx) => {
     },
   };
 
-  window[rawTransaction] = tx;
   window[signingActions.globalName] = signingActions.deposit;
   signTx(transaction, options);
 };
 
-export const sendNoneNativeCoinBSC = async () => {
+export const sendNoneNativeCoinBSC = () => {
   const transaction = {
     to: getCurrentICONexNetwork().TOKEN_BSH_ADDRESS,
   };
@@ -323,9 +322,7 @@ export const sendNoneNativeCoinBSC = async () => {
     params: {
       tokenName: 'ETH',
       to: `btp://${BSC_NODE.networkAddress}/${window[rawTransaction].to}`,
-      value: IconConverter.toHex(
-        IconAmount.of(window[rawTransaction].value, IconAmount.Unit.ICX).toLoop(),
-      ),
+      value: window[rawTransaction].data.params._value,
     },
   };
 
