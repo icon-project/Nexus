@@ -143,11 +143,7 @@ const RefundSelector = styled(Select)`
   }
 
   > ul {
-    width: 114px;
-
-    ${media.md`
-      width: 83px;
-    `};
+    width: 100%;
   }
 `;
 

@@ -254,10 +254,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       });
     } else {
       const coinId = await makeICXCall({
-        to:
-          symbol === 'BNB'
-            ? getCurrentICONexNetwork().BSHAddress
-            : getCurrentICONexNetwork().BSHAddress,
+        to: getCurrentICONexNetwork().BSHAddress,
         dataType: 'call',
         data: {
           method: 'coinId',
@@ -281,10 +278,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
         params.to = getCurrentICONexNetwork().BSHAddress;
         params.data.params._coinName = coinId;
       } else {
-        params.to =
-          symbol === 'BNB'
-            ? getCurrentICONexNetwork().irc2token
-            : getCurrentICONexNetwork().irc31token;
+        params.to = getCurrentICONexNetwork().irc31token;
         params.data.params._id = coinId;
       }
 

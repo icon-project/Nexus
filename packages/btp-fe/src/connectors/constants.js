@@ -71,6 +71,7 @@ export const ICON_NODES = {
     nid: process.env.REACT_APP_ICON_BSC_NID,
     networkAddress: process.env.REACT_APP_ICON_BSC_NETWORK_ADDRESS,
     irc2token: process.env.REACT_APP_ICON_BSC_IRC2_TOKEN_ADDRESS,
+    irc31token: process.env.REACT_APP_ICON_BSC_IRC31_TOKEN,
     BSHAddress: process.env.REACT_APP_ICON_BSC_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
     TOKEN_BSH_ADDRESS: process.env.REACT_APP_ICON_BSC_TOKEN_BSH_ADDRESS,
   },
