@@ -5,10 +5,6 @@ const { IconConverter } = require('icon-sdk-js').default;
 const { ICX_LOOP_UNIT } = require('./constants');
 const { logger } = require('./logger');
 
-function getCurrentTimestamp() {
-  return Math.floor(new Date().getTime() / 1000);
-}
-
 // Input: 0x1CBA2C95A76000
 // Output: 0.00002021
 function hexToIcxUnit(value) {
@@ -48,7 +44,6 @@ function logDbError(message, error) {
 }
 
 module.exports = {
-  getCurrentTimestamp,
   hexToFixedAmount,
   hexToIcxUnit,
   tokenToUsd,
