@@ -2,7 +2,7 @@
 
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
-const { tokenToUsd } = require('../../common');
+const { tokenToUsd, numberToFixedAmount } = require('../../common');
 
 // curl http://localhost:8000/v1/btpnetwork | jq
 // curl http://localhost:8000/v1/btpnetwork?stats=1 | jq
@@ -38,7 +38,7 @@ async function getNetworkInfo(request, response) {
     content: {
       volume: totalTransactionAmount,
       volumeLast24hChange,
-      bondedValue: bondedRelays,
+      bondedValue: numberToFixedAmount(bondedRelays),
       fee: {
         cumulativeAmount: allTimeFeeAssets.totalUSD,
         currentAmount: currentFeeAssets.totalUSD,

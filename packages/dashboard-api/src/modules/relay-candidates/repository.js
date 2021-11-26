@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger, pgPool, hexToFixedAmount } = require('../../common');
+const { logger, pgPool, hexToFixedAmount, numberToFixedAmount } = require('../../common');
 
 async function countTotalRelayCandidates() {
   const query = 'SELECT COUNT(*) FROM relay_candidates WHERE unregistered_time IS NULL';
@@ -17,27 +17,31 @@ async function countTotalRelayCandidates() {
 async function getTotalReward() {
   try {
     const { rows } = await pgPool.query(
-      'SELECT total_reward FROM relay_candidate_rewards ORDER BY created_time DESC LIMIT 1',
+      'SELECT total_reward, created_at FROM relay_candidate_rewards ORDER BY created_at DESC LIMIT 1',
     );
-    return rows[0] ? Number(rows[0].total_reward) : 0;
+    return {
+      totalReward: rows[0] ? Number(rows[0].total_reward) : 0,
+      createdAt: rows[0]? rows[0].created_at : null
+    }
   } catch (error) {
     logger.error('getTotalReward fails', { error });
     throw error;
   }
 }
 
-async function getTotalRewardLast30Days() {
-  const timeToCompare = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days before
+async function getTotalRewardLast30Days(lastDate) {
+  const timeToCompare = new Date(lastDate.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 days before
 
   try {
     const {
       rows,
     } = await pgPool.query(
-      'SELECT total_reward FROM relay_candidate_rewards WHERE created_time <= $1 ORDER BY created_time DESC LIMIT 1',
-      [timeToCompare.toISOString()],
+      'SELECT total_reward FROM relay_candidate_rewards WHERE created_at >= $1 AND created_at < $2',
+      [timeToCompare.toISOString(), lastDate.toISOString()],
     );
-
-    return rows[0] ? Number(rows[0].total_reward) : 0;
+    let total = 0;
+    rows.map(row => total += Number(row.total_reward));
+    return total;
   } catch (error) {
     logger.error('getTotalRewardLast30Days fails', { error });
     throw error;
@@ -45,10 +49,8 @@ async function getTotalRewardLast30Days() {
 }
 
 async function getRelayCandidateList(page = 0, limit = 20) {
-  const query = `SELECT relay_candidates.*, sum(relay_candidate_rewards.reward_value) as monthly_reward FROM relay_candidates
-                  INNER JOIN relay_candidate_rewards ON relay_candidates.id = relay_candidate_rewards.rc_id
+  const query = `SELECT relay_candidates.* FROM relay_candidates
                   WHERE unregistered_time IS NULL
-                  GROUP BY (relay_candidates.id)
                   LIMIT $1 OFFSET $2`;
 
   let offset = page * limit;
@@ -62,11 +64,11 @@ async function getRelayCandidateList(page = 0, limit = 20) {
       for (const row of rows) {
         relayCandidates.push({
           id: row.id,
-          rank: row.rank,
+          rank: Number(row.rank),
           name: row.name,
           address: row.address,
-          bondedICX: hexToFixedAmount(Number(row.bonded_icx)),
-          monthlyReward: row.monthly_reward ? Number(row.monthly_reward) : 0,
+          bondedICX: numberToFixedAmount(Number(row.bonded_icx)),
+          monthlyReward: numberToFixedAmount(Number(row.total_reward))
         });
       }
 

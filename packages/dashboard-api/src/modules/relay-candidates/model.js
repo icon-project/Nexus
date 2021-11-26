@@ -1,7 +1,7 @@
 'use strict';
 
 const IconService = require('icon-sdk-js').default;
-const { hexToIcxUnit, logger } = require('../../common');
+const { hexToIcxUnit, logger, numberToFixedAmount } = require('../../common');
 const {
   getRelayCandidateList,
   getTotalRewardLast30Days,
@@ -19,13 +19,14 @@ async function getTotalRelayCandidates() {
 }
 
 async function getTotalMonthlyReward() {
-  return await getTotalReward();
+  const { totalReward } = await getTotalReward();
+  return numberToFixedAmount(totalReward);
 }
 
 async function getRelayCandidates(page, limit) {
   let relayCandidates = await getRelayCandidateList(page, limit);
   let relayersOnchain = await getRelayerInfoOnChain();
-  let rankRelayers = rankRelayer(relayersOnchain);
+  let rankRelayers = await rankRelayer(relayersOnchain);
 
   for (let relayer of relayCandidates) {
     relayer.rank = rankRelayers[relayer.address] ? rankRelayers[relayer.address].rank : 0;
@@ -67,10 +68,10 @@ async function getRelayerInfoOnChain() {
 }
 
 async function getRewardLast30DaysChange() {
-  const totalReward = await getTotalReward();
-  const last30DaysReward = await getTotalRewardLast30Days();
+  const { totalReward, createdAt } = await getTotalReward();
+  const last30DaysReward = createdAt? await getTotalRewardLast30Days(createdAt) : 0;
 
-  return totalReward - last30DaysReward;
+  return numberToFixedAmount(totalReward - last30DaysReward);
 }
 
 module.exports = {
