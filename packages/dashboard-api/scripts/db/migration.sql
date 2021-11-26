@@ -295,6 +295,14 @@ ALTER TABLE ONLY public.transactions
 
 DROP TABLE relay_candidate_rewards;
 
+CREATE TABLE IF NOT EXISTS public.relay_candidate_rewards
+(
+    id character(10) COLLATE pg_catalog."default" NOT NULL,
+    total_reward numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT NOW(),
+    CONSTRAINT relay_candidate_rewards_pkey PRIMARY KEY (id)
+);
+
 ALTER TABLE relay_candidates
     DROP COLUMN id,
     DROP COLUMN dest_address;

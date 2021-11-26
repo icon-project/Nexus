@@ -30,14 +30,35 @@ icon Transaction: e {
 # https://github.com/icon-project/btp/blob/goloop2moonbeam-iconloop/javascore/bmc/src/main/java/foundation/icon/btp/bmc/BTPMessageCenter.java
 goloop rpc call --uri http://localhost:9080/api/v3/icon --method getRelayerManagerProperties --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71
 
+{
+  "bond": "0x5af316702100",
+  "carryover": "0x0",
+  "distributed": "0x0",
+  "nextRewardDistribution": "0xc8640",
+  "relayerMinBond": "0x1",
+  "relayerRewardRank": "0x19",
+  "relayerTerm": "0x64"
+}
+
 goloop rpc call --uri http://localhost:9080/api/v3/icon --method getRelayers --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71
 
-goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --method distributeRelayerReward --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --key_store godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --method setRelayerTerm --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --param _value=100 --key_store ./config/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+# 0xfdca2cdb420e549e069a8f3623e34a7a5da633ff1d686308e48fccb548666e70
 
-goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --method claimRelayerReward --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --key_store godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+# 100 ICX
+goloop rpc sendtx transfer --uri http://localhost:9080/api/v3/icon --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --value=0x56BC75E2D63100000 --key_store ./config/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+# 0x37520fd67ed487c70545891b48bfc3f591fbcee8902cc516b46e48aa1a66468e
 
+goloop rpc balance cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --uri http://localhost:9080/api/v3/icon
+# 0xad78f174ddc902100
 
-goloop rpc txresult 0xfb0bb38bcf092398c7a333ae9f1f217d64db078fd428c63fd451fa1179b3bdee --uri http://localhost:9080/api/v3/icon
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --method distributeRelayerReward --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --key_store ./config/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+# 0x658d2958882f96557664ec6515445e1bd82181edc98aea38214ccd61620412ab
+
+goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon --method claimRelayerReward --to cx26cdb2d9cf33dee078056532175a696b8a9fcc71 --key_store ./config/godWallet.json --key_password gochain --step_limit 10000000000 --nid 3
+
+goloop rpc txresult 0x37520fd67ed487c70545891b48bfc3f591fbcee8902cc516b46e48aa1a66468e --uri http://localhost:9080/api/v3/icon
+
 ```
 
 # Command

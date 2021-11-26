@@ -225,6 +225,16 @@ CREATE TABLE IF NOT EXISTS public.relay_candidates
     CONSTRAINT relay_candidates_address_key UNIQUE (address)
 ));
 
+-- Table: public.relay_candidate_rewards
+
+CREATE TABLE IF NOT EXISTS public.relay_candidate_rewards
+(
+    id character(10) COLLATE pg_catalog."default" NOT NULL,
+    total_reward numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT NOW(),
+    CONSTRAINT relay_candidate_rewards_pkey PRIMARY KEY (id)
+);
+
 -- Table: public.minted_tokens
 
 -- DROP TABLE public.minted_tokens;
