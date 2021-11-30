@@ -2,7 +2,7 @@
 
 const { getTransferEvent } = require('../src/modules/icon-indexer/transfer-fee');
 
-let txResult = {
+const txResult = {
   status: 1,
   to: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e', // token address
   txHash: '0x607984145dfe46bb66b7e329e76569b73124e1bfb1936f55ecfd095499ed24b3',
