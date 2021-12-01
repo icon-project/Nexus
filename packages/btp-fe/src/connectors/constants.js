@@ -1,4 +1,5 @@
-import { connectedNetWorks } from 'utils/constants';
+import IconService, { HttpProvider } from 'icon-sdk-js';
+import { connectedNetWorks, pairedNetworks, getPairedNetwork } from 'utils/constants';
 
 export const TYPES = {
   REQUEST_HAS_ACCOUNT: 'REQUEST_HAS_ACCOUNT',
@@ -19,16 +20,35 @@ export const signingActions = {
   globalName: 'signingActions',
   transfer: 'transfer',
   bid: 'bid',
+  deposit: 'deposit',
+  receiver: 'receiver',
 };
 
+export const rawTransaction = 'rawTransaction';
+
 export const allowedNetworkIDs = {
-  metamask: { '0x501': connectedNetWorks.moonbeam, '0x4': 'Rinkeby' },
+  metamask: {
+    '0x501': connectedNetWorks.moonbeam,
+    '0x61': connectedNetWorks.bsc,
+    '0x4': 'Rinkeby',
+  },
 };
 
 const customNetworks = localStorage.getItem('NETWORK_CONFIG');
 const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon: {}, moonbeam: {} };
 
+export const BSC_NODE = {
+  [connectedNetWorks.bsc]: true,
+  RPCUrl: process.env.REACT_APP_BSC_RPC_URL,
+  networkAddress: process.env.REACT_APP_BSC_NETWORK_ADDRESS,
+  BSHCore: process.env.REACT_APP_BSC_BSH_CORE,
+  tokenBSHProxy: process.env.REACT_APP_BSC_TOKEN_BSH_PROXY,
+  BEP20TKN: process.env.REACT_APP_BSC_BEP20_TKN,
+};
+console.log('BSC_NODE', BSC_NODE);
+
 export const MOON_BEAM_NODE = {
+  [connectedNetWorks.moonbeam]: true,
   RPCUrl: moonbeam.endpoint || process.env.REACT_APP_MB_RPC_URL,
   BSHCore: moonbeam.BSHCore || process.env.REACT_APP_MB_BSH_CORE,
   networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,
@@ -36,29 +56,52 @@ export const MOON_BEAM_NODE = {
 };
 console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 
-// https://www.icondev.io/docs/testnet
-export const NETWORKS = {
-  cloud: {
-    name: connectedNetWorks.icon,
+export const ICON_NODES = {
+  [pairedNetworks['ICON-Moonbeam']]: {
+    name: connectedNetWorks.icon + ' for Moonbeam',
     endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
     nid: icon.nid || process.env.REACT_APP_ICON_NID,
     networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
     irc31token: icon.irc31token || process.env.REACT_APP_ICON_IRC31_TOKEN,
     BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
-  sejong: {
-    name: 'Sejong Testnet',
-    endpoint: 'https://sejong.net.solidwallet.io/api/v3',
-    nid: '0x53',
-  },
-  ICONMainnet: {
-    name: 'ICON Mainnet',
-    endpoint: 'https://ctz.solidwallet.io/api/v3',
-    nid: '1',
+  [pairedNetworks['ICON-BSC']]: {
+    name: connectedNetWorks.icon + ' for BSC',
+    endpoint: process.env.REACT_APP_ICON_BSC_RPC_URL,
+    nid: process.env.REACT_APP_ICON_BSC_NID,
+    networkAddress: process.env.REACT_APP_ICON_BSC_NETWORK_ADDRESS,
+    irc2token: process.env.REACT_APP_ICON_BSC_IRC2_TOKEN_ADDRESS,
+    irc31token: process.env.REACT_APP_ICON_BSC_IRC31_TOKEN,
+    BSHAddress: process.env.REACT_APP_ICON_BSC_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
+    TOKEN_BSH_ADDRESS: process.env.REACT_APP_ICON_BSC_TOKEN_BSH_ADDRESS,
   },
 };
-console.log('ICON_NODE', NETWORKS.cloud);
 
-const testnet = localStorage.getItem('dev');
-export const currentICONexNetwork =
-  (testnet ? NETWORKS[testnet] : NETWORKS.cloud) || NETWORKS.cloud;
+const currentPairedNetworks = getPairedNetwork();
+let currentICONexNetwork = currentPairedNetworks
+  ? ICON_NODES[currentPairedNetworks]
+  : ICON_NODES['ICON-Moonbeam'];
+console.log(currentPairedNetworks, currentICONexNetwork);
+
+export const getCurrentICONexNetwork = () => currentICONexNetwork;
+
+export let serverEndpoint =
+  currentPairedNetworks === pairedNetworks['ICON-BSC']
+    ? process.env.REACT_APP_BTP_ENDPOINT_BSC
+    : process.env.REACT_APP_BTP_ENDPOINT;
+
+export let httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
+export let iconService = new IconService(httpProvider);
+
+// On dev process, we now have 2 paires of networks: ICON-Moonbeam & ICON-BSC
+// This fuction will handle switching back and forth between these paired networks
+export const setCurrentICONexNetwork = (pairedNetworksValue) => {
+  currentICONexNetwork = ICON_NODES[pairedNetworksValue];
+  serverEndpoint =
+    pairedNetworksValue === pairedNetworks['ICON-BSC']
+      ? process.env.REACT_APP_BTP_ENDPOINT_BSC
+      : process.env.REACT_APP_BTP_ENDPOINT;
+
+  httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
+  iconService = new IconService(httpProvider);
+};

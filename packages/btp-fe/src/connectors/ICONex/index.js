@@ -1,7 +1,7 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import { getBalance, sendTransaction, getTxResult } from './iconService';
+import { getBalance, sendTransaction, getTxResult, sendNoneNativeCoinBSC } from './iconService';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
@@ -10,9 +10,9 @@ import {
   TYPES,
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  currentICONexNetwork,
+  getCurrentICONexNetwork,
   signingActions,
-} from '../constants';
+} from 'connectors/constants';
 
 const { modal, account } = store.dispatch;
 
@@ -67,6 +67,19 @@ const eventHandler = async (event) => {
                     button: {
                       text: 'Continue bidding',
                       onClick: () => modal.setDisplay(false),
+                    },
+                  });
+                  break;
+
+                case signingActions.deposit:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
+                    button: {
+                      text: 'Transfer',
+                      onClick: () => {
+                        sendNoneNativeCoinBSC();
+                      },
                     },
                   });
                   break;
@@ -156,7 +169,7 @@ const getAccountInfo = async (address) => {
       balance,
       wallet,
       unit: 'ICX',
-      currentNetwork: currentICONexNetwork.name,
+      currentNetwork: getCurrentICONexNetwork().name,
     });
   } catch (err) {
     console.log('Err: ', err);

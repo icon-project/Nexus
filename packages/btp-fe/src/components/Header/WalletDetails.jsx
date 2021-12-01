@@ -6,7 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { tokenOptionList } from 'utils/constants';
+import { getBalanceToken } from 'utils/constants';
 import { getService } from 'services/transfer';
 
 import { Select } from 'components/Select';
@@ -143,11 +143,7 @@ const RefundSelector = styled(Select)`
   }
 
   > ul {
-    width: 114px;
-
-    ${media.md`
-      width: 83px;
-    `};
+    width: 100%;
   }
 `;
 
@@ -179,8 +175,8 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: unit, value: unit },
-    ...tokenOptionList
-      .map(({ symbol }) => ({ label: symbol, value: symbol }))
+    ...getBalanceToken()
+      .map((symbol) => ({ label: symbol, value: symbol }))
       .filter((item) => item.label !== unit),
   ];
 

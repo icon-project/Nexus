@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { tokenOptionList } from 'utils/constants';
+import { getTokenOptions } from 'utils/constants';
 
 const StyledItem = styled.div`
   display: flex;
@@ -35,9 +35,9 @@ const Item = ({ symbol, children, ...props }) => {
   );
 };
 
-const SelectAsset = ({ onChange }) => {
+const SelectAsset = ({ onChange, currentNetwork }) => {
   /* eslint-disable react/display-name */
-  const coins = tokenOptionList.map(({ symbol, netWorkLabel }) => ({
+  const options = getTokenOptions(currentNetwork).map(({ symbol, netWorkLabel }) => ({
     value: symbol,
     label: symbol,
     renderLabel: () => (
@@ -52,6 +52,7 @@ const SelectAsset = ({ onChange }) => {
     ),
   }));
 
-  return <Select options={coins} onChange={onChange} name="token" />;
+  return <Select options={options} onChange={onChange} name="token" />;
 };
+
 export default SelectAsset;

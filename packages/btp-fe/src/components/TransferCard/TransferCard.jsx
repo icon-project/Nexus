@@ -9,7 +9,7 @@ import { media } from 'components/Styles/Media';
 import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks } from 'utils/constants';
+import { isICONAndBSHPaired, getTartgetNetwork } from 'utils/constants';
 
 import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
@@ -88,7 +88,8 @@ export const TransferCard = ({
   };
 
   const onNext = async () => {
-    if (isSendingNativeCoin) {
+    //  We don't CheckingApproval for transfer native token and tokens on BSC, BSC uses deposit mechanism instead.
+    if (isSendingNativeCoin || isICONAndBSHPaired()) {
       setStep(1);
     } else {
       setCheckingApproval(true);
@@ -122,17 +123,6 @@ export const TransferCard = ({
     }
   };
 
-  const { icon, moonbeam } = connectedNetWorks;
-
-  const getCrossNetworks = () => {
-    return currentNetwork
-      ? [
-          { value: icon, label: icon },
-          { value: moonbeam, label: moonbeam },
-        ].filter((network) => network.value !== currentNetwork)
-      : [];
-  };
-
   return (
     <StyledCard>
       <Header className="sm bold center">Transfer</Header>
@@ -143,14 +133,14 @@ export const TransferCard = ({
 
         <div className="send">
           <Text className="md">Send</Text>
-          <SelectAsset onChange={onChange} />
+          <SelectAsset onChange={onChange} currentNetwork={currentNetwork} />
         </div>
 
         <div className="devider" />
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={getCrossNetworks()} onChange={onChange} name="network" />
+          <Select options={getTartgetNetwork(currentNetwork)} onChange={onChange} name="network" />
         </div>
 
         <div className="button-section">

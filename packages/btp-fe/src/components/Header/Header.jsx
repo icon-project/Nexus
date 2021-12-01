@@ -7,13 +7,14 @@ import { WalletDetails } from './WalletDetails';
 import { Modal } from 'components/NotificationModal';
 import { PrimaryButton, HamburgerButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
+import { Select } from 'components/Select';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
-import { wallets } from 'utils/constants';
+import { wallets, PAIRED_NETWORKS, getPairedNetwork, pairedNetworks } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
-import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { CONNECTED_WALLET_LOCAL_STORAGE, setCurrentICONexNetwork } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 import { SubTitle, Text } from 'components/Typography';
@@ -132,6 +133,12 @@ const StyledHeader = styled.header`
   `}
 `;
 
+const PairedNetworkWrapper = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+`;
+
 // const Logo = styled.img`
 //   width: 42.65px;
 // `;
@@ -163,6 +170,14 @@ const Header = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
+  const currentPairedNetworks = getPairedNetwork();
+
+  const pairedNetworksOptions = [
+    { label: currentPairedNetworks, value: currentPairedNetworks },
+    ...Object.keys(pairedNetworks)
+      .filter((i) => i !== currentPairedNetworks)
+      .map((i) => ({ label: i, value: i })),
+  ];
 
   useEffect(() => {
     if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
@@ -231,12 +246,25 @@ const Header = () => {
     setShowModal(true);
   };
 
+  const onChangePairedNetworks = (e) => {
+    const { value } = e.target;
+    localStorage.setItem(PAIRED_NETWORKS, value);
+    setCurrentICONexNetwork(value);
+  };
+
   useEffect(() => {
     if (address) {
       setLoading(false);
       setShowDetail(true);
     }
   }, [address]);
+
+  // set default paired networks
+  useEffect(() => {
+    if (!currentPairedNetworks) {
+      localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
+    }
+  }, [currentPairedNetworks]);
 
   return (
     <StyledHeader $showMenu={showMenu}>
@@ -293,6 +321,12 @@ const Header = () => {
                   isInstalled={isICONexInstalled()}
                 />
               </div>
+              <PairedNetworkWrapper>
+                <Text className="xs" color={colors.graySubText}>
+                  Select the paired networks:
+                </Text>
+                <Select options={pairedNetworksOptions} onChange={onChangePairedNetworks} />
+              </PairedNetworkWrapper>
             </Modal>
           )}
         </>

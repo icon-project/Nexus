@@ -6,8 +6,9 @@ import {
   getBalanceOf,
   reclaim,
 } from 'connectors/ICONex/iconService';
-import { EthereumInstance } from 'connectors/MetaMask';
-import { wallets } from 'utils/constants';
+import { wallets, getPairedNetwork, pairedNetworks } from 'utils/constants';
+import * as BSCServices from 'connectors/MetaMask/services/BSCServices';
+import * as MoonbeamServices from 'connectors/MetaMask/services/BSCServices';
 
 const getCurrentTransferService = () => (targetWallet) => {
   const { wallet } = store.getState().account;
@@ -15,11 +16,17 @@ const getCurrentTransferService = () => (targetWallet) => {
 
   const iconServices = { transfer, isApprovedForAll, setApprovalForAll, getBalanceOf, reclaim };
 
-  switch (wallet || targetWallet) {
-    case wallets.metamask:
-      return EthereumInstance;
-    default:
-      return iconServices;
+  const currentPairedNetworks = getPairedNetwork();
+  if ((wallet || targetWallet) === wallets.metamask) {
+    switch (currentPairedNetworks) {
+      case pairedNetworks['ICON-BSC']:
+        return BSCServices;
+
+      default:
+        return MoonbeamServices;
+    }
+  } else {
+    return iconServices;
   }
 };
 
