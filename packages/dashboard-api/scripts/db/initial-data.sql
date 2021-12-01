@@ -5,12 +5,13 @@
 
 INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at) VALUES ('0x42', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://icon.foundation', 0, 0, NOW(), NOW());
 INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at) VALUES ('0x507', 'Moonbeam', 'DEV','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network', 0, 0, NOW(), NOW());
---INSERT INTO networks(id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at) VALUES('0x1', 'NEARProtocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org', 0, 0, NOW(), NOW());
+INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at) VALUES('testnet', 'NEAR Protocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org', 0, 0, NOW(), NOW());
 --INSERT INTO networks (id, name, native_token, path_logo, url, mint_fee, burn_fee, create_at, update_at) VALUES ('0x97', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com', 0, 0, NOW(), NOW());
 
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x42', 'ICON', 0, NOW());
 INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x507', 'Moonbeam', 0, NOW());
 --INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('0x97', 'BSC', 0, NOW());
+INSERT INTO indexer_stats (network_id, name, block_height, updated_time) VALUES ('testnet', 'NEAR Protocol', 0, NOW());
 
 -- ### Token prices ###
 

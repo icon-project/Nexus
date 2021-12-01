@@ -1,5 +1,9 @@
 Clean up server and redeploy testnet
 
+lscpu
+
+top -o %MEM
+
 df -H
 
 docker container ls -s.

@@ -15,7 +15,9 @@ async function start() {
     logger.info('Listening at %o', server.address());
   });
 
-  await blockIndexer.start();
+  // usage: index.js <indexer>
+  const args = process.argv.slice(2);
+  await blockIndexer.start(args[0] || '');
 }
 
 module.exports = {
