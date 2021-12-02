@@ -6,12 +6,11 @@ import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
-import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
 import { useDispatch } from 'hooks/useRematch';
-import { isICONAndBSHPaired, getTartgetNetwork } from 'utils/constants';
+import { getTartgetNetwork } from 'utils/constants';
 
-import { getService } from 'services/transfer';
+import handleCheckingApproval from './handleCheckingApproval';
 import transferIcon from 'assets/images/vector-icon.svg';
 
 const StyledCard = styled.div`
@@ -89,38 +88,15 @@ export const TransferCard = ({
 
   const onNext = async () => {
     //  We don't CheckingApproval for transfer native token and tokens on BSC, BSC uses deposit mechanism instead.
-    if (isSendingNativeCoin || isICONAndBSHPaired()) {
-      setStep(1);
-    } else {
-      setCheckingApproval(true);
-
-      const result = await getService().isApprovedForAll();
-
-      if (result) {
-        setStep(1);
-      } else if (result === false) {
-        openModal({
-          hasHeading: false,
-          children: (
-            <TransferApproval
-              onOk={() => {
-                getService().setApprovalForAll();
-              }}
-              onCancel={() => {
-                setDisplay(false);
-              }}
-            />
-          ),
-        });
-      } else {
-        openModal({
-          icon: 'xIcon',
-          desc: 'Something went wrong',
-        });
-      }
-
-      setCheckingApproval(false);
-    }
+    setCheckingApproval(true);
+    await handleCheckingApproval(
+      setStep,
+      isSendingNativeCoin,
+      currentNetwork,
+      openModal,
+      setDisplay,
+    );
+    setCheckingApproval(false);
   };
 
   return (
