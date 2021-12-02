@@ -243,6 +243,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   try {
     let balance = 0;
 
+    // Being checked only on ICON-BSC chains
     if (symbol === 'ETH') {
       balance = await makeICXCall({
         dataType: 'call',
