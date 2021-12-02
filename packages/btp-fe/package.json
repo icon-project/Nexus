@@ -88,7 +88,7 @@
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
     ],
-    "resetMocks": true
+    "resetMocks": false
   },
   "dependencies": {
     "@rematch/core": "2.0.0-next.10",
