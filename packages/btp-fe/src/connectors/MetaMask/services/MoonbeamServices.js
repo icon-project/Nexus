@@ -7,10 +7,12 @@ import {
 } from 'connectors/constants';
 
 import { convertToICX } from 'connectors/ICONex/utils';
-import { toChecksumAddress } from 'connectors/utils';
+import { toChecksumAddress } from '../utils';
 import { roundNumber } from 'utils/app';
-
+import { connectedNetWorks } from 'utils/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
+
+export const serviceName = connectedNetWorks.moonbeam;
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {

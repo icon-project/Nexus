@@ -18,9 +18,11 @@ import { requestSigning } from './events';
 import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { isICONAndBSHPaired } from 'utils/constants';
+import { isICONAndBSHPaired, connectedNetWorks } from 'utils/constants';
 
 const { modal } = store.dispatch;
+
+export const serviceName = connectedNetWorks.icon;
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076

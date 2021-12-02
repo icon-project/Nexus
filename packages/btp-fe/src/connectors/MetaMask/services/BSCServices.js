@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 
 import { roundNumber } from 'utils/app';
+import { connectedNetWorks } from 'utils/constants';
 import {
   MOON_BEAM_NODE,
   BSC_NODE,
@@ -11,6 +12,8 @@ import {
 import { convertToICX } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { EthereumInstance } from 'connectors/MetaMask';
+
+export const serviceName = connectedNetWorks.bsc;
 
 export const getBalanceOf = async ({ address, symbol }) => {
   let balance = 0;
