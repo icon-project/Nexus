@@ -52,7 +52,7 @@ describe('components/TransferCard', () => {
 
       expect(mockSetStep).toBeCalledTimes(0);
       expect(mockOpenModal).toBeCalledTimes(1);
-      expect(mockOpenModal.mock.calls[0][0].isSetApprovalForAllModel).toBe(true);
+      expect(mockOpenModal.mock.calls[0][0].isSetApprovalForAllModal).toBe(true);
     });
   });
 });

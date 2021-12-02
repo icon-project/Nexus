@@ -12,7 +12,7 @@ export default async (setStep, isSendingNativeCoin, currentNetwork, openModal, s
       setStep(1);
     } else if (result === false) {
       openModal({
-        isSetApprovalForAllModel: true,
+        isSetApprovalForAllModal: true,
         hasHeading: false,
         children: (
           <TransferApproval
