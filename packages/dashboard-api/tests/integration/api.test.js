@@ -104,33 +104,71 @@ describe('Test /btpnetwork', () => {
 });
 
 describe('Test /relays', () => {
-/*
-+ curl http://localhost:8000/v1/relays
-+ jq
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   405  100   405    0     0    831      0 --:--:-- --:--:-- --:--:--   829
-{
-  "content": [
-    {
-      "id": "9d002c38-36a3-4ca6-af8b-33a70fa870ef",
-      "address": "hx5e39a47007c2d79ae1879fb6b524538bbab785ae",
-      "serverStatus": "Active",
-      "transferredTransactions": 5,
-      "failedTransactions": 0
-    },
-    {
-      "id": "114cbffb-04fc-4c8a-bd0a-652bd437efb7",
-      "address": "Ahx5e39a47007c2d79ae1879fb6b524538bbab785ae",
-      "serverStatus": "Active",
-      "transferredTransactions": 25,
-      "failedTransactions": 0
-    }
-  ],
-  "total": 2,
-  "registeredLastChange24h": 0
-}
-*/
+  test('GET /relays', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          address: expect.any(String),
+          serverStatus: expect.any(String),
+          transferredTransactions: expect.any(Number),
+          failedTransactions: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number),
+      registeredLastChange24h: expect.any(Number)
+    };
+
+    const response = await request(app)
+      .get('/v1/relays')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body).toMatchObject(expected);
+  });
+
+  test('GET /relays\?page=1\&limit=3', async () => {
+    const expected = {
+      content: [],
+      total: expect.any(Number),
+      registeredLastChange24h: expect.any(Number)
+    };
+
+    const response = await request(app)
+      .get('/v1/relays\?page=1\&limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toEqual(0);
+  });
+
+  test('GET /relays\?page=0\&limit=3', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(String),
+          address: expect.any(String),
+          serverStatus: expect.any(String),
+          transferredTransactions: expect.any(Number),
+          failedTransactions: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number),
+      registeredLastChange24h: expect.any(Number)
+    };
+
+    const response = await request(app)
+      .get('/v1/relays\?page=0\&limit=3')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body).toMatchObject(expected);
+    expect(response.body.content.length).toBeLessThanOrEqual(3);
+  });
 });
 
 describe('Test /networks', () => {
