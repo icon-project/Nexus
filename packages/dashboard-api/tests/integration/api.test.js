@@ -355,3 +355,45 @@ describe('Test /transactions', () => {
     expect(response.text).toBe(expected);
   })
 });
+
+describe('Test /relay-candidates', () => {
+  test('GET /relay-candidates', async () => {
+    const expected = {
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          rank: expect.any(Number),
+          name: expect.any(String),
+          address: expect.any(String),
+          bondedICX: expect.any(Number),
+          monthlyReward: expect.any(Number)
+        })
+      ]),
+      total: expect.any(Number)
+    };
+
+    const response = await request(app)
+      .get('/v1/relay-candidates')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body).toMatchObject(expected);
+  });
+
+  test('GET /relay-candidates/reward', async () => {
+    const expected = {
+      content: expect.objectContaining({
+        totalAmount: expect.any(Number),
+        last30DaysChange: expect.any(Number)
+      })
+    };
+
+    const response = await request(app)
+      .get('/v1/relay-candidates/reward')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /application\/json/)
+      .expect(HttpStatus.OK);
+
+    expect(response.body).toMatchObject(expected);
+  });
+});
