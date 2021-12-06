@@ -18,7 +18,7 @@ import { requestSigning } from './events';
 import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { isICONAndBSHPaired, connectedNetWorks } from 'utils/constants';
+import { connectedNetWorks } from 'utils/constants';
 
 const { modal } = store.dispatch;
 
@@ -164,20 +164,6 @@ export const placeBid = (auctionName, value, fas) => {
 
   window[signingActions.globalName] = signingActions.bid;
   signTx(transaction, options);
-};
-
-export const transfer = (tx, isSendingNativeCoin, network) => {
-  window[signingActions.globalName] = signingActions.transfer;
-  const networkAddress = BSC_NODE[network]
-    ? BSC_NODE.networkAddress
-    : MOON_BEAM_NODE.networkAddress;
-
-  if (isSendingNativeCoin) {
-    sendNativeCoin(tx, networkAddress);
-  } else {
-    if (isICONAndBSHPaired) depositTokensIntoBSH(tx);
-    else sendNonNativeCoin(tx);
-  }
 };
 
 export const signTx = (transaction = {}, options = {}) => {
