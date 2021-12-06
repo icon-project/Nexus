@@ -61,7 +61,7 @@ export const getTxResult = (txHash) => {
   }
 };
 
-export const sendNoneNativeCoin = ({ value, to }) => {
+export const sendNonNativeCoin = ({ value, to }) => {
   const transaction = {
     to: getCurrentICONexNetwork().BSHAddress,
   };
@@ -77,6 +77,7 @@ export const sendNoneNativeCoin = ({ value, to }) => {
   };
 
   signTx(transaction, options);
+  return { transaction, options };
 };
 
 export const sendNativeCoin = ({ value, to }, networkAddress) => {
@@ -94,6 +95,7 @@ export const sendNativeCoin = ({ value, to }, networkAddress) => {
   };
 
   signTx(transaction, options);
+  return { transaction, options };
 };
 
 export const setApprovalForAll = async () => {
@@ -174,7 +176,7 @@ export const transfer = (tx, isSendingNativeCoin, network) => {
     sendNativeCoin(tx, networkAddress);
   } else {
     if (isICONAndBSHPaired) depositTokensIntoBSH(tx);
-    else sendNoneNativeCoin(tx);
+    else sendNonNativeCoin(tx);
   }
 };
 

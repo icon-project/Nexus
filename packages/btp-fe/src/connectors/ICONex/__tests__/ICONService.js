@@ -2,7 +2,9 @@ import { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { signTx } from '../ICONService';
+import { getCurrentICONexNetwork, MOON_BEAM_NODE } from 'connectors/constants';
+
+import { signTx, sendNonNativeCoin, sendNativeCoin } from '../ICONService';
 
 jest.mock('store', () => {
   return {
@@ -47,5 +49,53 @@ describe('ICONService', () => {
     const result = signTx(transactions, options);
 
     expect(result).toBe(hash);
+  });
+
+  test('sendNoneNativeCoin', () => {
+    const value = 1;
+    const to = 'bob';
+
+    const transaction = {
+      to: getCurrentICONexNetwork().BSHAddress,
+    };
+
+    const options = {
+      method: 'transfer',
+      params: {
+        _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
+        _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+        _coinName: 'DEV',
+      },
+    };
+
+    const result = sendNonNativeCoin({ to, value });
+    delete result.options.builder;
+
+    expect(result.transaction).toEqual(transaction);
+    expect(result.options).toEqual(options);
+  });
+
+  test('sendNativeCoin', () => {
+    const value = 1;
+    const to = 'bob';
+    const networkAddress = 'icon.21';
+
+    const transaction = {
+      to: getCurrentICONexNetwork().BSHAddress,
+      value,
+    };
+
+    const options = {
+      method: 'transferNativeCoin',
+      params: {
+        _to: `btp://${networkAddress}/${to}`,
+      },
+    };
+
+    const result = sendNativeCoin({ to, value }, networkAddress);
+    delete result.options.builder;
+
+    expect(result.transaction).toEqual(transaction);
+    expect(result.options).toEqual(options);
   });
 });
