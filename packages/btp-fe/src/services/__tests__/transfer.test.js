@@ -4,7 +4,7 @@ import { wallets, connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'uti
 jest.mock('store', () => {
   return {
     getState: jest.fn().mockImplementation(() => ({ account: { wallet: '' } })),
-    dispatch: jest.fn().mockImplementation(() => ({ modal: {} })),
+    dispatch: { modal: {} },
   };
 });
 

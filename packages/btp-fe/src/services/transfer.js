@@ -1,7 +1,7 @@
 import store from 'store';
 import { wallets, getPairedNetwork, pairedNetworks } from 'utils/constants';
 
-import * as ICONServices from 'connectors/ICONex/iconService';
+import * as ICONServices from 'connectors/ICONex/ICONService';
 import * as BSCServices from 'connectors/MetaMask/services/BSCServices';
 import * as MoonbeamServices from 'connectors/MetaMask/services/MoonbeamServices';
 

@@ -10,7 +10,7 @@ import { SelectInput } from 'components/Select/SelectInput';
 import { colors } from 'components/Styles/Colors';
 
 import { minValue, required } from 'utils/inputValidation';
-import { placeBid } from 'connectors/ICONex/iconService';
+import { placeBid } from 'connectors/ICONex/ICONService';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
 const Form = styled.form`

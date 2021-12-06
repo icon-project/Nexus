@@ -180,7 +180,7 @@ export const transfer = (tx, isSendingNativeCoin, network) => {
 
 export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
-  const { method, params, builder } = options;
+  const { method, params, builder, nid, timestamp } = options;
 
   if (!modal.isICONexWalletConnected()) {
     return;
@@ -197,10 +197,10 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .stepLimit(IconConverter.toBigNumber(1000000000))
-    .nid(IconConverter.toBigNumber(getCurrentICONexNetwork().nid))
+    .nid(IconConverter.toBigNumber(nid || getCurrentICONexNetwork().nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
-    .timestamp(new Date().getTime() * 1000);
+    .timestamp(timestamp || new Date().getTime() * 1000);
 
   if (value) {
     tx = tx.value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop());
@@ -221,6 +221,8 @@ export const signTx = (transaction = {}, options = {}) => {
     from,
     hash: transactionHash,
   });
+
+  return transactionHash;
 };
 
 /**
