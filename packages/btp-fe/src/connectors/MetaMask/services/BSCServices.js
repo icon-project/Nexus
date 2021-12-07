@@ -84,3 +84,15 @@ export const sendNoneNativeCoinBSC = async () => {
     data,
   });
 };
+
+export const isApprovedForAll = () => {
+  console.log('Not implemented yet');
+};
+
+export const setApprovalForAll = () => {
+  console.log('Not implemented yet');
+};
+
+export const reclaim = () => {
+  console.log('Not implemented yet');
+};

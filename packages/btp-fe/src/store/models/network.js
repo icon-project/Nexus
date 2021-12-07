@@ -6,16 +6,11 @@ const network = {
     networkDetails: [],
   },
   reducers: {
-    setNetworks(state, networks = []) {
+    setNetworkState(state, prop = []) {
+      const [property, payload] = prop;
       return {
         ...state,
-        networks,
-      };
-    },
-    setNetworkDetails(state, networkDetails = []) {
-      return {
-        ...state,
-        networkDetails,
+        [property]: payload,
       };
     },
   },
@@ -27,7 +22,7 @@ const network = {
       if (!cache || (cache && !hasData)) {
         try {
           const networks = await getConnectedNetworks();
-          this.setNetworks(networks.content.networks || []);
+          this.setNetworkState(['networks', networks.content.networks || []]);
           return networks;
         } catch (error) {
           dispatch.modal.handleError(error);
@@ -37,7 +32,7 @@ const network = {
     async getNetworkDetails(id) {
       try {
         const network = await getNetwork(id);
-        this.setNetworkDetails(network.content.network);
+        this.setNetworkState(['networkDetails', network.content.network]);
         return network;
       } catch (error) {
         dispatch.modal.handleError(error);
