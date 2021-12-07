@@ -1,5 +1,7 @@
+'use strict';
+
 const { v4: uuidv4 } = require('uuid');
-const { logger } = require('../../common');
+const { createLogger } = require('../../common');
 const {
   updateRelay,
   createRelay,
@@ -10,6 +12,7 @@ const { getRegisteredRelayMap } = require('./model');
 
 const ADD_RELAY_PROTOTYPE = 'addRelay';
 const REMOVE_RELAY_PROTOTYPE = 'removeRelay';
+const logger = createLogger();
 
 async function handleRelayAction(txResult, transaction) {
   const relayMap = await getRegisteredRelayMap();

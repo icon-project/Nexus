@@ -1,9 +1,11 @@
 'use strict';
 
 const http = require('http');
-const { logger } = require('../common');
+const { createLogger } = require('../common');
 const app = require('./app');
 const blockIndexer = require('./block-indexer');
+
+const logger = createLogger();
 
 async function start() {
   // Separate Express 'app' and 'server'
@@ -15,7 +17,9 @@ async function start() {
     logger.info('Listening at %o', server.address());
   });
 
-  await blockIndexer.start();
+  // usage: index.js <indexer>
+  const args = process.argv.slice(2);
+  await blockIndexer.start(args[0] || '');
 }
 
 module.exports = {

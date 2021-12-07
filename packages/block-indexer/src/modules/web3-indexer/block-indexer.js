@@ -3,13 +3,15 @@
 const debug = require('debug')('moonbeam');
 const debugTx = require('debug')('moonbeam_tx');
 const Web3 = require('web3');
-const { logger } = require('../../common');
+const { createLogger } = require('../../common');
 const { getMoonbeamEventMap } = require('../common/events');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleRelayActions } = require('../relays/moonbeam');
 const { Web3MintBurnHandler } = require('../mint-burn/web3');
+
+const logger = createLogger();
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {

@@ -1,13 +1,14 @@
 'use strict';
 
 const debug = require('debug')('icon');
-const { logger } = require('../../common');
+const { createLogger } = require('../../common');
 const IconService = require('icon-sdk-js').default;
 const { IconBuilder, HttpProvider } = IconService;
 const { saveTokenInfo } = require('./repository');
 
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
+const logger = createLogger();
 
 async function handleTokenRegister(txResult, transaction) {
   if (1 !== txResult.status)

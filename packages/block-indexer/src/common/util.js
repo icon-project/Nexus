@@ -3,7 +3,9 @@
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js').default;
 const { ICX_LOOP_UNIT } = require('./constants');
-const { logger } = require('./logger');
+const { createLogger } = require('./logger');
+
+const logger = createLogger();
 
 // Input: 0x1CBA2C95A76000
 // Output: 0.00002021

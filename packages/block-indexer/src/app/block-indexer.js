@@ -1,25 +1,39 @@
 'use strict';
 
-const { logger } = require('../common');
+const { createLogger } = require('../common');
 const { getRegisteredTokens } = require('../modules/tokens/model');
 const iconIndexer = require('../modules/icon-indexer');
 const moonbeamIndexer = require('../modules/web3-indexer');
 const bscIndexer = require('../modules/bsc-indexer');
+const nearIndexer = require('../modules/near-indexer');
 
-async function start() {
+const logger = createLogger();
+
+async function start(indexerName) {
   const tokens = await getRegisteredTokens();
   logger.info('Registered tokens: %O', tokens);
 
-  if ('true' === process.env.ICON_INDEXER_ENABLED) {
-    iconIndexer.start();
-  }
+  const name = indexerName.toUpperCase();
 
-  if ('true' === process.env.MOONBEAM_INDEXER_ENABLED) {
-    moonbeamIndexer.start();
-  }
+  switch (name) {
+    case 'ICON':
+      iconIndexer.start();
+      break;
 
-  if ('true' === process.env.BSC_INDEXER_ENABLED) {
-    bscIndexer.start();
+    case 'MOONBEAM':
+      moonbeamIndexer.start();
+      break;
+
+    case 'BSC':
+      bscIndexer.start();
+      break;
+
+    case 'NEAR':
+      nearIndexer.start();
+      break;
+
+    default:
+      logger.warn('No indexer started.');
   }
 }
 

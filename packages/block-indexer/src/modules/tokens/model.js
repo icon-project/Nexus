@@ -1,8 +1,6 @@
 'use strict';
 
-const { logger } = require('../../common');
 const { findAllTokens } = require('./repository');
-
 const registeredTokens = new Map();
 
 async function getRegisteredTokens() {

@@ -3,7 +3,7 @@
 const debug = require('debug')('bsc');
 const debugTx = require('debug')('bsc_tx');
 const Web3 = require('web3');
-const { logger } = require('../../common');
+const { createLogger } = require('../../common');
 const { getBscEventMap } = require('../common/events');
 const { getBscActionMap } = require('../common/actions');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
@@ -11,6 +11,8 @@ const { getTokenContractMap } = require('../transactions/model');
 const { handleTransactionEvents } = require('../transactions/bsc');
 const { handleRelayActions } = require('../relays/bsc');
 const { Web3MintBurnHandler } = require('../mint-burn/web3');
+
+const logger = createLogger();
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
