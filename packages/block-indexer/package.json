@@ -1,16 +1,20 @@
 {
   "name": "block-indexer",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Indexing data from blockchain to local database",
   "main": "index.js",
   "author": "Tien Do",
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --no-eslintrc ./src",
-    "start": "nodemon index.js",
-    "start:near": "nodemon index.js near",
-    "start:pm2": "pm2 start pm2.json",
-    "stop:pm2": "pm2 stop pm2.json",
+    "start:icon": "LOGGER_NAME=icon nodemon index.js icon",
+    "start:moonbeam": "LOGGER_NAME=moonbeam nodemon index.js moonbeam",
+    "start:bsc": "LOGGER_NAME=bsc nodemon index.js bsc",
+    "start:near": "LOGGER_NAME=near nodemon index.js near",
+    "pm2:icon": "pm2 start pm2.icon.json",
+    "pm2:moonbeam": "pm2 start pm2.moonbeam.json",
+    "pm2:bsc": "pm2 start pm2.bsc.json",
+    "pm2:near": "pm2 start pm2.near.json",
     "test": "jest --config=jest.json --passWithNoTests --verbose"
   },
   "dependencies": {

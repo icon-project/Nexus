@@ -1,9 +1,11 @@
 'use strict';
 
 const http = require('http');
-const { logger } = require('../common');
+const { createLogger } = require('../common');
 const app = require('./app');
 const blockIndexer = require('./block-indexer');
+
+const logger = createLogger();
 
 async function start() {
   // Separate Express 'app' and 'server'

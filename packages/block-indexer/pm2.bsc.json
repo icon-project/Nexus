@@ -1,12 +1,14 @@
 {
   "apps": [
     {
-      "name": "block-indexer",
+      "name": "bsc-indexer",
       "script": "./index.js",
+      "args": "bsc",
       "cwd": "/home/ubuntu/deploy/btp-dashboard/packages/block-indexer",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "LOGGER_NAME": "bsc"
       }
     }
   ]

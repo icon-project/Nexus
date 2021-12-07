@@ -1,14 +1,14 @@
 {
   "apps": [
     {
-      "name": "near-indexer",
+      "name": "icon-indexer",
       "script": "./index.js",
-      "args": "near",
+      "args": "icon",
       "cwd": "/home/ubuntu/deploy/btp-dashboard/packages/block-indexer",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
         "NODE_ENV": "production",
-        "LOGGER_NAME": "near"
+        "LOGGER_NAME": "icon"
       }
     }
   ]

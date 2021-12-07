@@ -3,7 +3,7 @@
 const debug = require('debug')('near');
 const debugTx = require('debug')('near_tx');
 const nearApi = require('near-api-js');
-const { logger } = require('../../common');
+const { createLogger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
@@ -13,6 +13,7 @@ const pollingTimeout = Number(process.env.POLLING_TIMEOUT);
 
 let blockRetry = 0;
 let blockHeight = Number(process.env.NEAR_BLOCK_HEIGHT);
+const logger = createLogger();
 
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, result, block) {
@@ -67,6 +68,8 @@ async function getBlockData() {
     // Ref: https://docs.near.org/docs/concepts/gas#thinking-in-gas
     setTimeout(async () => await retryGetBlockData(), pollingInterval);
   } catch (error) {
+    // Not found block, or a block has no transaction.
+    // e.g. https://explorer.testnet.near.org/blocks/4yzd8JgxsKY82bm3Yb7yRWwMH5xhhn6TMATk8CQBissP
     if (error.message.indexOf('DB Not Found') !== -1) {
       if (blockRetry < pollingTimeout) {
         blockRetry = blockRetry + 1;
