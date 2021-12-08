@@ -4,6 +4,10 @@
 
 set -x
 
+# PRECISION=18
+# COIN_UNIT=$((10 ** $PRECISION))
+# printf '%d' 0x140
+
 # cd ~/testnet/btp/docker-compose/goloop2moonbeam
 cd config
 

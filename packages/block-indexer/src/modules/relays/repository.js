@@ -1,7 +1,9 @@
 'use strict';
 
 const debug = require('debug')('db');
-const { pgPool, logger } = require('../../common');
+const { pgPool, createLogger } = require('../../common');
+
+const logger = createLogger();
 
 async function createRelay(relay) {
   try {

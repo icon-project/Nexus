@@ -1,10 +1,11 @@
 'use strict';
 
-const { logger, pgPool } = require('../../common');
+const { createLogger, pgPool } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
 
 const MINT = 'mint';
 const BURN = 'burn';
+const logger = createLogger();
 
 async function getTotalTokenAmount(tokenName, tokenType) {
   try {

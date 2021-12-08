@@ -1,11 +1,12 @@
 'use strict';
 
 const debug = require('debug')('icon_tx');
-const { logger, hexToFixedAmount } = require('../../common');
+const { createLogger, hexToFixedAmount } = require('../../common');
 const { registerRelayer, unregisterRelayer } = require('./repository');
 
 const REGISTER_RELAYER_PROTOTYPE = 'registerRelayer';
 const UNREGISTER_RELAYER_PROTOTYPE = 'unregisterRelayer';
+const logger = createLogger();
 
 async function handleRelayerAction(transaction) {
   const data = transaction.data;

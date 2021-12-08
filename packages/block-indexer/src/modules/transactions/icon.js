@@ -3,7 +3,7 @@
 const { decode } = require('rlp');
 const { IconConverter } = require('icon-sdk-js').default;
 const Web3 = require('web3');
-const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
+const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
   getLatestTransactionByToken,
@@ -15,6 +15,7 @@ const {
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,bytes)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
+const logger = createLogger();
 
 /*
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);

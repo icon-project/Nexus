@@ -3,14 +3,14 @@
 const debug = require('debug')('moonbeam_tx');
 const Web3 = require('web3');
 const { v4: uuidv4 } = require('uuid');
-const { ADD_RELAY_ACTION, REMOVE_RELAY_ACTION } = require('../../common');
-const logger = require('../../common/logger');
+const { createLogger, ADD_RELAY_ACTION, REMOVE_RELAY_ACTION } = require('../../common');
 const { getMoonbeamActionMap, decodeActionInput } = require('../common/actions');
 const { getRegisteredRelayMap } = require('./model');
 const { setRelayUnregistered, createRelay } = require('./repository');
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const bmcMgmtAddress = process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS.toLowerCase();
+const logger = createLogger();
 
 /* Decoded addRelay input.
 Result {

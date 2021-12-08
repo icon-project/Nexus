@@ -2,15 +2,16 @@
 
 const Web3 = require('web3');
 const debug = require('debug')('bsc_tx');
-const { logger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
+const { createLogger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog, getMoonbeamEventMap } = require('../common/events');
 const { getTokenContractMap } = require('../transactions/model');
 const { getTokenName } = require('../tokens/model');
 const { saveToken, getTotalTokenAmount } = require('./repository');
 
-const web3 = new Web3(process.env.MOONBEAM_API_URL);
-const bmcAddress = process.env.BSC_BMC_ADDRESS.toLowerCase();
 const TRANSFER_SINGLE_EVENT = 'TransferSingle';
+const bmcAddress = process.env.BSC_BMC_ADDRESS.toLowerCase();
+const web3 = new Web3(process.env.MOONBEAM_API_URL);
+const logger = createLogger();
 
 async function handleMintBurnEvents(tx, receipt, block) {
   const eventMap = getMoonbeamEventMap();
