@@ -1,6 +1,7 @@
 'use strict';
 
-const { pgPool, logger } = require('../../common');
+const { pgPool, createLogger } = require('../../common');
+const logger = createLogger();
 
 async function saveIndexedBlockHeight(blockHeight, networkId) {
   try {

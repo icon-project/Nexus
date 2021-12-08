@@ -3,13 +3,13 @@
 const debug = require('debug')('bsc_tx');
 const Web3 = require('web3');
 const { v4: uuidv4 } = require('uuid');
-const { ADD_RELAY_ACTION, REMOVE_RELAY_ACTION } = require('../../common');
-const logger = require('../../common/logger');
+const { createLogger, ADD_RELAY_ACTION, REMOVE_RELAY_ACTION } = require('../../common');
 const { getBscActionMap, decodeActionInput } = require('../common/actions');
 const { setRelayUnregistered, createRelay } = require('./repository');
 
 const web3 = new Web3(process.env.BSC_API_URL);
 const bmcAddress = process.env.BSC_BMC_ADDRESS.toLowerCase();
+const logger = createLogger();
 
 /* Decoded addRelay input.
 Result {

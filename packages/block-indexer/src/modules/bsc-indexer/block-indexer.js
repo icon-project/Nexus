@@ -69,6 +69,10 @@ async function runBlockHandlers(block) {
 
 async function getBlockData() {
   // ISSUE: it requires a manual fix to work with web3 1.5.0
+  // Error: Number can only safely store up to 53 bits
+  // Open file .\node_modules\number-to-bn\node_modules\bn.js\lib\bn.js
+  // Go to line 506 assert(false, 'Number can only safely store up to 53 bits');
+  // Replace it with ret = Number.MAX_SAFE_INTEGER;
   // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
   const block = await web3.eth.getBlock(blockHeight, true);
   const timeout = block ? 3000 : 10000; // Block time ~3 seconds, wait longer for new blocks created.

@@ -2,12 +2,13 @@
 
 const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
-const { logger, pgPool } = require('../../common');
+const { createLogger, pgPool } = require('../../common');
 const { getRegisteredTokens } = require('./fas');
 const { hexToIcxUnit } = require('../../common/util');
 
 const TRANSFER_EVENT_PROTOTYPE = 'Transfer(Address,Address,int,bytes)';
 const nanoid = customAlphabet('1234567890abcdef', 10);
+const logger = createLogger();
 
 function isRegisteredToken(address) {
   return getRegisteredTokens().has(address);

@@ -1,7 +1,9 @@
 'use strict';
 
-const { pgPool, logger, logDbError } = require('../../common');
+const { pgPool, createLogger, logDbError } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
+
+const logger = createLogger();
 
 async function saveBlock(block) {
   try {

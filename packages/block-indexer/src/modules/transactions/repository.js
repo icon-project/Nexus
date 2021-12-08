@@ -1,7 +1,9 @@
 'use strict';
 
 const debug = require('debug')('db');
-const { pgPool, logger, logDbError, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+const { pgPool, createLogger, logDbError, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+
+const logger = createLogger();
 
 async function getLatestTransactionByToken(tokenName) {
   try {

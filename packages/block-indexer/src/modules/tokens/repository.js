@@ -1,7 +1,8 @@
 'use strict';
 
 const debug = require('debug')('db');
-const { logger, pgPool } = require('../../common');
+const { createLogger, pgPool } = require('../../common');
+const logger = createLogger();
 
 async function findAllTokens() {
   try {

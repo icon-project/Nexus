@@ -2,12 +2,13 @@
 
 const Web3 = require('web3');
 const debug = require('debug')('mint_burn');
-const { logger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
+const { createLogger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog } = require('../common/events');
 const { getTokenName } = require('../tokens/model');
 const { saveToken, getTotalTokenAmount } = require('./repository');
 
 const TRANSFER_SINGLE_EVENT = 'TransferSingle';
+const logger = createLogger();
 
 // No mint/burn events for ERC20 tokens e.g. ETH
 // Ref: https://github.com/icon-project/btp-dashboard/issues/479#issuecomment-966906028

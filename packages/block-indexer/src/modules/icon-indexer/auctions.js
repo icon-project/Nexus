@@ -3,7 +3,7 @@
 const debug = require('debug')('icon');
 const { customAlphabet } = require('nanoid/async');
 const { IconConverter } = require('icon-sdk-js').default;
-const { logger, pgPool } = require('../../common');
+const { createLogger, pgPool } = require('../../common');
 const { hexToIcxUnit } = require('../../common/util');
 
 const AUCTION_START_PROTOTYPE = 'AuctionStart(int,str,int,Address,int,int)';
@@ -11,6 +11,7 @@ const AUCTION_ENDED_PROTOTYPE = 'AuctionEnded(int,str,Address,int,int,int)';
 const BID_INFO_PROTOTYPE = 'BidInfo(int,str,Address,int,Address,int)';
 
 const nanoId = customAlphabet('1234567890abcdef', 10);
+const logger = createLogger();
 
 // Create auction ID based on its address to make an unique ID for persistent.
 // Reason: FAS reset auction ID to 1 with new deployment.

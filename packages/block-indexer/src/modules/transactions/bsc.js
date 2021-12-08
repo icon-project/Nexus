@@ -2,7 +2,7 @@
 
 const Web3 = require('web3');
 const debug = require('debug')('bsc_tx');
-const { logger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
+const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { findEventByName, decodeEventLog, getBscEventMap } = require('../common/events');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');
 const {
@@ -14,6 +14,7 @@ const {
 
 const web3 = new Web3(process.env.BSC_API_URL);
 const bmcPeripheryAddress = process.env.BSC_BMC_PERIPHERY_ADDRESS.toLowerCase();
+const logger = createLogger();
 
 async function handleTransactionEvents(tx, receipt, block) {
   const eventMap = getBscEventMap();
