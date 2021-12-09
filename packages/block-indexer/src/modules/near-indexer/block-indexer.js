@@ -5,20 +5,24 @@ const debugTx = require('debug')('near_tx');
 const nearApi = require('near-api-js');
 const { createLogger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
+const { handleTransactionEvents } = require('../transactions/near');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
 const pollingInterval = Number(process.env.POLLING_INTERVAL);
 const pollingRetryInterval = Number(process.env.POLLING_RETRY_INTERVAL);
 const pollingTimeout = Number(process.env.POLLING_TIMEOUT);
 
+const logger = createLogger();
+
 let blockRetry = 0;
 let blockHeight = Number(process.env.NEAR_BLOCK_HEIGHT);
-const logger = createLogger();
 
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, result, block) {
   try {
-    debugTx(result);
+    if (undefined !== result.status.SuccessValue) {
+      await handleTransactionEvents(result, block);
+    }
   } catch (error) {
     logger.error('near:runTransactionHandlers fails %O', error);
   }

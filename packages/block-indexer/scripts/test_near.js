@@ -10,7 +10,7 @@ const config = {
 const amountInYocto = nearApi.utils.format.parseNearAmount('1');
 console.log(amountInYocto);
 
-const amountInNEAR = nearApi.utils.format.formatNearAmount('1000000000000000000');
+const amountInNEAR = nearApi.utils.format.formatNearAmount('242900095612200000000');
 console.log(amountInNEAR);
 
 async function getTxStatus() {
