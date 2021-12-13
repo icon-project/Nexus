@@ -4,7 +4,7 @@ const { pgPool, createLogger, logDbError } = require('../../common');
 const { v4: uuidv4 } = require('uuid');
 
 const logger = createLogger();
-
+/*
 async function saveBlock(block) {
   try {
     const query = 'INSERT INTO icon_blocks (block_hash, block_height, block_data, created_time) VALUES ($1, $2, $3, NOW())';
@@ -28,10 +28,10 @@ async function getLastSavedBlock() {
     logger.error('getLastSavedBlock fails', { error });
   }
 }
-
+*/
 async function saveTokenInfo(tokenObj) {
   try {
-    const query = 'INSERT INTO token_info (id, network_id, token_id, token_name, tx_hash, create_at, contract_address, token_address) VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7)';
+    const query = 'INSERT INTO registered_tokens (id, network_id, token_id, token_name, tx_hash, create_at, contract_address, token_address) VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7)';
     const values = [uuidv4(), process.env.ICON_NETWORK_ID, tokenObj.tokenId, tokenObj.tokenName, tokenObj.txHash, tokenObj.contractAddress, tokenObj.tokenAddress];
 
     await pgPool.query(query, values);
@@ -61,8 +61,6 @@ async function unregisterRelayer(relayer) {
 }
 
 module.exports = {
-  saveBlock,
-  getLastSavedBlock,
   saveTokenInfo,
   registerRelayer,
   unregisterRelayer

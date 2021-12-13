@@ -2,7 +2,6 @@
 
 const debug = require('debug')('moonbeam_tx');
 const Web3 = require('web3');
-const { v4: uuidv4 } = require('uuid');
 const { createLogger, ADD_RELAY_ACTION, REMOVE_RELAY_ACTION } = require('../../common');
 const { getMoonbeamActionMap, decodeActionInput } = require('../common/actions');
 const { getRegisteredRelayMap } = require('./model');
@@ -59,7 +58,7 @@ function getRemoveRelayAction(encodedInput) {
 async function handleAddRelayAction(input, tx, block) {
   for (const address of input.addresses) {
     const relay = {
-      id: uuidv4(),
+      txHash: tx.hash,
       link: input.link,
       address: address.toLowerCase(),
       registeredTime: new Date(web3.utils.hexToNumber(block.timestamp) * 1000),

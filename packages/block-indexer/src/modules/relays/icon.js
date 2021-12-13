@@ -1,6 +1,5 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
 const { createLogger } = require('../../common');
 const {
   updateRelay,
@@ -27,12 +26,12 @@ async function handleRelayAction(txResult, transaction) {
     if (ADD_RELAY_PROTOTYPE == txData.method) {
       let params = txData.params;
       let relay = {
+        txHash: transaction.txHash,
         address: params._addr,
         link: params._link,
         registeredTime: new Date(transaction.timestamp / 1000),
         unregisteredTime: null,
-        id: uuidv4(),
-        serverStatus: 'Active',
+        serverStatus: 'Active'
       };
 
       const relayResult = await getRelayByAddress(relay.address);

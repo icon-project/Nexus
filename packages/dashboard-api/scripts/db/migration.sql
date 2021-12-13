@@ -314,3 +314,40 @@ ALTER TABLE relay_candidates
     ALTER COLUMN rank SET DEFAULT 0,
     ADD COLUMN total_reward numeric NOT NULL DEFAULT 0,
     ADD CONSTRAINT relay_candidates_pkey PRIMARY KEY (tx_hash);
+
+-- Issue #380
+
+ALTER TABLE transactions
+    DROP COLUMN block_hash,
+    DROP COLUMN block_hash_end;
+
+ALTER TABLE relays
+    DROP COLUMN id,
+    ADD COLUMN tx_hash character varying(100);
+
+UPDATE relays SET tx_hash=address;
+
+ALTER TABLE relays
+    ALTER COLUMN tx_hash SET NOT NULL,
+    ALTER COLUMN total_transferred_tx SET DEFAULT 0,
+    ALTER COLUMN total_failed_tx SET DEFAULT 0,
+    ALTER COLUMN created_at SET DEFAULT NOW(),
+    ADD CONSTRAINT relays_pkey PRIMARY KEY (tx_hash);
+
+CREATE TABLE registered_tokens
+(
+    tx_hash character varying(100) NOT NULL,
+    network_id character varying(20) NOT NULL,
+    token_id character varying(100) NOT NULL,
+    token_name character varying(50) NOT NULL,
+    token_address character varying(100) NOT NULL,
+    contract_address character varying(100) NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT NOW(),
+    CONSTRAINT registered_tokens_pkey PRIMARY KEY (tx_hash),
+    CONSTRAINT registered_tokens_network_id_token_name UNIQUE (network_id, token_name)
+);
+
+INSERT INTO registered_tokens (tx_hash, network_id, token_id, token_name, token_address, contract_address)
+	SELECT tx_hash, network_id, token_id, token_name, token_address, contract_address FROM token_info;
+
+DROP TABLE token_info;

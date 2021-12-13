@@ -46,12 +46,10 @@ async function findTxBySerialNumber(serialNumber, networkId, contractAddress) {
           ${TRANSACTION_TBL.status} = $1,
           tx_hash_end = $2,
           tx_error = $3,
-          ${TRANSACTION_TBL.updateAt} = NOW(),
-          block_hash_end = $5
+          ${TRANSACTION_TBL.updateAt} = NOW()
         WHERE ${TRANSACTION_TBL.txHash} = $4`;
 
-      // blockHash is needed for Moonbeam since Sidecar can only query blocks.
-      const values = [status, txInfo.txHash, txInfo.error, tx.tx_hash, txInfo.blockHash];
+      const values = [status, txInfo.txHash, txInfo.error, tx.tx_hash];
 
       await client.query(query, values);
       debug('setTransactionConfirmed SQL %s %O:', query, values);
@@ -71,10 +69,9 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
       ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
-      ${TRANSACTION_TBL.updateAt}, block_hash, contract_address)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13, $14)`;
+      ${TRANSACTION_TBL.updateAt}, contract_address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13)`;
 
-    // blockHash is needed for Moonbeam since Sidecar can only query blocks.
     const insertValues = [
       transaction.fromAddress,
       transaction.tokenName,
@@ -88,7 +85,6 @@ async function saveTransaction(transaction) {
       transaction.networkFee,
       transaction.status,
       transaction.totalVolume,
-      transaction.blockHash,
       transaction.contractAddress
     ];
 
@@ -102,7 +98,7 @@ async function saveTransaction(transaction) {
 
 async function getTokenContractAddresses() {
   try {
-    const { rows } = await pgPool.query('SELECT DISTINCT(contract_address) FROM token_info');
+    const { rows } = await pgPool.query('SELECT DISTINCT(contract_address) FROM registered_tokens');
     return rows.map(row => row.contract_address);
   } catch (error) {
     logger.error('getTokenContractAddresses fails: %s, %s', error.message, error.detail);

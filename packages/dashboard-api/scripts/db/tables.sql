@@ -78,32 +78,22 @@ CREATE TABLE IF NOT EXISTS public.networks
     CONSTRAINT networks_name_key UNIQUE (name)
 );
 
--- Table: public.token_info
+-- Table: public.registered_tokens
 
--- DROP TABLE public.token_info;
+-- DROP TABLE public.registered_tokens;
 
-CREATE TABLE IF NOT EXISTS public.token_info
+CREATE TABLE IF NOT EXISTS public.registered_tokens
 (
-    id character varying(100) NOT NULL,
-    network_id character varying(20) NOT NULL,
-    token_name character varying(50) NOT NULL,
-    token_id character varying(100) NOT NULL,
-    tx_hash character varying(100) NOT NULL,
-    create_at timestamp without time zone NOT NULL,
-    token_address character varying(100) NOT NULL,
-    contract_address character varying(100) NOT NULL,
-    CONSTRAINT token_info_pkey PRIMARY KEY (id),
-    CONSTRAINT token_info_network_id_token_name UNIQUE (network_id, token_name)
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    network_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    token_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    token_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT now(),
+    CONSTRAINT registered_tokens_pkey PRIMARY KEY (tx_hash),
+    CONSTRAINT registered_tokens_network_id_token_name UNIQUE (network_id, token_name)
 );
-
--- Index: token_info_token_id
-
--- DROP INDEX public.token_info_token_id;
-
-CREATE INDEX token_info_token_id
-    ON public.token_info USING btree
-    (token_id ASC NULLS LAST);
-
 
 -- Table: public.indexer_stats
 
@@ -173,17 +163,17 @@ CREATE INDEX transfer_fees_token_name
 
 CREATE TABLE IF NOT EXISTS public.relays
 (
-    id character varying(100) NOT NULL,
-    address character varying(100) NOT NULL,
-    link character varying(300) NOT NULL,
-    total_transferred_tx numeric NOT NULL,
-    total_failed_tx numeric NOT NULL,
+    address character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    link character varying(300) COLLATE pg_catalog."default" NOT NULL,
+    total_transferred_tx numeric NOT NULL DEFAULT 0,
+    total_failed_tx numeric NOT NULL DEFAULT 0,
     registered_time timestamp without time zone NOT NULL,
     unregistered_time timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT now(),
     updated_at timestamp without time zone,
-    server_status character varying(20) NOT NULL,
-    CONSTRAINT relays_pkey PRIMARY KEY (id),
+    server_status character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT relays_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT relays_address_key UNIQUE (address)
 );
 
@@ -328,8 +318,6 @@ CREATE TABLE IF NOT EXISTS public.transactions
     total_volume numeric NOT NULL DEFAULT 0,
     tx_hash_end character varying(100) COLLATE pg_catalog."default",
     tx_error character varying(100) COLLATE pg_catalog."default",
-    block_hash character varying(100) COLLATE pg_catalog."default",
-    block_hash_end character varying(100) COLLATE pg_catalog."default",
     contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
     CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT transactions_serial_network_contract_key UNIQUE (serial_number, network_id, contract_address)

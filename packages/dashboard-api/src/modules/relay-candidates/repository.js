@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger, pgPool, hexToFixedAmount, numberToFixedAmount } = require('../../common');
+const { logger, pgPool, numberToFixedAmount } = require('../../common');
 
 async function countTotalRelayCandidates() {
   const query = 'SELECT COUNT(*) FROM relay_candidates WHERE unregistered_time IS NULL';
@@ -96,33 +96,9 @@ async function getTotalBondedRelayCandidates() {
   }
 }
 
-async function getById(id) {
-  const query = 'SELECT * FROM relay_candidates WHERE id = $1';
-
-  try {
-    const { rows } = await pgPool.query(query, [id]);
-    if (rows.length > 0) {
-      const row = rows[0];
-      const result = {
-        id: row.id,
-        rank: row.rank,
-        address: row.address,
-        name: row.name,
-        bondedICX: hexToFixedAmount(Number(row.bonded_icx)),
-      };
-      return result;
-    }
-    return {};
-  } catch (err) {
-    logger.error('getById fails', { err });
-    throw err;
-  }
-}
-
 module.exports = {
   getRelayCandidateList,
   getTotalBondedRelayCandidates,
-  getById,
   getTotalReward,
   getTotalRewardLast30Days,
   countTotalRelayCandidates,
