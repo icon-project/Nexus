@@ -5,6 +5,7 @@ const debugTx = require('debug')('near_tx');
 const nearApi = require('near-api-js');
 const { createLogger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
+const { handleMintBurnEvents } = require('../mint-burn/near');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
 const pollingInterval = Number(process.env.POLLING_INTERVAL);
@@ -18,7 +19,7 @@ const logger = createLogger();
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, result, block) {
   try {
-    debugTx(result);
+    await handleMintBurnEvents(result, block);
   } catch (error) {
     logger.error('near:runTransactionHandlers fails %O', error);
   }
