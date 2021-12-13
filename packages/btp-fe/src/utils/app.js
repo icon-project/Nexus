@@ -3,19 +3,6 @@ const isEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 };
 
-const filterObjectByKeyArr = (objItem, keyArr) => {
-  if (isEmpty(objItem) || !keyArr || keyArr.length < 1) return {};
-  const filtered = Object.keys(objItem)
-    .filter((key) => keyArr.includes(key))
-    .reduce((obj, key) => {
-      return {
-        ...obj,
-        [key]: objItem[key],
-      };
-    }, {});
-  return filtered;
-};
-
 const hashShortener = (hashStr) => {
   if (!hashStr) return '';
   const len = hashStr.length;
@@ -59,4 +46,4 @@ const shortenNumber = (num) => {
   }
 };
 
-export { isEmpty, filterObjectByKeyArr, hashShortener, shortenNumber, toSeparatedNumberString };
+export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString };

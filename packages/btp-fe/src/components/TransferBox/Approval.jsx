@@ -6,7 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { getBTPfee } from 'connectors/ICONex/iconService';
+import { getBTPfee } from 'connectors/ICONex/ICONService';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { getService } from 'services/transfer';

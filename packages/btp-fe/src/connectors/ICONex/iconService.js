@@ -18,9 +18,11 @@ import { requestSigning } from './events';
 import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { isICONAndBSHPaired } from 'utils/constants';
+import { connectedNetWorks } from 'utils/constants';
 
 const { modal } = store.dispatch;
+
+export const serviceName = connectedNetWorks.icon;
 
 export const getBalance = (address) => {
   // https://github.com/icon-project/icon-sdk-js/issues/26#issuecomment-843988076
@@ -59,7 +61,7 @@ export const getTxResult = (txHash) => {
   }
 };
 
-export const sendNoneNativeCoin = ({ value, to }) => {
+export const sendNonNativeCoin = ({ value, to }) => {
   const transaction = {
     to: getCurrentICONexNetwork().BSHAddress,
   };
@@ -75,6 +77,7 @@ export const sendNoneNativeCoin = ({ value, to }) => {
   };
 
   signTx(transaction, options);
+  return { transaction, options };
 };
 
 export const sendNativeCoin = ({ value, to }, networkAddress) => {
@@ -92,6 +95,7 @@ export const sendNativeCoin = ({ value, to }, networkAddress) => {
   };
 
   signTx(transaction, options);
+  return { transaction, options };
 };
 
 export const setApprovalForAll = async () => {
@@ -162,23 +166,9 @@ export const placeBid = (auctionName, value, fas) => {
   signTx(transaction, options);
 };
 
-export const transfer = (tx, isSendingNativeCoin, network) => {
-  window[signingActions.globalName] = signingActions.transfer;
-  const networkAddress = BSC_NODE[network]
-    ? BSC_NODE.networkAddress
-    : MOON_BEAM_NODE.networkAddress;
-
-  if (isSendingNativeCoin) {
-    sendNativeCoin(tx, networkAddress);
-  } else {
-    if (isICONAndBSHPaired) depositTokensIntoBSH(tx);
-    else sendNoneNativeCoin(tx);
-  }
-};
-
 export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
-  const { method, params, builder } = options;
+  const { method, params, builder, nid, timestamp } = options;
 
   if (!modal.isICONexWalletConnected()) {
     return;
@@ -195,10 +185,10 @@ export const signTx = (transaction = {}, options = {}) => {
     .from(from)
     .to(to)
     .stepLimit(IconConverter.toBigNumber(1000000000))
-    .nid(IconConverter.toBigNumber(getCurrentICONexNetwork().nid))
+    .nid(IconConverter.toBigNumber(nid || getCurrentICONexNetwork().nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
-    .timestamp(new Date().getTime() * 1000);
+    .timestamp(timestamp || new Date().getTime() * 1000);
 
   if (value) {
     tx = tx.value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop());
@@ -219,6 +209,8 @@ export const signTx = (transaction = {}, options = {}) => {
     from,
     hash: transactionHash,
   });
+
+  return transactionHash;
 };
 
 /**
@@ -241,6 +233,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
   try {
     let balance = 0;
 
+    // Being checked only on ICON-BSC chains
     if (symbol === 'ETH') {
       balance = await makeICXCall({
         dataType: 'call',

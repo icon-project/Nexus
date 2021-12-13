@@ -8,7 +8,7 @@ import { TextInput } from 'components/Input';
 import { PrimaryButton } from 'components/Button';
 
 import { minValue, composeValidators } from 'utils/inputValidation';
-import { placeBid } from 'connectors/ICONex/iconService';
+import { placeBid } from 'connectors/ICONex/ICONService';
 
 const Form = styled.form`
   background-color: ${colors.grayBG};

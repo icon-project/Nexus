@@ -45,7 +45,6 @@ export const BSC_NODE = {
   tokenBSHProxy: process.env.REACT_APP_BSC_TOKEN_BSH_PROXY,
   BEP20TKN: process.env.REACT_APP_BSC_BEP20_TKN,
 };
-console.log('BSC_NODE', BSC_NODE);
 
 export const MOON_BEAM_NODE = {
   [connectedNetWorks.moonbeam]: true,
@@ -54,7 +53,6 @@ export const MOON_BEAM_NODE = {
   networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,
   gasLimit: moonbeam.gasLimit || process.env.REACT_APP_MB_GAS_LIMIT,
 };
-console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
 
 export const ICON_NODES = {
   [pairedNetworks['ICON-Moonbeam']]: {
@@ -81,7 +79,12 @@ const currentPairedNetworks = getPairedNetwork();
 let currentICONexNetwork = currentPairedNetworks
   ? ICON_NODES[currentPairedNetworks]
   : ICON_NODES['ICON-Moonbeam'];
-console.log(currentPairedNetworks, currentICONexNetwork);
+
+if (process.env.JEST_WORKER_ID === undefined) {
+  console.log('BSC_NODE', BSC_NODE);
+  console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
+  console.log(currentPairedNetworks, currentICONexNetwork);
+}
 
 export const getCurrentICONexNetwork = () => currentICONexNetwork;
 

@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 
 import { roundNumber } from 'utils/app';
+import { connectedNetWorks } from 'utils/constants';
 import {
   MOON_BEAM_NODE,
   BSC_NODE,
@@ -11,6 +12,8 @@ import {
 import { convertToICX } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { EthereumInstance } from 'connectors/MetaMask';
+
+export const serviceName = connectedNetWorks.bsc;
 
 export const getBalanceOf = async ({ address, symbol }) => {
   let balance = 0;
@@ -80,4 +83,16 @@ export const sendNoneNativeCoinBSC = async () => {
     gas: MOON_BEAM_NODE.gasLimit,
     data,
   });
+};
+
+export const isApprovedForAll = () => {
+  console.log('Not implemented yet');
+};
+
+export const setApprovalForAll = () => {
+  console.log('Not implemented yet');
+};
+
+export const reclaim = () => {
+  console.log('Not implemented yet');
 };

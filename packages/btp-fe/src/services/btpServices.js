@@ -1,8 +1,8 @@
 import { fetchAPI } from 'utils/fetch';
 
-const baseAuctionURL = '/auctions';
-const baseRelayURL = '/relays';
-const baseBTPNetwork = '/btpnetwork';
+export const baseAuctionURL = '/auctions';
+export const baseRelayURL = '/relays';
+export const baseBTPNetwork = '/btpnetwork';
 
 export const getAuctions = () => {
   return fetchAPI(baseAuctionURL);
