@@ -37,6 +37,15 @@ export const allowedNetworkIDs = {
 const customNetworks = localStorage.getItem('NETWORK_CONFIG');
 const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon: {}, moonbeam: {} };
 
+export const NEAR_NODE = {
+  [connectedNetWorks.near]: true,
+  networkId: process.env.REACT_APP_NEAR_NETWORK_ID,
+  nodeUrl: process.env.REACT_APP_NEAR_NODE_URL,
+  walletUrl: process.env.REACT_APP_NEAR_WALLET_URL,
+  helperUrl: process.env.REACT_APP_NEAR_HELPER_URL,
+  explorerUrl: process.env.REACT_APP_NEAR_EXPLORER_URL,
+};
+
 export const BSC_NODE = {
   [connectedNetWorks.bsc]: true,
   RPCUrl: process.env.REACT_APP_BSC_RPC_URL,
