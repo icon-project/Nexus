@@ -84,7 +84,7 @@ WalletSelector.propTypes = {
   /** Allowed wallets defination */
   wallet: PropTypes.object,
   /** Current selected wallet */
-  type: PropTypes.oneOf([wallets.metamask, wallets.iconex, wallets.hana]),
+  type: PropTypes.oneOf([wallets.metamask, wallets.iconex, wallets.hana, wallets.near]),
   /** Is selected wallet */
   active: PropTypes.bool,
   /** Handle clicking */

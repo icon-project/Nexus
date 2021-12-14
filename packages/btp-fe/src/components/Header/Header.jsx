@@ -25,6 +25,7 @@ import { media } from 'components/Styles/Media';
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
+import NEAR from 'assets/images/near-icon.svg';
 // import logo from 'assets/images/logo-nexus-white.png';
 
 const { darkBG, grayText, grayLine } = colors;
@@ -159,6 +160,11 @@ const mockWallets = {
     title: 'Hana Wallet',
     icon: Hana,
   },
+  [wallets.near]: {
+    id: 'near',
+    title: 'NEAR Wallet',
+    icon: NEAR,
+  },
 };
 
 const Header = () => {
@@ -212,18 +218,22 @@ const Header = () => {
     setLoading(true);
     resetAccountInfo();
     localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
-    if (selectedWallet === wallets.iconex || selectedWallet === wallets.hana) {
-      const hasAccount = requestAddress();
 
-      if (!hasAccount) {
+    switch (selectedWallet) {
+      case wallets.iconex:
+      case wallets.hana:
+        const hasAccount = requestAddress();
+        if (!hasAccount) {
+          setLoading(false);
+        }
+        break;
+
+      case wallets.metamask:
+        const isConnected = await EthereumInstance.connectMetaMaskWallet();
+        if (isConnected) {
+          await EthereumInstance.getEthereumAccounts();
+        }
         setLoading(false);
-      }
-    } else if (selectedWallet === wallets.metamask) {
-      const isConnected = await EthereumInstance.connectMetaMaskWallet();
-      if (isConnected) {
-        await EthereumInstance.getEthereumAccounts();
-      }
-      setLoading(false);
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -316,6 +326,14 @@ const Header = () => {
                   type={wallets.hana}
                   wallet={mockWallets}
                   active={selectedWallet == wallets.hana}
+                  onClick={() => handleSelectWallet(wallets.hana)}
+                  isCheckingInstalled={checkingICONexInstalled}
+                  isInstalled={isICONexInstalled()}
+                />
+                <WalletSelector
+                  type={wallets.near}
+                  wallet={mockWallets}
+                  active={selectedWallet == wallets.near}
                   onClick={() => handleSelectWallet(wallets.hana)}
                   isCheckingInstalled={checkingICONexInstalled}
                   isInstalled={isICONexInstalled()}
