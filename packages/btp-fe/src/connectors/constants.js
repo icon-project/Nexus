@@ -40,6 +40,7 @@ const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon:
 export const NEAR_NODE = {
   [connectedNetWorks.near]: true,
   networkId: process.env.REACT_APP_NEAR_NETWORK_ID,
+  contractId: process.env.REACT_APP_NEAR_CONTRACT_ID,
   nodeUrl: process.env.REACT_APP_NEAR_NODE_URL,
   walletUrl: process.env.REACT_APP_NEAR_WALLET_URL,
   helperUrl: process.env.REACT_APP_NEAR_HELPER_URL,

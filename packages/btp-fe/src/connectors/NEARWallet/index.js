@@ -13,10 +13,7 @@ const getNearInstance = async () =>
   });
 
 const getWalletInstance = async (near) => {
-  if (near) {
-    return new nearAPI.WalletConnection(near);
-  }
-  const nearIntance = await getNearInstance();
+  const nearIntance = near || (await getNearInstance());
   return new nearAPI.WalletConnection(nearIntance);
 };
 
@@ -24,7 +21,7 @@ export const connect = async () => {
   const wallet = await getWalletInstance();
   if (!wallet.isSignedIn()) {
     wallet.requestSignIn(
-      'example-contract.testnet', // contract requesting access
+      NEAR_NODE.contractId, // contract requesting access
       null,
       location.href + '?near=true',
     );
@@ -38,10 +35,13 @@ export const signOut = async () => {
 
 export const getBalanceOf = async ({ refundable }) => {
   if (refundable) {
-    return Promise.resolve(0);
+    return Promise.resolve(0); // TODO: implementation
   }
   const near = await getNearInstance();
-  const accountInfo = await near.account('duyphan.testnet');
+  const wallet = await getWalletInstance(near);
+
+  const walletAccountId = wallet.getAccountId();
+  const accountInfo = await near.account(walletAccountId);
   return accountInfo.getAccountBalance();
 };
 
