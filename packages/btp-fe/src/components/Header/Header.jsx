@@ -276,11 +276,13 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const queryString = location.search;
-    if (queryString.startsWith('?account_id')) {
-      console.log('🚀 ~ file: Header.jsx ~ line 280 ~ useEffect ~ queryString', queryString);
-
+    // handle callback url from NEAR wallet
+    // https://docs.near.org/docs/api/naj-quick-reference#sign-in
+    const { search, pathname } = location;
+    if (search.startsWith('?near=true') && address) {
       setShowDetail(true);
+      setShowModal(true);
+      window.history.replaceState(null, '', pathname);
     }
 
     if (address) {
@@ -295,8 +297,6 @@ const Header = () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
     }
   }, [currentPairedNetworks]);
-
-  console.log('showDetail', showDetail);
 
   return (
     <StyledHeader $showMenu={showMenu}>

@@ -25,6 +25,8 @@ export const connect = async () => {
   if (!wallet.isSignedIn()) {
     wallet.requestSignIn(
       'example-contract.testnet', // contract requesting access
+      null,
+      location.href + '?near=true',
     );
   }
 };
