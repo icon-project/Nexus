@@ -22,9 +22,11 @@ const getWalletInstance = async (near) => {
 
 export const connect = async () => {
   const wallet = await getWalletInstance();
-  wallet.requestSignIn(
-    'example-contract.testnet', // contract requesting access
-  );
+  if (!wallet.isSignedIn()) {
+    wallet.requestSignIn(
+      'example-contract.testnet', // contract requesting access
+    );
+  }
 };
 
 export const signOut = async () => {
@@ -45,12 +47,13 @@ export const getNearAccountInfo = async () => {
   const near = await getNearInstance();
   const wallet = await getWalletInstance(near);
   if (wallet && wallet.isSignedIn()) {
-    const accountInfo = await near.account('duyphan.testnet');
+    const walletAccountId = wallet.getAccountId();
+    const accountInfo = await near.account(walletAccountId);
     const balance = await accountInfo.getAccountBalance();
 
     account.setAccountInfo({
       address: accountInfo.accountId,
-      balance: ethers.utils.formatEther(balance.total),
+      balance: ethers.utils.formatUnits(balance.total, 24),
       wallet: wallets.near,
       unit: nativeTokens[connectedNetWorks.near].symbol,
       currentNetwork: connectedNetWorks.near,
