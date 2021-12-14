@@ -17,9 +17,9 @@ let blockHeight = Number(process.env.NEAR_BLOCK_HEIGHT);
 const logger = createLogger();
 
 // All transaction handlers go here.
-async function runTransactionHandlers(tx, result, block) {
+async function runTransactionHandlers(tx, txResult, block) {
   try {
-    await handleMintBurnEvents(result, block);
+    await handleMintBurnEvents(txResult, block);
   } catch (error) {
     logger.error('near:runTransactionHandlers fails %O', error);
   }
