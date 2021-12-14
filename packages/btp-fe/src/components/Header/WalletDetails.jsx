@@ -108,7 +108,7 @@ const TokenSelector = styled(Select)`
   margin-left: 10px;
   display: inline-flex;
   height: 32px;
-  min-width: 73px;
+  min-width: 84px;
 
   > .md {
     ${TextMixin.bold};
@@ -139,7 +139,7 @@ const RefundSelector = styled(Select)`
   }
 
   > .md {
-    width: 33px;
+    width: 42px;
   }
 
   > ul {

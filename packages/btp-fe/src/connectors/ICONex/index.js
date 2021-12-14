@@ -161,6 +161,7 @@ const eventHandler = async (event) => {
 };
 
 const getAccountInfo = async (address) => {
+  console.log('🚀 ~ file: index.js ~ line 164 ~ getAccountInfo ~ address', address);
   try {
     const wallet = localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE);
     const balance = +(await getBalance(address));

@@ -16,6 +16,7 @@ import { wallets, PAIRED_NETWORKS, getPairedNetwork, pairedNetworks } from 'util
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE, setCurrentICONexNetwork } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
+import { connect, getNearAccountInfo, signOut } from 'connectors/NEARWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -186,8 +187,12 @@ const Header = () => {
   ];
 
   useEffect(() => {
-    if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
-      EthereumInstance.getEthereumAccounts();
+    switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
+      case wallets.metamask:
+        EthereumInstance.getEthereumAccounts();
+        break;
+      case wallets.near:
+        getNearAccountInfo();
     }
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
@@ -213,6 +218,7 @@ const Header = () => {
     setShowModal((prev) => !prev);
     setShowDetail(false);
   };
+
   const handleConnect = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -234,6 +240,12 @@ const Header = () => {
           await EthereumInstance.getEthereumAccounts();
         }
         setLoading(false);
+        break;
+
+      case wallets.near:
+        await connect();
+        setLoading(false);
+        break;
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -241,6 +253,7 @@ const Header = () => {
   };
 
   const onDisconnectWallet = () => {
+    signOut();
     resetTransferStep();
     resetAccountInfo();
     toggleModal();
@@ -263,6 +276,13 @@ const Header = () => {
   };
 
   useEffect(() => {
+    const queryString = location.search;
+    if (queryString.startsWith('?account_id')) {
+      console.log('🚀 ~ file: Header.jsx ~ line 280 ~ useEffect ~ queryString', queryString);
+
+      setShowDetail(true);
+    }
+
     if (address) {
       setLoading(false);
       setShowDetail(true);
@@ -275,6 +295,8 @@ const Header = () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
     }
   }, [currentPairedNetworks]);
+
+  console.log('showDetail', showDetail);
 
   return (
     <StyledHeader $showMenu={showMenu}>
@@ -334,9 +356,8 @@ const Header = () => {
                   type={wallets.near}
                   wallet={mockWallets}
                   active={selectedWallet == wallets.near}
-                  onClick={() => handleSelectWallet(wallets.hana)}
-                  isCheckingInstalled={checkingICONexInstalled}
-                  isInstalled={isICONexInstalled()}
+                  onClick={() => handleSelectWallet(wallets.near)}
+                  isInstalled
                 />
               </div>
               <PairedNetworkWrapper>

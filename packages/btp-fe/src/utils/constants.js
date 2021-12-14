@@ -25,7 +25,7 @@ export const nativeTokens = {
     symbol: 'BNB',
     netWorkLabel: 'Binance',
   },
-  [connectedNetWorks.bsc]: {
+  [connectedNetWorks.near]: {
     symbol: 'NEAR',
     netWorkLabel: 'NEAR Protocol',
   },
