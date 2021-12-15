@@ -1,7 +1,7 @@
 {
   "env": {
     "NODE_ENV": "development",
-    "DEBUG": "app,indexer,db",
+    "DEBUG": "app,indexer,db,near,near_tx",
     "DEBUG_DEPTH": 5
   },
   "execMap": {
