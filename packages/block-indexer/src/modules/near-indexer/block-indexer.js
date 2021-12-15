@@ -5,6 +5,7 @@ const debugTx = require('debug')('near_tx');
 const nearApi = require('near-api-js');
 const { createLogger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
+const { handleRelayActions } = require('../relays/near');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
 const pollingInterval = Number(process.env.POLLING_INTERVAL);
@@ -16,11 +17,13 @@ let blockHeight = Number(process.env.NEAR_BLOCK_HEIGHT);
 const logger = createLogger();
 
 // All transaction handlers go here.
-async function runTransactionHandlers(tx, result, block) {
+async function runTransactionHandlers(tx, txResult, block) {
   try {
-    debugTx(result);
+    if (undefined !== txResult.status.SuccessValue) {
+      await handleRelayActions(txResult, block);
+    }
   } catch (error) {
-    logger.error('near:runTransactionHandlers fails %O', error);
+    logger.error('runTransactionHandlers fails %O', error);
   }
 }
 
@@ -53,13 +56,13 @@ async function getBlockData() {
     const block = await provider.block({ blockId: blockHeight });
 
     if (block.chunks.length > 0) {
-      logger.info(`near:getBlockData received block ${block.header.height}, ${block.header.hash}`);
+      logger.info(`getBlockData received block ${block.header.height}, ${block.header.hash}`);
       debug('Block: %O', block);
 
       await saveIndexedBlockHeight(block.header.height, process.env.NEAR_NETWORK_ID);
       await runBlockHandlers(block);
     } else {
-      debug('Empty block');
+      debug('Found an empty block');
     }
 
     blockRetry = 0;
@@ -74,13 +77,13 @@ async function getBlockData() {
       if (blockRetry < pollingTimeout) {
         blockRetry = blockRetry + 1;
 
-        logger.info('near:Pending block %d, %s', blockHeight, error.message);
+        logger.info('Pending block %d, %s', blockHeight, error.message);
         return setTimeout(async () => await retryGetBlockData(), pollingRetryInterval);
       } else {
         blockRetry = 0;
         blockHeight = blockHeight + 1;
 
-        logger.info('near:Polling timed out, skip block %d', blockHeight);
+        logger.info('Polling timed out, skip block %d', blockHeight);
         return setTimeout(async () => await retryGetBlockData(), pollingInterval);
       }
     }
@@ -93,7 +96,7 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('near:retryGetBlockData fails to fetch block, retry in 5 minutes: %O', error);
+    logger.error('retryGetBlockData fails to fetch block, retry in 5 minutes: %O', error);
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
