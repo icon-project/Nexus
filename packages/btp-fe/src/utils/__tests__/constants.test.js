@@ -43,7 +43,7 @@ describe('utils/constants', () => {
       ]);
     });
 
-    test('ICON-Moonbeam chains + ICON side (ICONex)', () => {
+    test('ICON-Moonbeam chains + Moonbeam side (ICONex)', () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
 
       expect(getTokenOptions(connectedNetWorks.moonbeam)).toEqual([

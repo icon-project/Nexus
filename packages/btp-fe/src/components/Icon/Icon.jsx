@@ -11,6 +11,7 @@ import { ReactComponent as copyIcon } from 'assets/images/copy-icon.svg';
 import { ReactComponent as binanceIcon } from 'assets/images/binance-icon.svg';
 import { ReactComponent as btcIcon } from 'assets/images/btc-icon.svg';
 import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
+import { ReactComponent as nearIcon } from 'assets/images/near-icon.svg';
 
 import MBIcon from 'assets/images/moonbeam.jpeg';
 
@@ -60,6 +61,7 @@ export const Icon = memo(
       btc: btcIcon,
       bch: bchIcon,
       DEV: MBIcon,
+      NEAR: nearIcon,
     };
 
     const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL;
@@ -106,6 +108,7 @@ Icon.propTypes = {
     'btc',
     'bch',
     'DEV',
+    'NEAR',
   ]),
   /** Display icon with URL */
   iconURL: PropTypes.string,

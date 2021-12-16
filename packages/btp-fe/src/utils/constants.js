@@ -42,28 +42,41 @@ export const pairedNetworks = {
   'ICON-NEAR': 'ICON-NEAR',
 };
 
-export const getPairedNetwork = () => localStorage.getItem(PAIRED_NETWORKS);
+export const getPairedNetwork = () =>
+  localStorage.getItem(PAIRED_NETWORKS) || pairedNetworks['ICON-Moonbeam'];
 export const isICONAndBSHPaired = () => getPairedNetwork() === pairedNetworks['ICON-BSC'];
 
 export const getTokenOptions = (currentNetwork) => {
   if (!currentNetwork) return [];
 
-  if (isICONAndBSHPaired()) {
-    switch (currentNetwork) {
-      case connectedNetWorks.bsc:
-        return [nativeTokens[connectedNetWorks.bsc], { symbol: 'ETH', netWorkLabel: 'Etherium' }];
+  switch (currentNetwork) {
+    case connectedNetWorks.icon:
+      switch (getPairedNetwork()) {
+        case pairedNetworks['ICON-Moonbeam']:
+          return [nativeTokens[connectedNetWorks.icon], nativeTokens[connectedNetWorks.moonbeam]];
 
-      default:
-        return [nativeTokens[connectedNetWorks.icon], { symbol: 'ETH', netWorkLabel: 'Etherium' }];
-    }
-  } else {
-    switch (currentNetwork) {
-      case connectedNetWorks.icon:
-        return [nativeTokens[connectedNetWorks.icon], nativeTokens[connectedNetWorks.moonbeam]];
+        case pairedNetworks['ICON-BSC']:
+          return [
+            nativeTokens[connectedNetWorks.icon],
+            { symbol: 'ETH', netWorkLabel: 'Etherium' },
+          ];
 
-      default:
-        return [nativeTokens[connectedNetWorks.moonbeam], nativeTokens[connectedNetWorks.icon]];
-    }
+        case pairedNetworks['ICON-NEAR']:
+          return [nativeTokens[connectedNetWorks.near]];
+
+        default:
+          console.log('Requires paired network value.');
+          break;
+      }
+      break;
+    case connectedNetWorks.moonbeam:
+      return [nativeTokens[connectedNetWorks.moonbeam], nativeTokens[connectedNetWorks.icon]];
+
+    case connectedNetWorks.bsc:
+      return [nativeTokens[connectedNetWorks.bsc], { symbol: 'ETH', netWorkLabel: 'Etherium' }];
+
+    case connectedNetWorks.near:
+      return [nativeTokens[connectedNetWorks.near]];
   }
 };
 
