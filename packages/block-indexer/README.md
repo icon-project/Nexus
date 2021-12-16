@@ -35,7 +35,7 @@ $ crontab -e
 
 # add this script and save changes.
 # ref: https://crontab.guru/
-0 0 * * * /home/ubuntu/deploy/btp-dashboard/packages/block-indexer/scripts/reward_reader.sh
+0 0 * * * /home/ubuntu/apps/btp-dashboard/packages/block-indexer/scripts/reward_reader.sh
 
 $ crontab -l
 ```

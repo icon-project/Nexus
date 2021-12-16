@@ -6,7 +6,7 @@ name: SSH deploy
 on:
   push:
     branches:
-    - be-dev
+    - disabled-be-dev
 
 jobs:
   deploy:

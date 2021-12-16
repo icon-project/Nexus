@@ -30,7 +30,7 @@ $ crontab -e
 
 # add this script and save changes.
 # ref: https://crontab.guru/
-0 0 * * * cd /home/ubuntu/deploy/btp-dashboard/packages/dashboard-api/scripts && COIN_MARKET_CAP_URL=https://pro-api.coinmarketcap.com/v1 COIN_MARKET_CAP_KEY=your_api_key POSTGRES_DB_URL=postgresql://postgres:test123@127.0.0.1:5432/postgres node cmc_conversion.js > cmc_conversion.log
+0 0 * * * cd $DASHBOARD_HOME/btp-dashboard/packages/dashboard-api/scripts && COIN_MARKET_CAP_URL=https://pro-api.coinmarketcap.com/v1 COIN_MARKET_CAP_KEY=your_api_key POSTGRES_DB_URL=postgresql://postgres:test123@127.0.0.1:5432/postgres node cmc_conversion.js > cmc_conversion.log
 
 $ crontab -l
 ```

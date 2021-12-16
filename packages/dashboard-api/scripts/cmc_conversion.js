@@ -150,5 +150,9 @@ async function start() {
 }
 
 (async function () {
-  await start();
+  try {
+    await start();
+  } catch (error) {
+    console.log(error);
+  }
 })();
