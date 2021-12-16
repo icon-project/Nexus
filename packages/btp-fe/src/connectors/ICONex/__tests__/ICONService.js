@@ -5,7 +5,7 @@ const { serialize } = IconUtil;
 import { connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
 import { BSC_NODE, signingActions } from 'connectors/constants';
 
-import * as ICONService from '../ICONService';
+import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
 
 jest.mock('store', () => {

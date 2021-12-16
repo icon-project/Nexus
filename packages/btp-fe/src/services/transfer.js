@@ -1,7 +1,7 @@
 import store from 'store';
 import { wallets, connectedNetWorks } from 'utils/constants';
 
-import * as ICONServices from 'connectors/ICONex/ICONService';
+import * as ICONServices from 'connectors/ICONex/ICONServices';
 import * as BSCServices from 'connectors/MetaMask/services/BSCServices';
 import * as MoonbeamServices from 'connectors/MetaMask/services/MoonbeamServices';
 import * as NEARServices from 'connectors/NEARWallet';

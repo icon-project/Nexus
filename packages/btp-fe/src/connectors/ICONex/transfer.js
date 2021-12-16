@@ -1,4 +1,4 @@
-import { sendNativeCoin, depositTokensIntoBSH, sendNonNativeCoin } from './ICONService';
+import { sendNativeCoin, depositTokensIntoBSH, sendNonNativeCoin } from './ICONServices';
 import { MOON_BEAM_NODE, BSC_NODE, signingActions } from 'connectors/constants';
 import { isICONAndBSHPaired } from 'utils/constants';
 
