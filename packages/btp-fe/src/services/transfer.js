@@ -13,7 +13,7 @@ export const getCurrentTransferService = () => (curentWallet, currentNetwork) =>
 
   switch (wallet || curentWallet) {
     case wallets.metamask:
-      // There are 2 network using Metamask now: Moonbeam & BSC
+      // There are 2 networks using Metamask now: Moonbeam & BSC
       switch (network || currentNetwork) {
         case connectedNetWorks.moonbeam:
           return MoonbeamServices;

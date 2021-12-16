@@ -39,6 +39,7 @@ export const PAIRED_NETWORKS = 'PAIRED_NETWORKS';
 export const pairedNetworks = {
   'ICON-Moonbeam': 'ICON-Moonbeam',
   'ICON-BSC': 'ICON-BSC',
+  'ICON-NEAR': 'ICON-NEAR',
 };
 
 export const getPairedNetwork = () => localStorage.getItem(PAIRED_NETWORKS);
@@ -80,12 +81,44 @@ export const getBalanceToken = () => {
 };
 
 export const getTartgetNetwork = (currentNetwork) => {
-  return !currentNetwork
-    ? []
-    : [
-        { value: connectedNetWorks.icon, label: connectedNetWorks.icon },
-        isICONAndBSHPaired()
-          ? { value: connectedNetWorks.bsc, label: connectedNetWorks.bsc }
-          : { value: connectedNetWorks.moonbeam, label: connectedNetWorks.moonbeam },
-      ].filter((network) => (currentNetwork.includes(network.label) ? false : network));
+  if (!currentNetwork) return [];
+  const currentPairedNetworks = getPairedNetwork();
+  const networkList = [{ value: connectedNetWorks.icon, label: connectedNetWorks.icon }];
+
+  switch (currentNetwork) {
+    case connectedNetWorks.icon:
+      switch (currentPairedNetworks) {
+        case pairedNetworks['ICON-Moonbeam']:
+          networkList.push({
+            value: connectedNetWorks.moonbeam,
+            label: connectedNetWorks.moonbeam,
+          });
+          break;
+
+        case pairedNetworks['ICON-BSC']:
+          networkList.push({
+            value: connectedNetWorks.bsc,
+            label: connectedNetWorks.bsc,
+          });
+          break;
+
+        case pairedNetworks['ICON-NEAR']:
+          networkList.push({
+            value: connectedNetWorks.near,
+            label: connectedNetWorks.near,
+          });
+          break;
+
+        default:
+          console.log('Requires paired network value.');
+          break;
+      }
+      break;
+    // case connectedNetWorks.bsc:
+    // case connectedNetWorks.near:
+  }
+
+  return networkList.filter((network) =>
+    currentNetwork.includes(network.label) ? false : network,
+  );
 };
