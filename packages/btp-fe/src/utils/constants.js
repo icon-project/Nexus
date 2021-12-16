@@ -81,16 +81,25 @@ export const getTokenOptions = (currentNetwork) => {
 };
 
 export const getBalanceToken = () => {
-  return isICONAndBSHPaired()
-    ? [
-        nativeTokens[connectedNetWorks.icon].symbol,
-        'ETH',
-        nativeTokens[connectedNetWorks.bsc].symbol,
-      ]
-    : [
+  switch (getPairedNetwork()) {
+    case pairedNetworks['ICON-Moonbeam']:
+      return [
         nativeTokens[connectedNetWorks.icon].symbol,
         nativeTokens[connectedNetWorks.moonbeam].symbol,
       ];
+    case pairedNetworks['ICON-BSC']:
+      return [
+        nativeTokens[connectedNetWorks.icon].symbol,
+        'ETH',
+        nativeTokens[connectedNetWorks.bsc].symbol,
+      ];
+    case pairedNetworks['ICON-NEAR']:
+      return [nativeTokens[connectedNetWorks.near].symbol];
+
+    default:
+      console.log('No matching paired network');
+      break;
+  }
 };
 
 export const getTartgetNetwork = (currentNetwork) => {

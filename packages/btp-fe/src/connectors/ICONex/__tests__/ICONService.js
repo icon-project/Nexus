@@ -71,7 +71,7 @@ describe('ICONService', () => {
         .spyOn(ICONService, 'depositTokensIntoBSH')
         .mockImplementation();
 
-      transfer({}, false);
+      transfer(null, null, connectedNetWorks.bsc, false);
 
       expect(mock_depositTokensIntoBSH).toBeCalledTimes(1);
     });
@@ -82,7 +82,7 @@ describe('ICONService', () => {
         .spyOn(ICONService, 'sendNonNativeCoin')
         .mockImplementation();
 
-      transfer({}, false);
+      transfer(null, null, connectedNetWorks.moonbeam, false);
 
       expect(mock_sendNonNativeCoin).toBeCalledTimes(1);
     });
