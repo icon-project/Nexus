@@ -1,6 +1,6 @@
-import { sendNativeCoin, depositTokensIntoBSH, sendNonNativeCoin } from './ICONService';
+import { sendNativeCoin, depositTokensIntoBSH, sendNonNativeCoin } from './ICONServices';
 import { MOON_BEAM_NODE, BSC_NODE, signingActions } from 'connectors/constants';
-import { isICONAndBSHPaired } from 'utils/constants';
+import { connectedNetWorks } from 'utils/constants';
 
 export const transfer = (tx, isSendingNativeCoin, network) => {
   window[signingActions.globalName] = signingActions.transfer;
@@ -11,7 +11,19 @@ export const transfer = (tx, isSendingNativeCoin, network) => {
   if (isSendingNativeCoin) {
     sendNativeCoin(tx, networkAddress);
   } else {
-    if (isICONAndBSHPaired()) depositTokensIntoBSH(tx);
-    else sendNonNativeCoin(tx);
+    switch (network) {
+      case connectedNetWorks.moonbeam:
+        sendNonNativeCoin(tx);
+        break;
+      case connectedNetWorks.bsc:
+        depositTokensIntoBSH(tx);
+        break;
+      case connectedNetWorks.near:
+        console.log('Not implemented yet');
+        break;
+      default:
+        console.log('No matching paired network');
+        break;
+    }
   }
 };

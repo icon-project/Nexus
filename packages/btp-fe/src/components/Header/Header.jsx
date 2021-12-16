@@ -16,6 +16,7 @@ import { wallets, PAIRED_NETWORKS, getPairedNetwork, pairedNetworks } from 'util
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE, setCurrentICONexNetwork } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
+import { connect, getNearAccountInfo, signOut } from 'connectors/NEARWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -25,6 +26,7 @@ import { media } from 'components/Styles/Media';
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
+import NEAR from 'assets/images/near-icon.svg';
 // import logo from 'assets/images/logo-nexus-white.png';
 
 const { darkBG, grayText, grayLine } = colors;
@@ -159,6 +161,11 @@ const mockWallets = {
     title: 'Hana Wallet',
     icon: Hana,
   },
+  [wallets.near]: {
+    id: 'near',
+    title: 'NEAR Wallet',
+    icon: NEAR,
+  },
 };
 
 const Header = () => {
@@ -180,8 +187,12 @@ const Header = () => {
   ];
 
   useEffect(() => {
-    if (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) === wallets.metamask) {
-      EthereumInstance.getEthereumAccounts();
+    switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
+      case wallets.metamask:
+        EthereumInstance.getEthereumAccounts();
+        break;
+      case wallets.near:
+        getNearAccountInfo();
     }
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
@@ -207,23 +218,34 @@ const Header = () => {
     setShowModal((prev) => !prev);
     setShowDetail(false);
   };
+
   const handleConnect = async (e) => {
     e.preventDefault();
     setLoading(true);
     resetAccountInfo();
     localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
-    if (selectedWallet === wallets.iconex || selectedWallet === wallets.hana) {
-      const hasAccount = requestAddress();
 
-      if (!hasAccount) {
+    switch (selectedWallet) {
+      case wallets.iconex:
+      case wallets.hana:
+        const hasAccount = requestAddress();
+        if (!hasAccount) {
+          setLoading(false);
+        }
+        break;
+
+      case wallets.metamask:
+        const isConnected = await EthereumInstance.connectMetaMaskWallet();
+        if (isConnected) {
+          await EthereumInstance.getEthereumAccounts();
+        }
         setLoading(false);
-      }
-    } else if (selectedWallet === wallets.metamask) {
-      const isConnected = await EthereumInstance.connectMetaMaskWallet();
-      if (isConnected) {
-        await EthereumInstance.getEthereumAccounts();
-      }
-      setLoading(false);
+        break;
+
+      case wallets.near:
+        await connect();
+        setLoading(false);
+        break;
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -231,6 +253,7 @@ const Header = () => {
   };
 
   const onDisconnectWallet = () => {
+    signOut();
     resetTransferStep();
     resetAccountInfo();
     toggleModal();
@@ -253,6 +276,15 @@ const Header = () => {
   };
 
   useEffect(() => {
+    // handle callback url from NEAR wallet
+    // https://docs.near.org/docs/api/naj-quick-reference#sign-in
+    const { search, pathname } = location;
+    if (search.startsWith('?near=true') && address) {
+      setShowDetail(true);
+      setShowModal(true);
+      window.history.replaceState(null, '', pathname);
+    }
+
     if (address) {
       setLoading(false);
       setShowDetail(true);
@@ -319,6 +351,13 @@ const Header = () => {
                   onClick={() => handleSelectWallet(wallets.hana)}
                   isCheckingInstalled={checkingICONexInstalled}
                   isInstalled={isICONexInstalled()}
+                />
+                <WalletSelector
+                  type={wallets.near}
+                  wallet={mockWallets}
+                  active={selectedWallet == wallets.near}
+                  onClick={() => handleSelectWallet(wallets.near)}
+                  isInstalled
                 />
               </div>
               <PairedNetworkWrapper>

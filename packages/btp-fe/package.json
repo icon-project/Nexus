@@ -62,7 +62,10 @@
       "(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "node_modules\/elliptic.+", 
+      "node_modules/elliptic.+",
+      "node_modules/near-api-js.+",
+      "node_modules/statuses.+",
+      "node_modules/node-fetch.+",
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
       ".+\\.module\\.(css|sass|scss)$"
     ],
@@ -106,6 +109,7 @@
     "i18next-http-backend": "1.0.23",
     "icon-sdk-js": "0.0.19",
     "identity-obj-proxy": "3.0.0",
+    "near-api-js": "0.44.1",
     "qs": "6.9.6",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",

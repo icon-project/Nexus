@@ -1,20 +1,7 @@
 import { PAIRED_NETWORKS, pairedNetworks, connectedNetWorks, nativeTokens } from 'utils/constants';
-import {
-  isICONAndBSHPaired,
-  getTokenOptions,
-  getBalanceToken,
-  getTartgetNetwork,
-} from '../constants';
+import { getTokenOptions, getBalanceToken, getTartgetNetwork } from '../constants';
 
 describe('utils/constants', () => {
-  test('isICONAndBSHPaired', () => {
-    localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-BSC']);
-    expect(isICONAndBSHPaired()).toBe(true);
-
-    localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
-    expect(isICONAndBSHPaired()).toBe(false);
-  });
-
   describe('getTokenOptions', () => {
     test('ICON-BSC chains + BSC side (Metamask)', () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-BSC']);
@@ -43,7 +30,7 @@ describe('utils/constants', () => {
       ]);
     });
 
-    test('ICON-Moonbeam chains + ICON side (ICONex)', () => {
+    test('ICON-Moonbeam chains + Moonbeam side (ICONex)', () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
 
       expect(getTokenOptions(connectedNetWorks.moonbeam)).toEqual([

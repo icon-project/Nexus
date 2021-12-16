@@ -5,7 +5,7 @@ const { serialize } = IconUtil;
 import { connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
 import { BSC_NODE, signingActions } from 'connectors/constants';
 
-import * as ICONService from '../ICONService';
+import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
 
 jest.mock('store', () => {
@@ -71,7 +71,7 @@ describe('ICONService', () => {
         .spyOn(ICONService, 'depositTokensIntoBSH')
         .mockImplementation();
 
-      transfer({}, false);
+      transfer(null, null, connectedNetWorks.bsc, false);
 
       expect(mock_depositTokensIntoBSH).toBeCalledTimes(1);
     });
@@ -82,7 +82,7 @@ describe('ICONService', () => {
         .spyOn(ICONService, 'sendNonNativeCoin')
         .mockImplementation();
 
-      transfer({}, false);
+      transfer(null, null, connectedNetWorks.moonbeam, false);
 
       expect(mock_sendNonNativeCoin).toBeCalledTimes(1);
     });
