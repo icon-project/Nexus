@@ -6,7 +6,7 @@ const isEmpty = (obj) => {
 const hashShortener = (hashStr) => {
   if (!hashStr) return '';
   const len = hashStr.length;
-  if (len <= 10) {
+  if (len <= 20) {
     return hashStr;
   }
 
