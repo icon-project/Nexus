@@ -101,12 +101,21 @@ if (process.env.JEST_WORKER_ID === undefined) {
 }
 
 export const getCurrentICONexNetwork = () => currentICONexNetwork;
+export const getServerEndpoint = (pairedNetworksValue) => {
+  switch (pairedNetworksValue) {
+    case pairedNetworks['ICON-BSC']:
+      return process.env.REACT_APP_BTP_ENDPOINT_BSC;
+    case pairedNetworks['ICON-Moonbeam']:
+      return process.env.REACT_APP_BTP_ENDPOINT_MOONBEAM;
+    case pairedNetworks['ICON-NEAR']:
+      return process.env.REACT_APP_BTP_ENDPOINT_MOONBEAM; // TODO: update the right endpoint
+    default:
+      console.log('No matching paired network');
+      break;
+  }
+};
 
-export let serverEndpoint =
-  currentPairedNetworks === pairedNetworks['ICON-BSC']
-    ? process.env.REACT_APP_BTP_ENDPOINT_BSC
-    : process.env.REACT_APP_BTP_ENDPOINT;
-
+export let serverEndpoint = getServerEndpoint(currentPairedNetworks);
 export let httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
 export let iconService = new IconService(httpProvider);
 
@@ -114,21 +123,7 @@ export let iconService = new IconService(httpProvider);
 // This fuction will handle switching back and forth between these paired networks
 export const setCurrentICONexNetwork = (pairedNetworksValue) => {
   currentICONexNetwork = ICON_NODES[pairedNetworksValue];
-
-  switch (pairedNetworksValue) {
-    case pairedNetworks['ICON-BSC']:
-      serverEndpoint = process.env.REACT_APP_BTP_ENDPOINT_BSC;
-      break;
-    case pairedNetworks['ICON-Moonbeam']:
-      serverEndpoint = process.env.REACT_APP_BTP_ENDPOINT_MOONBEAM;
-      break;
-    case pairedNetworks['ICON-NEAR']:
-      serverEndpoint = process.env.REACT_APP_BTP_ENDPOINT_MOONBEAM; // TODO: update the right endpoint
-      break;
-    default:
-      console.log('No matching paired network');
-      break;
-  }
+  serverEndpoint = getServerEndpoint(pairedNetworksValue);
 
   httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
   iconService = new IconService(httpProvider);
