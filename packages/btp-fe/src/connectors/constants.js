@@ -89,7 +89,7 @@ export const ICON_NODES = {
   },
 };
 
-const currentPairedNetworks = getPairedNetwork();
+const currentPairedNetworks = getPairedNetwork() || pairedNetworks['ICON-Moonbeam'];
 let currentICONexNetwork = currentPairedNetworks
   ? ICON_NODES[currentPairedNetworks]
   : ICON_NODES['ICON-Moonbeam'];
