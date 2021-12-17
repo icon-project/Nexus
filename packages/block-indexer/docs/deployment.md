@@ -155,6 +155,9 @@ goloop version
 ### Install Apps
 
 ```bash
+# nano ~/.bashrc
+export DASHBOARD_HOME=/home/ubuntu/apps
+
 mkdir apps
 git clone git@github.com:icon-project/btp-dashboard.git
 git checkout v0.1.2 # use latest stable tag

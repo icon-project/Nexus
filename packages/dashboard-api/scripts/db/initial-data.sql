@@ -3,9 +3,12 @@
 
 -- ### Clean up ###
 
-DELETE FROM token_info;
+DELETE FROM registered_tokens;
+DELETE FROM relay_candidate_rewards
+DELETE FROM relay_candidates;
 DELETE FROM relays;
-UPDATE transactions SET serial_number = '0' || serial_number;
+DELETE FROM transactions;
+-- UPDATE transactions SET serial_number = '0' || serial_number;
 
 -- ### Supported networks ###
 
@@ -31,18 +34,18 @@ INSERT INTO token_prices (cmc_id, name, price, active, created_time, updated_tim
 -- ICON
 
 -- md5(random()::text || clock_timestamp()::text)::uuid
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x42', 'ICX', '0', 'ICON_NATIVE_COIN_BSH_ADDRESS', '', '0x294c1e27198ae3b159f93eedd6a478966d725c4d12dd69915992afc50cb10f24');
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0xd35bbb', 'BNB', 'coinId', 'ICON_NATIVE_COIN_BSH_ADDRESS', '', '0xe839292c8f8e0bbbb33b34df27702cc72fabbd8602f23d656f7512990f5ae0c1');
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x42', 'DEV', 'coinId', 'ICON_NATIVE_COIN_BSH_ADDRESS', '', '0xd27a921020404b62e60160634b624e372329461cc44995f40ecd30cafa0e176d');
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x58eb1c', 'ETH', 'ETH', 'token_bsh.icon', '', '0x9dec32260be74cdfed593fef1ddcdfd86523050c27d8f57332c74f93811364f2');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x42', 'ICX', '0', 'ICON_NATIVE_COIN_BSH_ADDRESS', '', '0x294c1e27198ae3b159f93eedd6a478966d725c4d12dd69915992afc50cb10f24');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0xd35bbb', 'BNB', 'coinId', 'ICON_NATIVE_COIN_BSH_ADDRESS', '', '0xe839292c8f8e0bbbb33b34df27702cc72fabbd8602f23d656f7512990f5ae0c1');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x42', 'DEV', 'coinId', 'ICON_NATIVE_COIN_BSH_ADDRESS', '', '0xd27a921020404b62e60160634b624e372329461cc44995f40ecd30cafa0e176d');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x58eb1c', 'ETH', 'ETH', 'token_bsh.icon', '', '0x9dec32260be74cdfed593fef1ddcdfd86523050c27d8f57332c74f93811364f2');
 
 -- Moonbeam
 
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x507', 'DEV', '0', 'MOONBEAM_BSH_CORE_ADDRESS', '', '0x5c8b55af397256d06e2be6acdefb350f92ff4363745001ce8cd367c74b10d7f3');
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x507', 'ICX', 'coinId', 'MOONBEAM_BSH_CORE_ADDRESS', '', '0xb5b49cd71c1d403db3cb0e7a0a8eeddf8fba93eb15930709ca5583912fc64d6c');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x507', 'DEV', '0', 'MOONBEAM_BSH_CORE_ADDRESS', '', '0x5c8b55af397256d06e2be6acdefb350f92ff4363745001ce8cd367c74b10d7f3');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x507', 'ICX', 'coinId', 'MOONBEAM_BSH_CORE_ADDRESS', '', '0xb5b49cd71c1d403db3cb0e7a0a8eeddf8fba93eb15930709ca5583912fc64d6c');
 
 -- BSC
 
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x97', 'BNB', '0', 'BSC_BSH_CORE_ADDRESS', '', '0x5673ec01d33dbbfaf1f8c621aeca47229e1dca0662e23a22bc174964525249e3');
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x97', 'ICX', 'coinId', 'BSC_BSH_CORE_ADDRESS', '', '0x32dd79a4335317da1d55ffb2f4a189668dc821850277923ed442ce723bbab9a2');
-INSERT INTO token_info (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x97', 'ETH', 'ETH', 'token_bsh.proxy.bsc', '', '0x3d52997b75f5f45ed5fb6b66426c2c7b0d71e53cebcb11f6e6c18712da2a047b');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x97', 'BNB', '0', 'BSC_BSH_CORE_ADDRESS', '', '0x5673ec01d33dbbfaf1f8c621aeca47229e1dca0662e23a22bc174964525249e3');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x97', 'ICX', 'coinId', 'BSC_BSH_CORE_ADDRESS', '', '0x32dd79a4335317da1d55ffb2f4a189668dc821850277923ed442ce723bbab9a2');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, token_address, tx_hash) VALUES ('0x97', 'ETH', 'ETH', 'token_bsh.proxy.bsc', '', '0x3d52997b75f5f45ed5fb6b66426c2c7b0d71e53cebcb11f6e6c18712da2a047b');

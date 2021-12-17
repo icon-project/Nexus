@@ -19,6 +19,9 @@ async function getRelayerFromContract(iconService) {
 }
 
 async function getRelayerByAddresses(addresses) {
+  if (!addresses.length)
+    return [];
+
   const quotedAddresses = addresses.map(a => '\'' + a + '\'');
   const query = `SELECT address FROM relay_candidates WHERE address IN (${quotedAddresses.join(',')})`;
   const { rows } = await pgPool.query(query);
