@@ -250,6 +250,10 @@ const Header = () => {
   };
   const handleSelectWallet = (wallet) => {
     if (wallet) setSelectedWallet(wallet);
+
+    if (wallet === wallets.near) {
+      onChangePairedNetworks({ target: { value: pairedNetworks['ICON-NEAR'] } });
+    }
   };
 
   const onDisconnectWallet = () => {
@@ -360,12 +364,14 @@ const Header = () => {
                   isInstalled
                 />
               </div>
-              <PairedNetworkWrapper>
-                <Text className="xs" color={colors.graySubText}>
-                  Select the paired networks:
-                </Text>
-                <Select options={pairedNetworksOptions} onChange={onChangePairedNetworks} />
-              </PairedNetworkWrapper>
+              {wallets.near !== selectedWallet && (
+                <PairedNetworkWrapper>
+                  <Text className="xs" color={colors.graySubText}>
+                    Select the paired networks:
+                  </Text>
+                  <Select options={pairedNetworksOptions} onChange={onChangePairedNetworks} />
+                </PairedNetworkWrapper>
+              )}
             </Modal>
           )}
         </>
