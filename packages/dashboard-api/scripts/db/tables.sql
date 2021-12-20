@@ -4,18 +4,18 @@
 
 CREATE TABLE IF NOT EXISTS public.auctions
 (
-    tx_hash character varying(100) NOT NULL,
-    token_name character varying(50) NOT NULL,
-    bidder_address character varying(100) NOT NULL,
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    bidder_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     bid_amount numeric NOT NULL,
     end_time timestamp without time zone NOT NULL,
-    winner_address character varying(100),
+    winner_address character varying(100) COLLATE pg_catalog."default",
     token_amount numeric NOT NULL,
-    tx_hash_ended character varying(100),
-    created_time timestamp without time zone NOT NULL,
+    tx_hash_ended character varying(100) COLLATE pg_catalog."default",
+    created_time timestamp without time zone NOT NULL DEFAULT now(),
     updated_time timestamp without time zone,
     winner_bid_amount numeric,
-    id character varying(100) NOT NULL,
+    id character varying(100) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT auctions_pkey PRIMARY KEY (id)
 );
 
@@ -25,15 +25,15 @@ CREATE TABLE IF NOT EXISTS public.auctions
 
 CREATE TABLE IF NOT EXISTS public.bids
 (
-    id character(10) NOT NULL,
-    token_name character varying(50) NOT NULL,
-    current_bidder_address character varying(100) NOT NULL,
+    id character(10) COLLATE pg_catalog."default" NOT NULL,
+    token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    current_bidder_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     current_bid_amount numeric NOT NULL,
-    new_bidder_address character varying(100) NOT NULL,
+    new_bidder_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     new_bid_amount numeric NOT NULL,
-    tx_hash character varying(100) NOT NULL,
-    created_time timestamp without time zone NOT NULL,
-    auction_id character varying(100) NOT NULL,
+    tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    created_time timestamp without time zone NOT NULL DEFAULT now(),
+    auction_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT bids_pkey PRIMARY KEY (id),
     CONSTRAINT bids_auction_id_fkey FOREIGN KEY (auction_id)
         REFERENCES public.auctions (id) MATCH SIMPLE
@@ -64,15 +64,15 @@ CREATE INDEX bids_created_time
 
 CREATE TABLE IF NOT EXISTS public.networks
 (
-    id character varying(100) NOT NULL,
-    name character varying(50) NOT NULL,
-    path_logo character varying(100) NOT NULL,
-    url character varying(100) NOT NULL,
+    id character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    path_logo character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    url character varying(100) COLLATE pg_catalog."default" NOT NULL,
     mint_fee numeric NOT NULL DEFAULT 0,
     burn_fee numeric NOT NULL DEFAULT 0,
-    create_at timestamp without time zone NOT NULL,
-    update_at timestamp without time zone NOT NULL,
-    native_token character varying(50) NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT now(),
+    update_at timestamp without time zone,
+    native_token character varying(50) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT networks_pkey PRIMARY KEY (id),
     CONSTRAINT native_token_key UNIQUE (native_token),
     CONSTRAINT networks_name_key UNIQUE (name)
@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS public.indexer_stats
     network_id character varying(10) NOT NULL,
     name character varying(50) NOT NULL,
     block_height integer NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT now(),
     updated_time timestamp without time zone NOT NULL,
     CONSTRAINT indexer_stats_pkey PRIMARY KEY (network_id),
     CONSTRAINT indexer_stats_name_key UNIQUE (name)
@@ -119,8 +120,8 @@ CREATE TABLE IF NOT EXISTS public.token_prices
     name character varying(50) NOT NULL,
     price numeric NOT NULL,
     active integer NOT NULL,
-    created_time timestamp without time zone NOT NULL,
-    updated_time timestamp without time zone NOT NULL,
+    created_time timestamp without time zone NOT NULL DEFAULT now(),
+    updated_time timestamp without time zone,
     CONSTRAINT token_prices_pkey PRIMARY KEY (cmc_id),
     CONSTRAINT name_unique UNIQUE (name)
 );
@@ -136,7 +137,7 @@ CREATE TABLE IF NOT EXISTS public.transfer_fees
     token_amount numeric NOT NULL,
     tx_hash character varying(100) NOT NULL,
     total_token_amount numeric NOT NULL,
-    created_time timestamp without time zone NOT NULL,
+    created_time timestamp without time zone NOT NULL DEFAULT now(),
     CONSTRAINT transfer_fees_pkey PRIMARY KEY (id)
 );
 
@@ -238,7 +239,7 @@ CREATE TABLE IF NOT EXISTS public.minted_tokens
     total_token_amount numeric NOT NULL,
     block_time bigint NOT NULL,
     tx_hash character varying(100) NOT NULL,
-    create_at timestamp without time zone NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT now(),
     mint_to character varying(100) NOT NULL,
     token_id character varying(100) NOT NULL,
     CONSTRAINT minted_tokens_pkey PRIMARY KEY (id)
@@ -274,7 +275,7 @@ CREATE TABLE IF NOT EXISTS public.burned_tokens
     total_token_amount numeric NOT NULL,
     block_time bigint NOT NULL,
     tx_hash character varying(100) NOT NULL,
-    create_at timestamp without time zone NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT now(),
     burn_from character varying(100) NOT NULL,
     token_id character varying(100) NOT NULL
 );

@@ -351,3 +351,31 @@ INSERT INTO registered_tokens (tx_hash, network_id, token_id, token_name, token_
 	SELECT tx_hash, network_id, token_id, token_name, token_address, contract_address FROM token_info;
 
 DROP TABLE token_info;
+
+-- Issue #493
+
+ALTER TABLE auctions
+    ALTER COLUMN created_time SET DEFAULT NOW();
+
+ALTER TABLE bids
+    ALTER COLUMN created_time SET DEFAULT NOW();
+
+ALTER TABLE networks
+    ALTER COLUMN create_at SET DEFAULT NOW(),
+    ALTER COLUMN update_at DROP NOT NULL;
+
+ALTER TABLE indexer_stats
+    ADD COLUMN create_at timestamp without time zone NOT NULL DEFAULT NOW();
+
+ALTER TABLE token_prices
+    ALTER COLUMN created_time SET DEFAULT NOW(),
+    ALTER COLUMN updated_time DROP NOT NULL;
+
+ALTER TABLE transfer_fees
+    ALTER COLUMN created_time SET DEFAULT NOW();
+
+ALTER TABLE minted_tokens
+    ALTER COLUMN create_at SET DEFAULT NOW();
+
+ALTER TABLE burned_tokens
+    ALTER COLUMN create_at SET DEFAULT NOW();
