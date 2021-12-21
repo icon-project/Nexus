@@ -1,9 +1,7 @@
 'use strict';
 
 const { createLogger, pgPool } = require('../../common');
-const { v4: uuidv4 } = require('uuid');
 
-const MINT = 'mint';
 const BURN = 'burn';
 const logger = createLogger();
 
@@ -27,8 +25,6 @@ async function getTotalTokenAmount(tokenName, tokenType) {
 
 async function saveToken(object, totalToken, tokenType) {
   try {
-    preSave(object);
-
     let tableName = 'minted_tokens';
     let dymamicColumn = 'mint_to';
 
@@ -38,11 +34,12 @@ async function saveToken(object, totalToken, tokenType) {
     }
 
     const totalTokenAmount = totalToken + object.tokenValue;
+
     const query = `
-    INSERT INTO ${tableName} (id, network_id, token_name, token_value, total_token_amount, block_time, tx_hash, token_id, ${dymamicColumn}, create_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`;
+    INSERT INTO ${tableName} (network_id, token_name, token_value, total_token_amount, block_time, tx_hash, token_id, ${dymamicColumn})
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+
     const values = [
-      object.id,
       object.networkId,
       object.tokenName,
       object.tokenValue,
@@ -50,22 +47,12 @@ async function saveToken(object, totalToken, tokenType) {
       object.blockTime,
       object.txHash,
       object.tokenId,
-      object.to,
+      object.to
     ];
 
     await pgPool.query(query, values);
   } catch (error) {
     logger.error(`saveToken failed save ${tokenType} value`, { error });
-  }
-}
-
-/**
- * Pre-save mint/burn object
- * @param {*} data
- */
-function preSave(data) {
-  if (!data.id) {
-    data.id = uuidv4();
   }
 }
 

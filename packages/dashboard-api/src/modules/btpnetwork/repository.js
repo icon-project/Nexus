@@ -48,8 +48,7 @@ async function getAllTimeFeeOfAssets() {
 }
 
 async function getVolumeMintedNetworks() {
-  const query =
-    'SELECT network_id, token_name,  SUM(token_value) AS token_volume FROM minted_tokens GROUP BY(network_id, token_name)';
+  const query = 'SELECT network_id, token_name, SUM(token_value) AS token_volume FROM minted_tokens GROUP BY (network_id, token_name)';
 
   try {
     const { rows } = await pgPool.query(query);

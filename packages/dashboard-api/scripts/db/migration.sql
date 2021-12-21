@@ -379,3 +379,15 @@ ALTER TABLE minted_tokens
 
 ALTER TABLE burned_tokens
     ALTER COLUMN create_at SET DEFAULT NOW();
+
+-- Issue #380
+
+ALTER TABLE minted_tokens
+    DROP COLUMN id;
+
+ALTER TABLE minted_tokens
+    ADD CONSTRAINT minted_tokens_pkey PRIMARY KEY (tx_hash);
+
+ALTER TABLE burned_tokens
+    DROP COLUMN id,
+    ADD CONSTRAINT burned_tokens_pkey PRIMARY KEY (tx_hash);
