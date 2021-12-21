@@ -71,10 +71,7 @@ async function getNetworkInfo() {
 async function getTotalMintValue() {
   try {
     let result = [];
-
-    const { rows } = await pgPool.query('SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id \
-    FROM minted_tokens \
-    ORDER BY token_name, create_at DESC');
+    const { rows } = await pgPool.query('SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id FROM minted_tokens ORDER BY token_name, create_at DESC');
 
     for (let data of rows) {
       result.push({

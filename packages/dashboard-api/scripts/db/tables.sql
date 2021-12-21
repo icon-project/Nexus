@@ -232,7 +232,6 @@ CREATE TABLE IF NOT EXISTS public.relay_candidate_rewards
 
 CREATE TABLE IF NOT EXISTS public.minted_tokens
 (
-    id character varying(100) NOT NULL,
     network_id character varying(20) NOT NULL,
     token_name character varying(50) NOT NULL,
     token_value numeric NOT NULL,
@@ -242,7 +241,7 @@ CREATE TABLE IF NOT EXISTS public.minted_tokens
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     mint_to character varying(100) NOT NULL,
     token_id character varying(100) NOT NULL,
-    CONSTRAINT minted_tokens_pkey PRIMARY KEY (id)
+    CONSTRAINT minted_tokens_pkey PRIMARY KEY (tx_hash)
 );
 
 -- Index: minted_tokens_create_at
@@ -268,7 +267,6 @@ CREATE INDEX minted_tokens_token_name
 
 CREATE TABLE IF NOT EXISTS public.burned_tokens
 (
-    id character varying(100) NOT NULL,
     network_id character varying(20) NOT NULL,
     token_name character varying(50) NOT NULL,
     token_value numeric NOT NULL,
@@ -277,7 +275,8 @@ CREATE TABLE IF NOT EXISTS public.burned_tokens
     tx_hash character varying(100) NOT NULL,
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     burn_from character varying(100) NOT NULL,
-    token_id character varying(100) NOT NULL
+    token_id character varying(100) NOT NULL,
+    CONSTRAINT burned_tokens_pkey PRIMARY KEY (tx_hash)
 );
 
 -- Index: burned_tokens_create_at
