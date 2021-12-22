@@ -17,6 +17,14 @@ const getWalletInstance = async (near) => {
   return new nearAPI.WalletConnection(nearIntance);
 };
 
+const getAccountInstance = async () => {
+  const near = await getNearInstance();
+  const wallet = await getWalletInstance(near);
+  const account = await near.account(wallet.getAccountId());
+
+  return account;
+};
+
 export const connect = async () => {
   const wallet = await getWalletInstance();
   if (!wallet.isSignedIn()) {
@@ -33,25 +41,21 @@ export const signOut = async () => {
   wallet.signOut();
 };
 
-export const getBalanceOf = async ({ refundable }) => {
+export const getBalanceOf = async (options) => {
+  const { refundable } = options || {};
+
   if (refundable) {
     return Promise.resolve(0); // TODO: implementation
   }
-  const near = await getNearInstance();
-  const wallet = await getWalletInstance(near);
-
-  const walletAccountId = wallet.getAccountId();
-  const accountInfo = await near.account(walletAccountId);
-  return accountInfo.getAccountBalance();
+  const account = await getAccountInstance();
+  return account.getAccountBalance();
 };
 
 export const getNearAccountInfo = async () => {
-  const near = await getNearInstance();
-  const wallet = await getWalletInstance(near);
+  const wallet = await getWalletInstance();
   if (wallet && wallet.isSignedIn()) {
-    const walletAccountId = wallet.getAccountId();
-    const accountInfo = await near.account(walletAccountId);
-    const balance = await accountInfo.getAccountBalance();
+    const accountInfo = await getAccountInstance();
+    const balance = await getBalanceOf();
 
     account.setAccountInfo({
       address: accountInfo.accountId,
@@ -61,4 +65,35 @@ export const getNearAccountInfo = async () => {
       currentNetwork: connectedNetWorks.near,
     });
   }
+};
+
+export const transfer = async ({ value, to }) => {
+  const wallet = await getWalletInstance();
+
+  // https://github.com/near-examples/guest-book
+  // https://explorer.testnet.near.org/accounts/guest-book.testnet
+
+  const contract = await new nearAPI.Contract(
+    // User's accountId as a string
+    wallet.account(),
+    // accountId of the contract we will be loading
+    // NOTE: All contracts on NEAR are deployed to an account and
+    // accounts can only have one contract deployed to them.
+    NEAR_NODE.contractId,
+    {
+      // View methods are read-only – they don't modify the state, but usually return some value
+      viewMethods: ['getMessages'],
+      // Change methods can modify the state, but you don't receive the returned value when called
+      changeMethods: ['addMessage'],
+      // Sender is the account ID to initialize transactions.
+      // getAccountId() will return empty string if user is still unauthorized
+      sender: wallet.getAccountId(),
+    },
+  );
+
+  await contract.addMessage(
+    { text: to },
+    '30000000000000',
+    nearAPI.utils.format.parseNearAmount(value),
+  );
 };
