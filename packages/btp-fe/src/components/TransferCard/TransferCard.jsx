@@ -87,7 +87,6 @@ export const TransferCard = ({
   };
 
   const onNext = async () => {
-    //  We don't CheckingApproval for transfer native token and tokens on BSC, BSC uses deposit mechanism instead.
     setCheckingApproval(true);
     await handleCheckingApproval(
       setStep,

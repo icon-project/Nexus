@@ -22,6 +22,7 @@ import moonbeamIcon from 'assets/images/moonbeam.jpeg';
 import hanaIcon from 'assets/images/hana-wallet.png';
 import binanceIcon from 'assets/images/binance-icon.svg';
 import ethIcon from 'assets/images/eth-icon.svg';
+import nearIcon from 'assets/images/near-icon.svg';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -122,6 +123,7 @@ export const icons = {
   [wallets.hana]: hanaIcon,
   BNB: binanceIcon,
   ETH: ethIcon,
+  NEAR: nearIcon,
 };
 
 export const Details = memo(

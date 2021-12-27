@@ -22,6 +22,7 @@ import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
@@ -179,6 +180,11 @@ const Header = () => {
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
   const currentPairedNetworks = getPairedNetwork();
 
+  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
+    openModal,
+    setDisplay,
+  }));
+
   const pairedNetworksOptions = [
     { label: currentPairedNetworks, value: currentPairedNetworks },
     ...Object.keys(pairedNetworks)
@@ -283,9 +289,23 @@ const Header = () => {
     // handle callback url from NEAR wallet
     // https://docs.near.org/docs/api/naj-quick-reference#sign-in
     const { search, pathname } = location;
+
     if (search.startsWith('?near=true') && address) {
       setShowDetail(true);
       setShowModal(true);
+      window.history.replaceState(null, '', pathname);
+    }
+
+    if (search.startsWith('?transactionHashes=')) {
+      openModal({
+        icon: 'checkIcon',
+        children: <SuccessSubmittedTxContent />,
+        button: {
+          text: 'Continue transfer',
+          onClick: () => setDisplay(false),
+        },
+      });
+
       window.history.replaceState(null, '', pathname);
     }
 
@@ -293,7 +313,7 @@ const Header = () => {
       setLoading(false);
       setShowDetail(true);
     }
-  }, [address]);
+  }, [address, openModal, setDisplay]);
 
   // set default paired networks
   useEffect(() => {
