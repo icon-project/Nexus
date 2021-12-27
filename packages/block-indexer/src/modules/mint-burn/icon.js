@@ -87,4 +87,5 @@ async function handleMintBurnEvents(txResult, transaction) {
 
 module.exports = {
   handleMintBurnEvents,
+  getMintBurnEvent
 };

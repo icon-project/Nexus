@@ -1,114 +1,99 @@
-const { Pool } = require('pg');
-const RelayerICON = require('../src/modules/icon-indexer/relay-candidate');
+'use strict';
 
-const addRelayerICONTrans = {
-  timestamp: 1629099103257950,
-  nid: '3',
-  stepLimit: '13610920001',
-  from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
-  to: 'cx26cdb2d9cf33dee078056532175a696b8a9fcc71',
-  signature:
-    'pwG/MfYowPZEbOfIKDCBMRKWNXN5UGrQ22UI+mK+VIUw/LjKgp8i1hRLjFKouz+TspSy6qUR3iHlmp+9Ni9sMgA=',
+const { Pool } = require('pg');
+const relayer = require('../src/modules/icon-indexer/relay-candidate');
+const { hexToFixedAmount } = require('../src/common');
+
+const registerRelayerTx = {
+  timestamp: 1638258565685867,
+  value: { s: 1, e: 2, c: [ 256 ] },
+  nid: { s: 1, e: 6, c: [ 5827356 ] },
+  stepLimit: { s: 1, e: 6, c: [ 1000000 ] },
+  from: 'hxd98b12f8f12e4bc60fb6d2f4fd613db3f2c0cc92',
+  to: 'cx8e2d758fbcc7f9621f87481e33402ac2819785c8',
+  signature: '/XUN9wI791cOq2cVmixD3fxnCiQJXldynnqtaxnNTKNBPlb3diHAKDGE9xMHhpWgYUoxRy9IFbeZl+3zLRDYvAA=',
   dataType: 'call',
-  data: {
-    method: 'registerRelayer',
-    params: {
-      _desc: 'Relayer 1',
-    },
-  },
-  value: { c: ['0xDE0B6B3A7640000'] },
-  version: '3',
-  txHash: '0x6d690300980e7d708b0b6a3c0529988438583c3f898e52a8be78d70323b778da',
-  // blockNumber: 452634
+  data: { method: 'registerRelayer', params: { _desc: 'relayer3' } },
+  version: { s: 1, e: 0, c: [ 3 ] },
+  txHash: '0xe87656f7a91192162f037ac4643d0da30ae4b3e96e6e38de7154c3e6a5b6e66d'
 };
 
-const removeRelayerICONTrans = {
-  timestamp: 1629180788442439,
-  nid: '3',
-  stepLimit: '13610920001',
-  from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
-  to: 'cx26cdb2d9cf33dee078056532175a696b8a9fcc71',
-  signature:
-    'MgPQ/wyEivVZf33Iq289WYBS0wz3gAEpeFyz/IfafUpf/+kkQ5AQliZwcF4BiaD8TkLZOt0BlOxF5GSk/BkDWAA=',
+const unregisterRelayerTx = {
+  timestamp: 1638259453792276,
+  nid: { s: 1, e: 6, c: [ 5827356 ] },
+  stepLimit: { s: 1, e: 6, c: [ 1000000 ] },
+  from: 'hxd98b12f8f12e4bc60fb6d2f4fd613db3f2c0cc92',
+  to: 'cx8e2d758fbcc7f9621f87481e33402ac2819785c8',
+  signature: 'AgcByUhfVeG+H3yxyHDHlMNIrLdSWKWRaP9Ou6Bi1rUfi4jIMXJDpbI+G3agG3JhxiuAeRLSZZTbifYQZTvowwE=',
   dataType: 'call',
-  data: {
-    method: 'unregisterRelayer',
-  },
-  version: '3',
-  txHash: '0xda0e28e7a8ae06cceb10818ce189b27b9b7a4fa0c7d70fba6be626772bfc6998',
-  // blockNumber: 493470
+  data: { method: 'unregisterRelayer' },
+  version: { s: 1, e: 0, c: [ 3 ] },
+  txHash: '0x6af89abd0929682d89d8da31a7f3cfd2756b31dad00b49c3738f1aa97b969403'
 };
 
 jest.mock('pg', () => {
   const mPool = {
     connect: function () {
-      return { query: jest.fn() };
+      return {
+        query: jest.fn()
+      };
     },
     query: jest.fn(),
     end: jest.fn(),
-    on: jest.fn(),
+    on: jest.fn()
   };
-  return { Pool: jest.fn(() => mPool) };
+
+  return {
+    Pool: jest.fn(() => mPool)
+  };
 });
 
-describe('test for handle relay action', () => {
-  let pool;
+let pool = null;
 
-  beforeEach(() => {
-    pool = new Pool();
-    // Most important - it clears the cache
-    jest.resetModules();
-  });
+beforeEach(() => {
+  pool = new Pool();
+  jest.resetModules(); // clear cache
+});
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-  test('should add relayer to icon', async () => {
-    let data = addRelayerICONTrans.data.params;
-    pool.query.mockResolvedValue({ rows: [] });
-    await RelayerICON.handleRelayerAction({ status: 1 }, addRelayerICONTrans);
-    expect(pool.query).toBeCalledTimes(1);
-    expect(
-      pool.query,
-    ).toHaveBeenCalledWith(
-      'INSERT INTO relay_candidates ( id, rank, name, address, dest_address, bonded_icx, registered_time, unregistered_time, created_time, updated_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()) ON CONFLICT (address) DO UPDATE SET rank = $2 dest_address = $5, bonded_icx = $6, registered_time = $7, unregistered_time = $8, updated_time = NOW()',
-      [
-        expect.anything(),
-        0,
-        data._desc,
-        addRelayerICONTrans.from,
-        addRelayerICONTrans.to,
-        1,
-        new Date(addRelayerICONTrans.timestamp / 1000),
-        undefined,
-      ],
-    );
-  });
+test('should add new registered relayer', async () => {
+  pool.query.mockResolvedValue({ rows: [] });
+  await relayer.handleRelayerAction(registerRelayerTx);
 
-  test('should remove relayer to icon', async () => {
-    pool.query.mockResolvedValue({ rows: [] });
-    await RelayerICON.handleRelayerAction({ status: 1 }, removeRelayerICONTrans);
-    expect(pool.query).toBeCalledTimes(1);
-    expect(
-      pool.query,
-    ).toHaveBeenCalledWith(
-      'UPDATE relay_candidates SET unregistered_time = $1, updated_time = NOW() WHERE address = $2',
-      [new Date(removeRelayerICONTrans.timestamp / 1000), removeRelayerICONTrans.from],
-    );
-  });
+  expect(pool.query).toBeCalledTimes(1);
+  expect(pool.query).toHaveBeenCalledWith(
+    'INSERT INTO relay_candidates (tx_hash, name, address, bonded_icx, registered_time) VALUES ($1, $2, $3, $4, $5)',
+    [registerRelayerTx.txHash, registerRelayerTx.data.params._desc, registerRelayerTx.from,
+      hexToFixedAmount(registerRelayerTx.value), new Date(registerRelayerTx.timestamp / 1000)]
+  );
+});
 
-  test('shouldn not add relayer to icon', async () => {
-    addRelayerICONTrans.data.method = 'addRelay';
-    pool.query.mockResolvedValue({ rows: [] });
-    await RelayerICON.handleRelayerAction({ status: 1 }, addRelayerICONTrans);
-    expect(pool.query).toBeCalledTimes(0);
-  });
+test('should remove unregistered relayer', async () => {
+  pool.query.mockResolvedValue({ rows: [] });
+  await relayer.handleRelayerAction(unregisterRelayerTx);
 
-  test('should not remove relayer to icon', async () => {
-    removeRelayerICONTrans.data.method = 'relayRelay';
-    pool.query.mockResolvedValue({ rows: [] });
-    await RelayerICON.handleRelayerAction({ status: 1 }, removeRelayerICONTrans);
-    expect(pool.query).toBeCalledTimes(0);
-  });
+  expect(pool.query).toBeCalledTimes(1);
+  expect(pool.query).toHaveBeenCalledWith(
+    'UPDATE relay_candidates SET unregistered_time=$1, tx_hash_unregistered=$2, updated_time=NOW() WHERE address=$3',
+    [new Date(unregisterRelayerTx.timestamp / 1000), unregisterRelayerTx.txHash, unregisterRelayerTx.from]
+  );
+});
+
+test('should not add new registered relayer', async () => {
+  registerRelayerTx.data.method = 'test';
+  pool.query.mockResolvedValue({ rows: [] });
+
+  await relayer.handleRelayerAction({ status: 1 }, registerRelayerTx);
+  expect(pool.query).toBeCalledTimes(0);
+});
+
+test('should not remove unregistered relayer', async () => {
+  unregisterRelayerTx.data.method = 'test';
+  pool.query.mockResolvedValue({ rows: [] });
+
+  await relayer.handleRelayerAction({ status: 1 }, unregisterRelayerTx);
+  expect(pool.query).toBeCalledTimes(0);
 });

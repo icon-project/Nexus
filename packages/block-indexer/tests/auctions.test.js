@@ -101,7 +101,6 @@ test('should return AuctionStart event from tx result', async () => {
 test('should return AuctionEnded event from tx result', async () => {
   const auctionEnded = getAuctionEndedEvent(txResult.eventLogs);
 
-  // console.log(auctionEnded);
   expect(auctionEnded).toMatchObject({
     id: 1,
     tokenName: 'SampleToken020',
@@ -115,7 +114,6 @@ test('should return AuctionEnded event from tx result', async () => {
 test('should return BidInfo event from tx result', async () => {
   const bidInfo = getBidInfoEvent(txResult.eventLogs);
 
-  // console.log(bidInfo);
   expect(bidInfo).toMatchObject({
     auctionId: 1,
     tokenName: 'SampleToken020',

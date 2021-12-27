@@ -1,23 +1,48 @@
 'use strict';
 
 const { Pool } = require('pg');
-const Transaction = require('../src/modules/transactions/icon');
+const iconTxHandler = require('../src/modules/transactions/icon');
 
 jest.mock('pg', () => {
   const mPool = {
     connect: function () {
-      return { query: jest.fn() };
+      return {
+        query: jest.fn()
+      };
     },
     query: jest.fn(),
     end: jest.fn(),
-    on: jest.fn(),
+    on: jest.fn()
   };
-  return { Pool: jest.fn(() => mPool) };
+
+  return {
+    Pool: jest.fn(() => mPool)
+  };
 });
+
+const transferNativeCoinTx = {
+  timestamp: 1625217594463911,
+  value: '1e+21',
+  nid: { c: ['3'] },
+  stepLimit: '10000000000',
+  from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
+  to: process.env.ICON_BMC_ADDRESS,
+  signature:
+    'X01Gnp/G/Bp3UnHw9oqk1lvWuBcsL9dWNQH/4BE65NY2V259BWIvSrIZGFX2p+ITFmjMNi5ymR2KPAhdpkfhRgA=',
+  dataType: 'call',
+  data: {
+    method: 'transferNativeCoin',
+    params: {
+      _to: 'btp://0x03.icon/hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9',
+    },
+  },
+  version: '3',
+  txHash: '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754',
+};
 
 const txResult = {
   status: 1,
-  to: 'cx0c9f31cd4436d29680b6551a76449020186eeec1',
+  to: process.env.ICON_BMC_ADDRESS,
   txHash: '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754',
   txIndex: 0,
   blockHeight: 129858,
@@ -47,117 +72,83 @@ const txResult = {
   logsBloom: '0x000000000000000000000000000000000000',
 };
 
-const transaction = {
-  timestamp: 1625217594463911,
-  value: '1e+21',
-  nid: { c: ['3'] },
-  stepLimit: '10000000000',
-  from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
-  to: 'cx0c9f31cd4436d29680b6551a76449020186eeec1',
-  signature:
-    'X01Gnp/G/Bp3UnHw9oqk1lvWuBcsL9dWNQH/4BE65NY2V259BWIvSrIZGFX2p+ITFmjMNi5ymR2KPAhdpkfhRgA=',
-  dataType: 'call',
-  data: {
-    method: 'transferNativeCoin',
-    params: {
-      _to: 'btp://0x03.icon/hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9',
-    },
-  },
-  version: '3',
-  txHash: '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754',
-};
+let pool = null;
 
-describe('test for handle transation events', () => {
-  const OLD_ENV = process.env;
-  let pool;
+beforeEach(() => {
+  pool = new Pool();
+  jest.resetModules(); // clear cache
+});
 
-  beforeEach(() => {
-    pool = new Pool();
-    // Most important - it clears the cache
-    jest.resetModules();
-    // Make a copy
-    process.env = { ...OLD_ENV };
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+test('should create new transaction with TransferStart event', async () => {
+  pool.query.mockResolvedValueOnce({
+    rows: [{ contract_address: txResult.to }],
+    rowCount: 1
   });
 
-  afterEach(() => {
-    process.env = OLD_ENV;
-    jest.clearAllMocks();
+  await iconTxHandler.handleTransactionEvents(txResult, transferNativeCoinTx);
+
+  expect(pool.query).toBeCalledTimes(3);
+  expect(pool.query).nthCalledWith(3,
+    `INSERT INTO transactions (
+      from_address, token_name, serial_number,
+      value, to_address,
+      tx_hash, block_time, network_id, btp_fee,
+      network_fee, status, total_volume, create_at,
+      update_at, contract_address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13)`,
+    [
+      txResult.eventLogs[0].indexed[1],
+      'ICX',
+      1,
+      1000,
+      txResult.eventLogs[0].data[0],
+      txResult.txHash,
+      Math.floor(transferNativeCoinTx.timestamp / 1000),
+      '0x58eb1c',
+      0,
+      0.0093075375,
+      0,
+      1000,
+      txResult.eventLogs[0].scoreAddress
+    ]
+  );
+});
+
+test('should update total volume when creating new transaction', async () => {
+  pool.query.mockResolvedValueOnce({
+    rows: [{ total_volume: 500 }],
+    rowCount: 1
   });
 
-  test('should transfer and create transaction event from tx result', async () => {
-    process.env.ICON_BMC_ADDRESS = txResult.to;
-    pool.query.mockResolvedValue({
-      rows: [{ status: 0, contract_address: txResult.to }],
-      rowCount: 1,
-    });
-    await Transaction.handleTransactionEvents(txResult, transaction);
-    expect(pool.query).toBeCalledTimes(3);
-    expect(pool.query).toHaveBeenCalledWith('SELECT DISTINCT(contract_address) FROM token_info');
-    expect(
-      pool.query,
-    ).toHaveBeenCalledWith(
-      'SELECT * FROM  transactions WHERE token_name = $1 ORDER BY update_at DESC LIMIT 1',
-      ['ICX'],
-    );
-    expect(
-      pool.query,
-    ).toHaveBeenCalledWith(
-      'INSERT INTO transactions (\n      from_address, token_name, serial_number,\n      value, to_address,\n      tx_hash, block_time, network_id, btp_fee,\n      network_fee, status, total_volume, create_at,\n      update_at)\n    VALUES (\n      $1, $2, $3, $4,\n      $5, $6, $7, $8,\n      $9, $10, $11, $12,\n      NOW(), NOW())',
-      [
-        'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
-        'ICX',
-        1,
-        1000,
-        'hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9',
-        '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754',
-        1625217594463,
-        '0x101c5b',
-        0,
-        0.0093075375,
-        0,
-        0,
-      ],
-    );
-  });
+  await iconTxHandler.handleTransactionEvents(txResult, transferNativeCoinTx);
 
-  test('should transfer and create transaction event from tx result and update total_volume', async () => {
-    process.env.ICON_BMC_ADDRESS = txResult.to;
-    pool.query.mockResolvedValue({
-      rows: [
-        {
-          status: 0,
-          contract_address: 'cx0c9f31cd4436d29680b6551a76449020186eeec1',
-          total_volume: 1000,
-        },
-      ],
-      rowCount: 1,
-    });
-    await Transaction.handleTransactionEvents(txResult, transaction);
-    expect(pool.query).toBeCalledTimes(2);
-    expect(
-      pool.query,
-    ).toHaveBeenCalledWith(
-      'SELECT * FROM  transactions WHERE token_name = $1 ORDER BY update_at DESC LIMIT 1',
-      ['ICX'],
-    );
-    expect(
-      pool.query,
-    ).toHaveBeenCalledWith(
-      'INSERT INTO transactions (\n      from_address, token_name, serial_number,\n      value, to_address,\n      tx_hash, block_time, network_id, btp_fee,\n      network_fee, status, total_volume, create_at,\n      update_at)\n    VALUES (\n      $1, $2, $3, $4,\n      $5, $6, $7, $8,\n      $9, $10, $11, $12,\n      NOW(), NOW())',
-      [
-        'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
-        'ICX',
-        1,
-        1000,
-        'hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9',
-        '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754',
-        1625217594463,
-        '0x101c5b',
-        0,
-        0.0093075375,
-        0,
-        2000,
-      ],
-    );
-  });
+  expect(pool.query).toBeCalledTimes(2);
+  expect(pool.query).nthCalledWith(2,
+    `INSERT INTO transactions (
+      from_address, token_name, serial_number,
+      value, to_address,
+      tx_hash, block_time, network_id, btp_fee,
+      network_fee, status, total_volume, create_at,
+      update_at, contract_address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13)`,
+    [
+      txResult.eventLogs[0].indexed[1],
+      'ICX',
+      1,
+      1000,
+      txResult.eventLogs[0].data[0],
+      txResult.txHash,
+      Math.floor(transferNativeCoinTx.timestamp / 1000),
+      '0x58eb1c',
+      0,
+      0.0093075375,
+      0,
+      1500,
+      txResult.eventLogs[0].scoreAddress
+    ]
+  );
 });
