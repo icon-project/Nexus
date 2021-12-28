@@ -59,15 +59,14 @@ async function getPriceConversion(request, response) {
   if (!request.query.token || !request.query.amount || !request.query.convert_to)
     return response.sendStatus(HttpStatus.BadRequest);
 
-  if (Number.isNaN(Number(request.query.amount))) return response.sendStatus(HttpStatus.BadRequest);
+  if (Number.isNaN(Number(request.query.amount)))
+    return response.sendStatus(HttpStatus.BadRequest);
 
   response.status(HttpStatus.OK).json({
-    content: [
-      {
-        name: 'USD',
-        value: await tokenToUsd(request.query.token, Number(request.query.amount)),
-      },
-    ],
+    content: [{
+      name: 'USD',
+      value: await tokenToUsd(request.query.token, Number(request.query.amount)),
+    }]
   });
 }
 

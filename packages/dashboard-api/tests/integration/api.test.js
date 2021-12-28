@@ -1,7 +1,14 @@
 'use strict';
 
+const path = require('path');
 const request = require('supertest');
 const HttpStatus = require('@tiendq/http-status');
+
+require('dotenv-safe').config({
+  path: path.resolve(__dirname, '.env'),
+  example: path.resolve(__dirname, '.env.example')
+});
+
 const app = require('../../src/app/app');
 
 describe('Test /btpnetwork', () => {
@@ -82,7 +89,7 @@ describe('Test /btpnetwork', () => {
     expect(response.body.content).toMatchObject(expected);
   });
 
-  test('GET /btpnetwork/converter?token=btc&amount=100&convert_to=usd', async () => {
+  test('GET /btpnetwork/converter?token=BTC&amount=100&convert_to=USD', async () => {
     const expected = [{
       name: 'USD',
       value: expect.any(Number)
@@ -197,7 +204,7 @@ describe('Test /networks', () => {
     expect(response.body.content).toMatchObject(expected);
   });
 
-  test('GET /networks/0x501', async () => {
+  test(`GET /networks/${process.env.NETWORK_ID}`, async () => {
     const expected = {
       tokens: expect.arrayContaining([
         expect.objectContaining({
@@ -211,7 +218,7 @@ describe('Test /networks', () => {
     };
 
     const response = await request(app)
-      .get('/v1/networks/0x501')
+      .get(`/v1/networks/${process.env.NETWORK_ID}`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
       .expect(HttpStatus.OK);
@@ -286,7 +293,7 @@ describe('Test /transactions', () => {
     expect(response.body.content.length).toBeLessThanOrEqual(3);
   });
 
-  test('GET /transactions\?to=0x501\&limit=3', async () => {
+  test(`GET /transactions\?to=${process.env.NETWORK_ID}\&limit=3`, async () => {
     const expected = {
       content: expect.arrayContaining([
         expect.objectContaining({
@@ -300,7 +307,7 @@ describe('Test /transactions', () => {
       total: expect.any(Number)
     };
     const response = await request(app)
-      .get('/v1/transactions\?to=0x501\&limit=3')
+      .get(`/v1/transactions\?to=${process.env.NETWORK_ID}\&limit=3`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
       .expect(HttpStatus.OK);
@@ -308,7 +315,7 @@ describe('Test /transactions', () => {
     expect(response.body.content.length).toBeLessThanOrEqual(3);
   });
 
-  test('GET /transactions\?from\=0x501\&limit=3', async () => {
+  test(`GET /transactions\?from\=${process.env.NETWORK_ID}\&limit=3`, async () => {
     const expected = {
       content: expect.arrayContaining([
         expect.objectContaining({
@@ -322,7 +329,7 @@ describe('Test /transactions', () => {
       total: expect.any(Number)
     };
     const response = await request(app)
-      .get('/v1/transactions\?from\=0x501\&limit=3')
+      .get(`/v1/transactions\?from\=${process.env.NETWORK_ID}\&limit=3`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
       .expect(HttpStatus.OK);
@@ -330,7 +337,7 @@ describe('Test /transactions', () => {
     expect(response.body.content.length).toBeLessThanOrEqual(3);
   });
 
-  test('GET /transactions\?assetName\=icx\&limit=3', async () => {
+  test(`GET /transactions\?assetName\=${process.env.TOKEN_NAME}\&limit=3`, async () => {
     const expected = {
       content: expect.arrayContaining([
         expect.objectContaining({
@@ -344,7 +351,7 @@ describe('Test /transactions', () => {
       total: expect.any(Number)
     };
     const response = await request(app)
-      .get('/v1/transactions\?assetName\=icx\&limit=3')
+      .get(`/v1/transactions\?assetName\=${process.env.TOKEN_NAME}\&limit=3`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
       .expect(HttpStatus.OK);
@@ -352,7 +359,7 @@ describe('Test /transactions', () => {
     expect(response.body.content.length).toBeLessThanOrEqual(3);
   });
 
-  test('GET /transactions/0x0a26af1bf487843c6993bd08e5da5db7f5f04ef7f77ce96dfd3cfd245c52c8c8', async () => {
+  test(`GET /transactions/${process.env.TX_HASH}`, async () => {
     const expected = {
       content: expect.objectContaining({
         networkNameDst: expect.any(String),
@@ -376,17 +383,17 @@ describe('Test /transactions', () => {
     };
 
     const response = await request(app)
-      .get(`/v1/transactions/0x0a26af1bf487843c6993bd08e5da5db7f5f04ef7f77ce96dfd3cfd245c52c8c8`)
+      .get(`/v1/transactions/${process.env.TX_HASH}`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
       .expect(HttpStatus.OK);
     expect(response.body).toMatchObject(expected);
   });
 
-  test('GET /transactions/0xe6f572ce219f-not-found', async () => {
+  test('GET /transactions/tx-not-found', async () => {
     const expected = 'Not Found';
     const response = await request(app)
-      .get(`/v1/transactions/0xe6f572ce219f-not-found`)
+      .get(`/v1/transactions/tx-not-found`)
       .set('Accept', 'application/json')
       .expect('Content-Type', /text\/plain/)
       .expect(HttpStatus.NotFound);
