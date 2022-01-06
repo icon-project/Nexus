@@ -2,29 +2,32 @@
 
 ## Prepare Blockchain Information
 
-- Network information
+- Network endpoints and contracts information
 
 ```bash
 ICON_API_URL=https://btp.net.solidwallet.io/api/v3
-ICON_NETWORK_ID=0x42
-ICON_FAS_ADDRESS=cx37465423027f2dd3cc961d8b37a6ad04ddb17138
-ICON_BMC_ADDRESS=cx11a5a7510b128e0ab16546e1493e38b2d7e299c3
-ICON_NATIVE_COIN_BSH_ADDRESS=cx047d8cd08015a75deab90ef5f9e0f6878d5563bd
+ICON_NETWORK_ID=
+ICON_FAS_ADDRESS=
+ICON_BMC_ADDRESS=
+ICON_NATIVE_COIN_BSH_ADDRESS=
 
 MOONBEAM_API_URL=https://rpc.testnet.moonbeam.network
-MOONBEAM_NETWORK_ID=0x507
-MOONBEAM_BSH_CORE_ADDRESS=0x2a17B6814a172419a5E84d7B746aBEb95a84E76B
-MOONBEAM_BMC_ADDRESS=0x3e525eD7a82B87bE30cdADE89d32204cA0F1C356
-MOONBEAM_BMC_MANAGEMENT_ADDRESS=0xb3aD0707F494393A7d922F14A412E3518eD0B6bc
+MOONBEAM_NETWORK_ID=
+MOONBEAM_BSH_CORE_ADDRESS=
+MOONBEAM_BMC_ADDRESS=
+MOONBEAM_BMC_MANAGEMENT_ADDRESS=
 ```
 
 - Network explorers
+
+https://moonbase-blockscout.testnet.moonbeam.network
+https://btp.tracker.solidwallet.io
+
 - Block numbers (of each network) where deployment started
 - Registered tokens (tx/tx result/tx receipt)
 - Registered relays (tx/tx result/tx receipt)
-- Prefunded test accounts e.g. Alice, Bob
-- Moonbeam WS endpoint
-- Moonbeam contract ABI files
+- Prefunded test accounts (addresses and keys) e.g. Alice, Bob
+- Moonbeam contract ABI files (BMCManagement.json, BSHCore.json, BSHPeriphery.json)
 
 Source: https://github.com/icon-project/btp/blob/icondao/doc/deployment.md
 
@@ -68,7 +71,7 @@ goloop rpc --uri https://btp.net.solidwallet.io/api/v3/ sendtx call --to cx11a5a
 goloop rpc --uri https://btp.net.solidwallet.io/api/v3/ txresult 0xdabca08cf388c374bf61e05dd32a2d6bde0f37e2d1225a447a144662ecc73b13
 
 # ABI
-cat BMCManagement.json| jq '.abi' > abi.bmc_management.json
+cat BMCManagement.json | jq '.abi' > abi.bmc_management.json
 cat BSHCore.json | jq '.abi' > abi.bsh_core.json
 cat BSHPeriphery.json | jq '.abi' > abi.bsh_periphery.json
 ```
