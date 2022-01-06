@@ -58,4 +58,4 @@ curl $HOST/v1/transactions\?to=0x501\&limit=3 | jq
 curl $HOST/v1/transactions\?from\=0x501\&limit=3 | jq
 curl $HOST/v1/transactions\?assetName\=icx\&limit=3 | jq
 curl $HOST/v1/transactions/0xe6f572ce219f847b6b8fb03b0690a420b074b8984f0a6b395d142f41033b85fb | jq
-curl $HOST/v1/transactions/0xe6f572ce219f-not-found
+curl $HOST/v1/transactions/tx-not-found

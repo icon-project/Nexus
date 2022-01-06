@@ -19,6 +19,8 @@ goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
 
 sleep 5s
 
+echo 'note: setApprovalForAll must be enabled'
+
 # Alice sends 0.1 DEV to Bob
 goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
   --to $(cat nativeCoinBsh.icon) --method transfer \

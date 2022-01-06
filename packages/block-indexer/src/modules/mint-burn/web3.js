@@ -61,7 +61,7 @@ class Web3MintBurnHandler {
       const tokenName = getTokenName(this.config.networkId, tokenId);
 
       if (!tokenName) {
-        logger.warn(`${this.config.name}:handleTransferSingleEvent found an unregistered token ID=${eventData.id}`);
+        logger.warn(`${this.config.name}:handleTransferSingleEvent found unregistered token ${tokenId}`);
         return false;
       }
 

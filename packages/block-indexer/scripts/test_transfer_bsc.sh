@@ -20,6 +20,7 @@ goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
 
 sleep 5s
 echo 2. Alice sends 0.1 BNB to Bob
+echo 'note: setApprovalForAll must be enabled'
 
 #goloop rpc sendtx call --uri http://localhost:9080/api/v3/icon \
 #  --to $(cat irc31.icon) --method setApprovalForAll \
