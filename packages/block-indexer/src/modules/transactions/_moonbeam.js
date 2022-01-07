@@ -1,5 +1,7 @@
 'use strict';
 
+// OBSOLETE, using web3.js
+
 const Web3 = require('web3');
 const debug = require('debug')('moonbeam_tx');
 const debugEvmLog = require('debug')('evmlog');
@@ -236,7 +238,7 @@ async function handleTransactionEvents(transaction, block) {
 }
 
 module.exports = {
-  handleTransactionEvents,
-  getTransferStartEvent,
-  getTransferEndEvent
+  // handleTransactionEvents,
+  // getTransferStartEvent,
+  // getTransferEndEvent
 };

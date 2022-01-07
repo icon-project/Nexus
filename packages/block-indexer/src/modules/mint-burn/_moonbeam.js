@@ -1,5 +1,7 @@
 'use strict';
 
+// OBSOLETE, Moonbeam is using web3.js
+
 const Web3 = require('web3');
 const debug = require('debug')('moonbeam_tx');
 const debugEvmLog = require('debug')('evmlog');

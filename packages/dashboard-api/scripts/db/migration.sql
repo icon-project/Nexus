@@ -392,6 +392,11 @@ ALTER TABLE burned_tokens
     DROP COLUMN id,
     ADD CONSTRAINT burned_tokens_pkey PRIMARY KEY (tx_hash);
 
+-- Issue #518
+
+ALTER TABLE transactions
+    ALTER COLUMN create_at SET DEFAULT NOW();
+
 -- Issue #521
 
 ALTER TABLE transactions

@@ -1,5 +1,7 @@
 'use strict';
 
+// OBSOLETE, using web3.js
+
 const Web3 = require('web3');
 const debug = require('debug')('moonbeam_tx');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
@@ -85,5 +87,5 @@ async function handleTransferEndEvent(event, tx) {
 }
 
 module.exports = {
-  handleTransactionEvents
+  // handleTransactionEvents
 };
