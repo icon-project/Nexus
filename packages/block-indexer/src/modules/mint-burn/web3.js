@@ -29,11 +29,15 @@ class Web3MintBurnHandler {
 
       if (transferSingle) {
         debug('TransferSingle %O', transferSingle);
-        logger.info(`${this.config.name}:Get ${TRANSFER_SINGLE_EVENT} event in tx ${tx.hash}`);
+        logger.info(`${this.config.name}:Get ${TRANSFER_SINGLE_EVENT} event in tx ${transferSingle.id}, ${tx.hash}`);
 
         const eventData = decodeEventLog(this.web3, this.config.eventMap, TRANSFER_SINGLE_EVENT, transferSingle);
         debug('TransferSingle decoded %O', eventData);
-        await this.handleTransferSingleEvent(eventData, tx, block);
+
+        await this.handleTransferSingleEvent({
+          ...eventData,
+          logId: transferSingle.id
+        }, tx, block);
       }
     }
   }
@@ -72,6 +76,7 @@ class Web3MintBurnHandler {
         to: eventData.to.toLowerCase(),
         from: eventData.from.toLowerCase(),
         txHash: tx.hash,
+        logId: eventData.logId,
         networkId: this.config.networkId,
         blockTime: this.web3.utils.hexToNumber(block.timestamp) * 1000
       };
@@ -81,7 +86,7 @@ class Web3MintBurnHandler {
 
         const totalToken = await getTotalTokenAmount(mintBurn.tokenName, MINT_EVENT);
         await saveToken(mintBurn, totalToken, MINT_EVENT);
-      } else {
+      } else if (CONTRACT_ZERO_ADDRESS === mintBurn.to) {
         logger.info(`${this.config.name}:Burn ${mintBurn.tokenValue} ${mintBurn.tokenName} in tx ${tx.hash}`);
 
         const totalToken = await getTotalTokenAmount(mintBurn.tokenName, BURN_EVENT);

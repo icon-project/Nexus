@@ -36,8 +36,8 @@ async function saveToken(object, totalToken, tokenType) {
     const totalTokenAmount = totalToken + object.tokenValue;
 
     const query = `
-    INSERT INTO ${tableName} (network_id, token_name, token_value, total_token_amount, block_time, tx_hash, token_id, ${dymamicColumn})
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+    INSERT INTO ${tableName} (network_id, token_name, token_value, total_token_amount, block_time, tx_hash, log_id, token_id, ${dymamicColumn})
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
 
     const values = [
       object.networkId,
@@ -46,6 +46,7 @@ async function saveToken(object, totalToken, tokenType) {
       totalTokenAmount,
       object.blockTime,
       object.txHash,
+      object.logId || '',
       object.tokenId,
       object.to
     ];

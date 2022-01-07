@@ -4,7 +4,7 @@
 -- ### Clean up ###
 
 DELETE FROM registered_tokens;
-DELETE FROM relay_candidate_rewards
+DELETE FROM relay_candidate_rewards;
 DELETE FROM relay_candidates;
 DELETE FROM relays;
 DELETE FROM transactions;
