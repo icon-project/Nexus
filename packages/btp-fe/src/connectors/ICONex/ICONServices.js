@@ -19,6 +19,7 @@ import Request, { convertToICX, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
 import { connectedNetWorks } from 'utils/constants';
+export { transfer } from './transfer';
 
 const { modal } = store.dispatch;
 

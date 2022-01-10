@@ -66,7 +66,7 @@ export const MOON_BEAM_NODE = {
 
 export const ICON_NODES = {
   [pairedNetworks['ICON-Moonbeam']]: {
-    name: connectedNetWorks.icon + ' for Moonbeam',
+    name: connectedNetWorks.icon,
     endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
     nid: icon.nid || process.env.REACT_APP_ICON_NID,
     networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
@@ -74,11 +74,11 @@ export const ICON_NODES = {
     BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
   [pairedNetworks['ICON-NEAR']]: {
-    name: connectedNetWorks.icon + ' for NEAR',
+    name: connectedNetWorks.icon,
     endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
   },
   [pairedNetworks['ICON-BSC']]: {
-    name: connectedNetWorks.icon + ' for BSC',
+    name: connectedNetWorks.icon,
     endpoint: process.env.REACT_APP_ICON_BSC_RPC_URL,
     nid: process.env.REACT_APP_ICON_BSC_NID,
     networkAddress: process.env.REACT_APP_ICON_BSC_NETWORK_ADDRESS,
