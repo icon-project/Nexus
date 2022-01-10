@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXISTS public.transactions
     to_address character varying(100) COLLATE pg_catalog."default",
     from_address character varying(100) COLLATE pg_catalog."default",
     tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    create_at timestamp without time zone NOT NULL,
+    create_at timestamp without time zone NOT NULL DEFAULT now(),
     update_at timestamp without time zone,
     network_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
     block_time bigint NOT NULL,

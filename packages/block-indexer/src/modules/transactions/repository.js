@@ -45,11 +45,11 @@ async function findTxBySerialNumber(serialNumber, networkId, contractAddress) {
         SET
           ${TRANSACTION_TBL.status} = $1,
           tx_hash_end = $2,
-          tx_error = $3,
+          tx_error = $3, log_id2 = $4,
           ${TRANSACTION_TBL.updateAt} = NOW()
-        WHERE ${TRANSACTION_TBL.txHash} = $4`;
+        WHERE ${TRANSACTION_TBL.txHash} = $5`;
 
-      const values = [status, txInfo.txHash, txInfo.error, tx.tx_hash];
+      const values = [status, txInfo.txHash, txInfo.error, txInfo.logId || '', tx.tx_hash];
 
       await client.query(query, values);
       debug('setTransactionConfirmed SQL %s %O:', query, values);
@@ -68,9 +68,9 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
-      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.createAt},
-      ${TRANSACTION_TBL.updateAt}, contract_address)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW(), $13)`;
+      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume},
+      contract_address, log_id1)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`;
 
     const insertValues = [
       transaction.fromAddress,
@@ -85,7 +85,8 @@ async function saveTransaction(transaction) {
       transaction.networkFee,
       transaction.status,
       transaction.totalVolume,
-      transaction.contractAddress
+      transaction.contractAddress,
+      transaction.logId || ''
     ];
 
     debug('saveTransaction SQL %s %O:', insertStatement, insertValues);

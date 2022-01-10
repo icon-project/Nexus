@@ -7,9 +7,9 @@ const { createLogger } = require('../../common');
 const { getMoonbeamEventMap } = require('../common/events');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
 const { getTokenContractMap } = require('../transactions/model');
-const { handleTransactionEvents } = require('../transactions/moonbeam');
 const { handleRelayActions } = require('../relays/moonbeam');
 const { Web3MintBurnHandler } = require('../mint-burn/web3');
+const { Web3TransactionHandler } = require('../transactions/web3');
 
 const logger = createLogger();
 
@@ -23,15 +23,17 @@ const watchedTxReceipt = {
 };
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
+
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 let mintBurnHandler = null;
+let txHandler = null;
 
 // All transaction handlers go here.
 async function runTransactionHandlers(tx, txReceipt, block) {
   try {
     if (txReceipt && txReceipt.status) {
       // handlers need tx receipt go here.
-      await handleTransactionEvents(tx, txReceipt, block);
+      await txHandler.run(tx, txReceipt, block);
       await mintBurnHandler.run(tx, txReceipt, block);
       await handleRelayActions(tx, block);
     } else {
@@ -99,12 +101,21 @@ async function start() {
   logger.info('Moonbeam event map: %O', eventMap);
 
   const contractMap = await getTokenContractMap();
-  logger.info('Moonbeam registered tokens: %O', contractMap);
+  logger.info('Registered tokens: %O', contractMap);
 
   for (const [key, value] of contractMap.entries())
     watchedTxReceipt.toAddress.set(key, value);
 
   mintBurnHandler = new Web3MintBurnHandler({
+    name: 'moonbeam',
+    networkId: process.env.MOONBEAM_NETWORK_ID,
+    endpointUrl: process.env.MOONBEAM_API_URL,
+    bmcAddress: process.env.MOONBEAM_BMC_ADDRESS,
+    eventMap,
+    contractMap
+  });
+
+  txHandler = new Web3TransactionHandler({
     name: 'moonbeam',
     networkId: process.env.MOONBEAM_NETWORK_ID,
     endpointUrl: process.env.MOONBEAM_API_URL,

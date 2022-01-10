@@ -1,5 +1,7 @@
 'use strict';
 
+// OBSOLETE, using web3.js
+
 const Web3 = require('web3');
 const debug = require('debug')('bsc_tx');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
