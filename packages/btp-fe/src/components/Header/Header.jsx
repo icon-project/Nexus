@@ -335,7 +335,7 @@ const Header = () => {
               setDisplay={setShowModal}
             />
           ) : showDetail ? (
-            <Modal display setDisplay={setShowModal} title={mockWallets[wallet].title}>
+            <Modal display setDisplay={setShowModal} title={wallet && mockWallets[wallet].title}>
               <WalletDetails
                 networkName={currentNetwork}
                 unit={unit}
