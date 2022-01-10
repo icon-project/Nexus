@@ -20,7 +20,26 @@ describe('services/transfer', () => {
   });
 
   test('ICONex wallet', () => {
-    const service = getCurrentTransferService()(wallets.iconex, connectedNetWorks.bsc);
+    const service = getCurrentTransferService()(wallets.iconex, connectedNetWorks.icon);
     expect(service.serviceName).toBe(connectedNetWorks.icon);
+  });
+
+  test('Has enough functions on ICON service', () => {
+    const service = getCurrentTransferService()(wallets.iconex, connectedNetWorks.icon);
+    expect(service.transfer).toBeTruthy();
+    expect(service.getBalance).toBeTruthy();
+    expect(service.getBalanceOf).toBeTruthy();
+    expect(service.setApprovalForAll).toBeTruthy();
+    expect(service.isApprovedForAll).toBeTruthy();
+    expect(service.reclaim).toBeTruthy();
+  });
+
+  test('Has enough functions on Moonbeam service', () => {
+    const service = getCurrentTransferService()(wallets.metamask, connectedNetWorks.moonbeam);
+    expect(service.transfer).toBeTruthy();
+    expect(service.getBalanceOf).toBeTruthy();
+    expect(service.setApprovalForAll).toBeTruthy();
+    expect(service.isApprovedForAll).toBeTruthy();
+    expect(service.reclaim).toBeTruthy();
   });
 });
