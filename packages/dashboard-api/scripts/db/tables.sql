@@ -241,6 +241,7 @@ CREATE TABLE IF NOT EXISTS public.minted_tokens
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     mint_to character varying(100) NOT NULL,
     token_id character varying(100) NOT NULL,
+    log_id character varying(50),
     CONSTRAINT minted_tokens_pkey PRIMARY KEY (tx_hash)
 );
 
@@ -276,6 +277,7 @@ CREATE TABLE IF NOT EXISTS public.burned_tokens
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     burn_from character varying(100) NOT NULL,
     token_id character varying(100) NOT NULL,
+    log_id character varying(50),
     CONSTRAINT burned_tokens_pkey PRIMARY KEY (tx_hash)
 );
 
@@ -319,6 +321,8 @@ CREATE TABLE IF NOT EXISTS public.transactions
     tx_hash_end character varying(100) COLLATE pg_catalog."default",
     tx_error character varying(100) COLLATE pg_catalog."default",
     contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
+    log_id1 character varying(50),
+    log_id2 character varying(50),
     CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT transactions_serial_network_contract_key UNIQUE (serial_number, network_id, contract_address)
 );

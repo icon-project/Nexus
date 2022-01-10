@@ -391,3 +391,15 @@ ALTER TABLE minted_tokens
 ALTER TABLE burned_tokens
     DROP COLUMN id,
     ADD CONSTRAINT burned_tokens_pkey PRIMARY KEY (tx_hash);
+
+-- Issue #521
+
+ALTER TABLE transactions
+    ADD COLUMN log_id1 character varying(50),
+    ADD COLUMN log_id2 character varying(50);
+
+ALTER TABLE minted_tokens
+    ADD COLUMN log_id character varying(50);
+
+ALTER TABLE burned_tokens
+    ADD COLUMN log_id character varying(50);
