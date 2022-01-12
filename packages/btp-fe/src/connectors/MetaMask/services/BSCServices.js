@@ -31,7 +31,7 @@ export const getBalanceOf = async ({ address, symbol }) => {
 export const transferNativeCoin = async (tx = {}) => {
   const value = ethers.utils.parseEther(tx.value || '1')._hex;
 
-  const data = EthereumInstance.BSC_BSH_ABI.encodeFunctionData('transferNativeCoin', [
+  const data = EthereumInstance.ABI.encodeFunctionData('transferNativeCoin', [
     `btp://${getCurrentICONexNetwork().networkAddress}/${tx.to}`,
   ]);
 
@@ -46,7 +46,7 @@ export const transferNativeCoin = async (tx = {}) => {
 };
 
 export const approve = async (tx) => {
-  const data = EthereumInstance.BSC_BSH_ABI.encodeFunctionData('approve', [
+  const data = EthereumInstance.ABI.encodeFunctionData('approve', [
     BSC_NODE.tokenBSHProxy,
     ethers.utils.parseEther(tx.value)._hex,
   ]);
@@ -70,7 +70,7 @@ export const transfer = (tx, isSendingNativeCoin) => {
 };
 
 export const sendNoneNativeCoinBSC = async () => {
-  const data = EthereumInstance.BSC_BSH_ABI.encodeFunctionData('transfer', [
+  const data = EthereumInstance.ABI.encodeFunctionData('transfer', [
     'ETH',
     ethers.utils.parseEther(window[rawTransaction].value)._hex,
     `btp://${getCurrentICONexNetwork().networkAddress}/${window[rawTransaction].to}`,
@@ -83,14 +83,6 @@ export const sendNoneNativeCoinBSC = async () => {
     gas: MOON_BEAM_NODE.gasLimit,
     data,
   });
-};
-
-export const isApprovedForAll = () => {
-  console.log('Not implemented yet');
-};
-
-export const setApprovalForAll = () => {
-  console.log('Not implemented yet');
 };
 
 export const reclaim = () => {

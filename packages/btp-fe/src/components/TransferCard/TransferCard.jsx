@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
@@ -7,10 +6,8 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-import { useDispatch } from 'hooks/useRematch';
 import { getTartgetNetwork } from 'utils/constants';
 
-import handleCheckingApproval from './handleCheckingApproval';
 import transferIcon from 'assets/images/vector-icon.svg';
 
 const StyledCard = styled.div`
@@ -63,20 +60,7 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({
-  setStep,
-  setSendingInfo,
-  isConnected,
-  isSendingNativeCoin,
-  currentNetwork,
-}) => {
-  const [checkingApproval, setCheckingApproval] = useState(false);
-
-  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
-    openModal,
-    setDisplay,
-  }));
-
+export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetwork }) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -86,21 +70,14 @@ export const TransferCard = ({
     }
   };
 
-  const onNext = async () => {
-    setCheckingApproval(true);
-    await handleCheckingApproval(
-      setStep,
-      isSendingNativeCoin,
-      currentNetwork,
-      openModal,
-      setDisplay,
-    );
-    setCheckingApproval(false);
+  const onNext = () => {
+    setStep(1);
   };
 
   return (
     <StyledCard>
       <Header className="sm bold center">Transfer</Header>
+
       <div className="content">
         <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
@@ -120,15 +97,7 @@ export const TransferCard = ({
 
         <div className="button-section">
           {isConnected ? (
-            <PrimaryButton
-              width={416}
-              height={64}
-              disabled={checkingApproval}
-              onClick={() => {
-                onNext();
-              }}
-              type="button"
-            >
+            <PrimaryButton width={416} height={64} onClick={onNext} type="button">
               Next
             </PrimaryButton>
           ) : (

@@ -7,7 +7,7 @@ import { WalletDetails } from './WalletDetails';
 import { Modal } from 'components/NotificationModal';
 import { PrimaryButton, HamburgerButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
-import { Select } from 'components/Select';
+// import { Select } from 'components/Select';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
@@ -136,11 +136,11 @@ const StyledHeader = styled.header`
   `}
 `;
 
-const PairedNetworkWrapper = styled.div`
-  display: flex;
-  justify-content: left;
-  align-items: center;
-`;
+// const PairedNetworkWrapper = styled.div`
+//   display: flex;
+//   justify-content: left;
+//   align-items: center;
+// `;
 
 // const Logo = styled.img`
 //   width: 42.65px;
@@ -185,12 +185,12 @@ const Header = () => {
     setDisplay,
   }));
 
-  const pairedNetworksOptions = [
-    { label: currentPairedNetworks, value: currentPairedNetworks },
-    ...Object.keys(pairedNetworks)
-      .filter((i) => i !== currentPairedNetworks)
-      .map((i) => ({ label: i, value: i })),
-  ];
+  // const pairedNetworksOptions = [
+  //   { label: currentPairedNetworks, value: currentPairedNetworks },
+  //   ...Object.keys(pairedNetworks)
+  //     .filter((i) => i !== currentPairedNetworks)
+  //     .map((i) => ({ label: i, value: i })),
+  // ];
 
   useEffect(() => {
     switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
@@ -376,22 +376,22 @@ const Header = () => {
                   isCheckingInstalled={checkingICONexInstalled}
                   isInstalled={isICONexInstalled()}
                 />
-                <WalletSelector
+                {/* <WalletSelector
                   type={wallets.near}
                   wallet={mockWallets}
                   active={selectedWallet == wallets.near}
                   onClick={() => handleSelectWallet(wallets.near)}
                   isInstalled
-                />
+                /> */}
               </div>
-              {wallets.near !== selectedWallet && (
+              {/* {wallets.near !== selectedWallet && (
                 <PairedNetworkWrapper>
                   <Text className="xs" color={colors.graySubText}>
                     Select the paired networks:
                   </Text>
                   <Select options={pairedNetworksOptions} onChange={onChangePairedNetworks} />
                 </PairedNetworkWrapper>
-              )}
+              )} */}
             </Modal>
           )}
         </>

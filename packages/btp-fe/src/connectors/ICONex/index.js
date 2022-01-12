@@ -1,7 +1,13 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import { getBalance, sendTransaction, getTxResult, sendNoneNativeCoinBSC } from './ICONServices';
+import {
+  getBalance,
+  sendTransaction,
+  getTxResult,
+  sendNoneNativeCoinBSC,
+  sendNonNativeCoin,
+} from './ICONServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
@@ -77,9 +83,18 @@ const eventHandler = async (event) => {
                     desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
                     button: {
                       text: 'Transfer',
-                      onClick: () => {
-                        sendNoneNativeCoinBSC();
-                      },
+                      onClick: sendNoneNativeCoinBSC,
+                    },
+                  });
+                  break;
+
+                case signingActions.approve:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
+                    button: {
+                      text: 'Transfer',
+                      onClick: sendNonNativeCoin,
                     },
                   });
                   break;
@@ -124,6 +139,7 @@ const eventHandler = async (event) => {
             });
             break;
           case signingActions.transfer:
+          default:
             modal.openModal({
               icon: 'xIcon',
               desc: 'Your transaction has failed. Please go back and try again.',
@@ -132,9 +148,6 @@ const eventHandler = async (event) => {
                 onClick: () => modal.setDisplay(false),
               },
             });
-            break;
-
-          default:
             break;
         }
       }

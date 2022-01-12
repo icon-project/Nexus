@@ -1,4 +1,85 @@
-export const MB_ABI = [
+export const ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_tokenName',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: '_to',
+        type: 'string',
+      },
+    ],
+    name: 'transfer',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_to',
+        type: 'string',
+      },
+    ],
+    name: 'transferNativeCoin',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
   {
     name: 'getBalanceOf',
     inputs: [
@@ -38,38 +119,6 @@ export const MB_ABI = [
     inputs: [
       {
         internalType: 'string',
-        name: '_to',
-        type: 'string',
-      },
-    ],
-    name: 'transferNativeCoin',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-    payable: true,
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'operator',
-        type: 'address',
-      },
-      {
-        internalType: 'bool',
-        name: 'approved',
-        type: 'bool',
-      },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
         name: '_coinName',
         type: 'string',
       },
@@ -84,50 +133,7 @@ export const MB_ABI = [
         type: 'string',
       },
     ],
-    name: 'transfer',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'operator',
-        type: 'address',
-      },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-    constant: true,
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_coinName',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: '_value',
-        type: 'uint256',
-      },
-    ],
-    name: 'reclaim',
+    name: 'transferWrappedCoin',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
