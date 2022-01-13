@@ -126,7 +126,7 @@ async function retryGetBlockData() {
 
 async function start() {
   const tokenContractMap = await getTokenContractMap();
-  logger.info('ICON registered tokens: %O', tokenContractMap);
+  logger.info('Registered tokens: %O', tokenContractMap);
 
   // Continue from last indexed block?
   if (-1 === blockHeight) {

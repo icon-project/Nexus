@@ -26,7 +26,7 @@ https://btp.tracker.solidwallet.io
 ```
 
 - Block numbers (of each network) where deployment started
-- Registered tokens e.g. tx/tx result/tx receipt
+- Registered relays (tx/tx result/tx receipt)
 - Prefunded test accounts (addresses and keys) e.g. Alice, Bob
 - Moonbeam contract ABI files (BMCManagement.json, BSHCore.json, BSHPeriphery.json)
 
