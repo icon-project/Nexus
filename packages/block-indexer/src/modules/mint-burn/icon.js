@@ -40,6 +40,9 @@ async function handleMintBurnEvents(txResult, transaction) {
   try {
     const eventObj = await getMintBurnEvent(txResult.eventLogs[0], transaction);
 
+    if (process.env.ICON_NATIVE_COIN_BSH_ADDRESS !== eventObj.from)
+      return false;
+
     if (eventObj && eventObj.tokenName) {
       logger.info(`icon:handleMintBurnEvents get Transfer event of ${eventObj.tokenName} in tx ${transaction.txHash}`);
     } else {
@@ -47,25 +50,27 @@ async function handleMintBurnEvents(txResult, transaction) {
       return false;
     }
 
+    // Mint/burn with right IRC2 specs: disabled now.
     // Mint: _from = ICON_ZERO_ADDRESS
     // https://github.com/icon-project/btp/blob/icondao/javascore/nativecoinIRC2/src/main/java/foundation/icon/btp/nativecoinIRC2/irc2/IRC2Basic.java#L96
     // Burn: _to = ICON_ZERO_ADDRESS
     // https://github.com/icon-project/btp/blob/icondao/javascore/nativecoinIRC2/src/main/java/foundation/icon/btp/nativecoinIRC2/irc2/IRC2Basic.java#L109
     // _data is "mint" and "burn" respectively but not needed here.
-    if (process.env.ICON_NATIVE_COIN_BSH_ADDRESS === eventObj.from) {
-      // From Simson on Slack. Minting is modified and not same as IRC2 standard at https://docs.opendevicon.io/score-library/irc2standard/irc2
-      // and event isn't _from = ICON_ZERO_ADDRESS
-      // Send DEV from Moonbeam to ICON then, BSH transfer DEV to user.
-      // BMC emits Transfer event with _from = BSH.
-      logger.info(`icon:Mint ${eventObj.tokenValue} ${eventObj.tokenName} in tx ${transaction.txHash}`);
 
-      const totalMintToken = await getTotalTokenAmount(eventObj.tokenName, MINT_EVENT);
-      await saveToken(eventObj, totalMintToken, MINT_EVENT);
-    } else if (ICON_ZERO_ADDRESS === eventObj.to) {
-      logger.info(`icon:Burn ${eventObj.tokenValue} ${eventObj.tokenName} in tx ${transaction.txHash}`);
+    // Mint/burn with right Simson's IRC2 specs: current, https://docs.opendevicon.io/score-library/irc2standard/irc2
+    // BMC emits Transfer event with _from always is BSH
+    // _to is an user for mint https://berlin.tracker.solidwallet.io/transaction/0x163a8b4ff3122c22bd393f77053592c7d8ad7b3b3f31c50df824d5fffbac8bc0#events
+    // _to is ZERO for burn https://berlin.tracker.solidwallet.io/transaction/0x416579c00572910d96f7be9b9adef768bd0c0cf3ac25413718b7c2908a9d5799#events
+    if (ICON_ZERO_ADDRESS === eventObj.to) {
+      logger.info(`Burn ${eventObj.tokenValue} ${eventObj.tokenName} in tx ${transaction.txHash}`);
 
       const totalBurnToken = await getTotalTokenAmount(eventObj.tokenName, BURN_EVENT);
       await saveToken(eventObj, totalBurnToken, BURN_EVENT);
+    } else {
+      logger.info(`Mint ${eventObj.tokenValue} ${eventObj.tokenName} in tx ${transaction.txHash}`);
+
+      const totalMintToken = await getTotalTokenAmount(eventObj.tokenName, MINT_EVENT);
+      await saveToken(eventObj, totalMintToken, MINT_EVENT);
     }
   } catch (error) {
     logger.error('icon:handleMintBurnEvents failed %O', error);
