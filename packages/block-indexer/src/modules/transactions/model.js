@@ -15,7 +15,7 @@ function calculateTotalVolume(newTransaction, latestTransaction) {
   return totalVolume;
 }
 
-// Get list of BSH contract addresses of registered tokens.
+// Get list of contract addresses of registered tokens.
 async function getTokenContractMap() {
   if (0 === tokenContractMap.size) {
     const addresses = await getTokenContractAddresses();

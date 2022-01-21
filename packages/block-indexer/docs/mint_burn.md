@@ -1,6 +1,101 @@
 # Mint Burn events
 
+## Transfer
+
+For new IRC2 and ERC20 contracts, first deployed on Berlin.
+
+Mint
+
+goloop rpc txresult 0xd8dcb4777e7b4feb1609fc3ce660a5231acacaf7efceda9115b8a990921bf1ad --uri https://berlin.net.solidwallet.io/api/v3
+
+```json
+{
+  "to": "cx6a3de71a52d8bbd3f87a497b7a07ebae13368b3f",
+  "cumulativeStepUsed": "0x2404885",
+  "stepUsed": "0x11d6fa3",
+  "stepPrice": "0x2e90edd00",
+  "eventLogs": [
+    {
+      "scoreAddress": "cx824f3b2f2a8f59ac3d281b1b9bc295e051be5274",
+      "indexed": [
+        "Transfer(Address,Address,int,bytes)",
+        "cx8a05039c1c1da936d279e276a25c4fa66154bebd",
+        "hxc00a6d2d1e9ee0686704e0b6eec75d0f2c095b39",
+        "0x15fb7f9b8c2bcb0"
+      ],
+      "data": [
+        "0x7472616e7366657220746f205265636569766572"
+      ]
+    },
+    {
+      "scoreAddress": "cx6a3de71a52d8bbd3f87a497b7a07ebae13368b3f",
+      "indexed": [
+        "Message(str,int,bytes)",
+        "btp://0x507.pra/0xf4B7ebFDAD341a180b4B014fc017e15B1A4E01ae",
+        "0x57"
+      ],
+      "data": [
+        "0xf8a1b8396274703a2f2f3078372e69636f6e2f637836613364653731613532643862626433663837613439376237613037656261653133333638623366b83a6274703a2f2f30783530372e7072612f307866344237656246444144333431613138306234423031346663303137653135423141344530316165914e6174697665436f696e495243324253482c96d50293d200905472616e736665722053756363657373"
+      ]
+    }
+  ],
+  "logsBloom": "0x000020000000000000000020000800000001a000...",
+  "status": "0x1",
+  "blockHash": "0xb8f2dc3fe2fcf9414cfabf98d90a503a877b6ca0fc2ef082837e8a6da5f2f817",
+  "blockHeight": "0x21f323",
+  "txIndex": "0x4",
+  "txHash": "0xd8dcb4777e7b4feb1609fc3ce660a5231acacaf7efceda9115b8a990921bf1ad"
+}
+```
+
+Burn
+
+goloop rpc txresult 0x078c61fdf1fe47e63bf2e787ffdc4271eaba8e72427c6783a07d696547b50271 --uri https://berlin.net.solidwallet.io/api/v3
+
+```json
+{
+  "to": "cx6a3de71a52d8bbd3f87a497b7a07ebae13368b3f",
+  "cumulativeStepUsed": "0xa62d2d6",
+  "stepUsed": "0x4ced9e5",
+  "stepPrice": "0x2e90edd00",
+  "eventLogs": [
+    {
+      "scoreAddress": "cx824f3b2f2a8f59ac3d281b1b9bc295e051be5274",
+      "indexed": [
+        "Transfer(Address,Address,int,bytes)",
+        "cx8a05039c1c1da936d279e276a25c4fa66154bebd",
+        "hx0000000000000000000000000000000000000000",
+        "0x15fb7f9b8c38000"
+      ],
+      "data": [
+        "0x4275726e205472616e7366657220746f205a65726f2041646472657373"
+      ]
+    },
+    {
+      "scoreAddress": "cx8a05039c1c1da936d279e276a25c4fa66154bebd",
+      "indexed": [
+        "TransferEnd(Address,int,int,bytes)",
+        "hxc00a6d2d1e9ee0686704e0b6eec75d0f2c095b39"
+      ],
+      "data": [
+        "0x2b",
+        "0x0",
+        "0x"
+      ]
+    }
+  ],
+  "logsBloom": "0x00002000000080200000002000080000000180000000000000000000000000000000000000000000000000000000000000000440000000000000000000000000000000040000401000008000000000000000000000000000000000200000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000020001000000000000000000000000000000000000004000000000000000020800000000000000000000000000000000001000000000000000000000000000800000000000000000000000000000000008000000000000000000000",
+  "status": "0x1",
+  "blockHash": "0xfda15f1a0a9145037b4c824778c2c460d607cdec45ddef6c6fa9841afe78c458",
+  "blockHeight": "0x21f6f6",
+  "txIndex": "0x10",
+  "txHash": "0x078c61fdf1fe47e63bf2e787ffdc4271eaba8e72427c6783a07d696547b50271"
+}
+```
+
 ## TransferBatch
+
+Obsolete.
 
 ```json
   icon_tx Transaction result: e {
@@ -44,6 +139,8 @@
 ```
 
 ## TransferSingle
+
+Obsolete.
 
 ```json
 eth_tx {

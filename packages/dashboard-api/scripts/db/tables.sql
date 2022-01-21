@@ -86,9 +86,7 @@ CREATE TABLE IF NOT EXISTS public.registered_tokens
 (
     tx_hash character varying(100) COLLATE pg_catalog."default" NOT NULL,
     network_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    token_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
     token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    token_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     CONSTRAINT registered_tokens_pkey PRIMARY KEY (tx_hash),
@@ -101,11 +99,11 @@ CREATE TABLE IF NOT EXISTS public.registered_tokens
 
 CREATE TABLE IF NOT EXISTS public.indexer_stats
 (
-    network_id character varying(10) NOT NULL,
-    name character varying(50) NOT NULL,
-    block_height integer NOT NULL,
+    network_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    block_height integer NOT NULL DEFAULT 0,
     create_at timestamp without time zone NOT NULL DEFAULT now(),
-    updated_time timestamp without time zone NOT NULL,
+    update_at timestamp without time zone,
     CONSTRAINT indexer_stats_pkey PRIMARY KEY (network_id),
     CONSTRAINT indexer_stats_name_key UNIQUE (name)
 );
@@ -240,7 +238,6 @@ CREATE TABLE IF NOT EXISTS public.minted_tokens
     tx_hash character varying(100) NOT NULL,
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     mint_to character varying(100) NOT NULL,
-    token_id character varying(100) NOT NULL,
     log_id character varying(50),
     CONSTRAINT minted_tokens_pkey PRIMARY KEY (tx_hash)
 );
@@ -276,7 +273,6 @@ CREATE TABLE IF NOT EXISTS public.burned_tokens
     tx_hash character varying(100) NOT NULL,
     create_at timestamp without time zone NOT NULL DEFAULT now(),
     burn_from character varying(100) NOT NULL,
-    token_id character varying(100) NOT NULL,
     log_id character varying(50),
     CONSTRAINT burned_tokens_pkey PRIMARY KEY (tx_hash)
 );
