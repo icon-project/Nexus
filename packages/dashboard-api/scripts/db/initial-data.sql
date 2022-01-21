@@ -28,6 +28,7 @@ INSERT INTO token_prices (cmc_id, name, price, active, created_time, updated_tim
 INSERT INTO token_prices (cmc_id, name, price, active, created_time, updated_time) VALUES (52, 'DEV', 0.01, 1, NOW(), NOW());
 INSERT INTO token_prices (cmc_id, name, price, active, created_time, updated_time) VALUES (2099, 'ICX', 2.09, 1, NOW(), NOW());
 INSERT INTO token_prices (cmc_id, name, price, active, created_time, updated_time) VALUES (1839, 'BNB', 493.95, 1, NOW(), NOW());
+INSERT INTO token_prices (cmc_id, name, price, active, created_time, updated_time) VALUES (9285, 'MOVR', 493.95, 1, NOW(), NOW());
 
 -- ### Registered tokens ###
 
