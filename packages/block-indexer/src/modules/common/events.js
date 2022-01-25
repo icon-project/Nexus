@@ -57,7 +57,7 @@ function getBscEventMap(web3) {
 
 function getMoonbeamEventMap(web3) {
   if (0 === moonbeamEventMap.size) {
-    let events = getEventInfoFromAbi(web3, moonbeamBshCoreAbi, ['TransferSingle']);
+    let events = getEventInfoFromAbi(web3, moonbeamBshCoreAbi, ['Transfer']);
 
     for (const event of events)
       moonbeamEventMap.set(event.event.name, event);

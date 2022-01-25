@@ -2,11 +2,16 @@
 
 goloop rpc txbyhash 0x21e82864d512107b7541094f1466f48142fac0416497555dae6a29f81c1763b1 --uri http://localhost:9080/api/v3/icon
 
-goloop rpc txresult 0xa6c041a0c7ec952cfbbf4c335de46051d803fecea9dcbe419c7bde8a79afcaf7 --uri http://localhost:9080/api/v3/icon
+goloop rpc txbyhash 0xc2eb373959abee897a18da828d3386c292be6aae9560bc2cc17e9a8e9978b37d --uri https://berlin.net.solidwallet.io/api/v3
+
+goloop rpc txresult 0xc2eb373959abee897a18da828d3386c292be6aae9560bc2cc17e9a8e9978b37d --uri https://berlin.net.solidwallet.io/api/v3
 
 ./goloop rpc blockbyhash 0x7b8275119cb9735ac04f6f1da991bb04b8a4605f5ae2bdb604ef70bb09deaba0 --uri http://localhost:9082/api/v3
 
-goloop rpc scoreapi --uri http://localhost:9080/api/v3/icon cxa1229bef36fbdc2d75c8d4ec4b39102586f81eab
+goloop rpc scoreapi --uri http://localhost:9080/api/v3/icon cx8a05039c1c1da936d279e276a25c4fa66154bebd
+
+goloop rpc scoreapi --uri https://berlin.net.solidwallet.io/api/v3 cx8a05039c1c1da936d279e276a25c4fa66154bebd
+goloop rpc scoreapi --uri https://berlin.net.solidwallet.io/api/v3 cx824f3b2f2a8f59ac3d281b1b9bc295e051be5274
 
 goloop rpc call --uri http://localhost:9080/api/v3/icon --to $(cat ./config/nativeCoinBsh.icon) --method coinId --param _coinName=DEV
 
