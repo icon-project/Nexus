@@ -21,6 +21,7 @@ const logger = createLogger();
 const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
+const indexInterval = Number(process.env.ICON_INDEX_INTERVAL);
 
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
@@ -67,7 +68,12 @@ async function retryGetTransactionResult(tx, block) {
       setTimeout(async () => await retryGetTransactionResult(tx, block), 1000);
     }
   } catch (error) {
-    logger.error('icon:Fail to get transaction result %s, %s', tx.txHash, error);
+    if ('[RPC ERROR] Executing' === error.slice(0, 21)) {
+      logger.warn(`${error} ${tx.txHash}`);
+      setTimeout(async () => await retryGetTransactionResult(tx, block), 1000);
+    } else {
+      logger.error('icon:Fail to get transaction result %s, %s', tx.txHash, error);
+    }
   }
 }
 
@@ -97,7 +103,7 @@ async function getBlockByHeight(height) {
 
 async function getBlockData() {
   const block = await getBlockByHeight(blockHeight);
-  const timeout = block ? 1000 : 10000; // Wait longer for new blocks created.
+  const timeout = block ? indexInterval : 5000; // Wait longer for new blocks created.
 
   if (block) {
     debug('Block: %O', block);
@@ -119,8 +125,15 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('icon:Failed to fetch block %d, retry in 5 minutes: %s', blockHeight, error);
-    setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
+    // Reading to fast, next block is not available.
+    if ('[RPC ERROR] NotFound' === error.slice(0, 20)) {
+      logger.warn(error);
+      setTimeout(async () => await retryGetBlockData(), 5000);
+    } else {
+      // Unknown error, just wait longer to try again.
+      logger.error('icon:Failed to fetch block %d, retry in 1 minutes: %s', blockHeight, error);
+      setTimeout(async () => await retryGetBlockData(), 1 * 60 * 1000);
+    }
   }
 }
 
