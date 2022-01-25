@@ -48,9 +48,9 @@
 
 - Switch to Moonbeam localnet: https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-custom-Network-RPC
 
-**Moonbeam localnet:**
-- Name: any
-- New RPC URL: http://54.251.114.18:9933
-- Chain ID: 0x501
+**Moonbeam testnet:**
+- Name: Moonbase
+- New RPC URL: https://moonbeam-alpha.api.onfinality.io/public
+- Chain ID: 1287
 - Symbol: DEV
 
