@@ -15,9 +15,7 @@ const logger = createLogger();
 
 // from/to address of transactions need to query for receipts.
 const watchedTxReceipt = {
-  fromAddress: new Map([
-    ['address', true]
-  ]),
+  fromAddress: new Map(),
   toAddress: new Map([
     [process.env.MOONBEAM_BMC_ADDRESS.toLowerCase(), true],
     [process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS.toLowerCase(), true]
@@ -61,7 +59,7 @@ async function runBlockHandlers(block) {
   for (const tx of block.transactions) {
     debugTx('Transaction: %O', tx);
 
-    if ((tx.to && watchedTxReceipt.toAddress.has(tx.to.toLowerCase())) || watchedTxReceipt.fromAddress.has(tx.from.toLowerCase()))
+    if (tx.to && watchedTxReceipt.toAddress.has(tx.to.toLowerCase()))
       await retryGetTransactionReceipt(tx, block);
     else
       await runTransactionHandlers(tx, null, block);

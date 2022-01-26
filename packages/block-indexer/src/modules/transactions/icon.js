@@ -65,7 +65,7 @@ Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoinIRC2/s
  * ]
  */
 async function handleTransactionEvents(txResult, transaction) {
-  if (1 !== txResult.status || 0 === txResult.eventLogs.length)
+  if (0 === txResult.eventLogs.length)
     return false;
 
   const tokenContractMap = await getTokenContractMap();

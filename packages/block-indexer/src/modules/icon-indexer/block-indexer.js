@@ -9,7 +9,7 @@ const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexe
 // FAS: const { loadRegisteredTokens } = require('./fas');
 // FAS: const { handleAuctionEvents } = require('./auctions');
 const { handleTransactionEvents } = require('../transactions/icon');
-const { getTokenContractMap } = require('../transactions/model');
+const { getRegisteredTokens } = require('../tokens/model');
 // FAS: const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('../mint-burn/icon');
 // const { handleTokenRegister } = require('./token-register');
@@ -23,9 +23,17 @@ const iconService = new IconService(httpProvider);
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 const indexInterval = Number(process.env.ICON_INDEX_INTERVAL);
 
+// from/to address of transactions need to query for receipts.
+const watchedTxReceipt = {
+  fromAddress: new Map(),
+  toAddress: new Map([
+    [process.env.ICON_BMC_ADDRESS, true]
+  ])
+};
+
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
-    if (1 === txResult.status) {
+    if (txResult && 1 === txResult.status) {
       await handleTransactionEvents(txResult, transaction);
       // FAS: await handleAuctionEvents(txResult);
       // FAS: await handleTransferFeeEvents(txResult);
@@ -80,7 +88,11 @@ async function retryGetTransactionResult(tx, block) {
 async function runBlockHandlers(block) {
   for (const tx of block.confirmedTransactionList) {
     debugTx('Transaction: %O', tx);
-    await retryGetTransactionResult(tx, block);
+
+    if (tx.to && watchedTxReceipt.toAddress.has(tx.to))
+      await retryGetTransactionResult(tx, block);
+    else
+      await runTransactionHandlers(tx, null, block);
   }
 
   // More block handlers go here.
@@ -138,8 +150,10 @@ async function retryGetBlockData() {
 }
 
 async function start() {
-  const tokenContractMap = await getTokenContractMap();
-  logger.info('Registered tokens: %O', tokenContractMap);
+  const contractMap = await getRegisteredTokens();
+
+  for (const [key, value] of contractMap.entries())
+    watchedTxReceipt.toAddress.set(key, true);
 
   // Continue from last indexed block?
   if (-1 === blockHeight) {
