@@ -20,16 +20,17 @@ MOONBEAM_BMC_MANAGEMENT_ADDRESS=
 
 - Network explorers
 
+```
 https://moonbase-blockscout.testnet.moonbeam.network
 https://btp.tracker.solidwallet.io
+```
 
 - Block numbers (of each network) where deployment started
-- Registered tokens (tx/tx result/tx receipt)
 - Registered relays (tx/tx result/tx receipt)
 - Prefunded test accounts (addresses and keys) e.g. Alice, Bob
 - Moonbeam contract ABI files (BMCManagement.json, BSHCore.json, BSHPeriphery.json)
 
-Source: https://github.com/icon-project/btp/blob/icondao/doc/deployment.md
+Ref: https://github.com/icon-project/btp/blob/icondao/doc/deployment.md
 
 ```bash
 Block numbers:
@@ -39,9 +40,6 @@ PRA:    "offset": 1007699,
 # it's not reliable according to Phi: https://moonbase.moonscan.io
 https://moonbase-blockscout.testnet.moonbeam.network
 https://btp.tracker.solidwallet.io
-
-# Moonbeam relay
-0x87913e2186b32407e259025fdacf7534fffc772358c3ff11fe4b1fbc897c704e
 
 # Moonbeam tokens
 0x1abea0a03be823bd172c04b4b68dc1d9b8ed45db43b4c12ef262eac1cb6f66bb
@@ -127,7 +125,7 @@ Create new database name: `icon_moonbeam1`, login: `dashboard`, added as a membe
 
 Create database schema with `tables.sql`
 
-Initialize database with `initial-data.sql` and blockchain information: `indexer_stats`, `networks`, `token_info`, `token_prices`
+Initialize database with `initial-data.sql` and blockchain information: `indexer_stats`, `networks`, `registered_tokens`, `token_prices`
 
 ## Setup Application
 

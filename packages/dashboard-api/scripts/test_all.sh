@@ -8,6 +8,10 @@ HOST=http://localhost:8000
 # HOST=http://18.141.139.244:8000
 # HOST=http://3.15.169.101:8000
 
+ICON_ID=0x7
+MOONBEAM_ID=0x507
+TX_HASH=0x79a4d1083cd13a53b264dccc34fb68036b8307f0ca614e39ab12a894c05650c7
+
 # auctions
 
 # curl $HOST/v1/auctions | jq
@@ -34,9 +38,8 @@ curl $HOST/v1/btpnetwork/converter\?token=icx\&amount=100\&convert_to=usd | jq
 
 curl $HOST/v1/networks | jq
 curl $HOST/v1/networks/0x00
-
-curl $HOST/v1/networks/0x501 | jq
-curl $HOST/v1/networks/0x58eb1c | jq
+curl $HOST/v1/networks/$ICON_ID | jq
+curl $HOST/v1/networks/$MOONBEAM_ID | jq
 
 # relay-candidates
 
@@ -54,8 +57,8 @@ curl $HOST/v1/relays\?page=1\&limit=3 | jq
 curl $HOST/v1/transactions | jq
 curl $HOST/v1/transactions\?limit=3 | jq
 curl $HOST/v1/transactions\?page=1\&limit=3 | jq
-curl $HOST/v1/transactions\?to=0x501\&limit=3 | jq
-curl $HOST/v1/transactions\?from\=0x501\&limit=3 | jq
+curl $HOST/v1/transactions\?to=$MOONBEAM_ID\&limit=3 | jq
+curl $HOST/v1/transactions\?from\=$MOONBEAM_ID\&limit=3 | jq
 curl $HOST/v1/transactions\?assetName\=icx\&limit=3 | jq
-curl $HOST/v1/transactions/0xe6f572ce219f847b6b8fb03b0690a420b074b8984f0a6b395d142f41033b85fb | jq
+curl $HOST/v1/transactions/$TX_HASH | jq
 curl $HOST/v1/transactions/tx-not-found

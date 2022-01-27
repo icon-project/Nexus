@@ -6,7 +6,7 @@ const Web3 = require('web3');
 const { createLogger } = require('../../common');
 const { getMoonbeamEventMap } = require('../common/events');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
-const { getTokenContractMap } = require('../transactions/model');
+const { getRegisteredTokens } = require('../tokens/model');
 const { handleRelayActions } = require('../relays/moonbeam');
 const { Web3MintBurnHandler } = require('../mint-burn/web3');
 const { Web3TransactionHandler } = require('../transactions/web3');
@@ -59,7 +59,7 @@ async function runBlockHandlers(block) {
   for (const tx of block.transactions) {
     debugTx('Transaction: %O', tx);
 
-    if ((tx.to && watchedTxReceipt.toAddress.has(tx.to.toLowerCase())) || watchedTxReceipt.fromAddress.has(tx.from.toLowerCase()))
+    if (tx.to && watchedTxReceipt.toAddress.has(tx.to.toLowerCase()))
       await retryGetTransactionReceipt(tx, block);
     else
       await runTransactionHandlers(tx, null, block);
@@ -69,6 +69,14 @@ async function runBlockHandlers(block) {
 }
 
 async function getBlockData() {
+  // ISSUE 1: it requires a manual fix to work with web3 1.5.0
+  // Error: Number can only safely store up to 53 bits
+  // Open file ./node_modules/number-to-bn/node_modules/bn.js/lib/bn.js
+  // Go to line 506 assert(false, 'Number can only safely store up to 53 bits');
+  // Replace it with ret = Number.MAX_SAFE_INTEGER;
+  // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
+  // ISSUE 2: Get "Error: Returned error: Expect block number from id: BlockId::Number(1577159)" if block
+  // is not ready i.e. mining, importing
   const block = await web3.eth.getBlock(blockHeight, true);
   const timeout = block ? 3000 : 10000; // Block time ~3 seconds, wait longer for new blocks created.
 
@@ -91,8 +99,8 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('moonbeam:retryGetBlockData fails to fetch block, retry in 5 minutes: %O', error);
-    setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
+    logger.error('moonbeam:retryGetBlockData fails to fetch block, retry in 1 minutes: %O', error);
+    setTimeout(async () => await retryGetBlockData(), 1 * 60 * 1000);
   }
 }
 
@@ -100,11 +108,10 @@ async function start() {
   const eventMap = getMoonbeamEventMap(web3);
   logger.info('Moonbeam event map: %O', eventMap);
 
-  const contractMap = await getTokenContractMap();
-  logger.info('Registered tokens: %O', contractMap);
+  const contractMap = await getRegisteredTokens();
 
   for (const [key, value] of contractMap.entries())
-    watchedTxReceipt.toAddress.set(key, value);
+    watchedTxReceipt.toAddress.set(key, true);
 
   mintBurnHandler = new Web3MintBurnHandler({
     name: 'moonbeam',

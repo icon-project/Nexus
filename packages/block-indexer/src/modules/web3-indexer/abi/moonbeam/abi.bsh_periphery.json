@@ -119,7 +119,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -132,7 +133,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -168,7 +170,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -323,6 +326,7 @@
     "name": "checkParseAddress",
     "outputs": [],
     "stateMutability": "pure",
-    "type": "function"
+    "type": "function",
+    "constant": true
   }
 ]

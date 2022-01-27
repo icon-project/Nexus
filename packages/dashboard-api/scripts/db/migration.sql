@@ -408,3 +408,20 @@ ALTER TABLE minted_tokens
 
 ALTER TABLE burned_tokens
     ADD COLUMN log_id character varying(50);
+
+-- Issue #526
+
+ALTER TABLE minted_tokens
+    DROP COLUMN token_id;
+
+ALTER TABLE burned_tokens
+    DROP COLUMN token_id;
+
+ALTER TABLE registered_tokens
+    DROP COLUMN token_id,
+    DROP COLUMN token_address;
+
+ALTER TABLE indexer_stats
+    DROP COLUMN updated_time,
+    ALTER COLUMN block_height SET DEFAULT 0,
+    ADD COLUMN update_at timestamp without time zone;

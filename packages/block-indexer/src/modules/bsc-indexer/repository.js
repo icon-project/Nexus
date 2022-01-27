@@ -5,7 +5,7 @@ const logger = createLogger();
 
 async function saveIndexedBlockHeight(blockHeight, networkId) {
   try {
-    const query = 'UPDATE indexer_stats SET block_height=$1, updated_time=NOW() WHERE network_id=$2';
+    const query = 'UPDATE indexer_stats SET block_height=$1, update_at=NOW() WHERE network_id=$2';
     await pgPool.query(query, [blockHeight, networkId]);
 
     return true;

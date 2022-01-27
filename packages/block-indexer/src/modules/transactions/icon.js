@@ -21,8 +21,7 @@ const logger = createLogger();
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
 Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NCSEvents.java#L46
 */
-async function confirmTransferEnd
-(event, txInfo) {
+async function confirmTransferEnd(event, txInfo) {
   const data = event.data;
 
   try {
@@ -54,7 +53,7 @@ async function confirmTransferEnd
 /*
 TransferStart(Address _from, String _to, BigInteger _sn, byte[] _assets);
 
-Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NCSEvents.java#L35
+Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoinIRC2/src/main/java/foundation/icon/btp/nativecoinIRC2/NCSEvents.java#L35
 
  * // struct of assetTransferDetails after decoding
  * [
@@ -66,7 +65,7 @@ Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/m
  * ]
  */
 async function handleTransactionEvents(txResult, transaction) {
-  if (1 !== txResult.status || 0 === txResult.eventLogs.length)
+  if (0 === txResult.eventLogs.length)
     return false;
 
   const tokenContractMap = await getTokenContractMap();
