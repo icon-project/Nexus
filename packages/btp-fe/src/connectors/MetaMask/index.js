@@ -8,13 +8,13 @@ import {
   allowedNetworkIDs,
   signingActions,
 } from 'connectors/constants';
-import { MB_ABI } from './abi/MB_ABI';
-import { BSC_ABI } from './abi/BSC_ABI';
+import { ABI } from './abi/ABI';
 
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets, nativeTokens } from 'utils/constants';
 import { sendNoneNativeCoinBSC } from 'connectors/MetaMask/services/BSCServices';
+import { sendNoneNativeCoin } from 'connectors/MetaMask/services/MoonbeamServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -27,13 +27,13 @@ class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
+    this.ABI = new ethers.utils.Interface(ABI);
+
     // Moonbeam
-    this.MB_BSH_ABI = new ethers.utils.Interface(MB_ABI);
-    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
+    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, ABI, this.provider);
     // BSC
-    this.BSC_BSH_ABI = new ethers.utils.Interface(BSC_ABI);
-    this.contract_BSC = new ethers.Contract(BSC_NODE.BSHCore, BSC_ABI, this.provider);
-    this.contractBEP20TKN_BSC = new ethers.Contract(BSC_NODE.BEP20TKN, BSC_ABI, this.provider);
+    this.contract_BSC = new ethers.Contract(BSC_NODE.BSHCore, ABI, this.provider);
+    this.contractBEP20TKN_BSC = new ethers.Contract(BSC_NODE.BEP20TKN, ABI, this.provider);
   }
 
   get getEthereum() {
@@ -167,6 +167,16 @@ class Ethereum {
                   },
                 });
                 break;
+              case signingActions.approve:
+                modal.openModal({
+                  icon: 'checkIcon',
+                  desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
+                  button: {
+                    text: 'Transfer',
+                    onClick: sendNoneNativeCoin,
+                  },
+                });
+                break;
 
               default:
                 modal.openModal({
@@ -185,7 +195,14 @@ class Ethereum {
             }
           } else {
             clearInterval(checkTxRs);
-            throw new Error('Transaction failed');
+            modal.openModal({
+              icon: 'xIcon',
+              desc: 'Transaction failed',
+              button: {
+                text: 'Back to transfer',
+                onClick: () => modal.setDisplay(false),
+              },
+            });
           }
 
           clearInterval(checkTxRs);

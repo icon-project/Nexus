@@ -1,4 +1,4 @@
-import { sendNativeCoin, depositTokensIntoBSH, sendNonNativeCoin } from './ICONServices';
+import { sendNativeCoin, depositTokensIntoBSH, transferToERC2 } from './ICONServices';
 import { MOON_BEAM_NODE, BSC_NODE, signingActions } from 'connectors/constants';
 import { connectedNetWorks } from 'utils/constants';
 
@@ -13,7 +13,7 @@ export const transfer = (tx, isSendingNativeCoin, network) => {
   } else {
     switch (network) {
       case connectedNetWorks.moonbeam:
-        sendNonNativeCoin(tx);
+        transferToERC2(tx);
         break;
       case connectedNetWorks.bsc:
         depositTokensIntoBSH(tx);

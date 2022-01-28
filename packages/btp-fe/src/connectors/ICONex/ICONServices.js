@@ -62,7 +62,7 @@ export const getTxResult = (txHash) => {
   }
 };
 
-export const sendNonNativeCoin = ({ value, to }) => {
+export const sendNonNativeCoin = () => {
   const transaction = {
     to: getCurrentICONexNetwork().BSHAddress,
   };
@@ -71,12 +71,13 @@ export const sendNonNativeCoin = ({ value, to }) => {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${to}`,
-      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${window[signingActions.receiver]}`,
+      _value: window[rawTransaction].data.params._value,
       _coinName: 'DEV',
     },
   };
 
+  window[signingActions.globalName] = signingActions.transfer;
   signTx(transaction, options);
   return { transaction, options };
 };
@@ -99,24 +100,6 @@ export const sendNativeCoin = ({ value, to }, networkAddress) => {
   return { transaction, options };
 };
 
-export const setApprovalForAll = async () => {
-  const transaction = {
-    to: getCurrentICONexNetwork().irc31token,
-  };
-
-  const options = {
-    builder: new CallTransactionBuilder(),
-    method: 'setApprovalForAll',
-    params: {
-      _operator: getCurrentICONexNetwork().BSHAddress,
-      _approved: '0x1',
-    },
-  };
-
-  window[signingActions.globalName] = signingActions.transfer;
-  signTx(transaction, options);
-};
-
 export const reclaim = async ({ coinName, value }) => {
   const transaction = {
     to: getCurrentICONexNetwork().BSHAddress,
@@ -134,19 +117,23 @@ export const reclaim = async ({ coinName, value }) => {
   signTx(transaction, options);
 };
 
-export const isApprovedForAll = async (address) => {
-  const result = await makeICXCall({
-    to: getCurrentICONexNetwork().irc31token,
-    dataType: 'call',
-    data: {
-      method: 'isApprovedForAll',
-      params: {
-        _operator: getCurrentICONexNetwork().BSHAddress,
-        _owner: address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
-      },
+export const transferToERC2 = ({ value, to }) => {
+  const transaction = {
+    to: getCurrentICONexNetwork().irc2token,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      _to: getCurrentICONexNetwork().BSHAddress,
+      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
     },
-  });
-  return result === '0x1';
+  };
+
+  window[signingActions.receiver] = to;
+  window[signingActions.globalName] = signingActions.approve;
+  signTx(transaction, options);
 };
 
 export const placeBid = (auctionName, value, fas) => {
@@ -185,7 +172,7 @@ export const signTx = (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .stepLimit(IconConverter.toBigNumber(1000000000))
+    .stepLimit(IconConverter.toBigNumber(3519157719))
     .nid(IconConverter.toBigNumber(nid || getCurrentICONexNetwork().nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
@@ -232,58 +219,29 @@ export const getBTPfee = async () => {
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
   try {
-    let balance = 0;
-
-    // Being checked only on ICON-BSC chains
-    if (symbol === 'ETH') {
-      balance = await makeICXCall({
-        dataType: 'call',
-        to: getCurrentICONexNetwork().irc2token,
-        data: {
-          method: 'balanceOf',
-          params: {
-            _owner: address,
-          },
+    const payload = {
+      dataType: 'call',
+      to: getCurrentICONexNetwork().irc2token,
+      data: {
+        method: 'balanceOf',
+        params: {
+          _owner: address,
         },
-      });
-    } else {
-      const coinId = await makeICXCall({
-        to: getCurrentICONexNetwork().BSHAddress,
-        dataType: 'call',
-        data: {
-          method: 'coinId',
-          params: {
-            _coinName: symbol,
-          },
-        },
-      });
+      },
+    };
 
-      const params = {
-        dataType: 'call',
-        data: {
-          method: 'balanceOf',
-          params: {
-            _owner: address,
-          },
-        },
-      };
-
-      if (refundable) {
-        params.to = getCurrentICONexNetwork().BSHAddress;
-        params.data.params._coinName = coinId;
-      } else {
-        params.to = getCurrentICONexNetwork().irc31token;
-        params.data.params._id = coinId;
-      }
-
-      balance = await makeICXCall(params);
+    if (refundable) {
+      payload.to = getCurrentICONexNetwork().BSHAddress;
+      payload.data.params._coinName = symbol;
     }
+
+    const balance = await makeICXCall(payload);
 
     return refundable
       ? convertToICX(balance.refundable)
       : roundNumber(ethers.utils.formatEther(balance), 6);
   } catch (err) {
-    console.log('err', err);
+    console.log('getBalanceOf err', err);
   }
 };
 

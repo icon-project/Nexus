@@ -23,7 +23,7 @@ export const makeICXCall = async (payload) => {
     const result = await httpProvider.request(request).execute();
     return result;
   } catch (err) {
-    console.log('err', err);
+    console.log('makeICXCall err', err);
     return 0;
   }
 };

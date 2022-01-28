@@ -22,13 +22,14 @@ export const signingActions = {
   bid: 'bid',
   deposit: 'deposit',
   receiver: 'receiver',
+  approve: 'approve',
 };
 
 export const rawTransaction = 'rawTransaction';
 
 export const allowedNetworkIDs = {
   metamask: {
-    '0x501': connectedNetWorks.moonbeam,
+    '0x507': connectedNetWorks.moonbeam,
     '0x61': connectedNetWorks.bsc,
     '0x4': 'Rinkeby',
   },
@@ -71,6 +72,7 @@ export const ICON_NODES = {
     nid: icon.nid || process.env.REACT_APP_ICON_NID,
     networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
     irc31token: icon.irc31token || process.env.REACT_APP_ICON_IRC31_TOKEN,
+    irc2token: icon.irc2token || process.env.REACT_APP_ICON_IRC2_TOKEN,
     BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
   },
   [pairedNetworks['ICON-NEAR']]: {
