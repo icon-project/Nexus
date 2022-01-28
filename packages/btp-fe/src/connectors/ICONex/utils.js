@@ -1,6 +1,6 @@
-import { IconAmount, IconUtil, HttpProvider } from 'icon-sdk-js';
-import { currentICONexNetwork } from '../constants';
+import { IconAmount, IconUtil } from 'icon-sdk-js';
 import { SUCCESS_TRANSACTION } from 'utils/constants';
+import { httpProvider } from 'connectors/constants';
 
 export default class Request {
   constructor(id, method, params) {
@@ -15,8 +15,6 @@ export const convertToICX = (balance) => {
   return IconAmount.of(balance, IconAmount.Unit.LOOP).convertUnit(IconAmount.Unit.ICX).toString();
 };
 
-export const httpProvider = new HttpProvider(currentICONexNetwork.endpoint);
-
 export const makeICXCall = async (payload) => {
   try {
     const requestId = IconUtil.getCurrentTime();
@@ -25,7 +23,7 @@ export const makeICXCall = async (payload) => {
     const result = await httpProvider.request(request).execute();
     return result;
   } catch (err) {
-    console.log('err', err);
+    console.log('makeICXCall err', err);
     return 0;
   }
 };

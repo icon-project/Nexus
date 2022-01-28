@@ -1,25 +1,40 @@
 import store from 'store';
-import {
-  transfer,
-  isApprovedForAll,
-  setApprovalForAll,
-  getBalanceOf,
-  reclaim,
-} from 'connectors/ICONex/iconService';
-import { EthereumInstance } from 'connectors/MetaMask';
-import { wallets } from 'utils/constants';
+import { wallets, connectedNetWorks } from 'utils/constants';
 
-const getCurrentTransferService = () => (targetWallet) => {
-  const { wallet } = store.getState().account;
-  if (!wallet && !targetWallet) throw new Error('Missing wallet');
+import * as ICONServices from 'connectors/ICONex/ICONServices';
+import * as BSCServices from 'connectors/MetaMask/services/BSCServices';
+import * as MoonbeamServices from 'connectors/MetaMask/services/MoonbeamServices';
+import * as NEARServices from 'connectors/NEARWallet';
 
-  const iconServices = { transfer, isApprovedForAll, setApprovalForAll, getBalanceOf, reclaim };
+export const getCurrentTransferService = () => (curentWallet, currentNetwork) => {
+  const { wallet, currentNetwork: network } = store.getState().account;
+  if (!wallet && !curentWallet) throw new Error('Missing wallet');
+  if (!network && !currentNetwork) throw new Error('Missing network');
 
-  switch (wallet || targetWallet) {
+  switch (wallet || curentWallet) {
     case wallets.metamask:
-      return EthereumInstance;
+      // There are 2 networks using Metamask now: Moonbeam & BSC
+      switch (network || currentNetwork) {
+        case connectedNetWorks.moonbeam:
+          return MoonbeamServices;
+
+        case connectedNetWorks.bsc:
+          return BSCServices;
+        default:
+          console.log('No matching network');
+          break;
+      }
+      break;
+
+    case wallets.iconex:
+      return ICONServices;
+
+    case wallets.near:
+      return NEARServices;
+
     default:
-      return iconServices;
+      console.log('No matching wallet service');
+      break;
   }
 };
 

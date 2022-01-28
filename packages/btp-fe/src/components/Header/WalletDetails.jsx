@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Avatar } from 'antd';
 
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { tokenOptionList } from 'utils/constants';
+import { getBalanceToken } from 'utils/constants';
+import { getService } from 'services/transfer';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -14,8 +15,7 @@ import { TextMixin } from 'components/Typography/Text';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
-
-import { getService } from 'services/transfer';
+import { Avatar } from 'components/Avatar';
 
 import copyIcon from 'assets/images/copy-icon.svg';
 import refundIcon from 'assets/images/refund-icon.svg';
@@ -108,7 +108,7 @@ const TokenSelector = styled(Select)`
   margin-left: 10px;
   display: inline-flex;
   height: 32px;
-  min-width: 73px;
+  min-width: 84px;
 
   > .md {
     ${TextMixin.bold};
@@ -139,15 +139,11 @@ const RefundSelector = styled(Select)`
   }
 
   > .md {
-    width: 33px;
+    width: 42px;
   }
 
   > ul {
-    width: 114px;
-
-    ${media.md`
-      width: 83px;
-    `};
+    width: 100%;
   }
 `;
 
@@ -165,7 +161,6 @@ const ActionBtn = styled.button`
 
 export const WalletDetails = ({
   networkName,
-  userAvatar,
   unit,
   address,
   shortedAddress,
@@ -180,8 +175,8 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: unit, value: unit },
-    ...tokenOptionList
-      .map(({ symbol }) => ({ label: symbol, value: symbol }))
+    ...getBalanceToken()
+      .map((symbol) => ({ label: symbol, value: symbol }))
       .filter((item) => item.label !== unit),
   ];
 
@@ -206,7 +201,7 @@ export const WalletDetails = ({
   return (
     <Wrapper>
       <Text className="md network-name">{networkName}</Text>
-      <Avatar className="user-avatar" src={userAvatar} size={120} />
+      <Avatar className="user-avatar" size={120} />
       <Header className="md bold wallet-balance">
         {toSeparatedNumberString(currentBalance)}
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
@@ -264,4 +259,19 @@ export const WalletDetails = ({
       </div>
     </Wrapper>
   );
+};
+
+WalletDetails.propTypes = {
+  /** Display network's name */
+  networkName: PropTypes.string,
+  /** Display network's symbol */
+  unit: PropTypes.string,
+  /** Display connected address */
+  address: PropTypes.string,
+  /** Display connected address in short */
+  shortedAddress: PropTypes.string,
+  /** Handle disconnecting */
+  onDisconnectWallet: PropTypes.func,
+  /** Handle switching network */
+  onSwitchWallet: PropTypes.func,
 };

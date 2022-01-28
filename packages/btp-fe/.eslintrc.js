@@ -33,6 +33,7 @@ module.exports = {
   },
   plugins: ['prettier', 'react', 'react-hooks'],
   rules: {
+    'no-case-declarations': 0,
     'prettier/prettier': ['error', prettierOptions],
     'react/prop-types': 0,
     'react/jsx-uses-vars': [2],

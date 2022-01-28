@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { Field } from 'react-final-form';
 
@@ -19,6 +20,9 @@ import metaMaskIcon from 'assets/images/metal-mask.svg';
 import iconexIcon from 'assets/images/icon-ex.svg';
 import moonbeamIcon from 'assets/images/moonbeam.jpeg';
 import hanaIcon from 'assets/images/hana-wallet.png';
+import binanceIcon from 'assets/images/binance-icon.svg';
+import ethIcon from 'assets/images/eth-icon.svg';
+import nearIcon from 'assets/images/near-icon.svg';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -117,20 +121,13 @@ export const icons = {
   [wallets.metamask]: metaMaskIcon,
   DEV: moonbeamIcon,
   [wallets.hana]: hanaIcon,
+  BNB: binanceIcon,
+  ETH: ethIcon,
+  NEAR: nearIcon,
 };
 
 export const Details = memo(
-  ({
-    setStep,
-    setTokenValue,
-    initalInputDisplay,
-    isValidForm,
-    isCurrent,
-    sendingInfo,
-    account,
-    usdRate,
-    form,
-  }) => {
+  ({ setStep, setTokenValue, isValidForm, isCurrent, sendingInfo, account, usdRate, form }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet } = account;
     const [currentBalance] = useTokenBalance(token);
@@ -147,7 +144,6 @@ export const Details = memo(
             <TokenInput
               placeholder={`0 ${token}`}
               setTokenValue={setTokenValue}
-              initalInputDisplay={initalInputDisplay}
               isCurrent={isCurrent}
               token={token}
               usdRate={usdRate}
@@ -221,3 +217,26 @@ export const Details = memo(
 );
 
 Details.displayName = 'Details';
+
+Details.propTypes = {
+  /** Set step for transfer box */
+  setStep: PropTypes.func,
+  /** Set token input value */
+  setTokenValue: PropTypes.func,
+  isValidForm: PropTypes.bool,
+  /** Is the current display screen */
+  isCurrent: PropTypes.bool,
+  sendingInfo: PropTypes.shape({
+    token: PropTypes.string,
+    network: PropTypes.string,
+  }),
+  account: PropTypes.shape({
+    balance: PropTypes.number,
+    currentNetwork: PropTypes.string,
+    wallet: PropTypes.string,
+  }),
+  /** Token in USD rate */
+  usdRate: PropTypes.number,
+  /** react-final-form object */
+  form: PropTypes.object,
+};

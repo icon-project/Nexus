@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -79,6 +80,11 @@ const Nav = ({ setShowMenu }) => {
       ))}
     </NavStyled>
   );
+};
+
+Nav.propTypes = {
+  /** toggle menu on mobile view */
+  setShowMenu: PropTypes.func,
 };
 
 export default Nav;

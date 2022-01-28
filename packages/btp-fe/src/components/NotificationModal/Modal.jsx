@@ -140,7 +140,7 @@ export const Modal = memo(
             {children}
           </div>
           {text && (
-            <StyledButton height="64" {...others}>
+            <StyledButton height={64} {...others}>
               {text}
             </StyledButton>
           )}
@@ -153,5 +153,24 @@ export const Modal = memo(
 Modal.displayName = 'Modal';
 
 Modal.propTypes = {
+  /** Display a available icon */
   icon: PropTypes.oneOf(['checkIcon', 'xIcon', 'exclamationPointIcon', 'loader']),
+  /** Display title */
+  title: PropTypes.string,
+  /** Display description */
+  desc: PropTypes.string,
+  /** Display a button with text and actions */
+  button: PropTypes.object,
+  /** Width */
+  width: PropTypes.string,
+  /** Display or not */
+  display: PropTypes.bool,
+  /** Margin-top */
+  marginTop: PropTypes.string,
+  /** Toggle display */
+  setDisplay: PropTypes.func,
+  /** Display close button or not */
+  hasClosedBtn: PropTypes.bool,
+  /** Display heading or not */
+  hasHeading: PropTypes.bool,
 };

@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/macro';
+import PropTypes from 'prop-types';
+
 import { Text } from 'components/Typography';
 import { Loader } from 'components/Loader';
-import { useOnClickOutside } from '../../hooks/useOnClickOutside';
+import { colors } from 'components/Styles/Colors';
+
+import { useOnClickOutside } from 'hooks/useOnClickOutside';
 
 import arrowIcon from 'assets/images/arrow-icon.svg';
 import checkedIcon from 'assets/images/white-check-icon.svg';
-
-import { colors } from '../Styles/Colors';
 
 const { brandSecondaryBase, grayLine, grayBG } = colors;
 
@@ -160,4 +162,31 @@ const Select = ({
     </Wrapper>
   );
 };
+
+Select.propTypes = {
+  /** Display a available icon */
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      /** Display label */
+      label: PropTypes.string,
+      /** Same as label */
+      name: PropTypes.string,
+      /** Value */
+      value: PropTypes.string,
+      /** Custome label */
+      renderItem: PropTypes.func,
+    }),
+  ),
+  /** Custom Arrow with Image resource */
+  customeArrow: PropTypes.string,
+  /** Display check for selected option */
+  showCheck: PropTypes.bool,
+  /** Is loading */
+  loading: PropTypes.bool,
+  /** Handle onChange */
+  onChange: PropTypes.func,
+  /** Field name */
+  name: PropTypes.string,
+};
+
 export default Select;

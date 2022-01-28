@@ -7,9 +7,8 @@ import { colors } from 'components/Styles/Colors';
 import { TextInput } from 'components/Input';
 import { PrimaryButton } from 'components/Button';
 
-import { useDispatch } from '../../hooks/useRematch';
 import { minValue, composeValidators } from 'utils/inputValidation';
-import { placeBid } from '../../connectors/ICONex/iconService';
+import { placeBid } from 'connectors/ICONex/ICONServices';
 
 const Form = styled.form`
   background-color: ${colors.grayBG};
@@ -48,17 +47,9 @@ const Form = styled.form`
 export const PlaceBidForm = memo(({ currentBidAmount, auctionName }) => {
   const minimumIncrementalBid = currentBidAmount + currentBidAmount * 0.1;
 
-  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
-    openModal,
-  }));
-
   const onSubmit = (values) => {
     const { bidAmount } = values;
     if (bidAmount) {
-      openModal({
-        icon: 'loader',
-        desc: 'Waiting for confirmation in your wallet.',
-      });
       placeBid(auctionName, bidAmount);
     }
 

@@ -51,7 +51,7 @@ const auction = {
     },
     async getBids({ pageIndex, auctionId }) {
       try {
-        // offset is default 0 = first page
+        // offset default is 0 = first page
         const bids = await getAuctionBids(auctionId, pageIndex - 1);
         this.setAuctionState(['bids', bids]);
       } catch (error) {

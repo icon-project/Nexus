@@ -62,6 +62,10 @@
       "(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
+      "node_modules/elliptic.+",
+      "node_modules/near-api-js.+",
+      "node_modules/statuses.+",
+      "node_modules/node-fetch.+",
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
       ".+\\.module\\.(css|sass|scss)$"
     ],
@@ -88,7 +92,7 @@
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
     ],
-    "resetMocks": true
+    "resetMocks": false
   },
   "dependencies": {
     "@rematch/core": "2.0.0-next.10",
@@ -105,6 +109,7 @@
     "i18next-http-backend": "1.0.23",
     "icon-sdk-js": "0.0.19",
     "identity-obj-proxy": "3.0.0",
+    "near-api-js": "0.44.1",
     "qs": "6.9.6",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
@@ -129,10 +134,10 @@
     "@babel/core": "7.12.3",
     "@babel/parser": "7.12.11",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.2",
-    "@storybook/addon-actions": "6.1.17",
-    "@storybook/addon-essentials": "6.1.11",
-    "@storybook/addon-links": "6.1.11",
-    "@storybook/react": "6.1.11",
+    "@storybook/addon-actions": "6.3.12",
+    "@storybook/addon-essentials": "6.3.12",
+    "@storybook/addon-links": "6.3.12",
+    "@storybook/react": "6.3.12",
     "@svgr/webpack": "5.4.0",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.1.0",
@@ -141,7 +146,7 @@
     "@typescript-eslint/parser": "4.5.0",
     "axios-mock-adapter": "1.19.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "26.6.0",
+    "babel-jest": "26.6.3",
     "babel-loader": "8.1.0",
     "babel-plugin-i18next-extract": "0.8.2",
     "babel-plugin-named-asset-import": "0.3.7",

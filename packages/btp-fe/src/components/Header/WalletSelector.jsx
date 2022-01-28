@@ -1,12 +1,14 @@
 import styled from 'styled-components/macro';
-import { CheckOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import PropTypes from 'prop-types';
 
-import { Text } from '../Typography';
-import { Loader } from '../Loader';
+import { Text } from 'components/Typography';
+import { Loader } from 'components/Loader';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
+import { Icon } from 'components/Icon';
 
-import { colors } from '../Styles/Colors';
-import { media } from '../Styles/Media';
+import checkIcon from 'assets/images/check-icon.svg';
+import { wallets } from 'utils/constants';
 
 const { grayText, successState, grayAccent } = colors;
 
@@ -26,6 +28,7 @@ const StyledWalletItem = styled.button`
     margin-right: auto;
     margin-left: 13.3px;
   }
+
   span {
     grid-column: 3;
     display: flex;
@@ -34,11 +37,13 @@ const StyledWalletItem = styled.button`
     font-size: 18px;
     color: ${successState};
   }
+
   &:hover,
   :focus {
     background: ${grayAccent};
     border-radius: 4px;
   }
+
   .wallet-img {
     img {
       width: inherit;
@@ -64,13 +69,28 @@ export const WalletSelector = ({
       autoFocus={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
-      <Avatar className="wallet-img" src={wallet[type].icon} size={32} />
+      <Icon className="wallet-img" iconURL={wallet[type].icon} width="32px" />
       <Text className="md wallet-title">
         {!isInstalled && !isCheckingInstalled && 'Install '}
         {wallet[type].title}
       </Text>
-      {isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
-      {active && <CheckOutlined />}
+      {!active && isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
+      {active && <img src={checkIcon} alt="icon" />}
     </StyledWalletItem>
   );
+};
+
+WalletSelector.propTypes = {
+  /** Allowed wallets defination */
+  wallet: PropTypes.object,
+  /** Current selected wallet */
+  type: PropTypes.oneOf([wallets.metamask, wallets.iconex, wallets.hana, wallets.near]),
+  /** Is selected wallet */
+  active: PropTypes.bool,
+  /** Handle clicking */
+  onClick: PropTypes.func,
+  /** Is wallet installed*/
+  isInstalled: PropTypes.bool,
+  /** Is checking wallet installed */
+  isCheckingInstalled: PropTypes.bool,
 };

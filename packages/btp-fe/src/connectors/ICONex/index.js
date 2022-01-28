@@ -1,7 +1,13 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import { getBalance, sendTransaction, getTxResult } from './iconService';
+import {
+  getBalance,
+  sendTransaction,
+  getTxResult,
+  sendNoneNativeCoinBSC,
+  sendNonNativeCoin,
+} from './ICONServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
@@ -10,9 +16,9 @@ import {
   TYPES,
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  currentICONexNetwork,
+  getCurrentICONexNetwork,
   signingActions,
-} from '../constants';
+} from 'connectors/constants';
 
 const { modal, account } = store.dispatch;
 
@@ -71,6 +77,28 @@ const eventHandler = async (event) => {
                   });
                   break;
 
+                case signingActions.deposit:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
+                    button: {
+                      text: 'Transfer',
+                      onClick: sendNoneNativeCoinBSC,
+                    },
+                  });
+                  break;
+
+                case signingActions.approve:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
+                    button: {
+                      text: 'Transfer',
+                      onClick: sendNonNativeCoin,
+                    },
+                  });
+                  break;
+
                 case signingActions.transfer:
                   modal.openModal({
                     icon: 'checkIcon',
@@ -111,6 +139,7 @@ const eventHandler = async (event) => {
             });
             break;
           case signingActions.transfer:
+          default:
             modal.openModal({
               icon: 'xIcon',
               desc: 'Your transaction has failed. Please go back and try again.',
@@ -119,9 +148,6 @@ const eventHandler = async (event) => {
                 onClick: () => modal.setDisplay(false),
               },
             });
-            break;
-
-          default:
             break;
         }
       }
@@ -156,7 +182,7 @@ const getAccountInfo = async (address) => {
       balance,
       wallet,
       unit: 'ICX',
-      currentNetwork: currentICONexNetwork.name,
+      currentNetwork: getCurrentICONexNetwork().name,
     });
   } catch (err) {
     console.log('Err: ', err);

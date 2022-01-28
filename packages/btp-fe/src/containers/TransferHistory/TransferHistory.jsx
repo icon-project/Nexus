@@ -21,6 +21,7 @@ import { Text } from 'components/Typography';
 
 import { tokenOptionList } from 'utils/constants';
 import { toSeparatedNumberString } from 'utils/app';
+import { serverEndpoint } from 'connectors/constants';
 
 import VectorSrc from 'assets/images/vector.svg';
 
@@ -119,13 +120,14 @@ const TransferHistoryStyled = styled.div`
     .control-group {
       flex-direction: column;
       align-items: start;
-      margin-left: 24px;
     }
 
     .selector-group {
       margin-top: 20px;
       flex-direction: column;
       align-items: center;
+      display: block !important;
+
 
       .exchange-icon {
         width: 15px;
@@ -216,19 +218,12 @@ const TransferHistory = () => {
     },
   ];
   networks.forEach((network) => {
+    const iconURL = serverEndpoint + network.pathLogo.substring(1);
     networkOptions.push({
       value: network.id,
       label: network.name,
-      renderLabel: () => (
-        <TextWithIcon iconURL={process.env.REACT_APP_BTP_ENDPOINT + network.pathLogo.substring(1)}>
-          {network.name}
-        </TextWithIcon>
-      ),
-      renderItem: () => (
-        <TextWithIcon iconURL={process.env.REACT_APP_BTP_ENDPOINT + network.pathLogo.substring(1)}>
-          {network.name}
-        </TextWithIcon>
-      ),
+      renderLabel: () => <TextWithIcon iconURL={iconURL}>{network.name}</TextWithIcon>,
+      renderItem: () => <TextWithIcon iconURL={iconURL}>{network.name}</TextWithIcon>,
     });
   });
 

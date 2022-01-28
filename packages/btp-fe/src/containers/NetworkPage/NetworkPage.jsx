@@ -15,14 +15,16 @@ import { media } from 'components/Styles/Media';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { toSeparatedNumberString } from 'utils/app';
+import { serverEndpoint } from 'connectors/constants';
 
 const Network = ({ iconUrl, name, url }) => {
+  const onClick = (e) => e.stopPropagation();
   return (
     <Row className="middle">
       <Icon className="network-icon" iconURL={iconUrl} size="s" />
       <div>
         <div className="network-name">{name}</div>
-        <a href={`https://${url}`} target="_blank" rel="noreferrer" className="url">
+        <a href={url} target="_blank" rel="noreferrer" className="url" onClick={onClick}>
           {url}
         </a>
       </div>
@@ -44,7 +46,7 @@ const columns = [
     dataIndex: 'name',
     render: (text, record) => (
       <Network
-        iconUrl={process.env.REACT_APP_BTP_ENDPOINT + record.pathLogo.substring(1)}
+        iconUrl={serverEndpoint + record.pathLogo.substring(1)}
         name={text}
         url={record.url}
       />
@@ -147,7 +149,6 @@ function NetworkPage() {
           loading={loading && networks.length === 0}
           columns={columns}
           dataSource={networks}
-          pagination={false}
           headerColor={colors.grayAccent}
           backgroundColor={colors.darkBG}
           bodyText={'md'}

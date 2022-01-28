@@ -1,12 +1,11 @@
 import styled from 'styled-components/macro';
 import { normal, sm, xs, md, lg, bold } from './mixins';
-import { colors } from 'components/Styles/Colors';
 
 export const StyledText = styled.p`
   ${normal};
 
   & {
-    color: ${({ $color }) => $color};
+    ${({ $color }) => $color && `color:${$color}`};
   }
 
   &.xs {
@@ -34,7 +33,7 @@ export const StyledText = styled.p`
   }
 `;
 
-export const Text = ({ children, className, color = colors.grayText }) => {
+export const Text = ({ children, className, color }) => {
   return (
     <StyledText className={`plain-text ${className}`} $color={color}>
       {children}

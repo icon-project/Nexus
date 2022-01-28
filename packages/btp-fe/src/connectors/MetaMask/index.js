@@ -4,14 +4,17 @@ import {
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
   MOON_BEAM_NODE,
+  BSC_NODE,
   allowedNetworkIDs,
-  currentICONexNetwork,
-} from '../constants';
-import { MB_ABI } from './moonBeamABI';
-import { convertToICX, resetTransferStep } from 'connectors/ICONex/utils';
+  signingActions,
+} from 'connectors/constants';
+import { ABI } from './abi/ABI';
+
+import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
-import { wallets } from 'utils/constants';
-import { roundNumber } from 'utils/app';
+import { wallets, nativeTokens } from 'utils/constants';
+import { sendNoneNativeCoinBSC } from 'connectors/MetaMask/services/BSCServices';
+import { sendNoneNativeCoin } from 'connectors/MetaMask/services/MoonbeamServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -19,12 +22,18 @@ const { modal, account } = store.dispatch;
 
 const metamaskURL =
   'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
+
 class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
-    this.BSH_ABI = new ethers.utils.Interface(MB_ABI);
-    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, MB_ABI, this.provider);
+    this.ABI = new ethers.utils.Interface(ABI);
+
+    // Moonbeam
+    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, ABI, this.provider);
+    // BSC
+    this.contract_BSC = new ethers.Contract(BSC_NODE.BSHCore, ABI, this.provider);
+    this.contractBEP20TKN_BSC = new ethers.Contract(BSC_NODE.BEP20TKN, ABI, this.provider);
   }
 
   get getEthereum() {
@@ -106,18 +115,6 @@ class Ethereum {
     }
   }
 
-  async getBalanceOf({ address, refundable = false, symbol = 'ICX' }) {
-    try {
-      const balance = await this.contract.getBalanceOf(address, symbol);
-      return refundable
-        ? convertToICX(balance._refundableBalance._hex)
-        : roundNumber(convertToICX(balance[0]._hex), 6);
-    } catch (err) {
-      console.log('Err: ', err);
-      return 0;
-    }
-  }
-
   async getEthereumAccounts() {
     try {
       const isAllowedNetwork = this.isAllowedNetwork();
@@ -129,11 +126,12 @@ class Ethereum {
         localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
         const balance = await this.getProvider.getBalance(address);
         const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
+
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
           wallet,
-          unit: 'DEV',
+          unit: nativeTokens[currentNetwork].symbol,
           currentNetwork,
         });
       }
@@ -144,25 +142,74 @@ class Ethereum {
 
   async sendTransaction(txParams) {
     try {
+      modal.openModal({
+        icon: 'loader',
+        desc: 'Waiting for confirmation in your wallet.',
+      });
+
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
         params: [txParams],
       });
-      if (txHash) {
-        modal.openModal({
-          icon: 'checkIcon',
-          children: <SuccessSubmittedTxContent />,
-          button: {
-            text: 'Continue transfer',
-            onClick: () => {
-              // back to transfer box
-              resetTransferStep();
-              modal.setDisplay(false);
-            },
-          },
-        });
-      }
-      return txHash;
+      let result = null;
+
+      const checkTxRs = setInterval(async () => {
+        if (result) {
+          if (result.status === 1) {
+            switch (window[signingActions.globalName]) {
+              case signingActions.deposit:
+                modal.openModal({
+                  icon: 'checkIcon',
+                  desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
+                  button: {
+                    text: 'Transfer',
+                    onClick: () => sendNoneNativeCoinBSC(),
+                  },
+                });
+                break;
+              case signingActions.approve:
+                modal.openModal({
+                  icon: 'checkIcon',
+                  desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
+                  button: {
+                    text: 'Transfer',
+                    onClick: sendNoneNativeCoin,
+                  },
+                });
+                break;
+
+              default:
+                modal.openModal({
+                  icon: 'checkIcon',
+                  children: <SuccessSubmittedTxContent />,
+                  button: {
+                    text: 'Continue transfer',
+                    onClick: () => {
+                      // back to transfer box
+                      resetTransferStep();
+                      modal.setDisplay(false);
+                    },
+                  },
+                });
+                break;
+            }
+          } else {
+            clearInterval(checkTxRs);
+            modal.openModal({
+              icon: 'xIcon',
+              desc: 'Transaction failed',
+              button: {
+                text: 'Back to transfer',
+                onClick: () => modal.setDisplay(false),
+              },
+            });
+          }
+
+          clearInterval(checkTxRs);
+        } else {
+          result = await this.provider.getTransactionReceipt(txHash);
+        }
+      }, 4000);
     } catch (error) {
       if (error.code === 4001) {
         modal.openModal({
@@ -183,80 +230,8 @@ class Ethereum {
             onClick: () => modal.setDisplay(false),
           },
         });
-        return;
       }
     }
-  }
-
-  async setApprovalForAll() {
-    const data = this.BSH_ABI.encodeFunctionData('setApprovalForAll', [
-      MOON_BEAM_NODE.BSHCore,
-      '0x1',
-    ]);
-
-    await this.sendTransaction({
-      from: this.ethereum.selectedAddress,
-      to: MOON_BEAM_NODE.BSHCore,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    });
-  }
-
-  async reclaim({ coinName, value }) {
-    const data = this.BSH_ABI.encodeFunctionData('reclaim', [coinName, value]);
-
-    await this.sendTransaction({
-      from: this.ethereum.selectedAddress,
-      to: MOON_BEAM_NODE.BSHCore,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    });
-  }
-
-  async isApprovedForAll(address) {
-    try {
-      const result = await this.contract.isApprovedForAll(
-        address || localStorage.getItem(ADDRESS_LOCAL_STORAGE),
-        MOON_BEAM_NODE.BSHCore,
-      );
-      return result;
-    } catch (err) {
-      console.log('Err: ', err);
-    }
-  }
-
-  async transfer(tx, sendNativeCoin) {
-    // https://docs.metamask.io/guide/sending-transactions.html#example
-    const value = ethers.utils.parseEther(tx.value)._hex;
-    const { to } = tx;
-    let txParams = {
-      from: toChecksumAddress(this.ethereum.selectedAddress),
-      value,
-    };
-
-    let data = null;
-    if (sendNativeCoin) {
-      data = this.BSH_ABI.encodeFunctionData('transferNativeCoin', [
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
-      ]);
-    } else {
-      data = this.BSH_ABI.encodeFunctionData('transfer', [
-        'ICX',
-        value,
-        `btp://${currentICONexNetwork.networkAddress}/${to}`,
-      ]);
-
-      delete txParams.value;
-    }
-
-    txParams = {
-      ...txParams,
-      to: MOON_BEAM_NODE.BSHCore,
-      gas: MOON_BEAM_NODE.gasLimit,
-      data,
-    };
-
-    await this.sendTransaction(txParams);
   }
 }
 

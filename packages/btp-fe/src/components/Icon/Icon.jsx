@@ -2,7 +2,6 @@ import { memo } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components/macro';
-
 import { wallets } from 'utils/constants';
 
 import { ReactComponent as metaMaskIcon } from 'assets/images/metal-mask.svg';
@@ -12,6 +11,7 @@ import { ReactComponent as copyIcon } from 'assets/images/copy-icon.svg';
 import { ReactComponent as binanceIcon } from 'assets/images/binance-icon.svg';
 import { ReactComponent as btcIcon } from 'assets/images/btc-icon.svg';
 import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
+import { ReactComponent as nearIcon } from 'assets/images/near-icon.svg';
 
 import MBIcon from 'assets/images/moonbeam.jpeg';
 
@@ -24,6 +24,7 @@ const StyledIcon = styled.img`
   width: ${({ width, size }) => sizes[size] || width};
   vertical-align: middle;
 
+  /* Fix image gets blur when resize */
   image-rendering: -moz-crisp-edges; /* Firefox */
   image-rendering: -o-crisp-edges; /* Opera */
   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
@@ -56,9 +57,11 @@ export const Icon = memo(
       ETH: ethIcon,
       copy: copyIcon,
       binance: binanceIcon,
+      BNB: binanceIcon,
       btc: btcIcon,
       bch: bchIcon,
       DEV: MBIcon,
+      NEAR: nearIcon,
     };
 
     const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL;
@@ -89,5 +92,28 @@ export const Icon = memo(
 Icon.displayName = 'Icon';
 
 Icon.propTypes = {
+  /** Available sizes */
   size: PropTypes.oneOf(['s', 'm']),
+  /** Custome width and overrride size */
+  width: PropTypes.string,
+  /** List of avalable icons */
+  icon: PropTypes.oneOf([
+    wallets.metamask,
+    wallets.iconex,
+    'ICX',
+    'ETH',
+    'copy',
+    'binance',
+    'BNB',
+    'btc',
+    'bch',
+    'DEV',
+    'NEAR',
+  ]),
+  /** Display icon with URL */
+  iconURL: PropTypes.string,
+  /** Display icon with SVG component */
+  SVGComp: PropTypes.node,
+  /** Set color for icon with SVG component */
+  color: PropTypes.string,
 };

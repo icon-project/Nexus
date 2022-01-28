@@ -19,3 +19,5 @@ const StyledButton = styled(Button)`
 export const SecondaryButton = ({ children, ...rest }) => {
   return <StyledButton {...rest}>{children}</StyledButton>;
 };
+
+export default SecondaryButton;

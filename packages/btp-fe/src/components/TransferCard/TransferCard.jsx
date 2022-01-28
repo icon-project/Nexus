@@ -1,16 +1,13 @@
-import { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
 import { Select, SelectAsset } from 'components/Select';
 import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
-import { TransferApproval } from 'components/NotificationModal/TransferApproval';
 
-import { useDispatch } from 'hooks/useRematch';
-import { connectedNetWorks } from 'utils/constants';
+import { getTartgetNetwork } from 'utils/constants';
 
-import { getService } from 'services/transfer';
 import transferIcon from 'assets/images/vector-icon.svg';
 
 const StyledCard = styled.div`
@@ -63,20 +60,7 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({
-  setStep,
-  setSendingInfo,
-  isConnected,
-  isSendingNativeCoin,
-  currentNetwork,
-}) => {
-  const [checkingApproval, setCheckingApproval] = useState(false);
-
-  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
-    openModal,
-    setDisplay,
-  }));
-
+export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetwork }) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -86,55 +70,14 @@ export const TransferCard = ({
     }
   };
 
-  const onNext = async () => {
-    if (isSendingNativeCoin) {
-      setStep(1);
-    } else {
-      setCheckingApproval(true);
-
-      const result = await getService().isApprovedForAll();
-
-      if (result) {
-        setStep(1);
-      } else if (result === false) {
-        openModal({
-          hasHeading: false,
-          children: (
-            <TransferApproval
-              onOk={() => {
-                getService().setApprovalForAll();
-              }}
-              onCancel={() => {
-                setDisplay(false);
-              }}
-            />
-          ),
-        });
-      } else {
-        openModal({
-          icon: 'xIcon',
-          desc: 'Something went wrong',
-        });
-      }
-
-      setCheckingApproval(false);
-    }
-  };
-
-  const { icon, moonbeam } = connectedNetWorks;
-
-  const getCrossNetworks = () => {
-    return currentNetwork
-      ? [
-          { value: icon, label: icon },
-          { value: moonbeam, label: moonbeam },
-        ].filter((network) => network.value !== currentNetwork)
-      : [];
+  const onNext = () => {
+    setStep(1);
   };
 
   return (
     <StyledCard>
       <Header className="sm bold center">Transfer</Header>
+
       <div className="content">
         <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
@@ -142,27 +85,19 @@ export const TransferCard = ({
 
         <div className="send">
           <Text className="md">Send</Text>
-          <SelectAsset onChange={onChange} />
+          <SelectAsset onChange={onChange} currentNetwork={currentNetwork} />
         </div>
 
         <div className="devider" />
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={getCrossNetworks()} onChange={onChange} name="network" />
+          <Select options={getTartgetNetwork(currentNetwork)} onChange={onChange} name="network" />
         </div>
 
         <div className="button-section">
           {isConnected ? (
-            <PrimaryButton
-              width={416}
-              height={64}
-              disabled={checkingApproval}
-              onClick={() => {
-                onNext();
-              }}
-              type="button"
-            >
+            <PrimaryButton width={416} height={64} onClick={onNext} type="button">
               Next
             </PrimaryButton>
           ) : (
@@ -174,4 +109,13 @@ export const TransferCard = ({
       </div>
     </StyledCard>
   );
+};
+
+TransferCard.propTypes = {
+  /** Set step for transfer box */
+  setStep: PropTypes.func,
+  setSendingInfo: PropTypes.func,
+  isConnected: PropTypes.bool,
+  isSendingNativeCoin: PropTypes.bool,
+  currentNetwork: PropTypes.string,
 };

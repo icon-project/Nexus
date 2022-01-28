@@ -31,7 +31,6 @@ const Wapper = styled.div`
 
         &:nth-child(2) {
           text-align: right;
-          padding-right: 18px;
         }
       }
     }

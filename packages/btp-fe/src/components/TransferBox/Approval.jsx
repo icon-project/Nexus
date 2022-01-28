@@ -1,11 +1,12 @@
 import { memo, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { getBTPfee } from 'connectors/ICONex/iconService';
+import { getBTPfee } from 'connectors/ICONex/ICONServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { getService } from 'services/transfer';
@@ -144,7 +145,7 @@ export const Approval = memo(
         desc: 'Waiting for confirmation in your wallet.',
       });
 
-      getService().transfer(tx, isSendingNativeCoin);
+      getService().transfer(tx, isSendingNativeCoin, network);
     };
 
     return (
@@ -210,3 +211,24 @@ export const Approval = memo(
 );
 
 Approval.displayName = 'Approval';
+
+Approval.propTypes = {
+  /** Set step for transfer box */
+  setStep: PropTypes.func,
+  /** Transfer box values */
+  values: PropTypes.shape({ recipient: PropTypes.string, tokenAmount: PropTypes.string }),
+  sendingInfo: PropTypes.shape({
+    token: PropTypes.string,
+    network: PropTypes.string,
+  }),
+  account: PropTypes.shape({
+    currentNetwork: PropTypes.string,
+    unit: PropTypes.string,
+  }),
+  /** react-final-form object */
+  form: PropTypes.object,
+  /** Is the current display screen */
+  isCurrent: PropTypes.bool,
+  /** Token in USD rate */
+  usdRate: PropTypes.number,
+};
