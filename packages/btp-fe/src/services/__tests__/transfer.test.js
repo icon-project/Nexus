@@ -29,8 +29,7 @@ describe('services/transfer', () => {
     expect(service.transfer).toBeTruthy();
     expect(service.getBalance).toBeTruthy();
     expect(service.getBalanceOf).toBeTruthy();
-    expect(service.setApprovalForAll).toBeTruthy();
-    expect(service.isApprovedForAll).toBeTruthy();
+    expect(service.transferToERC2).toBeTruthy();
     expect(service.reclaim).toBeTruthy();
   });
 
@@ -38,8 +37,6 @@ describe('services/transfer', () => {
     const service = getCurrentTransferService()(wallets.metamask, connectedNetWorks.moonbeam);
     expect(service.transfer).toBeTruthy();
     expect(service.getBalanceOf).toBeTruthy();
-    expect(service.setApprovalForAll).toBeTruthy();
-    expect(service.isApprovedForAll).toBeTruthy();
     expect(service.reclaim).toBeTruthy();
   });
 });

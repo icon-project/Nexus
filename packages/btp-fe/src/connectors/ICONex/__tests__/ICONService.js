@@ -35,7 +35,7 @@ describe('ICONService', () => {
     const tx = txBuilder
       .from(transactions.from)
       .to(transactions.to)
-      .stepLimit(IconConverter.toBigNumber(1000000000))
+      .stepLimit(IconConverter.toBigNumber(3519157719))
       .nid(IconConverter.toBigNumber(options.nid))
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))
@@ -78,7 +78,7 @@ describe('ICONService', () => {
 
     test('send non-native coin on Moonbeam side', () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
-      const mock_sendNonNativeCoin = jest.spyOn(ICONService, 'approve').mockImplementation();
+      const mock_sendNonNativeCoin = jest.spyOn(ICONService, 'transferToERC2').mockImplementation();
 
       transfer({}, null, connectedNetWorks.moonbeam, false);
 
