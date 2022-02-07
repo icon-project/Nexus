@@ -3,7 +3,7 @@
 ### Playground
 
 - Team testing: http://demo-static-web.lecle.vn.s3-website-ap-southeast-1.amazonaws.com/transfer
-- Official testnet URL: http://stage-frontend-storage.s3-website.us-east-2.amazonaws.com/transfer
+- Official testnet URL: http://testnet.nexusportal.io/transfer
 
 ### Connect wallets to testnet 
 
@@ -39,6 +39,8 @@
 
 - pw: 0fce2036c36ec3d8
 
+**Faucet:** https://faucet.ibriz.ai/
+
 
 #### 2. MetaMask
 
@@ -46,11 +48,13 @@
 
 - Testing account: BOB - Private key: 0x4becbf3d80360c79447fd085971455e2e1970e64678eb546a3b9811219b67475
 
-- Switch to Moonbeam localnet: https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-custom-Network-RPC
+- Switch to Moonbeam testnet: https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-custom-Network-RPC
 
 **Moonbeam testnet:**
 - Name: Moonbase
 - New RPC URL: https://moonbeam-alpha.api.onfinality.io/public
 - Chain ID: 1287
 - Symbol: DEV
+
+- Faucet: https://docs.moonbeam.network/builders/get-started/moonbase/#get-tokens
 
