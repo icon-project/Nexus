@@ -18,7 +18,7 @@
 - ICONex: `Don't require` but more information to playground [here](https://www.icondev.io/references/how-to/change-network-in-iconex)
 - MetaMask: [Moonbeam testnet guideline](https://docs.moonbeam.network/getting-started/local-node/using-metamask/)
 
-### 2. Checking isApprovedForAll(Deprecated)
+### 2. Checking isApprovedForAll (Deprecated)
 
 > Before requesting transfer none native tokens, the first time, Requestor must call setApprovalForAll to authorize BSHCore >contract to transfer Tokens on Requestor's behave. Requestor is not required to repeat this step for following requests. `setApprovalForAll` takes effect until it's set back to false.
 
