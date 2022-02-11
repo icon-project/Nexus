@@ -7,58 +7,60 @@
 # PRECISION=18
 # COIN_UNIT=$((10 ** $PRECISION))
 # printf '%d' 0x140
+# echo $((0x16345785D8A0000))
 
-ICON_API=https://berlin.net.solidwallet.io/api/v3
-ICON_ID=0x7
-ICON_BSH_ADDRESS=cx8a05039c1c1da936d279e276a25c4fa66154bebd
-ICON_IRC2_ADDRESS=cx824f3b2f2a8f59ac3d281b1b9bc295e051be5274
-MOONBEAM_API=https://moonbeam-alpha.api.onfinality.io/public
-MOONBEAM_ID=0x507
-MOONBEAM_BSH=0xC0bDA7E7Cb3f0277748aF59F1c639BE7589bE4Ec
-MOONBEAM_ERC20=0xC0bDA7E7Cb3f0277748aF59F1c639BE7589bE4Ec
-ALICE_BTP_ADDRESS=btp://$ICON_ID.icon/hxdd7cc765bb90ef63fca515e362feb3cce3f63ec7
-ALICE_SECRET=
+ALICE_ADDRESS=hxdd7cc765bb90ef63fca515e362feb3cce3f63ec7
+ALICE_BTP_ADDRESS=btp://$ICON_NETWORK_ID.icon/$ALICE_ADDRESS
+# ALICE_SECRET=
 ALICE_KS=vova.json
-BOB_BTP_ADDRESS=btp://$MOONBEAM_ID.moonbeam/0x87a8804BDC1Fe3bC1ad703F61685934E7b348413
-BOB_PK=
+BOB_ADDRESS=0x87a8804BDC1Fe3bC1ad703F61685934E7b348413
+BOB_BTP_ADDRESS=btp://$MOONBEAM_NETWORK_ID.pra/$BOB_ADDRESS
+# BOB_PK=
+DEV_IRC2_ADDRESS=cx6ea23146cedff04e93462f067765bd150d8f24b5
+ICX_ERC20_ADDRESS=0x7b329aA204fe2c790f714C5A25123bb2DaC86632
 
 echo Alice sends 0.1 ICX to Bob
 
-goloop rpc sendtx call --uri $ICON_API --to $ICON_BSH_ADDRESS --method transferNativeCoin \
+goloop rpc sendtx call --uri $ICON_API_URL --to $ICON_NATIVE_COIN_BSH_ADDRESS --method transferNativeCoin \
   --param _to=$BOB_BTP_ADDRESS --value=100000000000000000 \
-  --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_ID
+  --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_NETWORK_ID
 
-sleep 5s
-
-echo Approve
-
-goloop rpc sendtx call --uri $ICON_API --to $ICON_IRC2_ADDRESS --method approve \
-  --param spender=$ICON_BSH_ADDRESS --value=100000000000000000 \
-  --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_ID
-
-sleep 5s
+sleep 1s
 
 echo Alice sends 0.1 DEV to Bob
 
-goloop rpc sendtx call --uri $ICON_API --to $ICON_IRC2_ADDRESS --method transfer \
-  --param _to=$BOB_BTP_ADDRESS --param _value=100000000000000000 \
-  --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_ID
+goloop rpc sendtx call --uri $ICON_API_URL --to $DEV_IRC2_ADDRESS --method approve \
+  --param spender=$ICON_NATIVE_COIN_BSH_ADDRESS --param amount=100000000000000000 \
+  --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_NETWORK_ID
 
-sleep 5s
+sleep 1s
+
+goloop rpc call --uri $ICON_API_URL --to $DEV_IRC2_ADDRESS --method allowance \
+  --param owner=$ALICE_ADDRESS --param spender=$ICON_NATIVE_COIN_BSH_ADDRESS
+
+goloop rpc sendtx call --uri $ICON_API_URL --to $ICON_NATIVE_COIN_BSH_ADDRESS --method transfer \
+  --param _to=$BOB_BTP_ADDRESS --param _coinName=DEV --param _value=100000000000000000 \
+  --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_NETWORK_ID
+
+sleep 1s
 
 echo Bob sends 0.1 DEV to Alice
 
-eth contract:send --network $MOONBEAM_API bshCore@$MOONBEAM_BSH 'transferNativeCoin("$ALICE_BTP_ADDRESS")' \
+# eth address:balance --network $MOONBEAM_API_URL $BOB_ADDRESS
+
+eth contract:send --network $MOONBEAM_API_URL bshcore@$MOONBEAM_BSH_CORE_ADDRESS "transferNativeCoin('$ALICE_BTP_ADDRESS')" \
   --pk $BOB_PK --value 100000000000000000 | jq -r
 
-sleep 5s
-
-echo Approve
-
-eth contract:send --network $MOONBEAM_API erc20@$MOONBEAM_ERC20 'approve("$MOONBEAM_BSH", 100000000000000000)' \
-  --pk $BOB_PK | jq -r
+sleep 1s
 
 echo Bob sends 0.1 ICX to Alice
 
-eth contract:send --network $MOONBEAM_API bshCore@$MOONBEAM_BSH 'transfer("ICX", "0x16345785D8A0000", "$ALICE_BTP_ADDRESS")' \
+eth contract:send --network $MOONBEAM_API_URL erc20@$ICX_ERC20_ADDRESS "approve('$MOONBEAM_BSH_CORE_ADDRESS', '100000000000000000')" \
+  --pk $BOB_PK | jq -r
+
+sleep 1s
+
+eth contract:call --network $MOONBEAM_API_URL erc20@$ICX_ERC20_ADDRESS "allowance('$BOB_ADDRESS', '$MOONBEAM_BSH_CORE_ADDRESS')"
+
+eth contract:send --network $MOONBEAM_API_URL bshcore@$MOONBEAM_BSH_CORE_ADDRESS "transfer('ICX', '100000000000000000', '$ALICE_BTP_ADDRESS')" \
   --pk $BOB_PK | jq -r

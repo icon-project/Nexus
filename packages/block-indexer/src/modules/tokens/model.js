@@ -27,7 +27,7 @@ async function refreshRegisteredTokens() {
 
 function getTokenName(contractAddress) {
   const token = registeredTokens.get(contractAddress);
-  return token ? token.token_name : '';
+  return token ? token.token_id : '';
 }
 
 module.exports = {

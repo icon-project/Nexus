@@ -74,8 +74,6 @@ async function getBlockData() {
   // Go to line 506 assert(false, 'Number can only safely store up to 53 bits');
   // Replace it with ret = Number.MAX_SAFE_INTEGER;
   // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
-  // ISSUE 2: Get "Error: Returned error: Expect block number from id: BlockId::Number(1577159)" if block
-  // is not ready i.e. mining, importing
   const block = await web3.eth.getBlock(blockHeight, true);
   const timeout = block ? 3000 : 10000; // Block time ~3 seconds, wait longer for new blocks created.
 
@@ -98,8 +96,16 @@ async function retryGetBlockData() {
   try {
     await getBlockData();
   } catch (error) {
-    logger.error('moonbeam:retryGetBlockData fails to fetch block, retry in 1 minutes: %O', error);
-    setTimeout(async () => await retryGetBlockData(), 1 * 60 * 1000);
+    // Bad error.message if block isn't available: Error: Returned error: Expect block number from id: BlockId::Number(1577159)
+    // is not ready i.e. mining, importing
+    if (error.message.indexOf('Expect block number from id') > 0) {
+      logger.info(`Block ${blockHeight} is not available. Waiting for a few seconds.`);
+      setTimeout(async () => await retryGetBlockData(), 15 * 1000);
+      return true;
+    }
+
+    logger.error('moonbeam:retryGetBlockData fails to fetch block, retry in 5 minutes: %O', error);
+    setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
 

@@ -27,19 +27,9 @@ https://btp.tracker.solidwallet.io
 
 - Block numbers (of each network) where deployment started
 - Registered relays (tx/tx result/tx receipt)
-- Prefunded test accounts (addresses and keys) e.g. Alice, Bob
-- Moonbeam contract ABI files (BMCManagement.json, BSHCore.json, BSHPeriphery.json)
+- Moonbeam contract ABI files (BMCManagement.json, BSHCore.json, BSHPeriphery.json, ERC20.json)
 
 Ref: https://github.com/icon-project/btp/blob/icondao/doc/deployment.md
-
-```bash
-Block numbers:
-ICON:   "offset": 4890078,
-PRA:    "offset": 1007699,
-
-# it's not reliable according to Phi: https://moonbase.moonscan.io
-https://moonbase-blockscout.testnet.moonbeam.network
-https://btp.tracker.solidwallet.io
 
 # Moonbeam tokens
 0x1abea0a03be823bd172c04b4b68dc1d9b8ed45db43b4c12ef262eac1cb6f66bb
@@ -69,9 +59,12 @@ goloop rpc --uri https://btp.net.solidwallet.io/api/v3/ sendtx call --to cx11a5a
 goloop rpc --uri https://btp.net.solidwallet.io/api/v3/ txresult 0xdabca08cf388c374bf61e05dd32a2d6bde0f37e2d1225a447a144662ecc73b13
 
 # ABI
+
+```bash
 cat BMCManagement.json | jq '.abi' > abi.bmc_management.json
 cat BSHCore.json | jq '.abi' > abi.bsh_core.json
 cat BSHPeriphery.json | jq '.abi' > abi.bsh_periphery.json
+cat ERC20.json | jq '.abi' > abi.erc20.json
 ```
 
 ## Configure System
