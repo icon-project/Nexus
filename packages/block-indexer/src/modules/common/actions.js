@@ -2,6 +2,7 @@
 
 const bmcAbi = require('../bsc-indexer/abi/BMCManagement.json');
 const moonbeamBmcAbi = require('../web3-indexer/abi/moonbeam/abi.bmc_management.json');
+const moonbeamBshAbi = require('../web3-indexer/abi/moonbeam/abi.bsh_core.json');
 
 const bscActionMap = new Map();
 const moonbeamActionMap = new Map();
@@ -36,7 +37,12 @@ function getBscActionMap(web3) {
 
 function getMoonbeamActionMap(web3) {
   if (0 === moonbeamActionMap.size) {
-    const actions = getActionInfoFromAbi(web3, moonbeamBmcAbi, ['addRelay', 'removeRelay']);
+    let actions = getActionInfoFromAbi(web3, moonbeamBmcAbi, ['addRelay', 'removeRelay']);
+
+    for (const action of actions)
+      moonbeamActionMap.set(action.action.name, action);
+
+    actions = getActionInfoFromAbi(web3, moonbeamBshAbi, ['register']);
 
     for (const action of actions)
       moonbeamActionMap.set(action.action.name, action);

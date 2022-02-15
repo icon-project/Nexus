@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('icon');
 const { findAllTokens } = require('./repository');
 const registeredTokens = new Map();
 
@@ -15,6 +16,15 @@ async function getRegisteredTokens() {
   return registeredTokens;
 }
 
+async function refreshRegisteredTokens() {
+  registeredTokens.clear();
+
+  const tokens = await getRegisteredTokens();
+  debug('Refreshed registered tokens: %O', tokens);
+
+  return tokens;
+}
+
 function getTokenName(contractAddress) {
   const token = registeredTokens.get(contractAddress);
   return token ? token.token_name : '';
@@ -22,5 +32,6 @@ function getTokenName(contractAddress) {
 
 module.exports = {
   getRegisteredTokens,
+  refreshRegisteredTokens,
   getTokenName
 };

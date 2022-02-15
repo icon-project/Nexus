@@ -425,3 +425,9 @@ ALTER TABLE indexer_stats
     DROP COLUMN updated_time,
     ALTER COLUMN block_height SET DEFAULT 0,
     ADD COLUMN update_at timestamp without time zone;
+
+-- Issue #538
+
+ALTER TABLE registered_tokens
+    ADD COLUMN active integer NOT NULL DEFAULT 1,
+    ADD COLUMN token_id character varying(50) NOT NULL;

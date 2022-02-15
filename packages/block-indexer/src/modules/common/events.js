@@ -33,9 +33,11 @@ function decodeEventLog(web3, eventMap, eventName, eventData) {
 function findEventByName(eventName, eventMap, eventLogs) {
   const eventDef = eventMap.get(eventName);
 
-  for (const event of eventLogs) {
-    if (eventDef.hash === event.topics[0])
-      return event;
+  if (eventDef) {
+    for (const event of eventLogs) {
+      if (eventDef.hash === event.topics[0])
+        return event;
+    }
   }
 }
 

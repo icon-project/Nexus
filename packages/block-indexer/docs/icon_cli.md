@@ -40,7 +40,7 @@ eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_cor
 
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "coinId('ICX')"
 
-eth transaction:get --network http://localhost:9933 0xc67c3a4d537de8d042c6631f857580c78961f21e3bb425314be0cce86bf668b9
+eth transaction:get --network moonbeam 0xce086c72ef5b5a3547ace07a9e9791b3b0032b52eb9554e1f60b2250390970ec
 
 eth contract:call --network http://localhost:9933 bshcore@$(cat ./config/bsh_core.moonbeam) "coinNames()"
 
@@ -51,3 +51,9 @@ eth contract:call --network http://localhost:8545 bshcore@$(cat bsh.core.bsc) "c
 eth block:number --network http://localhost:8545
 
 eth address:balance 0x70e789d2f5d469ea30e0525dbfdd5515d6ead30d
+
+eth contract:call --network moonbeam bshcore@0xC45517EF106214F34ac7e45F66559b499Ebef542 "coinNames()"
+eth contract:call --network moonbeam bshcore@0xC45517EF106214F34ac7e45F66559b499Ebef542 "coinId('ICON')"
+
+scp ssh ubuntu@54.251.114.18:btp/solidity/bsh/build/contracts/BSHCore.json ~/Public
+cat BSHCore.json | jq '.abi' > abi.bsh_core.json

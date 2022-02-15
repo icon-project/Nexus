@@ -12,7 +12,7 @@ const { handleTransactionEvents } = require('../transactions/icon');
 const { getRegisteredTokens } = require('../tokens/model');
 // FAS: const { handleTransferFeeEvents } = require('./transfer-fee');
 const { handleMintBurnEvents } = require('../mint-burn/icon');
-// const { handleTokenRegister } = require('./token-register');
+const { handleTokenRegister } = require('../tokens/icon');
 const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
 
@@ -23,14 +23,6 @@ const iconService = new IconService(httpProvider);
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 const indexInterval = Number(process.env.ICON_INDEX_INTERVAL);
 
-// from/to address of transactions need to query for receipts.
-const watchedTxReceipt = {
-  fromAddress: new Map(),
-  toAddress: new Map([
-    [process.env.ICON_BMC_ADDRESS, true]
-  ])
-};
-
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
     if (txResult && 1 === txResult.status) {
@@ -38,7 +30,7 @@ async function runTransactionHandlers(transaction, txResult, block) {
       // FAS: await handleAuctionEvents(txResult);
       // FAS: await handleTransferFeeEvents(txResult);
       await handleMintBurnEvents(txResult, transaction);
-      // await handleTokenRegister(txResult, transaction);
+      await handleTokenRegister(transaction);
       await handleRelayAction(txResult, transaction);
       await handleRelayerAction(transaction);
     }
@@ -89,10 +81,14 @@ async function runBlockHandlers(block) {
   for (const tx of block.confirmedTransactionList) {
     debugTx('Transaction: %O', tx);
 
-    if (tx.to && watchedTxReceipt.toAddress.has(tx.to))
-      await retryGetTransactionResult(tx, block);
-    else
-      await runTransactionHandlers(tx, null, block);
+    if (tx.to) {
+      const tokenMap = await getRegisteredTokens();
+
+      if (process.env.ICON_BMC_ADDRESS === tx.to || tokenMap.has(tx.to))
+        await retryGetTransactionResult(tx, block);
+      else
+        await runTransactionHandlers(tx, null, block);
+    }
   }
 
   // More block handlers go here.
@@ -150,11 +146,6 @@ async function retryGetBlockData() {
 }
 
 async function start() {
-  const contractMap = await getRegisteredTokens();
-
-  for (const [key, value] of contractMap.entries())
-    watchedTxReceipt.toAddress.set(key, true);
-
   // Continue from last indexed block?
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
