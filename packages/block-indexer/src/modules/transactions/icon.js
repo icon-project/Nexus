@@ -4,7 +4,8 @@ const { decode } = require('rlp');
 const { IconConverter } = require('icon-sdk-js').default;
 const Web3 = require('web3');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
-const { calculateTotalVolume, getTokenContractMap } = require('./model');
+const { getRegisteredTokens } = require('../tokens/model');
+const { calculateTotalVolume } = require('./model');
 const {
   getLatestTransactionByToken,
   findTxBySerialNumber,
@@ -68,9 +69,9 @@ async function handleTransactionEvents(txResult, transaction) {
   if (0 === txResult.eventLogs.length)
     return false;
 
-  const tokenContractMap = await getTokenContractMap();
+  const tokenMap = await getRegisteredTokens();
 
-  if (tokenContractMap.has(txResult.to)) {
+  if (tokenMap.has(txResult.to)) {
     for (const event of txResult.eventLogs) {
       if (TRANFER_START_PROTOTYPE !== event.indexed[0])
         continue;

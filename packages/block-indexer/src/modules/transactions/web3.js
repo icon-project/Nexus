@@ -4,6 +4,7 @@ const Web3 = require('web3');
 const debug = require('debug')('web3_tx');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT, TRANSFER_START_EVENT, TRANSFER_END_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog } = require('../common/events');
+const { getRegisteredTokens } = require('../tokens/model');
 const { calculateTotalVolume } = require('./model');
 const { getLatestTransactionByToken, findTxBySerialNumber, setTransactionConfirmed, saveTransaction } = require('./repository');
 
@@ -18,8 +19,9 @@ class Web3TransactionHandler {
 
   async run(tx, receipt, block) {
     const txTo = tx.to.toLowerCase();
+    const tokenMap = await getRegisteredTokens();
 
-    if (this.config.contractMap.has(txTo)) {
+    if (tokenMap.has(txTo)) {
       const tsEvent = findEventByName(TRANSFER_START_EVENT, this.config.eventMap, receipt.logs);
 
       if (tsEvent) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('db');
-const { pgPool, createLogger, logDbError, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
+const { pgPool, createLogger, TRANSACTION_TBL_NAME, TRANSACTION_TBL } = require('../../common');
 
 const logger = createLogger();
 
@@ -97,19 +97,9 @@ async function saveTransaction(transaction) {
   }
 }
 
-async function getTokenContractAddresses() {
-  try {
-    const { rows } = await pgPool.query('SELECT DISTINCT(contract_address) FROM registered_tokens');
-    return rows.map(row => row.contract_address);
-  } catch (error) {
-    logger.error('getTokenContractAddresses fails: %s, %s', error.message, error.detail);
-  }
-}
-
 module.exports = {
   getLatestTransactionByToken,
   findTxBySerialNumber,
   setTransactionConfirmed,
-  saveTransaction,
-  getTokenContractAddresses
+  saveTransaction
 };

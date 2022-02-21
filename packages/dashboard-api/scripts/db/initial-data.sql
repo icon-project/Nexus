@@ -34,15 +34,13 @@ INSERT INTO token_prices (cmc_id, name, price, active) VALUES (1839, 'BNB', 493.
 -- ICON
 
 -- md5(random()::text || clock_timestamp()::text)::uuid
-INSERT INTO registered_tokens (network_id, token_name, contract_address, tx_hash) VALUES ('0x42', 'ICX', 'ICON_NATIVE_COIN_BSH_ADDRESS', '0x294c1e27198ae3b159f93eedd6a478966d725c4d12dd69915992afc50cb10f24');
-INSERT INTO registered_tokens (network_id, token_name, contract_address, tx_hash) VALUES ('0xd35bbb', 'BNB', 'IRC2_CONTRACT_ADDRESS', '0xe839292c8f8e0bbbb33b34df27702cc72fabbd8602f23d656f7512990f5ae0c1');
-INSERT INTO registered_tokens (network_id, token_name, contract_address, tx_hash) VALUES ('0x42', 'DEV', 'IRC2_CONTRACT_ADDRESS', '0xd27a921020404b62e60160634b624e372329461cc44995f40ecd30cafa0e176d');
-INSERT INTO registered_tokens (network_id, token_name, contract_address, tx_hash) VALUES ('0x58eb1c', 'ETH', 'token_bsh.icon', '0x9dec32260be74cdfed593fef1ddcdfd86523050c27d8f57332c74f93811364f2');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x42', 'ICX', 'ICX', 'ICON_NATIVE_COIN_BSH_ADDRESS', '0x294c1e27198ae3b159f93eedd6a478966d725c4d12dd69915992afc50cb10f24');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x42', 'DEV', 'DEV', 'IRC2_CONTRACT_ADDRESS', '0xd27a921020404b62e60160634b624e372329461cc44995f40ecd30cafa0e176d');
 
 -- Moonbeam
 
-INSERT INTO registered_tokens (network_id, token_name, contract_address, tx_hash) VALUES ('0x507', 'DEV', 'MOONBEAM_BSH_CORE_ADDRESS', '0x5c8b55af397256d06e2be6acdefb350f92ff4363745001ce8cd367c74b10d7f3');
-INSERT INTO registered_tokens (network_id, token_name, contract_address, tx_hash) VALUES ('0x507', 'ICX', 'MOONBEAM_BSH_CORE_ADDRESS', '0xb5b49cd71c1d403db3cb0e7a0a8eeddf8fba93eb15930709ca5583912fc64d6c');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x507', 'DEV', 'DEV', 'MOONBEAM_BSH_CORE_ADDRESS', '0x5c8b55af397256d06e2be6acdefb350f92ff4363745001ce8cd367c74b10d7f3');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x507', 'ICX', 'ICX', 'ERC20_CONTRACT_ADDRESS', '0xb5b49cd71c1d403db3cb0e7a0a8eeddf8fba93eb15930709ca5583912fc64d6c');
 
 -- BSC
 

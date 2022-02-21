@@ -4,7 +4,7 @@ const Web3 = require('web3');
 const debug = require('debug')('mint_burn');
 const { createLogger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog } = require('../common/events');
-const { getTokenName } = require('../tokens/model');
+const { getTokenName, getRegisteredTokens } = require('../tokens/model');
 const { saveToken, getTotalTokenAmount } = require('./repository');
 
 const TRANSFER_EVENT = 'Transfer';
@@ -21,10 +21,11 @@ class Web3MintBurnHandler {
 
   async run(tx, receipt, block) {
     const txTo = tx.to.toLowerCase();
+    const tokenMap = await getRegisteredTokens();
 
     // Mint in a tx send to BSH but burn in a tx send to BMC.
     // Ref: https://github.com/icon-project/btp-dashboard/issues/465#issuecomment-966937077
-    if (this.config.contractMap.has(txTo) || this.config.bmcAddress === txTo) {
+    if (tokenMap.has(txTo) || this.config.bmcAddress === txTo) {
       const transferEvent = findEventByName(TRANSFER_EVENT, this.config.eventMap, receipt.logs);
 
       if (transferEvent) {

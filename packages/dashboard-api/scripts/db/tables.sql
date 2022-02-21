@@ -89,6 +89,8 @@ CREATE TABLE IF NOT EXISTS public.registered_tokens
     token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
     contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL,
     create_at timestamp without time zone NOT NULL DEFAULT now(),
+    token_id character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    active integer NOT NULL DEFAULT 1,
     CONSTRAINT registered_tokens_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT registered_tokens_network_id_token_name UNIQUE (network_id, token_name)
 );
