@@ -23,8 +23,10 @@ class Web3MintBurnHandler {
     const txTo = tx.to.toLowerCase();
     const tokenMap = await getRegisteredTokens();
 
-    // Mint in a tx send to BSH but burn in a tx send to BMC.
-    // Ref: https://github.com/icon-project/btp-dashboard/issues/465#issuecomment-966937077
+    // Mint in a tx send to BMC.
+    // e.g. https://moonbase-blockscout.testnet.moonbeam.network/tx/0x50098911ff8aa4b62d84a6c73649015821561d64fb34a825ce947e1ca4a5f15a/logs
+    // BSH but burn in a tx send to BMC.
+    // Changes with ERC20 factory: BSH 1-n ERC20 (#536). Mint/burn only happens to a wrapped coin.
     if (tokenMap.has(txTo) || this.config.bmcAddress === txTo) {
       const transferEvent = findEventByName(TRANSFER_EVENT, this.config.eventMap, receipt.logs);
 
@@ -37,6 +39,7 @@ class Web3MintBurnHandler {
 
         await this.handleTransferEvent({
           ...eventData,
+          contractAddress: transferEvent.address,
           logId: transferEvent.id
         }, tx, block);
       }
@@ -56,7 +59,7 @@ class Web3MintBurnHandler {
   } */
   async handleTransferEvent(eventData, tx, block) {
     try {
-      const tokenName = 'ICX'; // getTokenName(tx.to.toLowerCase());
+      const tokenName = getTokenName(eventData.contractAddress.toLowerCase());
 
       if (!tokenName) {
         logger.warn(`handleTransferEvent found unregistered token in tx ${eventData.logId}, ${tx.hash}`);

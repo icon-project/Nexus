@@ -1,6 +1,6 @@
 'use strict';
 
-const moonbeamBshCoreAbi= require('../web3-indexer/abi/moonbeam/abi.bsh_core.json');
+const erc20Abi= require('../web3-indexer/abi/moonbeam/abi.erc20.json');
 const moonbeamBshPeripheryAbi = require('../web3-indexer/abi/moonbeam/abi.bsh_periphery.json');
 const bshCoreAbi = require('../bsc-indexer/abi/BSHCore.json');
 const bshPeripheryAbi = require('../bsc-indexer/abi/BSHPeriphery.json');
@@ -59,7 +59,7 @@ function getBscEventMap(web3) {
 
 function getMoonbeamEventMap(web3) {
   if (0 === moonbeamEventMap.size) {
-    let events = getEventInfoFromAbi(web3, moonbeamBshCoreAbi, ['Transfer']);
+    let events = getEventInfoFromAbi(web3, erc20Abi, ['Transfer']);
 
     for (const event of events)
       moonbeamEventMap.set(event.event.name, event);

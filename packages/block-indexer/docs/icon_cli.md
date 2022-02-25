@@ -8,7 +8,7 @@ goloop rpc txresult 0xc2eb373959abee897a18da828d3386c292be6aae9560bc2cc17e9a8e99
 
 ./goloop rpc blockbyhash 0x7b8275119cb9735ac04f6f1da991bb04b8a4605f5ae2bdb604ef70bb09deaba0 --uri http://localhost:9082/api/v3
 
-goloop rpc scoreapi --uri http://localhost:9080/api/v3/icon cx8a05039c1c1da936d279e276a25c4fa66154bebd
+goloop rpc scoreapi --uri $ICON_URL 0x7b63480320B5A21f2294637aD518D174F45c2058
 
 goloop rpc scoreapi --uri https://berlin.net.solidwallet.io/api/v3 cx8a05039c1c1da936d279e276a25c4fa66154bebd
 goloop rpc scoreapi --uri https://berlin.net.solidwallet.io/api/v3 cx824f3b2f2a8f59ac3d281b1b9bc295e051be5274
