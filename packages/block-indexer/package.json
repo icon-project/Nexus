@@ -1,6 +1,6 @@
 {
   "name": "block-indexer",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Indexing data from blockchain to local database",
   "main": "index.js",
   "author": "Tien Do",
