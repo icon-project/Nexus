@@ -62,6 +62,28 @@ export const getTxResult = (txHash) => {
   }
 };
 
+export const setApproveForSendNonNativeCoin = async (tx) => {
+  const { to, coinName, value } = tx;
+  const bshAddress = await getBSHAddressOfCoinName(coinName);
+  const transaction = {
+    to: bshAddress,
+  };
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'approve',
+    params: {
+      spender: getCurrentICONexNetwork().BSHAddress,
+      amount: ethers.utils.parseEther(value).toString(10),
+    },
+  };
+
+  window[rawTransaction] = tx;
+  window[signingActions.receiver] = to;
+  window[signingActions.globalName] = signingActions.approve;
+  signTx(transaction, options);
+  return { transaction, options };
+};
+
 export const sendNonNativeCoin = () => {
   const transaction = {
     to: getCurrentICONexNetwork().BSHAddress,
@@ -72,7 +94,7 @@ export const sendNonNativeCoin = () => {
     method: 'transfer',
     params: {
       _to: `btp://${MOON_BEAM_NODE.networkAddress}/${window[signingActions.receiver]}`,
-      _value: window[rawTransaction].data.params._value,
+      _value: window[rawTransaction].data.params.amount,
       _coinName: 'DEV',
     },
   };
@@ -217,11 +239,47 @@ export const getBTPfee = async () => {
   return IconConverter.toNumber(fee);
 };
 
-export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
+export const getCoinNames = async () => {
   try {
     const payload = {
       dataType: 'call',
-      to: getCurrentICONexNetwork().irc2token,
+      to: getCurrentICONexNetwork().BSHAddress,
+      data: {
+        method: 'coinNames',
+      },
+    };
+    const coinNames = await makeICXCall(payload);
+    return coinNames;
+  } catch (err) {
+    console.log('getCoinNames err', err);
+  }
+};
+
+export const getBSHAddressOfCoinName = async (coinName) => {
+  try {
+    const payload = {
+      dataType: 'call',
+      to: getCurrentICONexNetwork().BSHAddress,
+      data: {
+        method: 'coinAddress',
+        params: {
+          _coinName: coinName,
+        },
+      },
+    };
+    const bshAddress = await makeICXCall(payload);
+    return bshAddress;
+  } catch (err) {
+    console.log('getBSHAddressOfCoinName err', err);
+  }
+};
+
+export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
+  const bshAddressToken = await getBSHAddressOfCoinName(symbol);
+  try {
+    const payload = {
+      dataType: 'call',
+      to: bshAddressToken,
       data: {
         method: 'balanceOf',
         params: {

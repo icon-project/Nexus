@@ -29,6 +29,9 @@ export const getCurrentTransferService = () => (curentWallet, currentNetwork) =>
     case wallets.iconex:
       return ICONServices;
 
+    case wallets.hana:
+      return ICONServices;
+
     case wallets.near:
       return NEARServices;
 

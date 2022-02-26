@@ -52,17 +52,23 @@ export const transfer = async (tx, sendNativeCoin) => {
     data = EthereumInstance.ABI.encodeFunctionData('transferNativeCoin', [
       `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
     ]);
+    txParams = {
+      ...txParams,
+      to: MOON_BEAM_NODE.BSHCore,
+    };
   } else {
     window[rawTransaction] = tx;
     window[signingActions.globalName] = signingActions.approve;
     data = EthereumInstance.ABI.encodeFunctionData('approve', [MOON_BEAM_NODE.BSHCore, value]);
-
+    txParams = {
+      ...txParams,
+      to: '0x7b329aA204fe2c790f714C5A25123bb2DaC86632',
+    };
     delete txParams.value;
   }
 
   txParams = {
     ...txParams,
-    to: MOON_BEAM_NODE.BSHCore,
     gas: MOON_BEAM_NODE.gasLimit,
     data,
   };
@@ -71,7 +77,7 @@ export const transfer = async (tx, sendNativeCoin) => {
 };
 
 export const sendNoneNativeCoin = async () => {
-  const data = EthereumInstance.ABI.encodeFunctionData('transferWrappedCoin', [
+  const data = EthereumInstance.ABI.encodeFunctionData('transfer', [
     'ICX',
     ethers.utils.parseEther(window[rawTransaction].value)._hex,
     `btp://${getCurrentICONexNetwork().networkAddress}/${window[rawTransaction].to}`,
