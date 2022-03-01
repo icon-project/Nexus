@@ -62,7 +62,7 @@ export const transfer = async (tx, sendNativeCoin) => {
     data = EthereumInstance.ABI.encodeFunctionData('approve', [MOON_BEAM_NODE.BSHCore, value]);
     txParams = {
       ...txParams,
-      to: '0x7b329aA204fe2c790f714C5A25123bb2DaC86632',
+      to: MOON_BEAM_NODE.BSHICX,
     };
     delete txParams.value;
   }

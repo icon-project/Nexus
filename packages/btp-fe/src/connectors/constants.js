@@ -61,6 +61,7 @@ export const MOON_BEAM_NODE = {
   [connectedNetWorks.moonbeam]: true,
   RPCUrl: moonbeam.endpoint || process.env.REACT_APP_MB_RPC_URL,
   BSHCore: moonbeam.BSHCore || process.env.REACT_APP_MB_BSH_CORE,
+  BSHICX: process.env.REACT_APP_MB_BSH_ICX,
   networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,
   gasLimit: moonbeam.gasLimit || process.env.REACT_APP_MB_GAS_LIMIT,
 };
