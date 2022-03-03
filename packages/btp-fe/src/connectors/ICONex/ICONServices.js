@@ -139,25 +139,6 @@ export const reclaim = async ({ coinName, value }) => {
   signTx(transaction, options);
 };
 
-export const transferToERC2 = ({ value, to }) => {
-  const transaction = {
-    to: getCurrentICONexNetwork().irc2token,
-  };
-
-  const options = {
-    builder: new CallTransactionBuilder(),
-    method: 'transfer',
-    params: {
-      _to: getCurrentICONexNetwork().BSHAddress,
-      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
-    },
-  };
-
-  window[signingActions.receiver] = to;
-  window[signingActions.globalName] = signingActions.approve;
-  signTx(transaction, options);
-};
-
 export const placeBid = (auctionName, value, fas) => {
   const transaction = {
     to: fas || 'cxe3d36b26abbe6e1005eacf7e1111d5fefbdbdcad', // default FAS addess to our server
@@ -237,22 +218,6 @@ export const getBTPfee = async () => {
     },
   });
   return IconConverter.toNumber(fee);
-};
-
-export const getCoinNames = async () => {
-  try {
-    const payload = {
-      dataType: 'call',
-      to: getCurrentICONexNetwork().BSHAddress,
-      data: {
-        method: 'coinNames',
-      },
-    };
-    const coinNames = await makeICXCall(payload);
-    return coinNames;
-  } catch (err) {
-    console.log('getCoinNames err', err);
-  }
 };
 
 export const getBSHAddressOfCoinName = async (coinName) => {
