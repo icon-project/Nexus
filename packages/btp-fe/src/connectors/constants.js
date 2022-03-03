@@ -36,9 +36,6 @@ export const allowedNetworkIDs = {
   },
 };
 
-const customNetworks = localStorage.getItem('NETWORK_CONFIG');
-const { icon, moonbeam } = customNetworks ? JSON.parse(customNetworks) : { icon: {}, moonbeam: {} };
-
 export const NEAR_NODE = {
   [connectedNetWorks.near]: true,
   networkId: process.env.REACT_APP_NEAR_NETWORK_ID,
@@ -60,26 +57,27 @@ export const BSC_NODE = {
 
 export const MOON_BEAM_NODE = {
   [connectedNetWorks.moonbeam]: true,
-  RPCUrl: moonbeam.endpoint || process.env.REACT_APP_MB_RPC_URL,
-  BSHCore: moonbeam.BSHCore || process.env.REACT_APP_MB_BSH_CORE,
+  RPCUrl: process.env.REACT_APP_MB_RPC_URL,
+  BSHCore: process.env.REACT_APP_MB_BSH_CORE,
   BSHICX: process.env.REACT_APP_MB_BSH_ICX,
-  networkAddress: moonbeam.networkAddress || process.env.REACT_APP_MB_NETWORK_ADDRESS,
-  gasLimit: moonbeam.gasLimit || process.env.REACT_APP_MB_GAS_LIMIT,
+  networkAddress: process.env.REACT_APP_MB_NETWORK_ADDRESS,
+  gasLimit: process.env.REACT_APP_MB_GAS_LIMIT,
 };
 
 export const ICON_NODES = {
   [pairedNetworks['ICON-Moonbeam']]: {
     name: connectedNetWorks.icon,
-    endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
-    nid: icon.nid || process.env.REACT_APP_ICON_NID,
-    networkAddress: icon.networkAddress || process.env.REACT_APP_ICON_NETWORK_ADDRESS,
-    irc31token: icon.irc31token || process.env.REACT_APP_ICON_IRC31_TOKEN,
-    irc2token: icon.irc2token || process.env.REACT_APP_ICON_IRC2_TOKEN,
-    BSHAddress: icon.BSHAddress || process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
+    endpoint: process.env.REACT_APP_ICON_RPC_URL,
+    nid: process.env.REACT_APP_ICON_NID,
+    networkAddress: process.env.REACT_APP_ICON_NETWORK_ADDRESS,
+    irc31token: process.env.REACT_APP_ICON_IRC31_TOKEN,
+    irc2token: process.env.REACT_APP_ICON_IRC2_TOKEN,
+    BSHAddress: process.env.REACT_APP_ICON_BSH_ADDRESS, // used to get the BTP fee from getBTPfee()
+    stepLimit: process.env.REACT_APP_ICON_STEP_LIMIT,
   },
   [pairedNetworks['ICON-NEAR']]: {
     name: connectedNetWorks.icon,
-    endpoint: icon.endpoint || process.env.REACT_APP_ICON_RPC_URL,
+    endpoint: process.env.REACT_APP_ICON_RPC_URL,
   },
   [pairedNetworks['ICON-BSC']]: {
     name: connectedNetWorks.icon,

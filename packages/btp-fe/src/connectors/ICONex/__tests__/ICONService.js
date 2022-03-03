@@ -3,7 +3,7 @@ const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
 import { connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
-import { BSC_NODE, signingActions } from 'connectors/constants';
+import { BSC_NODE, signingActions, getCurrentICONexNetwork } from 'connectors/constants';
 
 import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
@@ -36,7 +36,7 @@ describe('ICONService', () => {
     const tx = txBuilder
       .from(transactions.from)
       .to(transactions.to)
-      .stepLimit(IconConverter.toBigNumber(3519157719))
+      .stepLimit(IconConverter.toBigNumber(getCurrentICONexNetwork().stepLimit))
       .nid(IconConverter.toBigNumber(options.nid))
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))

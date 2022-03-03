@@ -31,9 +31,7 @@ export const convertToLoopUnit = (value) => {
 
 export const makeICXCall = async (payload) => {
   try {
-    const result = await httpProvider.request(new Request('icx_call', payload)).execute();
-
-    return result;
+    return await httpProvider.request(new Request('icx_call', payload)).execute();
   } catch (err) {
     console.log('makeICXCall err', err);
     return 0;

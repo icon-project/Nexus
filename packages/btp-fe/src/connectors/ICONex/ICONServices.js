@@ -214,7 +214,7 @@ export const signTx = (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .stepLimit(IconConverter.toBigNumber(3519157719))
+    .stepLimit(IconConverter.toBigNumber(getCurrentICONexNetwork().stepLimit))
     .nid(IconConverter.toBigNumber(nid || getCurrentICONexNetwork().nid))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
