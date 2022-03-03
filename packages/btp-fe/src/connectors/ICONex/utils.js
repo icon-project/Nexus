@@ -11,8 +11,22 @@ export default class Request {
   }
 }
 
+/**
+ * Get balance in user-friendly format
+ * @param {string|BigNumber|number} balance
+ * @returns {string} balance in user-friendly format
+ */
 export const convertToICX = (balance) => {
   return IconAmount.of(balance, IconAmount.Unit.LOOP).convertUnit(IconAmount.Unit.ICX).toString();
+};
+
+/**
+ * Convert to Loop Unit
+ * @param {string|BigNumber|number} balance
+ * @returns {string} balance as Loop Unit
+ */
+export const convertToLoopUnit = (value) => {
+  return IconAmount.of(value, IconAmount.Unit.ICX).toLoop();
 };
 
 export const makeICXCall = async (payload) => {
@@ -26,6 +40,9 @@ export const makeICXCall = async (payload) => {
   }
 };
 
+/**
+ * Reset transfer box UI
+ */
 export const resetTransferStep = () => {
   const event = new Event(SUCCESS_TRANSACTION);
   document.dispatchEvent(event);

@@ -1,4 +1,4 @@
-import { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
+import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
@@ -7,6 +7,7 @@ import { BSC_NODE, signingActions } from 'connectors/constants';
 
 import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
+import { convertToLoopUnit } from '../utils';
 
 jest.mock('store', () => {
   return {
@@ -40,7 +41,7 @@ describe('ICONService', () => {
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))
       .timestamp(options.timestamp)
-      .value(IconAmount.of(transactions.value, IconAmount.Unit.ICX).toLoop())
+      .value(convertToLoopUnit(transactions.value))
       .method(options.method)
       .params(options.params)
       .build();

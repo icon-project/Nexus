@@ -1,4 +1,4 @@
-import { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
+import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
@@ -15,7 +15,7 @@ import {
   httpProvider,
 } from 'connectors/constants';
 import { requestSigning } from './events';
-import Request, { convertToICX, makeICXCall } from './utils';
+import Request, { convertToICX, convertToLoopUnit, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
 import { connectedNetWorks } from 'utils/constants';
@@ -160,7 +160,7 @@ export const reclaim = async ({ coinName, value }) => {
     method: 'reclaim',
     params: {
       _coinName: coinName,
-      _value: IconConverter.toHex(IconAmount.of(value, IconAmount.Unit.ICX).toLoop()),
+      _value: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
 
@@ -221,7 +221,7 @@ export const signTx = (transaction = {}, options = {}) => {
     .timestamp(timestamp || new Date().getTime() * 1000);
 
   if (value) {
-    tx = tx.value(IconAmount.of(value, IconAmount.Unit.ICX).toLoop());
+    tx = tx.value(convertToLoopUnit(value));
   }
 
   if (method) {
@@ -334,7 +334,7 @@ export const depositTokensIntoBSH = (tx) => {
     method: 'transfer',
     params: {
       _to: getCurrentICONexNetwork().TOKEN_BSH_ADDRESS,
-      _value: IconConverter.toHex(IconAmount.of(tx.value, IconAmount.Unit.ICX).toLoop()),
+      _value: IconConverter.toHex(convertToLoopUnit(tx.value)),
     },
   };
 
