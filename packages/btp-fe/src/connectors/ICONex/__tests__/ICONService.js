@@ -78,7 +78,9 @@ describe('ICONService', () => {
 
     test('send non-native coin on Moonbeam side', () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
-      const mock_sendNonNativeCoin = jest.spyOn(ICONService, 'transferToERC2').mockImplementation();
+      const mock_sendNonNativeCoin = jest
+        .spyOn(ICONService, 'setApproveForSendNonNativeCoin')
+        .mockImplementation();
 
       transfer({}, null, connectedNetWorks.moonbeam, false);
 
