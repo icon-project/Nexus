@@ -1,6 +1,7 @@
 import IconService, { HttpProvider } from 'icon-sdk-js';
 import { connectedNetWorks, pairedNetworks, getPairedNetwork } from 'utils/constants';
 
+// https://www.icondev.io/iconex-connect/chrome-extension#methods
 export const TYPES = {
   REQUEST_HAS_ACCOUNT: 'REQUEST_HAS_ACCOUNT',
   RESPONSE_HAS_ACCOUNT: 'RESPONSE_HAS_ACCOUNT',

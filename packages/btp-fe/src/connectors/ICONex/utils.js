@@ -3,9 +3,9 @@ import { SUCCESS_TRANSACTION } from 'utils/constants';
 import { httpProvider } from 'connectors/constants';
 
 export default class Request {
-  constructor(id, method, params) {
+  constructor(method, params) {
     this.jsonrpc = '2.0';
-    this.id = id;
+    this.id = IconUtil.getCurrentTime();
     this.method = method;
     this.params = params;
   }
@@ -17,10 +17,8 @@ export const convertToICX = (balance) => {
 
 export const makeICXCall = async (payload) => {
   try {
-    const requestId = IconUtil.getCurrentTime();
-    const request = new Request(requestId, 'icx_call', payload);
+    const result = await httpProvider.request(new Request('icx_call', payload)).execute();
 
-    const result = await httpProvider.request(request).execute();
     return result;
   } catch (err) {
     console.log('makeICXCall err', err);
