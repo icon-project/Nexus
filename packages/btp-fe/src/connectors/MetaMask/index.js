@@ -179,6 +179,8 @@ class Ethereum {
                 break;
 
               default:
+                this.getEthereumAccounts();
+
                 modal.openModal({
                   icon: 'checkIcon',
                   children: <SuccessSubmittedTxContent />,

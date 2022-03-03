@@ -107,10 +107,10 @@ export const NetwotkDetails = ({ currentNetworkID }) => {
     networkDetails: selectNetworkDetails,
   }));
 
-  const { getNetworkDetails, setNetworkDetails } = useDispatch(
-    ({ network: { getNetworkDetails, setNetworkDetails } }) => ({
+  const { getNetworkDetails, setNetworkState } = useDispatch(
+    ({ network: { getNetworkDetails, setNetworkState } }) => ({
       getNetworkDetails,
-      setNetworkDetails,
+      setNetworkState,
     }),
   );
 
@@ -118,9 +118,9 @@ export const NetwotkDetails = ({ currentNetworkID }) => {
     if (currentNetworkID) getNetworkDetails(currentNetworkID).then(() => setLoading(false));
 
     return () => {
-      setNetworkDetails([]);
+      setNetworkState(['networkDetails', []]);
     };
-  }, [getNetworkDetails, currentNetworkID, setNetworkDetails]);
+  }, [getNetworkDetails, currentNetworkID, setNetworkState]);
 
   return (
     <>
