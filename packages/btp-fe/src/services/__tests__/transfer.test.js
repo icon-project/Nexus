@@ -29,8 +29,9 @@ describe('services/transfer', () => {
     expect(service.transfer).toBeTruthy();
     expect(service.getBalance).toBeTruthy();
     expect(service.getBalanceOf).toBeTruthy();
-    expect(service.transferToERC2).toBeTruthy();
     expect(service.reclaim).toBeTruthy();
+    expect(service.setApproveForSendNonNativeCoin).toBeTruthy();
+    expect(service.sendNonNativeCoin).toBeTruthy();
   });
 
   test('Has enough functions on Moonbeam service', () => {

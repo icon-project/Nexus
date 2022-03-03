@@ -1,12 +1,13 @@
-import { IconAmount, IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
+import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
 import { connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
-import { BSC_NODE, signingActions } from 'connectors/constants';
+import { BSC_NODE, signingActions, getCurrentICONexNetwork } from 'connectors/constants';
 
 import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
+import { convertToLoopUnit } from '../utils';
 
 jest.mock('store', () => {
   return {
@@ -35,12 +36,12 @@ describe('ICONService', () => {
     const tx = txBuilder
       .from(transactions.from)
       .to(transactions.to)
-      .stepLimit(IconConverter.toBigNumber(3519157719))
+      .stepLimit(IconConverter.toBigNumber(getCurrentICONexNetwork().stepLimit))
       .nid(IconConverter.toBigNumber(options.nid))
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))
       .timestamp(options.timestamp)
-      .value(IconAmount.of(transactions.value, IconAmount.Unit.ICX).toLoop())
+      .value(convertToLoopUnit(transactions.value))
       .method(options.method)
       .params(options.params)
       .build();
@@ -78,7 +79,9 @@ describe('ICONService', () => {
 
     test('send non-native coin on Moonbeam side', () => {
       localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
-      const mock_sendNonNativeCoin = jest.spyOn(ICONService, 'transferToERC2').mockImplementation();
+      const mock_sendNonNativeCoin = jest
+        .spyOn(ICONService, 'setApproveForSendNonNativeCoin')
+        .mockImplementation();
 
       transfer({}, null, connectedNetWorks.moonbeam, false);
 
