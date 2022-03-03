@@ -32,7 +32,7 @@ const network = {
     async getNetworkDetails(id) {
       try {
         const network = await getNetwork(id);
-        this.setNetworkState(['networkDetails', network.content.network]);
+        this.setNetworkState(['networkDetails', network.content.tokens]);
         return network;
       } catch (error) {
         dispatch.modal.handleError(error);
