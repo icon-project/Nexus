@@ -47,7 +47,7 @@ export const TransferBox = () => {
   const isCurrentStep = (s) => s === step;
 
   const { unit, currentNetwork } = account;
-  const usdRate = useTokenToUsd(unit, 1, isCurrentStep(1));
+  const usdRate = useTokenToUsd(sendingInfo.token, 1, isCurrentStep(1));
 
   const onSendingInfoChange = (info = {}) => {
     setSendingInfo((sendingInfo) => ({ ...sendingInfo, ...info }));

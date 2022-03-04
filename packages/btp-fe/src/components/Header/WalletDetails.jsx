@@ -188,7 +188,7 @@ export const WalletDetails = ({
     const { value } = e.target;
     setSelectedRefundToken(value);
     getService()
-      .getBalanceOf({
+      ?.getBalanceOf({
         address,
         refundable: true,
         symbol: value,

@@ -161,7 +161,7 @@ function NetworkPage() {
       </div>
       {currentNetworkID && (
         <Modal
-          display={currentNetworkID}
+          display={!!currentNetworkID}
           width="736px"
           title="Curve"
           setDisplay={setCurrentNetworkID}
