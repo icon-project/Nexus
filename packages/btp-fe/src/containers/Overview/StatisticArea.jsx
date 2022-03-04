@@ -147,7 +147,7 @@ export const StatisticArea = ({ data, networks, isFetching }) => {
           <div className="amount-of-networks">
             <TextWithInfo
               className="flex"
-              tooltip="Total number of transactions on the BTP Network"
+              tooltip="Number of networks connected with ICON Blockchain"
             >
               NETWORKS CONNECTED
             </TextWithInfo>
