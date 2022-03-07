@@ -14,11 +14,11 @@ import {
   iconService,
   httpProvider,
 } from 'connectors/constants';
-import { requestSigning } from './events';
+import { requestICONexSigning, requestHanaSigning } from './events';
 import Request, { convertToICX, convertToLoopUnit, makeICXCall } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { connectedNetWorks } from 'utils/constants';
+import { connectedNetWorks, wallets } from 'utils/constants';
 export { transfer } from './transfer';
 
 const { modal } = store.dispatch;
@@ -235,10 +235,14 @@ export const signTx = (transaction = {}, options = {}) => {
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
-  requestSigning({
-    from,
-    hash: transactionHash,
-  });
+  if (store.getState().account.wallet === wallets.hana) {
+    requestHanaSigning(rawTx);
+  } else {
+    requestICONexSigning({
+      from,
+      hash: transactionHash,
+    });
+  }
 
   return transactionHash;
 };

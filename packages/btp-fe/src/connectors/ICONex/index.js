@@ -47,13 +47,14 @@ const eventHandler = async (event) => {
       break;
 
     case TYPES.RESPONSE_SIGNING:
+    case TYPES.RESPONSE_JSON_RPC:
       try {
         modal.openModal({
           icon: 'loader',
           desc: 'Please wait a moment.',
         });
 
-        const txHash = await sendTransaction(payload);
+        const txHash = payload.result || (await sendTransaction(payload));
 
         await new Promise((resolve, reject) => {
           const checkTxRs = setInterval(async () => {
@@ -153,6 +154,7 @@ const eventHandler = async (event) => {
       }
       break;
     case TYPES.CANCEL_SIGNING:
+    case TYPES.CANCEL_JSON_RPC:
       modal.openModal({
         icon: 'exclamationPointIcon',
         desc: 'Transaction rejected.',

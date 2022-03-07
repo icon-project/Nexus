@@ -54,6 +54,15 @@ export const requestHasAddress = (address) => {
   createICONexEvent(TYPES.REQUEST_HAS_ADDRESS, address);
 };
 
-export const requestSigning = (transaction) => {
+export const requestICONexSigning = (transaction) => {
   createICONexEvent(TYPES.REQUEST_SIGNING, transaction);
+};
+
+export const requestHanaSigning = (transaction) => {
+  createICONexEvent(TYPES.REQUEST_JSON_RPC, {
+    jsonrpc: '2.0',
+    method: 'icx_sendTransaction',
+    params: transaction,
+    id: new Date().getTime(),
+  });
 };
