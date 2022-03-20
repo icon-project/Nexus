@@ -69,10 +69,7 @@ class Ethereum {
   }
 
   isAllowedNetwork() {
-    if (
-      this.ethereum.chainId &&
-      !Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)
-    ) {
+    if (!Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)) {
       modal.openModal({
         desc:
           'The connected wallet is conflicted with your Source or Destination blockchain. Please change your blockchain option or reconnect a new wallet.',
@@ -107,12 +104,10 @@ class Ethereum {
   }
 
   chainChangedListener() {
-    if (this.isMetaMaskConnected()) {
-      this.getEthereum.on('chainChanged', (chainId) => {
-        console.log('Change Network', chainId);
-        window.location.reload();
-      });
-    }
+    this.getEthereum.on('chainChanged', (chainId) => {
+      console.log('Change Network', chainId);
+      window.location.reload();
+    });
   }
 
   async getEthereumAccounts() {
