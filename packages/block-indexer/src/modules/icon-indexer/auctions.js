@@ -1,3 +1,5 @@
+/* eslint-disable yoda */
+/* eslint-disable curly */
 'use strict';
 
 const debug = require('debug')('icon');

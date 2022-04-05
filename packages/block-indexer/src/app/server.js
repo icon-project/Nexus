@@ -7,6 +7,7 @@ const blockIndexer = require('./block-indexer');
 
 const logger = createLogger();
 
+// eslint-disable-next-line space-before-function-paren
 async function start() {
   // Separate Express 'app' and 'server'
   // https://github.com/goldbergyoni/nodebestpractices#-14-separate-express-app-and-server

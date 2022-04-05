@@ -1,7 +1,7 @@
+/* eslint-disable yoda */
 'use strict';
 
 const Web3 = require('web3');
-const debug = require('debug')('web3_tx');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT, TRANSFER_START_EVENT, TRANSFER_END_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog } = require('../common/events');
 const { getRegisteredTokens } = require('../tokens/model');
@@ -79,7 +79,7 @@ class Web3TransactionHandler {
       fee: '10000000000000000'
     ]
   ]
-  }*/
+  } */
   /** https://git.baikal.io/icon/btp/-/blob/develop/solidity/bsh/contracts/BSHPeriphery.sol#L40
    *    @notice Sends a receipt to user
     The `_from` sender
@@ -92,7 +92,7 @@ class Web3TransactionHandler {
     string _to,
     uint256 _sn,
     Types.AssetTransferDetail[] _assetDetails
-  );*/
+  ); */
   async handleTransferStartEvent(event, tx, receipt, block) {
     try {
       const txData = {
@@ -132,7 +132,7 @@ class Web3TransactionHandler {
     _sn: '1',
     _code: '0',
     _response: 'Transfer Success'
-  }*/
+  } */
   /**   @notice Sends a final notification to a user
       The `_from` sender
       The `_sn` sequence number of service message.
@@ -144,7 +144,7 @@ class Web3TransactionHandler {
     uint256 _sn,
     uint256 _code,
     string _response
-  );*/
+  ); */
   async handleTransferEndEvent(event, tx) {
     try {
       const statusCode = 0 === Number(event._code) ? TRANSACTION_STATUS.success : TRANSACTION_STATUS.failed;

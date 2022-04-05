@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict';
 
 const { getAuctionStartEvent, getAuctionEndedEvent, getBidInfoEvent } = require('../src/modules/icon-indexer/auctions');
@@ -26,7 +27,7 @@ const txResult = {
         'FundReceived(Address,str)',
         'cx8ca6ca89fdf3ce6e77b9531b66da51a455be7367'
       ],
-      data: [ 'Treasury Fund 115000000000000000000 Received.' ]
+      data: ['Treasury Fund 115000000000000000000 Received.']
     },
     {
       scoreAddress: 'cx18fbe903abdbb4b1e484e3135782ba2b8ba8dd4c',
@@ -36,7 +37,7 @@ const txResult = {
         'hx774ca45c762872ac6dd4780784e279ceb389dec9',
         '0x56bc75e2d63100000'
       ],
-      data: [ '0x7472616e7366657220746f20626964646572' ]
+      data: ['0x7472616e7366657220746f20626964646572']
     },
     {
       scoreAddress: 'cx8ca6ca89fdf3ce6e77b9531b66da51a455be7367', // FAS

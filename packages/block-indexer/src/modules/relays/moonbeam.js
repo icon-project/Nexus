@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 'use strict';
 
 const debug = require('debug')('moonbeam_tx');
@@ -18,7 +19,7 @@ Result {
   __length__: 2,
   _link: 'btp://0xd35bbb.icon/cx11db74c77d4b8ac2e30ff5d73341c8c741be75ae',
   _addr: [ '0x70E789D2f5D469eA30e0525DbfDD5515d6EAd30D' ]
-}*/
+} */
 function getAddRelayAction(encodedInput) {
   try {
     const actionMap = getMoonbeamActionMap(web3);

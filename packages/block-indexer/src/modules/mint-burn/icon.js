@@ -1,6 +1,7 @@
+/* eslint-disable curly */
+/* eslint-disable yoda */
 'use strict';
 
-const debug = require('debug')('icon');
 const { IconConverter } = require('icon-sdk-js').default;
 const { createLogger, ICX_LOOP_UNIT, MINT_EVENT, BURN_EVENT, ICON_ZERO_ADDRESS } = require('../../common');
 const { getTokenName } = require('../tokens/model');
@@ -33,8 +34,8 @@ async function getMintBurnEvent(event, transaction) {
 // Mint: Alice on ICON got a DEV from Moonbeam (a DEV minted to Alice).
 // Burn: Alice on ICON send a DEV (which she got from Bob earlier) back to Bob on Moonbeam (a DEV burned from Alice).
 async function handleMintBurnEvents(txResult, transaction) {
-  if (process.env.ICON_BMC_ADDRESS !== transaction.to || 0 === txResult.eventLogs.length
-    || TRANSFER_PROTOTYPE !== txResult.eventLogs[0].indexed[0])
+  if (process.env.ICON_BMC_ADDRESS !== transaction.to || 0 === txResult.eventLogs.length ||
+    TRANSFER_PROTOTYPE !== txResult.eventLogs[0].indexed[0])
     return false;
 
   try {

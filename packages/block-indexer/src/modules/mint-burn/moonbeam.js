@@ -3,7 +3,6 @@
 // OBSOLETE, Moonbeam is using web3.js
 
 const Web3 = require('web3');
-const debug = require('debug')('moonbeam_tx');
 const { createLogger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog, getMoonbeamEventMap } = require('../common/events');
 const { getTokenContractMap } = require('../transactions/model');
@@ -14,6 +13,7 @@ const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
 const logger = createLogger();
 
+// eslint-disable-next-line no-unused-vars
 async function handleMintBurnEvents(tx, receipt, block) {
   const eventMap = getMoonbeamEventMap();
   const contractMap = await getTokenContractMap();

@@ -1,3 +1,4 @@
+/* eslint-disable yoda */
 'use strict';
 
 const Web3 = require('web3');
@@ -13,7 +14,7 @@ function getActionInfoFromAbi(abi, actionNames) {
   for (const action of actions) {
     const info = {
       hash: web3.eth.abi.encodeFunctionSignature(action),
-      action,
+      action
     };
 
     result.push(info);
@@ -37,5 +38,5 @@ function getActionMap() {
 module.exports = {
   getActionInfoFromAbi,
   buildActionMap,
-  getActionMap,
+  getActionMap
 };

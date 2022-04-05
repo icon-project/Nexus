@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 'use strict';
 
 const debug = require('debug')('icon');
@@ -10,7 +11,7 @@ const registeredTokens = new Map([
     address: 'cx5574137f1a9544c2cd2ab14bf8d5a285c43f761e',
     name: 'SampleToken1406'
   }]
-]);*/
+]); */
 
 const registeredTokens = new Map();
 

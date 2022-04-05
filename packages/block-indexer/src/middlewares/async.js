@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 const Boom = require('@hapi/boom');
 
 // References:

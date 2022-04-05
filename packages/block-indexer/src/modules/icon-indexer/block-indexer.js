@@ -1,3 +1,5 @@
+/* eslint-disable curly */
+/* eslint-disable yoda */
 'use strict';
 
 const debug = require('debug')('icon');
@@ -123,7 +125,7 @@ async function getBlockData() {
       await runBlockHandlers(block);
     }
 
-    ++ blockHeight;
+    ++blockHeight;
   }
 
   setTimeout(async () => await retryGetBlockData(), timeout);
@@ -151,7 +153,7 @@ async function start() {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
 
     if (blockHeight > 0)
-      ++ blockHeight;
+      ++blockHeight;
   }
 
   const block = await iconService.getLastBlock().execute();

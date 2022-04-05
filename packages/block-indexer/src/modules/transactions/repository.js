@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 'use strict';
 
 const debug = require('debug')('db');
@@ -8,16 +9,16 @@ const logger = createLogger();
 async function getLatestTransactionByToken(tokenName) {
   try {
     let {
-      rows,
+      rows
     } = await pgPool.query(
       `SELECT * FROM  ${TRANSACTION_TBL_NAME} WHERE ${TRANSACTION_TBL.tokenName} = $1 ORDER BY ${TRANSACTION_TBL.updateAt} DESC LIMIT 1`,
-      [tokenName],
+      [tokenName]
     );
     return rows[0];
   } catch (error) {
     logger.error(
       `getLatestTransactionByToken Failed to get transaction result with token ${tokenName}`,
-      { error },
+      { error }
     );
   }
 }
@@ -34,7 +35,7 @@ async function findTxBySerialNumber(serialNumber, networkId, contractAddress) {
  * @param {*} transactions
  * @param {*} txInfo
  */
- async function setTransactionConfirmed(transactions, txInfo, status) {
+async function setTransactionConfirmed(transactions, txInfo, status) {
   try {
     const client = await pgPool.connect();
     await client.query('BEGIN');
