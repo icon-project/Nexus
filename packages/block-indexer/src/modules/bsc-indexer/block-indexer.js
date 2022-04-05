@@ -1,3 +1,5 @@
+/* eslint-disable yoda */
+/* eslint-disable curly */
 'use strict';
 
 const debug = require('debug')('bsc');
@@ -86,7 +88,7 @@ async function getBlockData() {
       await runBlockHandlers(block);
     }
 
-    ++ blockHeight;
+    ++blockHeight;
   }
 
   setTimeout(async () => await retryGetBlockData(), timeout);
@@ -127,7 +129,7 @@ async function start() {
     blockHeight = await getIndexedBlockHeight(process.env.BSC_NETWORK_ID);
 
     if (blockHeight > 0)
-      ++ blockHeight;
+      ++blockHeight;
   }
 
   if (0 === blockHeight)

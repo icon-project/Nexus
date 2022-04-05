@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict';
 
 const { Pool } = require('pg');
@@ -17,8 +18,8 @@ const addIconRelayTx = {
     method: 'addRelay',
     params: {
       _addr: 'hxd007a51447a18021ed2d27e8cb4784febb0c956d',
-      _link: 'btp://0x501.pra/0x5CC307268a1393AB9A764A20DACE848AB8275c46',
-    },
+      _link: 'btp://0x501.pra/0x5CC307268a1393AB9A764A20DACE848AB8275c46'
+    }
   },
   version: '3',
   txHash: '0x6d690300980e7d708b0b6a3c0529988438583c3f898e52a8be78d70323b778da'
@@ -37,8 +38,8 @@ const removeIconRelayTx = {
     method: 'removeRelay',
     params: {
       _addr: 'hxd007a51447a18021ed2d27e8cb4784febb0c956d',
-      _link: 'btp://0x501.pra/0x5CC307268a1393AB9A764A20DACE848AB8275c46',
-    },
+      _link: 'btp://0x501.pra/0x5CC307268a1393AB9A764A20DACE848AB8275c46'
+    }
   },
   version: '3',
   txHash: '0xda0e28e7a8ae06cceb10818ce189b27b9b7a4fa0c7d70fba6be626772bfc6998'
@@ -169,29 +170,29 @@ afterEach(() => {
 });
 
 test('should add ICON relay', async () => {
-  pool.query.mockResolvedValueOnce({rows: [] });
-  pool.query.mockResolvedValueOnce({rows: [] });
-  pool.query.mockResolvedValueOnce({rows: [{}] });
+  pool.query.mockResolvedValueOnce({ rows: [] });
+  pool.query.mockResolvedValueOnce({ rows: [] });
+  pool.query.mockResolvedValueOnce({ rows: [{}] });
 
   await iconRelayHandler.handleRelayAction({ status: 1 }, addIconRelayTx);
 
   const relay = addIconRelayTx.data.params;
 
   expect(pool.query).toBeCalledTimes(3);
-  expect(pool.query,).nthCalledWith(3,
+  expect(pool.query).nthCalledWith(3,
     'INSERT INTO relays (tx_hash, address, link, server_status, registered_time) VALUES ($1, $2, $3, $4, $5)',
     [addIconRelayTx.txHash, relay._addr, relay._link, 'Active', expect.any(Date)]
   );
 });
 
 test('should remove ICON relay', async () => {
-  pool.query.mockResolvedValueOnce({rows: [] });
+  pool.query.mockResolvedValueOnce({ rows: [] });
   await iconRelayHandler.handleRelayAction({ status: 1 }, removeIconRelayTx);
 
   const relay = removeIconRelayTx.data.params;
 
   expect(pool.query).toBeCalledTimes(1);
-  expect(pool.query,).toBeCalledWith(
+  expect(pool.query).toBeCalledWith(
     'UPDATE relays SET updated_at = NOW(), server_status = $2, unregistered_time = $3 WHERE address = $1',
     [relay._addr, 'Inactive', new Date(removeIconRelayTx.timestamp / 1000)]
   );
@@ -203,18 +204,18 @@ test('should add Moonbeam relay', async () => {
     { address: '0x3cd0a705a2dc65e5b1e1205896baa2be8a07c6e0', link: 'btp://0x58eb1c.icon/cx8e2d758fbcc7f9621f87481e33402ac2819785c8' }
   ];
 
-  pool.query.mockResolvedValueOnce({rows: [{}] });
-  pool.query.mockResolvedValueOnce({rows: [{ address: relays[0].address }] });
-  pool.query.mockResolvedValueOnce({rows: [{}] });
+  pool.query.mockResolvedValueOnce({ rows: [{}] });
+  pool.query.mockResolvedValueOnce({ rows: [{ address: relays[0].address }] });
+  pool.query.mockResolvedValueOnce({ rows: [{}] });
 
   await moonbeamRelayHandler.handleRelayActions(addMoonbeamRelayBlock.transactions[0], addMoonbeamRelayBlock);
 
   expect(pool.query).toBeCalledTimes(3);
-  expect(pool.query,).nthCalledWith(1,
+  expect(pool.query).nthCalledWith(1,
     'INSERT INTO relays (tx_hash, address, link, server_status, registered_time) VALUES ($1, $2, $3, $4, $5)',
     [addMoonbeamRelayBlock.transactions[0].hash, relays[0].address, relays[0].link, 'Active', expect.any(Date)]
   );
-  expect(pool.query,).nthCalledWith(3,
+  expect(pool.query).nthCalledWith(3,
     'INSERT INTO relays (tx_hash, address, link, server_status, registered_time) VALUES ($1, $2, $3, $4, $5)',
     [addMoonbeamRelayBlock.transactions[0].hash, relays[1].address, relays[1].link, 'Active', expect.any(Date)]
   );
@@ -227,8 +228,8 @@ test('should remove Moonbeam relay', async () => {
     unregisteredTime: '2021-12-03T07:07:53.000Z'
   };
 
-  pool.query.mockResolvedValueOnce({rows: [] });
-  pool.query.mockResolvedValueOnce({rows: [{ address: relay.address }] });
+  pool.query.mockResolvedValueOnce({ rows: [] });
+  pool.query.mockResolvedValueOnce({ rows: [{ address: relay.address }] });
 
   await moonbeamRelayHandler.handleRelayActions(removeMoonbeamRelayBlock.transactions[0], removeMoonbeamRelayBlock);
 

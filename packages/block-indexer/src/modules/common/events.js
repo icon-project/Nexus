@@ -1,6 +1,8 @@
+/* eslint-disable yoda */
+/* eslint-disable curly */
 'use strict';
 
-const erc20Abi= require('../web3-indexer/abi/moonbeam/abi.erc20.json');
+const erc20Abi = require('../web3-indexer/abi/moonbeam/abi.erc20.json');
 const moonbeamBshPeripheryAbi = require('../web3-indexer/abi/moonbeam/abi.bsh_periphery.json');
 const bshCoreAbi = require('../bsc-indexer/abi/BSHCore.json');
 const bshPeripheryAbi = require('../bsc-indexer/abi/BSHPeriphery.json');

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict';
 
 const { Pool } = require('pg');
@@ -33,11 +34,11 @@ const transferNativeCoinTx = {
   data: {
     method: 'transferNativeCoin',
     params: {
-      _to: 'btp://0x03.icon/hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9',
-    },
+      _to: 'btp://0x03.icon/hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9'
+    }
   },
   version: '3',
-  txHash: '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754',
+  txHash: '0xa856a2afef583be6fa60e00e0e7b3b24713d56ee791867066785080bd84a1754'
 };
 
 const txResult = {
@@ -55,21 +56,21 @@ const txResult = {
       scoreAddress: 'cx0c9f31cd4436d29680b6551a76449020186eeec1',
       indexed: [
         'TransferStart(Address,str,int,bytes)',
-        'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
+        'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd'
       ],
       data: [
         'hxdcdbf343de48a378ce68ccef3b380ad45b5f21e9',
         '0x1',
-        '0xd0cf83494358893635c9adc5dea0000000',
-      ],
+        '0xd0cf83494358893635c9adc5dea0000000'
+      ]
     },
     {
       scoreAddress: 'cx0c9f31cd4436d29680b6551a76449020186eeec1',
       indexed: ['TransferEnd(Address,int,int,str)', 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd'],
-      data: ['0x1', '0x0', 'Transfer Success'],
-    },
+      data: ['0x1', '0x0', 'Transfer Success']
+    }
   ],
-  logsBloom: '0x000000000000000000000000000000000000',
+  logsBloom: '0x000000000000000000000000000000000000'
 };
 
 let pool = null;

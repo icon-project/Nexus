@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 'use strict';
 
 const Web3 = require('web3');
@@ -36,7 +37,7 @@ class Web3TokenRegisterHandler {
       const result = decodeActionInput(this.web3, this.config.actionMap, 'register', encodedInput);
 
       if (result) {
-        /*info: moonbeam:getBlockData received block 1684372, 0x2a5db5a7e1abc5d68055c4a8b3ea9c402e1696b5960b191920283095340ca00c
+        /* info: moonbeam:getBlockData received block 1684372, 0x2a5db5a7e1abc5d68055c4a8b3ea9c402e1696b5960b191920283095340ca00c
         web3 register Result {
         web3   '0': 'ICON',
         web3   '1': 'ICX',
@@ -45,7 +46,7 @@ class Web3TokenRegisterHandler {
         web3   _name: 'ICON',
         web3   _symbol: 'ICX',
         web3   _decimals: '18'
-        web3 } +35s*/
+        web3 } +35s */
         debug('register %O', result);
 
         return {

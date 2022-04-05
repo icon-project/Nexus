@@ -1,3 +1,5 @@
+/* eslint-disable multiline-ternary */
+/* eslint-disable yoda */
 'use strict';
 
 const { createLogger, format, transports } = require('winston');

@@ -1,3 +1,5 @@
+/* eslint-disable yoda */
+/* eslint-disable curly */
 'use strict';
 
 const debug = require('debug')('moonbeam');
@@ -86,7 +88,7 @@ async function getBlockData() {
       await runBlockHandlers(block);
     }
 
-    ++ blockHeight;
+    ++blockHeight;
   }
 
   setTimeout(async () => await retryGetBlockData(), timeout);
@@ -145,7 +147,7 @@ async function start() {
     blockHeight = await getIndexedBlockHeight(process.env.MOONBEAM_NETWORK_ID);
 
     if (blockHeight > 0)
-      ++ blockHeight;
+      ++blockHeight;
   }
 
   const height = await web3.eth.getBlockNumber();

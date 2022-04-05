@@ -1,3 +1,4 @@
+/* eslint-disable yoda */
 'use strict';
 
 const axios = require('axios');

@@ -1,7 +1,7 @@
 const TRANSACTION_STATUS = {
   success: 1,
   failed: -1,
-  pending: 0,
+  pending: 0
 };
 
 const TRANSACTION_TBL_NAME = 'transactions';

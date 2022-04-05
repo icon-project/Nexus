@@ -6,7 +6,7 @@ const { parsed } = require('dotenv-safe').config({
   silent: true,
   allowEmptyValues: true,
   path: root('.env'),
-  sample: root('.env.example'),
+  sample: root('.env.example')
 });
 
 const server = require('./server');

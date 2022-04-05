@@ -1,9 +1,9 @@
+/* eslint-disable yoda */
 'use strict';
 
 // OBSOLETE, using web3.js
 
 const Web3 = require('web3');
-const debug = require('debug')('moonbeam_tx');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
 const { findEventByName, decodeEventLog, getMoonbeamEventMap } = require('../common/events');
 const { calculateTotalVolume, getTokenContractMap } = require('./model');
@@ -18,6 +18,7 @@ const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const bmcAddress = process.env.MOONBEAM_BMC_ADDRESS.toLowerCase();
 const logger = createLogger();
 
+// eslint-disable-next-line no-unused-vars
 async function handleTransactionEvents(tx, receipt, block) {
   const eventMap = getMoonbeamEventMap();
   const tokenMap = await getTokenContractMap();

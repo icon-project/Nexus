@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable yoda */
 const debug = require('debug')('app');
 const Boom = require('@hapi/boom');
 

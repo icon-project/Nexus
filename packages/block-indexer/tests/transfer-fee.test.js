@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict';
 
 const { getTransferEvent } = require('../src/modules/icon-indexer/transfer-fee');
@@ -18,7 +19,7 @@ const txResult = {
         'cx51291cbe0fff966b881d251b9414e54f5a02dac7', // FAS address
         '0x8e087d455911b400' // amount
       ],
-      data: [ '0x' ]
+      data: ['0x']
     }
   ],
   logsBloom: '0x0000000000000000800000200000...'

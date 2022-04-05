@@ -1,8 +1,10 @@
+/* eslint-disable curly */
+/* eslint-disable yoda */
 'use strict';
 
 const Web3 = require('web3');
 const abiBshPeriphery = require('./abi/abi.bsh_periphery.json');
-const abiBshScore= require('./abi/abi.bsh_core.json');
+const abiBshScore = require('./abi/abi.bsh_core.json');
 
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const eventMap = new Map();
@@ -54,5 +56,5 @@ module.exports = {
   buildBSHScoreEventMap,
   getEventMapBSHScore,
   buildEventMap,
-  getEventMap,
+  getEventMap
 };

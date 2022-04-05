@@ -1,3 +1,5 @@
+/* eslint-disable curly */
+/* eslint-disable yoda */
 'use strict';
 
 const bmcAbi = require('../bsc-indexer/abi/BMCManagement.json');

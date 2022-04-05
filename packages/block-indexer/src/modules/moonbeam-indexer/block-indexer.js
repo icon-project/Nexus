@@ -1,3 +1,4 @@
+/* eslint-disable yoda */
 'use strict';
 
 const debug = require('debug')('moonbeam');
@@ -6,19 +7,19 @@ const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js').default;
 const { logger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
-const { getTokenContractMap } = require('../transactions/model');
+// const { getTokenContractMap } = require('../transactions/model');
 const { buildEventMap, buildBSHScoreEventMap } = require('./events');
 const { buildActionMap } = require('./actions');
-const { handleTransactionEvents } = require('../transactions/moonbeam');
-const { handleMintBurnEvents } = require('../mint-burn/moonbeam');
+// const { handleTransactionEvents } = require('../transactions/moonbeam');
+// const { handleMintBurnEvents } = require('../mint-burn/moonbeam');
 const { handleRelayActions } = require('../relays/moonbeam');
 
 let blockHeight = Number(process.env.MOONBEAM_BLOCK_HEIGHT);
 
 async function runTransactionHandlers(transaction, block) {
   try {
-    await handleTransactionEvents(transaction, block);
-    await handleMintBurnEvents(transaction, block);
+    // await handleTransactionEvents(transaction, block);
+    // await handleMintBurnEvents(transaction, block);
     await handleRelayActions(transaction, block);
 
     // More transaction handlers go here.
@@ -43,8 +44,8 @@ async function getBlockByHeight(height) {
   try {
     const result = await axios.get(`${process.env.SIDECAR_API_URL}/blocks/${blockHeight}`, {
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
 
     return result.data;
@@ -90,13 +91,13 @@ async function getHeadBlock() {
     {
       id: 1,
       jsonrpc: '2.0',
-      method: 'chain_getHead',
+      method: 'chain_getHead'
     },
     {
       headers: {
-        'Content-Type': 'application/json',
-      },
-    },
+        'Content-Type': 'application/json'
+      }
+    }
   );
 
   if (200 === result.status) {
@@ -106,18 +107,18 @@ async function getHeadBlock() {
         id: 1,
         jsonrpc: '2.0',
         method: 'chain_getBlock',
-        params: [result.data.result], // head block hash
+        params: [result.data.result] // head block hash
       },
       {
         headers: {
-          'Content-Type': 'application/json',
-        },
-      },
+          'Content-Type': 'application/json'
+        }
+      }
     );
 
     if (200 === result.status) {
       result.data.result.block.number = IconConverter.toNumber(
-        result.data.result.block.header.number,
+        result.data.result.block.header.number
       );
       debug('Head block: %O', result.data.result.block);
 
@@ -133,12 +134,13 @@ async function retryGetBlockData() {
     await getBlockData();
   } catch (error) {
     logger.error('Failed to fetch Moonbeam block data, retry in 5 minutes', {
-      error: error.toString(),
+      error: error.toString()
     });
     setTimeout(async () => await retryGetBlockData(), 5 * 60 * 1000);
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 async function start() {
   const eventMap = buildEventMap();
   const eventMapBSHScore = buildBSHScoreEventMap();
@@ -148,8 +150,8 @@ async function start() {
   logger.info('Moonbeam BSH SCORE event map: %O', eventMapBSHScore);
   logger.info('Moonbeam BMC Management action map: %O', actionMap);
 
-  const tokenContractMap = await getTokenContractMap();
-  logger.info('Moonbeam registered tokens: %O', tokenContractMap);
+  // const tokenContractMap = await getTokenContractMap();
+  // logger.info('Moonbeam registered tokens: %O', tokenContractMap);
 
   if (-1 === blockHeight) {
     blockHeight = await getIndexedBlockHeight(process.env.MOONBEAM_NETWORK_ID);

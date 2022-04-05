@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict';
 
 jest.mock('../src/modules/tokens/model', () => ({
@@ -9,8 +10,8 @@ const { getMintBurnEvent } = require('../src/modules/mint-burn/icon');
 
 const mintTx = {
   timestamp: 1630460980087098,
-  nid: { s: 1, e: 0, c: [ 3 ] },
-  stepLimit: { s: 1, e: 9, c: [ 5000000000 ] },
+  nid: { s: 1, e: 0, c: [3] },
+  stepLimit: { s: 1, e: 9, c: [5000000000] },
   from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
   to: 'cx26cdb2d9cf33dee078056532175a696b8a9fcc71',
   signature: 'cqkrqtAUa9E3fposozcNCyonGdGzQOlEz3IntyEjXyUdMvrD2Nx5zKVkDZcD+PpOgm8u96dRGZ7guOAuFxLxRQA=',
@@ -19,10 +20,10 @@ const mintTx = {
     method: 'handleRelayMessage',
     params: {
       _prev: 'btp://0x501.pra/0x5CC307268a1393AB9A764A20DACE848AB8275c46',
-      _msg: '-Qux-QMNuLn4t7izr0_CgV0GUnZOUzNq6UWF8KN4MdBQKUWh3NwlwWZWFdGeJ',
+      _msg: '-Qux-QMNuLn4t7izr0_CgV0GUnZOUzNq6UWF8KN4MdBQKUWh3NwlwWZWFdGeJ'
     }
   },
-  version:  { s: 1, e: 0, c: [ 3 ] },
+  version: { s: 1, e: 0, c: [3] },
   txHash: '0xbf0271afffb758ac685cc3f5017458ee590c0400cdad42ad3797bc31c0b0b04c'
 };
 
@@ -33,9 +34,9 @@ const mintTxResult = {
   txIndex: 0,
   blockHeight: 1133446,
   blockHash: '0xbe190a8aa8791e2017b4f303a0a88d28e37113a293aa7756842fbe9e649842f0',
-  cumulativeStepUsed:  { s: 1, e: 6, c: [ 2854716 ] },
-  stepUsed: { s: 1, e: 6, c: [ 2854716 ] },
-  stepPrice: { s: 1, e: 10, c: [ 12500000000 ] },
+  cumulativeStepUsed: { s: 1, e: 6, c: [2854716] },
+  stepUsed: { s: 1, e: 6, c: [2854716] },
+  stepPrice: { s: 1, e: 10, c: [12500000000] },
   eventLogs: [
     {
       scoreAddress: 'cx8cefe5b2d97d15223f474e1aaab35bcb87450885',
@@ -67,8 +68,8 @@ const mintTxResult = {
 
 const burnTx = {
   timestamp: 1630460980080000,
-  nid: { s: 1, e: 0, c: [ 3 ] },
-  stepLimit: { s: 1, e: 9, c: [ 5000000000 ] },
+  nid: { s: 1, e: 0, c: [3] },
+  stepLimit: { s: 1, e: 9, c: [5000000000] },
   from: 'hxb6b5791be0b5ef67063b3c10b840fb81514db2fd',
   to: 'cx26cdb2d9cf33dee078056532175a696b8a9fcc71',
   signature: 'cqkrqtAUa9E3fposozcNCyonGdGzQOlEz3IntyEjXyUdMvrD2Nx5zKVkDZcD+PpOgm8u96dRGZ7guOAuFxLxRQA=',
@@ -77,10 +78,10 @@ const burnTx = {
     method: 'handleRelayMessage',
     params: {
       _prev: 'btp://0x501.pra/0x5CC307268a1393AB9A764A20DACE848AB8275c46',
-      _msg: '-Qux-QMNuLn4t7izr0_CgV0GUnZOUzNq6UWF8KN4MdBQKUWh3NwlwWZWFdGeJ',
+      _msg: '-Qux-QMNuLn4t7izr0_CgV0GUnZOUzNq6UWF8KN4MdBQKUWh3NwlwWZWFdGeJ'
     }
-    },
-  version:  { s: 1, e: 0, c: [ 3 ] },
+  },
+  version: { s: 1, e: 0, c: [3] },
   txHash: '0xbf0271afffb758ac685cc3f5017458ee590c0400cdad42ad3797bc31c0b0b04c'
 };
 
@@ -91,9 +92,9 @@ const burnTxResult = {
   txIndex: 0,
   blockHeight: 1133447,
   blockHash: '0xbe190a8aa8791e2017b4f303a0a88d28e37113a293aa7756842fbe9e649842f0',
-  cumulativeStepUsed:  { s: 1, e: 6, c: [ 2854716 ] },
-  stepUsed: { s: 1, e: 6, c: [ 2854716 ] },
-  stepPrice: { s: 1, e: 10, c: [ 12500000000 ] },
+  cumulativeStepUsed: { s: 1, e: 6, c: [2854716] },
+  stepUsed: { s: 1, e: 6, c: [2854716] },
+  stepPrice: { s: 1, e: 10, c: [12500000000] },
   eventLogs: [
     {
       scoreAddress: 'cx8cefe5b2d97d15223f474e1aaab35bcb87450885',
@@ -101,7 +102,7 @@ const burnTxResult = {
         'TransferBatch(Address,Address,Address,bytes,bytes)',
         'hx77220b7bd46eee88cf3ca61590030d6f85ae42fe',
         'hxcf3af6a05c8f1d6a8eb9f53fe555f4fdf4316262',
-        'hx0000000000000000000000000000000000000000',
+        'hx0000000000000000000000000000000000000000'
       ],
       data: [
         '0xe1a008f7ce30203eb1ff1d26492c94d9ab04d63f4e54f1f9e677e8d4a0d6daaab2dd',
@@ -124,7 +125,7 @@ const burnTxResult = {
 };
 
 test('should return mint event from tx result', async () => {
-  tokenModel.getTokenName.mockReturnValue("DEV");
+  tokenModel.getTokenName.mockReturnValue('DEV');
   const event = await getMintBurnEvent(mintTxResult, mintTx);
   event.tokenValue = Number(event.tokenValue).toFixed(20);
 
@@ -143,7 +144,7 @@ test('should return mint event from tx result', async () => {
 });
 
 test('should return burn event from tx result', async () => {
-  tokenModel.getTokenName.mockReturnValue("DEV");
+  tokenModel.getTokenName.mockReturnValue('DEV');
   const event = await getMintBurnEvent(burnTxResult, burnTx);
   event.tokenValue = Number(event.tokenValue).toFixed(20);
 

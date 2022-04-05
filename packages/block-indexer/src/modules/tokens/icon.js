@@ -1,6 +1,6 @@
+/* eslint-disable yoda */
 'use strict';
 
-const debug = require('debug')('icon');
 const IconService = require('icon-sdk-js').default;
 const { createLogger } = require('../../common');
 const { saveToken } = require('./repository');

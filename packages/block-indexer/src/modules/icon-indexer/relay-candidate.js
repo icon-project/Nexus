@@ -1,6 +1,5 @@
 'use strict';
 
-const debug = require('debug')('icon_tx');
 const { createLogger, hexToFixedAmount } = require('../../common');
 const { registerRelayer, unregisterRelayer } = require('./repository');
 

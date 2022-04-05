@@ -1,6 +1,5 @@
 'use strict';
 
-const debug = require('debug')('db');
 const { createLogger, pgPool } = require('../../common');
 
 const logger = createLogger();

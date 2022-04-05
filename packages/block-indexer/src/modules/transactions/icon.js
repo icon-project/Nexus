@@ -1,3 +1,6 @@
+/* eslint-disable prefer-const */
+/* eslint-disable curly */
+/* eslint-disable yoda */
 'use strict';
 
 const { decode } = require('rlp');

@@ -1,6 +1,6 @@
+/* eslint-disable prefer-const */
 'use strict';
 
-const debug = require('debug')('db');
 const { pgPool, createLogger } = require('../../common');
 
 const logger = createLogger();
@@ -9,7 +9,7 @@ async function createRelay(relay) {
   try {
     await pgPool.query(
       'INSERT INTO relays (tx_hash, address, link, server_status, registered_time) VALUES ($1, $2, $3, $4, $5)',
-      [relay.txHash, relay.address, relay.link, relay.serverStatus, relay.registeredTime],
+      [relay.txHash, relay.address, relay.link, relay.serverStatus, relay.registeredTime]
     );
 
     return true;
@@ -53,7 +53,7 @@ async function setRelayUnregistered(relay) {
 async function getRelayByAddress(address) {
   try {
     const { rows } = await pgPool.query('SELECT address FROM relays WHERE address = $1', [
-      address,
+      address
     ]);
 
     if (rows[0]) {
