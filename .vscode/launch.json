@@ -18,9 +18,34 @@
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "ICON-Block-Idx",
+      "name": "BSC-Idxer",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
       "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
+      "args": ["BSC"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/packages/block-indexer/index.js"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "MOONBEAM-Idxer",
+      "envFile": "${workspaceRoot}/packages/block-indexer/.env",
+      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
+      "args": ["MOONBEAM"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/packages/block-indexer/index.js"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "ICON-Idxer",
+      "envFile": "${workspaceRoot}/packages/block-indexer/.env",
+      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
+      "args": ["ICON"],
       "skipFiles": [
         "<node_internals>/**"
       ],

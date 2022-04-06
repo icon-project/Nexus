@@ -1,7 +1,5 @@
-/* eslint-disable yoda */
 'use strict';
 
-const Web3 = require('web3');
 const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT, TRANSFER_START_EVENT, TRANSFER_END_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog } = require('../common/events');
 const { getRegisteredTokens } = require('../tokens/model');
@@ -11,10 +9,12 @@ const { getLatestTransactionByToken, findTxBySerialNumber, setTransactionConfirm
 const logger = createLogger();
 
 class Web3TransactionHandler {
-  constructor(config) {
-    this.config = { ...config };
-    this.config.bmcAddress = config.bmcAddress.toLowerCase();
-    this.web3 = new Web3(config.endpointUrl);
+  constructor(config, eventMap, web3) {
+    this.bmcAddress = config.bmcAddress.toLowerCase();
+    this.web3 = web3;
+    this.eventMap = eventMap;
+    this.networkName = config.name;
+    this.networkId = config.networkId;
   }
 
   async run(tx, receipt, block) {
@@ -22,25 +22,25 @@ class Web3TransactionHandler {
     const tokenMap = await getRegisteredTokens();
 
     if (tokenMap.has(txTo)) {
-      const tsEvent = findEventByName(TRANSFER_START_EVENT, this.config.eventMap, receipt.logs);
+      const tsEvent = findEventByName(TRANSFER_START_EVENT, this.eventMap, receipt.logs);
 
       if (tsEvent) {
-        logger.info(`${this.config.name}:run get ${TRANSFER_START_EVENT} event in tx ${tsEvent.id}, ${tx.hash}`);
+        logger.info(`${this.networkName}:run get ${TRANSFER_START_EVENT} event in tx ${tsEvent.id}, ${tx.hash}`);
 
-        const ts = decodeEventLog(this.web3, this.config.eventMap, TRANSFER_START_EVENT, tsEvent);
+        const ts = decodeEventLog(this.web3, this.eventMap, TRANSFER_START_EVENT, tsEvent);
         await this.handleTransferStartEvent({
           ...ts,
           logId: tsEvent.id,
           contractAddress: tsEvent.address
         }, tx, receipt, block);
       }
-    } else if (this.config.bmcAddress === txTo) {
-      const teEvent = findEventByName(TRANSFER_END_EVENT, this.config.eventMap, receipt.logs);
+    } else if (this.bmcAddress === txTo) {
+      const teEvent = findEventByName(TRANSFER_END_EVENT, this.eventMap, receipt.logs);
 
       if (teEvent) {
-        logger.info(`${this.config.name}:run get ${TRANSFER_END_EVENT} event in tx ${teEvent.id}, ${tx.hash}`);
+        logger.info(`${this.networkName}:run get ${TRANSFER_END_EVENT} event in tx ${teEvent.id}, ${tx.hash}`);
 
-        const te = decodeEventLog(this.web3, this.config.eventMap, TRANSFER_END_EVENT, teEvent);
+        const te = decodeEventLog(this.web3, this.eventMap, TRANSFER_END_EVENT, teEvent);
         await this.handleTransferEndEvent({
           ...te,
           logId: teEvent.id,
@@ -106,7 +106,7 @@ class Web3TransactionHandler {
         logId: event.logId,
         status: TRANSACTION_STATUS.pending,
         blockTime: this.web3.utils.hexToNumber(block.timestamp) * 1000,
-        networkId: this.config.networkId,
+        networkId: this.networkId,
         networkFee: (Number(tx.gasPrice) * receipt.gasUsed) / ICX_LOOP_UNIT,
         contractAddress: event.contractAddress
       };
@@ -117,7 +117,7 @@ class Web3TransactionHandler {
       txData.totalVolume = totalVolume;
       await saveTransaction(txData);
     } catch (error) {
-      logger.error(`${this.config.name}:handleTransferStartEvent fails: ${error.message} in tx ${tx.hash}`);
+      logger.error(`${this.networkName}:handleTransferStartEvent fails: ${error.message} in tx ${tx.hash}`);
     }
   }
 
@@ -147,8 +147,8 @@ class Web3TransactionHandler {
   ); */
   async handleTransferEndEvent(event, tx) {
     try {
-      const statusCode = 0 === Number(event._code) ? TRANSACTION_STATUS.success : TRANSACTION_STATUS.failed;
-      const updatingTx = await findTxBySerialNumber(event._sn, this.config.networkId, event.contractAddress);
+      const statusCode = Number(event._code) === 0 ? TRANSACTION_STATUS.success : TRANSACTION_STATUS.failed;
+      const updatingTx = await findTxBySerialNumber(event._sn, this.networkId, event.contractAddress);
 
       const txData = {
         txHash: tx.hash,
@@ -158,7 +158,7 @@ class Web3TransactionHandler {
 
       await setTransactionConfirmed([updatingTx], txData, statusCode);
     } catch (error) {
-      logger.error(`${this.config.name}:handleTransferEndEvent fails: ${error.message} in tx ${tx.hash}`);
+      logger.error(`${this.networkName}:handleTransferEndEvent fails: ${error.message} in tx ${tx.hash}`);
     }
   }
 }

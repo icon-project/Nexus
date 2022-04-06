@@ -1,7 +1,5 @@
 /* eslint-disable quotes */
 'use strict';
-
-const Web3 = require('web3');
 const debug = require('debug')('mint_burn');
 const { createLogger, ICX_LOOP_UNIT, CONTRACT_ZERO_ADDRESS, MINT_EVENT, BURN_EVENT } = require('../../common');
 const { findEventByName, decodeEventLog } = require('../common/events');
@@ -14,10 +12,11 @@ const logger = createLogger();
 // Transfer event
 // Ref: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol#L246
 class Web3MintBurnHandler {
-  constructor(config) {
-    this.config = { ...config };
-    this.config.bmcAddress = config.bmcAddress.toLowerCase();
-    this.web3 = new Web3(config.endpointUrl);
+  constructor(config, eventMap, web3) {
+    this.bmcAddress = config.bmcAddress.toLowerCase();
+    this.web3 = web3;
+    this.eventMap = eventMap;
+    this.networkId = config.networkId;
   }
 
   async run(tx, receipt, block) {
@@ -28,14 +27,14 @@ class Web3MintBurnHandler {
     // e.g. https://moonbase-blockscout.testnet.moonbeam.network/tx/0x50098911ff8aa4b62d84a6c73649015821561d64fb34a825ce947e1ca4a5f15a/logs
     // BSH but burn in a tx send to BMC.
     // Changes with ERC20 factory: BSH 1-n ERC20 (#536). Mint/burn only happens to a wrapped coin.
-    if (tokenMap.has(txTo) || this.config.bmcAddress === txTo) {
-      const transferEvent = findEventByName(TRANSFER_EVENT, this.config.eventMap, receipt.logs);
+    if (tokenMap.has(txTo) || this.bmcAddress === txTo) {
+      const transferEvent = findEventByName(TRANSFER_EVENT, this.eventMap, receipt.logs);
 
       if (transferEvent) {
         debug('Transfer event %O', transferEvent);
         logger.info(`Get ${TRANSFER_EVENT} event in tx ${transferEvent.id}, ${tx.hash}`);
 
-        const eventData = decodeEventLog(this.web3, this.config.eventMap, TRANSFER_EVENT, transferEvent);
+        const eventData = decodeEventLog(this.web3, this.eventMap, TRANSFER_EVENT, transferEvent);
         debug('Transfer event decoded %O', eventData);
 
         await this.handleTransferEvent({
@@ -74,7 +73,7 @@ class Web3MintBurnHandler {
         from: eventData.from.toLowerCase(),
         txHash: tx.hash,
         logId: eventData.logId,
-        networkId: this.config.networkId,
+        networkId: this.networkId,
         blockTime: this.web3.utils.hexToNumber(block.timestamp) * 1000
       };
 
