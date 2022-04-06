@@ -60,7 +60,7 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
+export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetwork }) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -74,10 +74,12 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected }) => {
     setStep(1);
   };
 
-  const targetChains = chainList.map(({ CHAIN_NAME }) => ({
-    value: CHAIN_NAME,
-    label: CHAIN_NAME,
-  }));
+  const targetChains = chainList
+    .map(({ CHAIN_NAME }) => ({
+      value: CHAIN_NAME,
+      label: CHAIN_NAME,
+    }))
+    .filter(({ value }) => value !== currentNetwork);
 
   return (
     <StyledCard>
