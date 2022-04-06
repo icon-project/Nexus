@@ -64,7 +64,7 @@ export const Icon = memo(
       NEAR: nearIcon,
     };
 
-    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL;
+    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.ICX;
     const isImagePath = iconURL || (typeof MySource === 'string' && MySource.includes('/'));
 
     return (

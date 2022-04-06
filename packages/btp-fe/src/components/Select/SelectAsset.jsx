@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { getTokenOptions } from 'utils/constants';
+import { chainList } from 'connectors/chainConfigs';
 
 const StyledItem = styled.div`
   display: flex;
@@ -35,19 +35,19 @@ const Item = ({ symbol, children, ...props }) => {
   );
 };
 
-const SelectAsset = ({ onChange, currentNetwork }) => {
+const SelectAsset = ({ onChange }) => {
   /* eslint-disable react/display-name */
-  const options = getTokenOptions(currentNetwork).map(({ symbol, netWorkLabel }) => ({
-    value: symbol,
-    label: symbol,
+  const options = chainList.map(({ CHAIN_NAME, COIN_SYMBOL }) => ({
+    value: COIN_SYMBOL,
+    label: COIN_SYMBOL,
     renderLabel: () => (
-      <TextWithIcon icon={symbol} width="24px">
-        {symbol}
+      <TextWithIcon icon={COIN_SYMBOL} width="24px">
+        {COIN_SYMBOL}
       </TextWithIcon>
     ),
     renderItem: () => (
-      <Item icon={symbol} symbol={symbol}>
-        {netWorkLabel}
+      <Item icon={COIN_SYMBOL} symbol={COIN_SYMBOL}>
+        {CHAIN_NAME}
       </Item>
     ),
   }));
