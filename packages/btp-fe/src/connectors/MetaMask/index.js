@@ -13,7 +13,6 @@ import { ABI } from './abi/ABI';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets, nativeTokens } from 'utils/constants';
-import { sendNoneNativeCoinBSC } from 'connectors/MetaMask/services/BSCServices';
 import { sendNoneNativeCoin } from 'connectors/MetaMask/services/MoonbeamServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
@@ -152,16 +151,6 @@ class Ethereum {
         if (result) {
           if (result.status === 1) {
             switch (window[signingActions.globalName]) {
-              case signingActions.deposit:
-                modal.openModal({
-                  icon: 'checkIcon',
-                  desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
-                  button: {
-                    text: 'Transfer',
-                    onClick: () => sendNoneNativeCoinBSC(),
-                  },
-                });
-                break;
               case signingActions.approve:
                 modal.openModal({
                   icon: 'checkIcon',

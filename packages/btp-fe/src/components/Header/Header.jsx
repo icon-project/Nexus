@@ -14,7 +14,7 @@ import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connect
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets, PAIRED_NETWORKS, getPairedNetwork, pairedNetworks } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
-import { CONNECTED_WALLET_LOCAL_STORAGE, setCurrentICONexNetwork } from 'connectors/constants';
+import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { connect, getNearAccountInfo, signOut } from 'connectors/NEARWallet';
 
@@ -256,10 +256,6 @@ const Header = () => {
   };
   const handleSelectWallet = (wallet) => {
     if (wallet) setSelectedWallet(wallet);
-
-    if (wallet === wallets.near) {
-      onChangePairedNetworks({ target: { value: pairedNetworks['ICON-NEAR'] } });
-    }
   };
 
   const onDisconnectWallet = () => {
@@ -277,12 +273,6 @@ const Header = () => {
   const onAvatarClicked = () => {
     setShowDetail(true);
     setShowModal(true);
-  };
-
-  const onChangePairedNetworks = (e) => {
-    const { value } = e.target;
-    localStorage.setItem(PAIRED_NETWORKS, value);
-    setCurrentICONexNetwork(value);
   };
 
   useEffect(() => {

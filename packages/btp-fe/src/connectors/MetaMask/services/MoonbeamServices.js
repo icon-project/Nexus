@@ -1,19 +1,15 @@
 import { ethers } from 'ethers';
 
-import {
-  MOON_BEAM_NODE,
-  getCurrentICONexNetwork,
-  signingActions,
-  rawTransaction,
-} from 'connectors/constants';
+import { MOON_BEAM_NODE, signingActions, rawTransaction } from 'connectors/constants';
 
 import { convertToICX } from 'connectors/ICONex/utils';
+import { chainConfigs } from 'connectors/chainConfigs';
 import { toChecksumAddress } from '../utils';
 import { roundNumber } from 'utils/app';
-import { connectedNetWorks } from 'utils/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-export const serviceName = connectedNetWorks.moonbeam;
+export const serviceName = 'TODO';
+const ICONchain = chainConfigs.ICON || {};
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {
@@ -50,7 +46,7 @@ export const transfer = async (tx, sendNativeCoin) => {
   let data = null;
   if (sendNativeCoin) {
     data = EthereumInstance.ABI.encodeFunctionData('transferNativeCoin', [
-      `btp://${getCurrentICONexNetwork().networkAddress}/${to}`,
+      `btp://${ICONchain.NETWORK_ADDRESS}/${to}`,
     ]);
     txParams = {
       ...txParams,
@@ -80,7 +76,7 @@ export const sendNoneNativeCoin = async () => {
   const data = EthereumInstance.ABI.encodeFunctionData('transfer', [
     'ICX',
     ethers.utils.parseEther(window[rawTransaction].value)._hex,
-    `btp://${getCurrentICONexNetwork().networkAddress}/${window[rawTransaction].to}`,
+    `btp://${ICONchain.NETWORK_ADDRESS}/${window[rawTransaction].to}`,
   ]);
 
   window[signingActions.globalName] = signingActions.transfer;
