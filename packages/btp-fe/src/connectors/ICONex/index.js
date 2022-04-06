@@ -16,9 +16,9 @@ import {
   TYPES,
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  getCurrentICONexNetwork,
   signingActions,
 } from 'connectors/constants';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
@@ -184,7 +184,7 @@ const getAccountInfo = async (address) => {
       balance,
       wallet,
       unit: 'ICX',
-      currentNetwork: getCurrentICONexNetwork().name,
+      currentNetwork: chainConfigs.ICON?.CHAIN_NAME,
     });
   } catch (err) {
     console.log('Err: ', err);

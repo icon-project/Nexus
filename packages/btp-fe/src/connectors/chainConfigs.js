@@ -1,4 +1,4 @@
-const chainConfigs = {};
+export const chainConfigs = {};
 Object.keys(process.env).forEach((e) => {
   if (e.startsWith('REACT_APP_CHAIN')) {
     const chainName = e.split('_')[3];
