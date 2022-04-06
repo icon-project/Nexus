@@ -4,7 +4,7 @@ import { signingActions, rawTransaction, getCurrentChain } from 'connectors/cons
 
 import { convertToICX } from 'connectors/ICONex/utils';
 import { chainConfigs } from 'connectors/chainConfigs';
-import { toChecksumAddress } from '../utils';
+import { toChecksumAddress } from './utils';
 import { roundNumber } from 'utils/app';
 import { EthereumInstance } from 'connectors/MetaMask';
 

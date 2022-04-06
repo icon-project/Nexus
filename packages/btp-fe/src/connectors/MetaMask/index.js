@@ -5,12 +5,12 @@ import {
   CONNECTED_WALLET_LOCAL_STORAGE,
   signingActions,
 } from 'connectors/constants';
-import { ABI } from './abi/ABI';
+import { ABI } from './ABI';
 
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets } from 'utils/constants';
-import { sendNoneNativeCoin } from 'connectors/MetaMask/services/MoonbeamServices';
+import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
 import { chainList } from 'connectors/chainConfigs';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';

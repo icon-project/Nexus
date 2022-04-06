@@ -2,7 +2,7 @@ import store from 'store';
 import { wallets } from 'utils/constants';
 
 import * as ICONServices from 'connectors/ICONex/ICONServices';
-import * as MoonbeamServices from 'connectors/MetaMask/services/MoonbeamServices';
+import * as MoonbeamServices from 'connectors/MetaMask/services';
 import * as NEARServices from 'connectors/NEARWallet';
 
 export const getCurrentTransferService = () => (curentWallet, currentNetwork) => {
