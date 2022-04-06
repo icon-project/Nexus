@@ -12,7 +12,7 @@ import { Avatar } from 'components/Avatar';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
-import { wallets, PAIRED_NETWORKS, getPairedNetwork, pairedNetworks } from 'utils/constants';
+import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
@@ -178,7 +178,6 @@ const Header = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
-  const currentPairedNetworks = getPairedNetwork();
 
   const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
     openModal,
@@ -304,13 +303,6 @@ const Header = () => {
       setShowDetail(true);
     }
   }, [address, openModal, setDisplay]);
-
-  // set default paired networks
-  useEffect(() => {
-    if (!currentPairedNetworks) {
-      localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
-    }
-  }, [currentPairedNetworks]);
 
   return (
     <StyledHeader $showMenu={showMenu}>

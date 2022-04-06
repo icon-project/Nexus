@@ -2,7 +2,7 @@ import * as nearAPI from 'near-api-js';
 import { NEAR_NODE } from 'connectors/constants';
 import { ethers } from 'ethers';
 import store from 'store';
-import { connectedNetWorks, nativeTokens, wallets } from 'utils/constants';
+import { wallets } from 'utils/constants';
 
 const { account } = store.dispatch;
 
@@ -61,8 +61,8 @@ export const getNearAccountInfo = async () => {
       address: accountInfo.accountId,
       balance: ethers.utils.formatUnits(balance.total, 24),
       wallet: wallets.near,
-      unit: nativeTokens[connectedNetWorks.near].symbol,
-      currentNetwork: connectedNetWorks.near,
+      unit: 'NEAR',
+      currentNetwork: 'NEAR',
     });
   }
 };
