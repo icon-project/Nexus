@@ -1,5 +1,6 @@
 import IconService, { HttpProvider } from 'icon-sdk-js';
-import { connectedNetWorks } from 'utils/constants';
+import store from 'store';
+
 import { chainConfigs } from 'connectors/chainConfigs';
 
 // https://www.icondev.io/iconex-connect/chrome-extension#methods
@@ -31,17 +32,12 @@ export const signingActions = {
 };
 
 export const rawTransaction = 'rawTransaction';
-
-export const allowedNetworkIDs = {
-  metamask: {
-    '0x507': connectedNetWorks.moonbeam,
-    '0x61': connectedNetWorks.bsc,
-    '0x4': 'Rinkeby',
-  },
-};
+export const serverEndpoint = process.env.REACT_APP_BTP_ENDPOINT;
+export const httpProvider = new HttpProvider(chainConfigs.ICON?.RPC_URL);
+export const iconService = new IconService(httpProvider);
+export const getCurrentChain = () => chainConfigs[store.getState().account.id];
 
 export const NEAR_NODE = {
-  [connectedNetWorks.near]: true,
   networkId: process.env.REACT_APP_NEAR_NETWORK_ID,
   contractId: process.env.REACT_APP_NEAR_CONTRACT_ID,
   nodeUrl: process.env.REACT_APP_NEAR_NODE_URL,
@@ -49,30 +45,3 @@ export const NEAR_NODE = {
   helperUrl: process.env.REACT_APP_NEAR_HELPER_URL,
   explorerUrl: process.env.REACT_APP_NEAR_EXPLORER_URL,
 };
-
-export const BSC_NODE = {
-  [connectedNetWorks.bsc]: true,
-  RPCUrl: process.env.REACT_APP_BSC_RPC_URL,
-  networkAddress: process.env.REACT_APP_BSC_NETWORK_ADDRESS,
-  BSHCore: process.env.REACT_APP_BSC_BSH_CORE,
-  tokenBSHProxy: process.env.REACT_APP_BSC_TOKEN_BSH_PROXY,
-  BEP20TKN: process.env.REACT_APP_BSC_BEP20_TKN,
-};
-
-export const MOON_BEAM_NODE = {
-  [connectedNetWorks.moonbeam]: true,
-  RPCUrl: process.env.REACT_APP_MB_RPC_URL,
-  BSHCore: process.env.REACT_APP_MB_BSH_CORE,
-  BSHICX: process.env.REACT_APP_MB_BSH_ICX,
-  networkAddress: process.env.REACT_APP_MB_NETWORK_ADDRESS,
-  gasLimit: process.env.REACT_APP_MB_GAS_LIMIT,
-};
-
-if (process.env.JEST_WORKER_ID === undefined) {
-  console.log('BSC_NODE', BSC_NODE);
-  console.log('MOON_BEAM_NODE', MOON_BEAM_NODE);
-}
-
-export const serverEndpoint = process.env.REACT_APP_BTP_ENDPOINT;
-export const httpProvider = new HttpProvider(chainConfigs.ICON?.RPC_URL);
-export const iconService = new IconService(httpProvider);

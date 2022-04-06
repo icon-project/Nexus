@@ -3,17 +3,15 @@ import store from 'store';
 import {
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  MOON_BEAM_NODE,
-  BSC_NODE,
-  allowedNetworkIDs,
   signingActions,
 } from 'connectors/constants';
 import { ABI } from './abi/ABI';
 
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
-import { wallets, nativeTokens } from 'utils/constants';
+import { wallets } from 'utils/constants';
 import { sendNoneNativeCoin } from 'connectors/MetaMask/services/MoonbeamServices';
+import { chainList } from 'connectors/chainConfigs';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -27,12 +25,7 @@ class Ethereum {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
     this.ABI = new ethers.utils.Interface(ABI);
-
-    // Moonbeam
-    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, ABI, this.provider);
-    // BSC
-    this.contract_BSC = new ethers.Contract(BSC_NODE.BSHCore, ABI, this.provider);
-    this.contractBEP20TKN_BSC = new ethers.Contract(BSC_NODE.BEP20TKN, ABI, this.provider);
+    this.contract = null;
   }
 
   get getEthereum() {
@@ -68,7 +61,12 @@ class Ethereum {
   }
 
   isAllowedNetwork() {
-    if (!Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)) {
+    if (
+      this.ethereum.chainId &&
+      !chainList
+        .map((chain) => chain.NETWORK_ADDRESS?.split('.')[0])
+        .includes(this.ethereum.chainId)
+    ) {
       modal.openModal({
         desc:
           'The connected wallet is conflicted with your Source or Destination blockchain. Please change your blockchain option or reconnect a new wallet.',
@@ -119,14 +117,22 @@ class Ethereum {
         const address = toChecksumAddress(accounts[0]);
         localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
         const balance = await this.getProvider.getBalance(address);
-        const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
+        const currentNetwork = chainList.find((chain) =>
+          chain.NETWORK_ADDRESS.startsWith(this.getEthereum.chainId),
+        );
 
+        if (!currentNetwork) throw new Error('not found chain config');
+
+        const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE } = currentNetwork;
+
+        this.contract = new ethers.Contract(BSH_CORE, ABI, this.provider);
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
           wallet,
-          unit: nativeTokens[currentNetwork].symbol,
-          currentNetwork,
+          unit: COIN_SYMBOL,
+          currentNetwork: CHAIN_NAME,
+          id: id,
         });
       }
     } catch (error) {

@@ -6,11 +6,11 @@ import { ethers } from 'ethers';
 
 import {
   ADDRESS_LOCAL_STORAGE,
-  MOON_BEAM_NODE,
   signingActions,
   rawTransaction,
   iconService,
   httpProvider,
+  getCurrentChain,
 } from 'connectors/constants';
 import { chainConfigs } from 'connectors/chainConfigs';
 
@@ -117,7 +117,7 @@ export const sendNonNativeCoin = () => {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: `btp://${MOON_BEAM_NODE.networkAddress}/${window[signingActions.receiver]}`,
+      _to: `btp://${getCurrentChain().NETWORK_ADDRESS}/${window[signingActions.receiver]}`,
       _value: window[rawTransaction].data.params.amount,
       _coinName: 'DEV',
     },

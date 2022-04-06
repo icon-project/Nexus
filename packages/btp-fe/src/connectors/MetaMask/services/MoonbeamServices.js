@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-import { MOON_BEAM_NODE, signingActions, rawTransaction } from 'connectors/constants';
+import { signingActions, rawTransaction, getCurrentChain } from 'connectors/constants';
 
 import { convertToICX } from 'connectors/ICONex/utils';
 import { chainConfigs } from 'connectors/chainConfigs';
@@ -28,13 +28,13 @@ export const reclaim = async ({ coinName, value }) => {
 
   await EthereumInstance.sendTransaction({
     from: EthereumInstance.ethereum.selectedAddress,
-    to: MOON_BEAM_NODE.BSHCore,
-    gas: MOON_BEAM_NODE.gasLimit,
+    to: getCurrentChain().BSH_CORE,
+    gas: getCurrentChain().GAS_LIMIT,
     data,
   });
 };
 
-export const transfer = async (tx, sendNativeCoin) => {
+export const transfer = async (tx, sendNativeCoin, token) => {
   // https://docs.metamask.io/guide/sending-transactions.html#example
   const value = ethers.utils.parseEther(tx.value)._hex;
   const { to } = tx;
@@ -50,22 +50,22 @@ export const transfer = async (tx, sendNativeCoin) => {
     ]);
     txParams = {
       ...txParams,
-      to: MOON_BEAM_NODE.BSHCore,
+      to: getCurrentChain().BSH_CORE,
     };
   } else {
     window[rawTransaction] = tx;
     window[signingActions.globalName] = signingActions.approve;
-    data = EthereumInstance.ABI.encodeFunctionData('approve', [MOON_BEAM_NODE.BSHCore, value]);
+    data = EthereumInstance.ABI.encodeFunctionData('approve', [getCurrentChain().BSH_CORE, value]);
     txParams = {
       ...txParams,
-      to: MOON_BEAM_NODE.BSHICX,
+      to: getCurrentChain()['BSH_' + token],
     };
     delete txParams.value;
   }
 
   txParams = {
     ...txParams,
-    gas: MOON_BEAM_NODE.gasLimit,
+    gas: getCurrentChain().GAS_LIMIT,
     data,
   };
 
@@ -83,8 +83,8 @@ export const sendNoneNativeCoin = async () => {
 
   await EthereumInstance.sendTransaction({
     from: EthereumInstance.ethereum.selectedAddress,
-    to: MOON_BEAM_NODE.BSHCore,
-    gas: MOON_BEAM_NODE.gasLimit,
+    to: getCurrentChain().BSH_CORE,
+    gas: getCurrentChain().GAS_LIMIT,
     data,
   });
 };
