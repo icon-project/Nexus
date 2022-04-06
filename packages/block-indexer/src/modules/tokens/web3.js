@@ -1,7 +1,5 @@
-/* eslint-disable curly */
 'use strict';
 
-const Web3 = require('web3');
 const debug = require('debug')('web3');
 const { createLogger } = require('../../common');
 const { decodeActionInput } = require('../common/actions');
@@ -12,17 +10,18 @@ const logger = createLogger();
 
 // Ref: https://github.com/icon-project/btp/blob/icondao/solidity/bsh/contracts/BSHCore.sol#L176
 class Web3TokenRegisterHandler {
-  constructor(config) {
-    this.config = { ...config };
-    this.config.bshAddress = config.bshAddress.toLowerCase();
-    this.web3 = new Web3(config.endpointUrl);
+  constructor(config, actionMap, web3) {
+    this.bshAddress = config.bshAddress.toLowerCase();
+    this.web3 = web3;
+    this.actionMap = actionMap;
+    this.bshAbi = config.bshAbi;
+    this.networkId = config.networkId;
   }
 
   async run(tx, receipt, block) {
     const txTo = tx.to.toLowerCase();
 
-    if (txTo !== this.config.bshAddress)
-      return false;
+    if (txTo !== this.bshAddress) { return false; }
 
     const input = this.getRegisterAction(tx.input);
 
@@ -34,7 +33,7 @@ class Web3TokenRegisterHandler {
 
   getRegisterAction(encodedInput) {
     try {
-      const result = decodeActionInput(this.web3, this.config.actionMap, 'register', encodedInput);
+      const result = decodeActionInput(this.web3, this.actionMap, 'register', encodedInput);
 
       if (result) {
         /* info: moonbeam:getBlockData received block 1684372, 0x2a5db5a7e1abc5d68055c4a8b3ea9c402e1696b5960b191920283095340ca00c
@@ -61,11 +60,11 @@ class Web3TokenRegisterHandler {
 
   async registerERC20Token(input, tx) {
     try {
-      const bsh = new this.web3.eth.Contract(this.config.bshAbi, this.config.bshAddress);
+      const bsh = new this.web3.eth.Contract(this.bshAbi, this.bshAddress);
       const address = await bsh.methods.coinId(input.tokenName).call();
 
       const token = {
-        networkId: this.config.networkId,
+        networkId: this.networkId,
         tokenName: input.tokenName,
         tokenId: input.tokenId,
         contractAddress: address,
