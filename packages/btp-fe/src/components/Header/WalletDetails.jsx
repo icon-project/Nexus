@@ -6,8 +6,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { getBalanceToken } from 'utils/constants';
 import { getService } from 'services/transfer';
+import { chainList } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -175,8 +175,8 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: unit, value: unit },
-    ...getBalanceToken()
-      .map((symbol) => ({ label: symbol, value: symbol }))
+    ...chainList
+      .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== unit),
   ];
 
