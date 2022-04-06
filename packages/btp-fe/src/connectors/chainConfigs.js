@@ -13,7 +13,7 @@ Object.keys(process.env).forEach((e) => {
 });
 
 Object.keys(custom).forEach((c) => {
-  const { ABI } = custom[c];
+  const { ABI, methods } = custom[c];
   if (ABI) {
     ABI.forEach((ABIItem) => {
       const index = currentABI.findIndex((a) => ABIItem.name === a.name);
@@ -22,8 +22,11 @@ Object.keys(custom).forEach((c) => {
       }
     });
   }
+  if (methods) {
+    chainConfigs[c].methods = methods;
+  }
 });
 
-console.log('🚀 ~ file: chainConfigs.js ~ line 3 ~ currentABI', currentABI);
+console.log('chainConfigs', chainConfigs);
 
 export const chainList = Object.values(chainConfigs);

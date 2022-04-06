@@ -2,6 +2,12 @@ import { ABI } from 'connectors/MetaMask/ABITest';
 
 export const custom = {
   NEAR: {
-    ABI: ABI,
+    ABI,
+    methods: {
+      transferNativeCoin: {
+        newName: 'abcTest',
+        params: ({ to, value }) => [to, value],
+      },
+    },
   },
 };
