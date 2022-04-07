@@ -196,6 +196,13 @@ const Header = () => {
     resetAccountInfo,
   }));
 
+  useEffect(() => {
+    if (address) {
+      setLoading(false);
+      setShowDetail(true);
+    }
+  }, [address]);
+
   const shortedAddress = hashShortener(address);
 
   const toggleModal = () => {
