@@ -75,11 +75,11 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetw
   };
 
   const targetChains = chainList
-    .map(({ CHAIN_NAME }) => ({
-      value: CHAIN_NAME,
+    .map(({ CHAIN_NAME, id }) => ({
+      value: id,
       label: CHAIN_NAME,
     }))
-    .filter(({ value }) => value !== currentNetwork);
+    .filter(({ label }) => label !== currentNetwork);
 
   return (
     <StyledCard>

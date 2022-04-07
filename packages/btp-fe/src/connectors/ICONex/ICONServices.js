@@ -128,7 +128,7 @@ export const sendNonNativeCoin = () => {
   return { transaction, options };
 };
 
-export const sendNativeCoin = ({ value, to }) => {
+export const sendNativeCoin = ({ value, to }, network) => {
   const transaction = {
     to: ICONchain.BSH_ADDRESS,
     value,
@@ -138,7 +138,7 @@ export const sendNativeCoin = ({ value, to }) => {
     builder: new CallTransactionBuilder(),
     method: 'transferNativeCoin',
     params: {
-      _to: `btp://${ICONchain.NETWORK_ADDRESS}/${to}`,
+      _to: `btp://${chainConfigs[network].NETWORK_ADDRESS}/${to}`,
     },
   };
 
@@ -214,8 +214,8 @@ export const signTx = (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .stepLimit(IconConverter.toBigNumber(ICONchain.stepLimit))
-    .nid(IconConverter.toBigNumber(nid || ICONchain.nid))
+    .stepLimit(IconConverter.toBigNumber(ICONchain.STEP_LIMIT))
+    .nid(IconConverter.toBigNumber(nid || ICONchain.NETWORK_ADDRESS?.split('.')[0]))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
     .timestamp(timestamp || new Date().getTime() * 1000);
