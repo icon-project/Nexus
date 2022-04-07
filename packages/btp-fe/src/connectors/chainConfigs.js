@@ -19,6 +19,8 @@ Object.keys(custom).forEach((c) => {
       const index = currentABI.findIndex((a) => ABIItem.name === a.name);
       if (index !== -1) {
         currentABI[index] = ABIItem;
+      } else {
+        currentABI.push(ABIItem);
       }
     });
   }
