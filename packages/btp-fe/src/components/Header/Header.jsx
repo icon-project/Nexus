@@ -7,7 +7,6 @@ import { WalletDetails } from './WalletDetails';
 import { Modal } from 'components/NotificationModal';
 import { PrimaryButton, HamburgerButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
-// import { Select } from 'components/Select';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
@@ -16,13 +15,11 @@ import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
-import { connect, getNearAccountInfo, signOut } from 'connectors/NEARWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
-import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
@@ -136,12 +133,6 @@ const StyledHeader = styled.header`
   `}
 `;
 
-// const PairedNetworkWrapper = styled.div`
-//   display: flex;
-//   justify-content: left;
-//   align-items: center;
-// `;
-
 // const Logo = styled.img`
 //   width: 42.65px;
 // `;
@@ -179,25 +170,13 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
-  const { openModal, setDisplay } = useDispatch(({ modal: { openModal, setDisplay } }) => ({
-    openModal,
-    setDisplay,
-  }));
-
-  // const pairedNetworksOptions = [
-  //   { label: currentPairedNetworks, value: currentPairedNetworks },
-  //   ...Object.keys(pairedNetworks)
-  //     .filter((i) => i !== currentPairedNetworks)
-  //     .map((i) => ({ label: i, value: i })),
-  // ];
-
   useEffect(() => {
     switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
       case wallets.metamask:
         EthereumInstance.getEthereumAccounts();
         break;
-      case wallets.near:
-        getNearAccountInfo();
+      // case wallets.near:
+      //   getNearAccountInfo();
     }
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
@@ -247,10 +226,10 @@ const Header = () => {
         setLoading(false);
         break;
 
-      case wallets.near:
-        await connect();
-        setLoading(false);
-        break;
+      // case wallets.near:
+      //   await connect();
+      //   setLoading(false);
+      //   break;
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -258,7 +237,6 @@ const Header = () => {
   };
 
   const onDisconnectWallet = () => {
-    signOut();
     resetTransferStep();
     resetAccountInfo();
     toggleModal();
@@ -273,36 +251,6 @@ const Header = () => {
     setShowDetail(true);
     setShowModal(true);
   };
-
-  useEffect(() => {
-    // handle callback url from NEAR wallet
-    // https://docs.near.org/docs/api/naj-quick-reference#sign-in
-    const { search, pathname } = location;
-
-    if (search.startsWith('?near=true') && address) {
-      setShowDetail(true);
-      setShowModal(true);
-      window.history.replaceState(null, '', pathname);
-    }
-
-    if (search.startsWith('?transactionHashes=')) {
-      openModal({
-        icon: 'checkIcon',
-        children: <SuccessSubmittedTxContent />,
-        button: {
-          text: 'Continue transfer',
-          onClick: () => setDisplay(false),
-        },
-      });
-
-      window.history.replaceState(null, '', pathname);
-    }
-
-    if (address) {
-      setLoading(false);
-      setShowDetail(true);
-    }
-  }, [address, openModal, setDisplay]);
 
   return (
     <StyledHeader $showMenu={showMenu}>
@@ -358,22 +306,7 @@ const Header = () => {
                   isCheckingInstalled={checkingICONexInstalled}
                   isInstalled={isICONexInstalled()}
                 />
-                {/* <WalletSelector
-                  type={wallets.near}
-                  wallet={mockWallets}
-                  active={selectedWallet == wallets.near}
-                  onClick={() => handleSelectWallet(wallets.near)}
-                  isInstalled
-                /> */}
               </div>
-              {/* {wallets.near !== selectedWallet && (
-                <PairedNetworkWrapper>
-                  <Text className="xs" color={colors.graySubText}>
-                    Select the paired networks:
-                  </Text>
-                  <Select options={pairedNetworksOptions} onChange={onChangePairedNetworks} />
-                </PairedNetworkWrapper>
-              )} */}
             </Modal>
           )}
         </>
