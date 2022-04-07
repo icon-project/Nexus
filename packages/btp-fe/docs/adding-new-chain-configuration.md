@@ -56,9 +56,9 @@ export const customization = {
 };
 ```
 
-- `ID`: Your chain's id in .env file, e.g: MOONBEAM 
-- `ABI (array)`: List of ABIs, existing ABI will be overrided, a new ABI will be added. (/src/connectors/Metamask/ABI.js is an exmaple)
-- `methods (objects)`: Place your customization on existing methods mentioned above here
+- `ID: string (required)`: Your chain's id in .env file, e.g: MOONBEAM 
+- `ABI: array (optional)`: List of ABIs, existing ABI will be overrided, a new ABI will be added. (/src/connectors/Metamask/ABI.js is an exmaple)
+- `methods: object (optional)`: Place your customization on existing methods mentioned above here
   - `newName: string (optional)`: rename an existing method.
   - `params: function (options)`: customize a method's params. The function will receive the UI input's values as params and must return an array of customized params in order.
 
