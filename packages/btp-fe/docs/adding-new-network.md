@@ -10,6 +10,8 @@ There are 3 preparation steps for the new network added:
 
 3. For the UI, the new network and its native token need to be added to some selectors to reflect the corresponding transfer case.
 
+[Details](/docs/adding-new-chain-configuration.md)
+
 ## Back-end Tasks
 
 To support a new network basically it requires to implement a new blockchain data indexer which will read data from blockchain, save into local database, and process all related events/actions.
