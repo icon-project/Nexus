@@ -1,4 +1,4 @@
-import { custom } from './chainCustom';
+import { custom } from './chainCustomization';
 import { ABI as currentABI } from 'connectors/MetaMask/ABI';
 
 export const chainConfigs = {};
