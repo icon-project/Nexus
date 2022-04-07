@@ -32,7 +32,7 @@ export const reclaim = async ({ coinName, value }) => {
 
   const data = EthereumInstance.ABI.encodeFunctionData(
     reclaim.newName || 'reclaim',
-    reclaim.params ? reclaim.params({ value, coinName }) : [coinName, value],
+    reclaim.params ? reclaim.params({ amount: value, coinName }) : [coinName, value],
   );
 
   await EthereumInstance.sendTransaction({
@@ -63,7 +63,7 @@ export const transfer = async (tx, sendNativeCoin, token) => {
     data = EthereumInstance.ABI.encodeFunctionData(
       transferNativeCoin.newName || 'transferNativeCoin',
       transferNativeCoin.params
-        ? transferNativeCoin.params({ value, coinName: token })
+        ? transferNativeCoin.params({ amount: value, coinName: token, recipientAddress: to })
         : [`btp://${ICONchain.NETWORK_ADDRESS}/${to}`],
     );
     txParams = {
@@ -75,7 +75,7 @@ export const transfer = async (tx, sendNativeCoin, token) => {
     window[signingActions.globalName] = signingActions.approve;
     data = EthereumInstance.ABI.encodeFunctionData(
       approve.newName || 'approve',
-      approve.params ? approve.params({ value, coinName: token }) : [BSH_CORE, value],
+      approve.params ? approve.params({ amount: value, coinName: token }) : [BSH_CORE, value],
     );
     txParams = {
       ...txParams,
@@ -100,15 +100,17 @@ export const sendNoneNativeCoin = async () => {
     methods: { transfer = {} },
   } = getCurrentChain();
 
+  const hexValue = ethers.utils.parseEther(window[rawTransaction].value)._hex;
+
   const data = EthereumInstance.ABI.encodeFunctionData(
     transfer.newName || 'transfer',
     transfer.params
-      ? transfer.params({ value: window[rawTransaction].value, to: window[rawTransaction].to })
-      : [
-          'ICX',
-          ethers.utils.parseEther(window[rawTransaction].value)._hex,
-          `btp://${ICONchain.NETWORK_ADDRESS}/${window[rawTransaction].to}`,
-        ],
+      ? transfer.params({
+          amount: hexValue,
+          recipientAddress: window[rawTransaction].to,
+        })
+      : // TODO: remove hard-coded ICX
+        ['ICX', hexValue, `btp://${ICONchain.NETWORK_ADDRESS}/${window[rawTransaction].to}`],
   );
 
   window[signingActions.globalName] = signingActions.transfer;
