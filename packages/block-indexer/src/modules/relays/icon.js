@@ -1,3 +1,6 @@
+/* eslint-disable prefer-const */
+/* eslint-disable eqeqeq */
+/* eslint-disable curly */
 'use strict';
 
 const { createLogger } = require('../../common');
@@ -5,7 +8,7 @@ const {
   updateRelay,
   createRelay,
   updateRelayTransaction,
-  getRelayByAddress,
+  getRelayByAddress
 } = require('./repository');
 const { getRegisteredRelayMap } = require('./model');
 
@@ -51,7 +54,7 @@ async function handleRelayAction(txResult, transaction) {
       await updateRelay({
         address: params._addr,
         unregisteredTime: new Date(transaction.timestamp / 1000),
-        serverStatus: 'Inactive',
+        serverStatus: 'Inactive'
       });
 
       logger.info('icon:handleRelayAction unregisters relay %s at tx %s', params._addr, transaction.txHash);

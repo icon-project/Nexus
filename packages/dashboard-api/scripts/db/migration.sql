@@ -431,3 +431,15 @@ ALTER TABLE indexer_stats
 ALTER TABLE registered_tokens
     ADD COLUMN active integer NOT NULL DEFAULT 1,
     ADD COLUMN token_id character varying(50) NOT NULL;
+
+-- Issue #552
+DELETE FROM token_prices;
+ALTER TABLE token_prices
+    DROP COLUMN cmc_id,
+    ADD COLUMN coingecko_id character varying(50) NOT NULL,
+    ADD CONSTRAINT token_prices_pkey PRIMARY KEY (coingecko_id)
+    
+INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('ethereum', 'ETH', 3823.55, 1);
+INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('dev-protocol', 'DEV', 0.01, 1);
+INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('icon', 'ICX', 2.09, 1);
+INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('binancecoin', 'BNB', 493.95, 1);
