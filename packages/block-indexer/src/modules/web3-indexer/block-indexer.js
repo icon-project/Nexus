@@ -82,7 +82,7 @@ class Web3BlockIndexer {
     // Replace it with ret = Number.MAX_SAFE_INTEGER;
     // ref: https://github.com/ChainSafe/web3.js/pull/3948#issuecomment-821779691
     const block = await this.web3.eth.getBlock(this.blockHeight, true);
-    const timeout = block ? 3000 : 10000; // Block time ~3 seconds, wait longer for new blocks created.
+    const timeout = block ? 0 : 3000; // Block time ~3 seconds, wait longer for new blocks created.
 
     if (block) {
       if (block.transactions.length > 0) {
@@ -107,12 +107,12 @@ class Web3BlockIndexer {
       // is not ready i.e. mining, importing
       if (error.message.indexOf('Expect block number from id') > 0) {
         logger.info(`Block ${this.blockHeight} is not available. Waiting for a few seconds.`);
-        setTimeout(async () => await this.retryGetBlockData(), 15 * 1000);
+        setTimeout(async () => await this.retryGetBlockData(), 3 * 1000);
         return true;
       }
 
-      logger.error(`${this.networkName}:retryGetBlockData fails to fetch block, retry in 5 minutes: %O`, error);
-      setTimeout(async () => await this.retryGetBlockData(), 5 * 60 * 1000);
+      logger.error(`${this.networkName}:retryGetBlockData fails to fetch block, retry in 3 seconds: %O`, error);
+      setTimeout(async () => await this.retryGetBlockData(), 3 * 1000);
     }
   }
 
