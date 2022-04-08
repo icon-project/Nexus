@@ -142,7 +142,7 @@ const eventHandler = async (event) => {
         icon: 'exclamationPointIcon',
         desc: 'Transaction rejected.',
         button: {
-          text: 'Dissmiss',
+          text: 'Dismiss',
           onClick: () => modal.setDisplay(false),
         },
       });

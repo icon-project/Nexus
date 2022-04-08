@@ -212,7 +212,7 @@ class Ethereum {
           icon: 'exclamationPointIcon',
           desc: 'Transaction rejected.',
           button: {
-            text: 'Dissmiss',
+            text: 'Dismiss',
             onClick: () => modal.setDisplay(false),
           },
         });
