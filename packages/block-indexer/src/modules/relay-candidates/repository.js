@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable curly */
 'use strict';
 
 const IconService = require('icon-sdk-js').default;
