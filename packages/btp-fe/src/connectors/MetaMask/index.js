@@ -101,10 +101,14 @@ class Ethereum {
   }
 
   chainChangedListener() {
-    this.getEthereum.on('chainChanged', (chainId) => {
-      console.log('Change Network', chainId);
-      window.location.reload();
-    });
+    try {
+      this.getEthereum.on('chainChanged', (chainId) => {
+        console.log('Change Network', chainId);
+        window.location.reload();
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async getEthereumAccounts() {
