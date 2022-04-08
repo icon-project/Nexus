@@ -29,6 +29,8 @@ Object.keys(custom).forEach((c) => {
   }
 });
 
-console.log('chainConfigs', chainConfigs);
+if (process.env.JEST_WORKER_ID === undefined) {
+  console.log('chainConfigs', chainConfigs);
+}
 
 export const chainList = Object.values(chainConfigs);
