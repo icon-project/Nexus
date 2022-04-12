@@ -2,7 +2,6 @@ import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
 import { signingActions } from 'connectors/constants';
 import { chainConfigs } from 'connectors/chainConfigs';
 
