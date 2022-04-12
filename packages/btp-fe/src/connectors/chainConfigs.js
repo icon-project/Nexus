@@ -12,8 +12,8 @@ Object.keys(process.env).forEach((e) => {
   }
 });
 
-Object.keys(custom).forEach((c) => {
-  const { ABI, methods } = custom[c];
+export const customzeChain = (chainId = '') => {
+  const { ABI, methods } = custom[chainId] || {};
   if (ABI) {
     ABI.forEach((ABIItem) => {
       const index = currentABI.findIndex((a) => ABIItem.name === a.name);
@@ -25,9 +25,9 @@ Object.keys(custom).forEach((c) => {
     });
   }
   if (methods) {
-    chainConfigs[c].methods = methods;
+    chainConfigs[chainId].methods = methods;
   }
-});
+};
 
 if (process.env.JEST_WORKER_ID === undefined) {
   console.log('chainConfigs', chainConfigs);

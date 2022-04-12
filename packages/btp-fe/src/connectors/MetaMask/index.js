@@ -11,7 +11,7 @@ import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets } from 'utils/constants';
 import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, customzeChain } from 'connectors/chainConfigs';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -130,6 +130,7 @@ class Ethereum {
         const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE } = currentNetwork;
 
         this.contract = new ethers.Contract(BSH_CORE, ABI, this.provider);
+        customzeChain(id);
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
