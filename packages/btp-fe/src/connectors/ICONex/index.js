@@ -22,6 +22,18 @@ const eventHandler = async (event) => {
 
   console.info('%cICONex event', 'color: green;', event.detail);
 
+  if (payload.error) {
+    modal.openModal({
+      icon: 'xIcon',
+      desc: payload.error.message,
+      button: {
+        text: 'Try again',
+        onClick: () => modal.setDisplay(false),
+      },
+    });
+    return;
+  }
+
   switch (type) {
     // request for wallet address confirm
     case TYPES.RESPONSE_ADDRESS:
