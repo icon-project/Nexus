@@ -11,9 +11,11 @@
     "start:moonbeam": "LOGGER_NAME=moonbeam nodemon index.js moonbeam",
     "start:bsc": "LOGGER_NAME=bsc nodemon index.js bsc",
     "start:near": "LOGGER_NAME=near nodemon index.js near",
+    "start:harmony": "LOGGER_NAME=harmony nodemon index.js harmony",
     "pm2:icon": "pm2 start pm2.icon.json",
     "pm2:moonbeam": "pm2 start pm2.moonbeam.json",
     "pm2:bsc": "pm2 start pm2.bsc.json",
+    "pm2:harmony": "pm2 start pm2.harmony.json",
     "pm2:near": "pm2 start pm2.near.json",
     "test": "jest --config=jest.json --passWithNoTests --verbose"
   },

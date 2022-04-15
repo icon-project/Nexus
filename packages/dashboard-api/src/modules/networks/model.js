@@ -1,7 +1,5 @@
 'use strict';
 
-const Web3 = require('web3');
-const IconService = require('icon-sdk-js').default;
 const { logger } = require('../../common');
 const {
   getNetworkInfo,
@@ -14,12 +12,8 @@ const {
   getTokensbyNetworkId
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
-const abiBshScore = require('./abi/abi.bsh_core.json');
 
-const { HttpProvider, IconBuilder } = IconService;
-const provider = new HttpProvider(process.env.ICON_API_URL);
-const iconService = new IconService(provider);
-const web3 = new Web3(process.env.MOONBEAM_API_URL);
+
 
 async function getListNetworkConnectedIcon() {
   try {

@@ -1,7 +1,7 @@
 'use strict';
 
 const IconService = require('icon-sdk-js').default;
-const { hexToIcxUnit, logger, numberToFixedAmount } = require('../../common');
+const { logger, numberToFixedAmount } = require('../../common');
 const {
   getRelayCandidateList,
   getTotalRewardLast30Days,
