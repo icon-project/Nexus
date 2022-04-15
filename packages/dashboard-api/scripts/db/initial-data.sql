@@ -15,12 +15,14 @@ DELETE FROM transactions;
 INSERT INTO networks (id, name, native_token, path_logo, url) VALUES ('0x42', 'ICON', 'ICX', './image/logo/icon-icx-logo.png', 'https://icon.foundation');
 INSERT INTO networks (id, name, native_token, path_logo, url) VALUES ('0x507', 'Moonbeam', 'DEV','./image/logo/moonbeam-glmr-logo.png', 'https://moonbeam.network');
 INSERT INTO networks (id, name, native_token, path_logo, url) VALUES('testnet', 'NEAR Protocol', 'NEAR','./image/logo/near-protocol-near-logo.png', 'https://near.org');
-INSERT INTO networks (id, name, native_token, path_logo, url) VALUES ('0x97', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com');
+INSERT INTO networks (id, name, native_token, path_logo, url) VALUES ('0x61', 'BSC', 'BNB','./image/logo/binance-bnb-logo.png', 'https://www.binance.com');
+INSERT INTO networks (id, name, native_token, path_logo, url) VALUES ('0x6357d2e0', 'HARNONEY', 'ONE','./image/logo/harmony-one-logo.png', 'https://www.harmony.one');
 
 INSERT INTO indexer_stats (network_id, name) VALUES ('0x42', 'ICON');
 INSERT INTO indexer_stats (network_id, name) VALUES ('0x507', 'Moonbeam');
 INSERT INTO indexer_stats (network_id, name) VALUES ('testnet', 'NEAR Protocol');
-INSERT INTO indexer_stats (network_id, name) VALUES ('0x97', 'BSC');
+INSERT INTO indexer_stats (network_id, name) VALUES ('0x61', 'BSC');
+INSERT INTO indexer_stats (network_id, name) VALUES ('0x6357d2e0', 'HARMONY');
 
 -- ### Token prices ###
 
@@ -28,6 +30,7 @@ INSERT INTO token_prices (cmc_id, name, price, active) VALUES (1027, 'ETH', 3823
 INSERT INTO token_prices (cmc_id, name, price, active) VALUES (52, 'DEV', 0.01, 1);
 INSERT INTO token_prices (cmc_id, name, price, active) VALUES (2099, 'ICX', 2.09, 1);
 INSERT INTO token_prices (cmc_id, name, price, active) VALUES (1839, 'BNB', 493.95, 1);
+INSERT INTO token_prices (cmc_id, name, price, active) VALUES (3945, 'ONE', 0.1193, 1);
 
 -- ### Registered tokens ###
 

@@ -12,17 +12,17 @@ async function getRelayerFromContract(iconService) {
   const relayers = await iconService.call(call).execute();
   const relayerMap = new Map();
 
-  for (const address in relayers)
+  for (const address in relayers) {
     relayerMap.set(address, {
       ...relayers[address]
     });
+  }
 
   return relayerMap;
 }
 
 async function getRelayerByAddresses(addresses) {
-  if (!addresses.length)
-    return [];
+  if (!addresses.length) { return []; }
 
   const quotedAddresses = addresses.map(a => '\'' + a + '\'');
   const query = `SELECT address FROM relay_candidates WHERE address IN (${quotedAddresses.join(',')})`;
@@ -32,13 +32,13 @@ async function getRelayerByAddresses(addresses) {
 }
 
 async function saveRelayerReward(address, reward) {
-  const query = `UPDATE relay_candidates SET total_reward = $1, updated_time = NOW() WHERE address = $2`;
+  const query = 'UPDATE relay_candidates SET total_reward = $1, updated_time = NOW() WHERE address = $2';
   const values = [reward, address];
   await pgPool.query(query, values);
 }
 
 async function saveTotalReward(rewardInfo) {
-  const query = `INSERT INTO relay_candidate_rewards (id, total_reward) VALUES ($1, $2)`;
+  const query = 'INSERT INTO relay_candidate_rewards (id, total_reward) VALUES ($1, $2)';
   const values = [rewardInfo.id, rewardInfo.totalReward];
   await pgPool.query(query, values);
 }
