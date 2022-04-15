@@ -65,6 +65,25 @@ async function start(indexerName) {
       nearIndexer.start();
       break;
 
+    case 'HARMONY': {
+      const web3 = new Web3(process.env.HARMONY_API_URL);
+
+      const eventMap = getBscEventMap(web3);
+      const actionMap = getBscActionMap(web3);
+
+      const indexer = new Web3BlockIndexer({
+        name,
+        blockHeight: Number(process.env.HARMONY_BLOCK_HEIGHT),
+        networkId: process.env.HARMONY_NETWORK_ID,
+        endpointUrl: process.env.HARMONY_API_URL,
+        bshAddress: process.env.HARMONY_BSH_CORE_ADDRESS,
+        bmcAddress: process.env.HARMONY_BMC_ADDRESS,
+        bmcManagementAddress: process.env.HARMONY_BMC_MANAGEMENT_ADDRESS,
+        bshAbi: bscBshAbi
+      }, eventMap, actionMap, web3);
+      indexer.start();
+      break;
+    }
     default:
       logger.warn('No indexer started.');
   }

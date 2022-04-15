@@ -52,6 +52,18 @@
       "program": "${workspaceFolder}/packages/block-indexer/index.js"
     },
     {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Harmony-Idxer",
+      "envFile": "${workspaceRoot}/packages/block-indexer/.env",
+      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
+      "args": ["HARMONY"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/packages/block-indexer/index.js"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Jest Current File",

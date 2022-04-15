@@ -4,33 +4,66 @@
 name: SSH deploy
 
 on:
-  push:
-    branches:
-    - disabled-be-dev
+  # push:
+  #   branches:
+  #   - be-dev
+  workflow_dispatch:
+    inputs:
+      indexerName:
+        description: "Indexer Name"
+        required: true
+        default: "bsc"
+        type: choice
+        options:
+        - bsc
+        - moonbeam
+        - near
+        - harmony
+        - algorand
+      tags:
+        description: "deployment tags"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VM_SSH_HOST }}
-        username: ${{ secrets.VM_SSH_USER }}
-        key: ${{ secrets.VM_SSH_KEY }}
-        script: |
-          echo "Deployment process started"
-          cd ./deploy/btp-dashboard
-          git checkout be-dev && git pull
-          pm2 stop ./packages/block-indexer/pm2.json
-          pm2 stop ./packages/dashboard-api/pm2.json
-          cd ./packages/block-indexer && yarn
-          yarn test
-          cd ../dashboard-api && yarn
-          yarn test
-          cd ../..
-          pm2 start ./packages/block-indexer/pm2.json
-          pm2 start ./packages/dashboard-api/pm2.json
-          pm2 status
-          pm2 save
-          echo "Deployment process finished"
+      - name: deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_SSH_HOST }}
+          username: ${{ secrets.VM_SSH_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            echo "Deployment process started"
+            cd ./deploy/btp-dashboard
+            git checkout be-dev && git pull
+            pm2 stop all
+            cd ./packages/block-indexer && yarn
+
+            if ${{ github.event.inputs == 'bsc' }}; then
+              echo "Deploying BSC Indexer"
+              pm2 start ./packages/block-indexer/pm2.bsc.json
+
+            elif ${{ github.event.inputs == 'moonbeam' }}; then
+              echo "Deploying Moonbeam Indexer"
+              pm2 start ./packages/block-indexer/pm2.moonbeam.json
+
+            elif ${{ github.event.inputs == 'near' }}; then
+              echo "Deploying Near Indexer"
+              pm2 start ./packages/block-indexer/pm2.near.json
+
+            elif ${{ github.event.inputs == 'harmony' }}; then
+              echo "Deploying Harmony Indexer"
+              pm2 start ./packages/block-indexer/pm2.harmony.json
+
+            elif ${{ github.event.inputs == 'algorand' }}; then
+              echo "Deploying Algorand Indexer"
+              pm2 start ./packages/block-indexer/pm2.algorand.json
+            fi
+
+            cd ../dashboard-api && yarn
+            cd ../..
+            pm2 start ./packages/dashboard-api/pm2.json
+            pm2 status
+            pm2 save
+            echo "Deployment process finished"
