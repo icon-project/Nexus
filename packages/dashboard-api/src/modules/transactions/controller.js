@@ -2,6 +2,7 @@
 
 const HttpStatus = require('@tiendq/http-status');
 const model = require('./model');
+const _ = require('lodash');
 
 // Show the list of transactions.
 // GET /transactions
@@ -11,8 +12,16 @@ async function getTransHistory(request, response) {
   let assetName = request.query.assetName || '';
   let page = Number(request.query.page) || 0;
   let limit = Number(request.query.limit) || 20;
+  let startDate = _.get(request, 'query.startDate', null);
+  let endDate = _.get(request, 'query.endDate', null);
+  if ((new Date(startDate)).toString() === 'Invalid Date') {
+    response.status(HttpStatus.BadRequest).json({ startDate: 'invalid' });
+  }
+  if ((new Date(endDate)).toString() === 'Invalid Date') {
+    response.status(HttpStatus.BadRequest).json({ endDate: 'invalid' });
+  }
 
-  let transHistory = await model.getTrans(page, limit, from, to, assetName);
+  let transHistory = await model.getTrans(page, limit, from, to, assetName, startDate, endDate);
 
   if (!transHistory)
     return response.sendStatus(HttpStatus.NotFound);

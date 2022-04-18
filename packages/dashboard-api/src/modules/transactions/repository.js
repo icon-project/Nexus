@@ -10,7 +10,7 @@ const {
   NETWORK_TBL_NAME,
 } = require('../../common');
 
-async function getTransactions(page = 0, limit = 20, from, to, assestName) {
+async function getTransactions(page = 0, limit = 20, from, to, assestName, startDate, endDate) {
   let offset = page * limit;
   let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME} WHERE value <> $1`;
   const limitOffset = ' ORDER BY block_time DESC LIMIT $2 OFFSET $3';
@@ -29,6 +29,13 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName) {
   if (assestName) {
     query += ` AND ${TRANSACTION_TBL.tokenName} ILIKE $${params.length + 1}`;
     params.push(assestName);
+  }
+
+  if (startDate) {
+    query += ` AND create_at >= '${startDate}'`;
+  }
+  if (endDate) {
+    query += ` AND create_at <= '${endDate}'`;
   }
 
   query += limitOffset;
