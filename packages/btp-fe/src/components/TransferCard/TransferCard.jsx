@@ -60,7 +60,13 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetwork }) => {
+export const TransferCard = ({
+  setStep,
+  setSendingInfo,
+  isConnected,
+  currentNetwork,
+  nativeCoin,
+}) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -92,7 +98,7 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetw
 
         <div className="send">
           <Text className="md">Send</Text>
-          <SelectAsset onChange={onChange} />
+          <SelectAsset onChange={onChange} nativeCoin={nativeCoin} />
         </div>
 
         <div className="devider" />
