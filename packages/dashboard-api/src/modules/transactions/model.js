@@ -3,8 +3,8 @@
 const { getNetworkById } = require('../networks/repository');
 const { getTransactions, getTransactionByTxHash, countAllTransaction } = require('./repository');
 
-async function getTrans(page, limit, from, to, assetName) {
-  return await getTransactions(page, limit, from, to, assetName);
+async function getTrans(page, limit, from, to, assetName, startDate, endDate) {
+  return await getTransactions(page, limit, from, to, assetName, startDate, endDate);
 }
 
 async function getTotalTransaction() {
