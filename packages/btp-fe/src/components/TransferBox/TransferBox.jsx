@@ -69,7 +69,7 @@ export const TransferBox = () => {
                   setStep={memoizedSetStep}
                   setSendingInfo={onSendingInfoChange}
                   isConnected={isConnected}
-                  isSendingNativeCoin={unit === sendingInfo.token}
+                  nativeCoin={unit}
                   currentNetwork={currentNetwork}
                 />
               </div>
