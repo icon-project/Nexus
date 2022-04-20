@@ -12,7 +12,7 @@ import {
   CONNECTED_WALLET_LOCAL_STORAGE,
   signingActions,
 } from 'connectors/constants';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, customzeChain } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
@@ -174,12 +174,15 @@ const getAccountInfo = async (address) => {
   try {
     const wallet = localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE);
     const balance = +(await getBalance(address));
+    const id = 'ICON';
+    customzeChain(id);
     await account.setAccountInfo({
       address,
       balance,
       wallet,
       unit: 'ICX',
       currentNetwork: chainConfigs.ICON?.CHAIN_NAME,
+      id,
     });
   } catch (err) {
     console.log('Err: ', err);

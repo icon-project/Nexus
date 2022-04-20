@@ -296,7 +296,15 @@ export const getBSHAddressOfCoinName = async (coinName) => {
  */
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
   try {
-    const bshAddressToken = await getBSHAddressOfCoinName(symbol);
+    const {
+      methods: { getBalanceOf = {} },
+    } = getCurrentChain();
+
+    const customPayload = getBalanceOf?.payload || {};
+
+    const bshAddressToken = customPayload.to
+      ? customPayload.to
+      : await getBSHAddressOfCoinName(symbol);
 
     const payload = {
       dataType: 'call',
@@ -307,6 +315,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
           _owner: address,
         },
       },
+      ...customPayload,
     };
 
     if (refundable) {
