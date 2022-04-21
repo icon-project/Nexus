@@ -9,6 +9,7 @@ import { PrimaryButton, HamburgerButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
+import { connect, signOut, getNearAccountInfo } from 'connectors/NearWallet';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
@@ -175,8 +176,9 @@ const Header = () => {
       case wallets.metamask:
         EthereumInstance.getEthereumAccounts();
         break;
-      // case wallets.near:
-      //   getNearAccountInfo();
+      case wallets.near:
+        getNearAccountInfo();
+        break;
     }
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
@@ -191,6 +193,18 @@ const Header = () => {
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
+
+  useEffect(() => {
+    // handle callback url from NEAR wallet
+    // https://docs.near.org/docs/api/naj-quick-reference#sign-in
+    const { search, pathname } = location;
+
+    if (search.startsWith('?near=true') && address) {
+      setShowDetail(true);
+      setShowModal(true);
+      window.history.replaceState(null, '', pathname);
+    }
+  }, [address]);
 
   const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
     resetAccountInfo,
@@ -233,10 +247,10 @@ const Header = () => {
         setLoading(false);
         break;
 
-      // case wallets.near:
-      //   await connect();
-      //   setLoading(false);
-      //   break;
+      case wallets.near:
+        await connect();
+        setLoading(false);
+        break;
     }
   };
   const handleSelectWallet = (wallet) => {
@@ -244,6 +258,7 @@ const Header = () => {
   };
 
   const onDisconnectWallet = () => {
+    signOut();
     resetTransferStep();
     resetAccountInfo();
     toggleModal();
@@ -312,6 +327,13 @@ const Header = () => {
                   onClick={() => handleSelectWallet(wallets.hana)}
                   isCheckingInstalled={checkingICONexInstalled}
                   isInstalled={isICONexInstalled()}
+                />
+                <WalletSelector
+                  type={wallets.near}
+                  wallet={mockWallets}
+                  active={selectedWallet == wallets.near}
+                  onClick={() => handleSelectWallet(wallets.near)}
+                  isInstalled
                 />
               </div>
             </Modal>
