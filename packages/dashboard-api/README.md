@@ -1,5 +1,8 @@
 # dashboard-api
 
+## Drop, re-create, and initial database
+`$ node ./db-init/index.js`
+
 ## Development Environment
 
 PostgreSQL container

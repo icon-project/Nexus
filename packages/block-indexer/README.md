@@ -2,6 +2,11 @@
 
 Fee Aggregation SCORE v1.0.4
 
+## Initial database
+STOP all block-indexer server before running this command
+cmd: `node ./db-init/index.js`
+Then go to `registered_tokens` table and check records again
+
 ## Development
 
 Start local Moonbeam development node.
@@ -27,3 +32,15 @@ https://geth.ethereum.org/downloads/
 ## Production
 
 `yarn start:pm2`
+
+Configure cron job to update relayer candidate rewards.
+
+```bash
+$ crontab -e
+
+# add this script and save changes.
+# ref: https://crontab.guru/
+0 0 * * * /home/ubuntu/apps/btp-dashboard/packages/block-indexer/scripts/reward_reader.sh
+
+$ crontab -l
+```
