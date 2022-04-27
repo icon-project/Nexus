@@ -37,9 +37,8 @@ const Item = ({ symbol, children, ...props }) => {
 
 const SelectAsset = ({ onChange, nativeCoin }) => {
   /* eslint-disable react/display-name */
-  const options = chainList
-    .filter(({ COIN_SYMBOL }) => COIN_SYMBOL === nativeCoin)
-    .map(({ CHAIN_NAME, COIN_SYMBOL }) => ({
+  const getOptions = () => {
+    const options = chainList.map(({ CHAIN_NAME, COIN_SYMBOL }) => ({
       value: COIN_SYMBOL,
       label: COIN_SYMBOL,
       renderLabel: () => (
@@ -54,7 +53,11 @@ const SelectAsset = ({ onChange, nativeCoin }) => {
       ),
     }));
 
-  return <Select options={options} onChange={onChange} name="token" />;
+    if (!nativeCoin) return options;
+    return options.filter(({ value }) => value === nativeCoin);
+  };
+
+  return <Select options={getOptions()} onChange={onChange} name="token" />;
 };
 
 export default SelectAsset;
