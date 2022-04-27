@@ -13,6 +13,7 @@ import { ReactComponent as btcIcon } from 'assets/images/btc-icon.svg';
 import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
 import { ReactComponent as nearIcon } from 'assets/images/near-icon.svg';
 
+import HamornyICon from 'assets/images/harmony-icon.png';
 import MBIcon from 'assets/images/moonbeam.jpeg';
 
 const sizes = {
@@ -62,6 +63,7 @@ export const Icon = memo(
       bch: bchIcon,
       DEV: MBIcon,
       NEAR: nearIcon,
+      ONE: HamornyICon,
     };
 
     const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.ICX;
@@ -109,6 +111,7 @@ Icon.propTypes = {
     'bch',
     'DEV',
     'NEAR',
+    'ONE',
   ]),
   /** Display icon with URL */
   iconURL: PropTypes.string,
