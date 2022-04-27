@@ -7,6 +7,6 @@ export const transfer = (tx, isSendingNativeCoin, token, network) => {
   if (isSendingNativeCoin) {
     sendNativeCoin(tx, network);
   } else {
-    setApproveForSendNonNativeCoin(tx);
+    setApproveForSendNonNativeCoin(tx, network);
   }
 };

@@ -81,7 +81,7 @@ export const getTxResult = (txHash) => {
  * Set approval for sending non-native token
  * @param {object} tx Transaction object
  */
-export const setApproveForSendNonNativeCoin = async (tx) => {
+export const setApproveForSendNonNativeCoin = async (tx, network) => {
   const { to, coinName, value } = tx;
   const bshAddress = await getBSHAddressOfCoinName(coinName);
 
@@ -93,7 +93,7 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
     builder: new CallTransactionBuilder(),
     method: 'approve',
     params: {
-      spender: ICONchain.BSH_ADDRESS,
+      spender: chainConfigs[network]?.ICON_BSH_ADDRESS,
       amount: ethers.utils.parseEther(value).toString(10),
     },
   };
@@ -117,7 +117,7 @@ export const sendNonNativeCoin = () => {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: `btp://${getCurrentChain().NETWORK_ADDRESS}/${window[signingActions.receiver]}`,
+      _to: `btp://${getCurrentChain().NETWORK_ADDRESS}/${window[signingActions.receiver]}`, // TODO: check network address
       _value: window[rawTransaction].data.params.amount,
       _coinName: 'DEV',
     },
@@ -130,7 +130,7 @@ export const sendNonNativeCoin = () => {
 
 export const sendNativeCoin = ({ value, to }, network) => {
   const transaction = {
-    to: ICONchain.BSH_ADDRESS,
+    to: chainConfigs[network]?.ICON_BSH_ADDRESS,
     value,
   };
 
@@ -138,7 +138,7 @@ export const sendNativeCoin = ({ value, to }, network) => {
     builder: new CallTransactionBuilder(),
     method: 'transferNativeCoin',
     params: {
-      _to: `btp://${chainConfigs[network].NETWORK_ADDRESS}/${to}`,
+      _to: `btp://${chainConfigs[network]?.NETWORK_ADDRESS}/${to}`,
     },
   };
 
@@ -152,7 +152,7 @@ export const sendNativeCoin = ({ value, to }, network) => {
  */
 export const reclaim = async ({ coinName, value }) => {
   const transaction = {
-    to: ICONchain.BSH_ADDRESS,
+    to: ICONchain.BSH_ADDRESS, // TODO: change to the proper ICON BSH Address
   };
 
   const options = {
@@ -252,9 +252,9 @@ export const signTx = (transaction = {}, options = {}) => {
  * @return {string} unit: 1/10000
  * ref: https://github.com/icon-project/btp/blob/iconloop/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L40
  */
-export const getBTPfee = async () => {
+export const getBTPfee = async (network) => {
   const fee = await makeICXCall({
-    to: ICONchain.BSH_ADDRESS,
+    to: chainConfigs[network]?.ICON_BSH_ADDRESS,
     dataType: 'call',
     data: {
       method: 'feeRatio',

@@ -7,14 +7,14 @@ import { TokenInput, TextInput } from 'components/Input';
 import { Icon } from 'components/Icon';
 import { Header, Text } from 'components/Typography';
 import { ControlButtons } from './ControlButtons';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
 import { wallets } from 'utils/constants';
-
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 import metaMaskIcon from 'assets/images/metal-mask.svg';
 import iconexIcon from 'assets/images/icon-ex.svg';
@@ -197,7 +197,7 @@ export const Details = memo(
             <Text className="md" color={colors.graySubText}>
               To
             </Text>
-            <Text className="md">{network}</Text>
+            <Text className="md">{chainConfigs[network]?.CHAIN_NAME}</Text>
           </div>
         </Addresses>
         <ControlButtons

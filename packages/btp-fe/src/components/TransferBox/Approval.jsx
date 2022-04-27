@@ -123,7 +123,7 @@ export const Approval = memo(
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
       if (isCurrent)
-        getBTPfee().then((result) => {
+        getBTPfee(network).then((result) => {
           setBTPFee((result / 10000) * tokenAmount);
         });
     }, [isCurrent]);
