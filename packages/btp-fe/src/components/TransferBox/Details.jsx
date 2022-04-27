@@ -10,7 +10,6 @@ import { ControlButtons } from './ControlButtons';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
-import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
 import { wallets } from 'utils/constants';
@@ -23,6 +22,7 @@ import hanaIcon from 'assets/images/hana-wallet.png';
 import binanceIcon from 'assets/images/binance-icon.svg';
 import ethIcon from 'assets/images/eth-icon.svg';
 import nearIcon from 'assets/images/near-icon.svg';
+import HamornyICon from 'assets/images/harmony-icon.png';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -124,15 +124,15 @@ export const icons = {
   BNB: binanceIcon,
   ETH: ethIcon,
   NEAR: nearIcon,
+  ONE: HamornyICon,
 };
 
 export const Details = memo(
   ({ setStep, setTokenValue, isValidForm, isCurrent, sendingInfo, account, usdRate, form }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet } = account;
-    const [currentBalance] = useTokenBalance(token);
 
-    const max = maxValue(currentBalance, 'Insufficient balance');
+    const max = maxValue(balance, 'Insufficient balance');
 
     return (
       <Wrapper>
@@ -172,7 +172,7 @@ export const Details = memo(
             </div>
             <div className="right">
               <Text className="md">
-                {toSeparatedNumberString(currentBalance)} {token}
+                {toSeparatedNumberString(balance)} {token}
               </Text>
               <Text className="xs" color={colors.graySubText}>
                 = ${toSeparatedNumberString(usdRate * balance)}
@@ -209,7 +209,7 @@ export const Details = memo(
             form.resetFieldState(fields.recipient);
             setStep(0);
           }}
-          disabled={currentBalance === null}
+          disabled={balance === null}
         />
       </Wrapper>
     );

@@ -118,12 +118,12 @@ export const Approval = memo(
     const [BTPFee, setBTPFee] = useState(0);
     const { recipient, tokenAmount = 0 } = values;
     const { token, network } = sendingInfo;
-    const { currentNetwork, unit } = account;
+    const { currentNetwork, unit, id } = account;
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
       if (isCurrent)
-        getBTPfee(network).then((result) => {
+        getBTPfee(id, network).then((result) => {
           setBTPFee((result / 10000) * tokenAmount);
         });
     }, [isCurrent]);
