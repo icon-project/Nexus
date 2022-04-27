@@ -6,7 +6,7 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, chainConfigs } from 'connectors/chainConfigs';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -60,13 +60,7 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({
-  setStep,
-  setSendingInfo,
-  isConnected,
-  currentNetwork,
-  nativeCoin,
-}) => {
+export const TransferCard = ({ setStep, setSendingInfo, isConnected, nativeCoin }) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -80,12 +74,19 @@ export const TransferCard = ({
     setStep(1);
   };
 
-  const targetChains = chainList
-    .map(({ CHAIN_NAME, id }) => ({
+  const getTartgetChains = () => {
+    const targetChains = chainList.map(({ CHAIN_NAME, id }) => ({
       value: id,
       label: CHAIN_NAME,
-    }))
-    .filter(({ label }) => label !== currentNetwork);
+    }));
+
+    if (!nativeCoin) return targetChains;
+    return targetChains.filter(({ value }) =>
+      nativeCoin === chainConfigs.ICON.COIN_SYMBOL
+        ? value !== chainConfigs.ICON.id
+        : value === chainConfigs.ICON.id,
+    );
+  };
 
   return (
     <StyledCard>
@@ -105,7 +106,7 @@ export const TransferCard = ({
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={targetChains} onChange={onChange} name="network" />
+          <Select options={getTartgetChains()} onChange={onChange} name="network" />
         </div>
 
         <div className="button-section">
