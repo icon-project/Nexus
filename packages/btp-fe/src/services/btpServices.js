@@ -61,3 +61,14 @@ export const getTransferHistoryByTxHash = (txHash) => {
 export const tokenToUsd = async (token, amount) => {
   return fetchAPI(`${baseBTPNetwork}/converter?token=${token}&amount=${amount}&convert_to=usd`);
 };
+
+export const sendLog = async (payload) => {
+  return fetchAPI('', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    baseURL: 'https://7624-171-224-241-172.ngrok.io/v1/transaction-ips',
+  });
+};

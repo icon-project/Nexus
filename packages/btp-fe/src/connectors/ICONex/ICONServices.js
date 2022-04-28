@@ -130,7 +130,8 @@ export const sendNonNativeCoin = () => {
   return { transaction, options };
 };
 
-export const sendNativeCoin = ({ value, to }, network) => {
+export const sendNativeCoin = (tx) => {
+  const { value, to, network } = tx;
   const transaction = {
     to: ICONchain.BSH_ADDRESS,
     value,
