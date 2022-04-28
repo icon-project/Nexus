@@ -29,7 +29,7 @@ async function start(indexerName) {
       const actionMap = getMoonbeamActionMap(web3);
 
       const indexer = new Web3BlockIndexer({
-        name,
+        networkName: name,
         blockHeight: Number(process.env.MOONBEAM_BLOCK_HEIGHT),
         networkId: process.env.MOONBEAM_NETWORK_ID,
         endpointUrl: process.env.MOONBEAM_API_URL,
@@ -49,7 +49,7 @@ async function start(indexerName) {
       const actionMap = getBscActionMap(web3);
 
       const indexer = new Web3BlockIndexer({
-        name,
+        networkName: name,
         blockHeight: Number(process.env.BSC_BLOCK_HEIGHT),
         networkId: process.env.BSC_NETWORK_ID,
         endpointUrl: process.env.BSC_API_URL,
@@ -72,7 +72,7 @@ async function start(indexerName) {
       const actionMap = getBscActionMap(web3);
 
       const indexer = new Web3BlockIndexer({
-        name,
+        networkName: name,
         blockHeight: Number(process.env.HARMONY_BLOCK_HEIGHT),
         networkId: process.env.HARMONY_NETWORK_ID,
         endpointUrl: process.env.HARMONY_API_URL,
