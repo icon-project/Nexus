@@ -139,7 +139,7 @@ const RefundSelector = styled(Select)`
   }
 
   > .md {
-    width: 42px;
+    width: 49px;
   }
 
   > ul {
@@ -166,6 +166,7 @@ export const WalletDetails = ({
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
+  networkID,
 }) => {
   const [selectedToken, setSelectedToken] = useState(unit);
   const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
@@ -179,6 +180,19 @@ export const WalletDetails = ({
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== unit),
   ];
+
+  const refundedTokens = [
+    ...chainList
+      .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
+      .filter((item) => item.label !== unit),
+  ];
+
+  if (networkID === 'ICON') {
+    refundedTokens.unshift({ label: 'ICX-B', value: unit });
+    refundedTokens.unshift({ label: 'ICX-H', value: unit });
+  } else {
+    refundedTokens.unshift({ label: unit, value: unit });
+  }
 
   const onTokenChange = async (evt) => {
     setSelectedToken(evt.target.value);
@@ -213,7 +227,7 @@ export const WalletDetails = ({
         <div className="select-refund">
           <RefundSelector
             className="padding-content"
-            options={tokens}
+            options={refundedTokens}
             onChange={onChangeRefundSelect}
           />
           <Text className="md">{refund}</Text>

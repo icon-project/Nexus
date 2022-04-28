@@ -12,7 +12,7 @@ import {
   httpProvider,
   getCurrentChain,
 } from 'connectors/constants';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, chainList } from 'connectors/chainConfigs';
 
 import { requestICONexSigning, requestHanaSigning } from './events';
 import Request, { convertToICX, convertToLoopUnit, makeICXCall } from './utils';
@@ -270,11 +270,11 @@ export const getBTPfee = async (id, network) => {
  * @param {string} coinName Token's name, ex: ICX, DEV,
  * @returns {string} BSH address corresponding to the coinName
  */
-export const getBSHAddressOfCoinName = async (coinName) => {
+export const getBSHAddressOfCoinName = async (coinName, ICONBSHAddress) => {
   try {
     const payload = {
       dataType: 'call',
-      to: ICONchain.BSH_ADDRESS,
+      to: ICONBSHAddress,
       data: {
         method: 'coinAddress',
         params: {
@@ -300,11 +300,26 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       methods: { getBalanceOf = {} },
     } = getCurrentChain();
 
+    // TODO: check refundable balance for ICX_H ICX_B
     const customPayload = getBalanceOf?.payload || {};
+    const chain = chainList.find(({ COIN_SYMBOL }) => COIN_SYMBOL === symbol);
+    console.log('🚀 ~ file: ICONServices.js ~ line 305 ~ getBalanceOf ~ chain', chain);
+    console.log('🚀 ~ file: ICONServices.js ~ line 298 ~ getBalanceOf ~ symbol', symbol);
 
-    const bshAddressToken = customPayload.to
-      ? customPayload.to
-      : await getBSHAddressOfCoinName(symbol);
+    if (!chain) {
+      console.log('relevant chain not found');
+      return 0;
+    }
+    const ICONBSHAddress = chain.ICON_BSH_ADDRESS;
+
+    const bshAddressToken =
+      customPayload.symbol === symbol && customPayload.to
+        ? customPayload.to
+        : await getBSHAddressOfCoinName(symbol, ICONBSHAddress);
+
+    if (!bshAddressToken) throw new Error('BSH address not found');
+
+    delete customPayload.symbol;
 
     const payload = {
       dataType: 'call',
@@ -319,7 +334,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     };
 
     if (refundable) {
-      payload.to = ICONchain.BSH_ADDRESS;
+      payload.to = ICONBSHAddress;
       payload.data.params._coinName = symbol;
     }
 
@@ -330,5 +345,6 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       : roundNumber(ethers.utils.formatEther(balance), 6);
   } catch (err) {
     console.log('getBalanceOf err', err);
+    return 0;
   }
 };
