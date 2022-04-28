@@ -100,17 +100,17 @@ export const sendNoneNativeCoin = async () => {
     methods: { transfer = {} },
   } = getCurrentChain();
 
-  const hexValue = ethers.utils.parseEther(window[rawTransaction].value)._hex;
+  const { value, to, coinName } = window[rawTransaction];
+  const hexValue = ethers.utils.parseEther(value)._hex;
 
   const data = EthereumInstance.ABI.encodeFunctionData(
     transfer.newName || 'transfer',
     transfer.params
       ? transfer.params({
           amount: hexValue,
-          recipientAddress: window[rawTransaction].to,
+          recipientAddress: to,
         })
-      : // TODO: remove hard-coded ICX
-        ['ICX', hexValue, `btp://${ICONchain.NETWORK_ADDRESS}/${window[rawTransaction].to}`],
+      : [coinName, hexValue, `btp://${ICONchain.NETWORK_ADDRESS}/${to}`],
   );
 
   window[signingActions.globalName] = signingActions.transfer;
