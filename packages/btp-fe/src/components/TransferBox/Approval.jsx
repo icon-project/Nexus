@@ -139,7 +139,7 @@ export const Approval = memo(
 
     const onApprove = () => {
       const isSendingNativeCoin = unit === token;
-      const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token };
+      const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token, network };
       openModal({
         icon: 'loader',
         desc: 'Waiting for confirmation in your wallet.',

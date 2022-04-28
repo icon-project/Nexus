@@ -8,6 +8,7 @@ import {
   ADDRESS_LOCAL_STORAGE,
   signingActions,
   rawTransaction,
+  txPayload,
   iconService,
   httpProvider,
   getCurrentChain,
@@ -82,7 +83,7 @@ export const getTxResult = (txHash) => {
  * @param {object} tx Transaction object
  */
 export const setApproveForSendNonNativeCoin = async (tx) => {
-  const { to, coinName, value } = tx;
+  const { coinName, value } = tx;
   const bshAddress = await getBSHAddressOfCoinName(coinName);
 
   const transaction = {
@@ -94,12 +95,11 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
     method: 'approve',
     params: {
       spender: ICONchain.BSH_ADDRESS,
-      amount: ethers.utils.parseEther(value).toString(10),
+      amount: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
 
-  window[rawTransaction] = tx;
-  window[signingActions.receiver] = to;
+  window[txPayload] = tx;
   window[signingActions.globalName] = signingActions.approve;
   signTx(transaction, options);
   return { transaction, options };
@@ -113,13 +113,15 @@ export const sendNonNativeCoin = () => {
     to: ICONchain.BSH_ADDRESS,
   };
 
+  const { coinName, value, to, network } = window[txPayload];
+
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: `btp://${getCurrentChain().NETWORK_ADDRESS}/${window[signingActions.receiver]}`,
-      _value: window[rawTransaction].data.params.amount,
-      _coinName: 'DEV',
+      _to: `btp://${chainConfigs[network].NETWORK_ADDRESS}/${to}`,
+      _value: IconConverter.toHex(convertToLoopUnit(value)),
+      _coinName: coinName,
     },
   };
 
