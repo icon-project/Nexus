@@ -67,7 +67,7 @@
       "type": "node",
       "request": "launch",
       "name": "Jest Current File",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "program": "${workspaceFolder}/packages/block-indexer/node_modules/.bin/jest",
       "args": [
         "${fileBasenameNoExtension}",
         "--detectOpenHandles",
@@ -77,13 +77,10 @@
       "env": {
         "LOGGER_FILENAME": "logs/services.%DATE%.log"
       },
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/packages/block-indexer/",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest-cli/bin/jest",
-      }
     },
   ]
 }

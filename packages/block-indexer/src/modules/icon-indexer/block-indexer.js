@@ -1,5 +1,3 @@
-/* eslint-disable curly */
-/* eslint-disable yoda */
 'use strict';
 
 const debug = require('debug')('icon');
@@ -27,7 +25,7 @@ const indexInterval = Number(process.env.ICON_INDEX_INTERVAL);
 
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
-    if (txResult && 1 === txResult.status) {
+    if (txResult && txResult.status === 1) {
       await handleTransactionEvents(txResult, transaction);
       // FAS: await handleAuctionEvents(txResult);
       // FAS: await handleTransferFeeEvents(txResult);
@@ -50,7 +48,7 @@ async function getTransactionResult(txHash) {
   } catch (error) {
     // Ignore pending tx to retry later.
     // Ref: https://www.icondev.io/references/reference-manuals/icon-json-rpc-api-v3-specification#icx_gettransactionresult
-    if ('[RPC ERROR] Executing' === error || '[RPC ERROR] Invalid params txHash' === error) {
+    if (error === '[RPC ERROR] Executing' || error === '[RPC ERROR] Invalid params txHash') {
       logger.warn('icon:Pending transaction result %s, %s', txHash, error);
       return null;
     }
@@ -70,7 +68,7 @@ async function retryGetTransactionResult(tx, block) {
       setTimeout(async () => await retryGetTransactionResult(tx, block), 1000);
     }
   } catch (error) {
-    if ('[RPC ERROR] Executing' === error.slice(0, 21)) {
+    if (error.slice(0, 21) === '[RPC ERROR] Executing') {
       logger.warn(`${error} ${tx.txHash}`);
       setTimeout(async () => await retryGetTransactionResult(tx, block), 1000);
     } else {
@@ -86,10 +84,11 @@ async function runBlockHandlers(block) {
     if (tx.to) {
       const tokenMap = await getRegisteredTokens();
 
-      if (process.env.ICON_BMC_ADDRESS === tx.to || tokenMap.has(tx.to))
+      if (process.env.ICON_BMC_ADDRESS === tx.to || process.env.ICON_WPS_BMC === tx.to || tokenMap.has(tx.to)) {
         await retryGetTransactionResult(tx, block);
-      else
+      } else {
         await runTransactionHandlers(tx, null, block);
+      }
     }
   }
 
@@ -102,7 +101,7 @@ async function getBlockByHeight(height) {
     const block = await iconService.getBlockByHeight(height).execute();
     return block;
   } catch (error) {
-    if ('[RPC ERROR] E1005:Not found' === error) {
+    if (error === '[RPC ERROR] E1005:Not found') {
       logger.warn(`icon:Block ${height} not found`);
       return null;
     }
@@ -136,7 +135,7 @@ async function retryGetBlockData() {
     await getBlockData();
   } catch (error) {
     // Reading to fast, next block is not available.
-    if ('[RPC ERROR] NotFound' === error.slice(0, 20)) {
+    if (error.slice(0, 20) === '[RPC ERROR] NotFound') {
       logger.warn(error);
       setTimeout(async () => await retryGetBlockData(), 5000);
     } else {
@@ -149,18 +148,20 @@ async function retryGetBlockData() {
 
 async function start() {
   // Continue from last indexed block?
-  if (-1 === blockHeight) {
+  if (blockHeight === -1) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
 
-    if (blockHeight > 0)
+    if (blockHeight > 0) {
       ++blockHeight;
+    }
   }
 
   const block = await iconService.getLastBlock().execute();
 
   // Start at head block, and when invalid block height.
-  if (0 === blockHeight || blockHeight > block.height)
+  if (blockHeight === 0 || blockHeight > block.height) {
     blockHeight = block.height;
+  }
 
   logger.info('Starting ICON block indexer at block %d...', blockHeight);
 
