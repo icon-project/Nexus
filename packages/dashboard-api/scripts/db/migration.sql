@@ -443,3 +443,14 @@ INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('ethereum',
 INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('dev-protocol', 'DEV', 0.01, 1);
 INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('icon', 'ICX', 2.09, 1);
 INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('binancecoin', 'BNB', 493.95, 1);
+
+-- Issue Add slack notification
+CREATE TABLE IF NOT EXISTS public.transaction_ips
+(
+    tx_hash character varying(100) NOT NULL,
+	ip character varying(50) NOT NULL,
+    network_id character varying(20) NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT now(),
+    updated_at timestamp without time zone,
+	CONSTRAINT transaction_ip_pkey PRIMARY KEY (tx_hash, network_id)
+)

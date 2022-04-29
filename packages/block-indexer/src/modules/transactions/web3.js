@@ -5,7 +5,7 @@ const { findEventByName, decodeEventLog } = require('../common/events');
 const { getRegisteredTokens } = require('../tokens/model');
 const { calculateTotalVolume } = require('./model');
 const { getLatestTransactionByToken, findTxBySerialNumber, setTransactionConfirmed, saveTransaction } = require('./repository');
-
+const { logTxHashToSlack } = require('../../slack-bot');
 const logger = createLogger();
 
 class Web3TransactionHandler {
@@ -115,6 +115,19 @@ class Web3TransactionHandler {
       const totalVolume = calculateTotalVolume(txData, latestTransaction);
 
       txData.totalVolume = totalVolume;
+
+      // Log a transaction to slack channel
+      logTxHashToSlack(
+        txData.toAddress,
+        txData.fromAddress,
+        txData.txHash,
+        txData.blockTime,
+        txData.btpFee,
+        txData.networkFee,
+        txData.status,
+        txData.value,
+        txData.networkId
+      );
       await saveTransaction(txData);
     } catch (error) {
       logger.error(`${this.networkName}:handleTransferStartEvent fails: ${error.message} in tx ${tx.hash}`);
@@ -156,6 +169,20 @@ class Web3TransactionHandler {
         error: TRANSACTION_STATUS.failed === statusCode ? event._response : ''
       };
 
+      // Log a transaction to slack channel when update transaction's status
+      if (updatingTx) {
+        logTxHashToSlack(
+          updatingTx.to_address,
+          updatingTx.from_address,
+          updatingTx.tx_hash,
+          updatingTx.block_time,
+          updatingTx.btp_fee,
+          updatingTx.network_fee,
+          statusCode,
+          updatingTx.value,
+          updatingTx.network_id
+        );
+      }
       await setTransactionConfirmed([updatingTx], txData, statusCode);
     } catch (error) {
       logger.error(`${this.networkName}:handleTransferEndEvent fails: ${error.message} in tx ${tx.hash}`);
