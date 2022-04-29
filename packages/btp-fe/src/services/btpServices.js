@@ -69,6 +69,6 @@ export const sendLog = async (payload) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(payload),
-    baseURL: 'https://7624-171-224-241-172.ngrok.io/v1/transaction-ips',
+    baseURL: process.env.REACT_APP_LOGS_ENDPOINT,
   });
 };
