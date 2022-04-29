@@ -99,7 +99,7 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected, nativeCoin 
 
         <div className="send">
           <Text className="md">Send</Text>
-          <SelectAsset onChange={onChange} nativeCoin={nativeCoin} />
+          <SelectAsset onChange={onChange} />
         </div>
 
         <div className="devider" />

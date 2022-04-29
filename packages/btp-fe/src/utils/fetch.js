@@ -13,6 +13,6 @@ export const fetchAPI = (endpoint, config = {}) => {
       return res.json();
     })
     .catch((error) => {
-      throw error;
+      console.log(error);
     });
 };

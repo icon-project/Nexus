@@ -8,6 +8,7 @@ import {
   ADDRESS_LOCAL_STORAGE,
   signingActions,
   rawTransaction,
+  txPayload,
   iconService,
   httpProvider,
   getCurrentChain,
@@ -81,8 +82,8 @@ export const getTxResult = (txHash) => {
  * Set approval for sending non-native token
  * @param {object} tx Transaction object
  */
-export const setApproveForSendNonNativeCoin = async (tx, network) => {
-  const { to, coinName, value } = tx;
+export const setApproveForSendNonNativeCoin = async (tx) => {
+  const { coinName, value } = tx;
   const bshAddress = await getBSHAddressOfCoinName(coinName);
 
   const transaction = {
@@ -93,13 +94,12 @@ export const setApproveForSendNonNativeCoin = async (tx, network) => {
     builder: new CallTransactionBuilder(),
     method: 'approve',
     params: {
-      spender: chainConfigs[network]?.ICON_BSH_ADDRESS,
-      amount: ethers.utils.parseEther(value).toString(10),
+      spender: ICONchain.BSH_ADDRESS,
+      amount: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
 
-  window[rawTransaction] = tx;
-  window[signingActions.receiver] = to;
+  window[txPayload] = tx;
   window[signingActions.globalName] = signingActions.approve;
   signTx(transaction, options);
   return { transaction, options };
@@ -113,13 +113,15 @@ export const sendNonNativeCoin = () => {
     to: ICONchain.BSH_ADDRESS,
   };
 
+  const { coinName, value, to, network } = window[txPayload];
+
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: `btp://${getCurrentChain().NETWORK_ADDRESS}/${window[signingActions.receiver]}`, // TODO: check network address
-      _value: window[rawTransaction].data.params.amount,
-      _coinName: 'DEV',
+      _to: `btp://${chainConfigs[network].NETWORK_ADDRESS}/${to}`,
+      _value: IconConverter.toHex(convertToLoopUnit(value)),
+      _coinName: coinName,
     },
   };
 
@@ -128,7 +130,8 @@ export const sendNonNativeCoin = () => {
   return { transaction, options };
 };
 
-export const sendNativeCoin = ({ value, to }, network) => {
+export const sendNativeCoin = (tx) => {
+  const { value, to, network } = tx;
   const transaction = {
     to: chainConfigs[network]?.ICON_BSH_ADDRESS,
     value,

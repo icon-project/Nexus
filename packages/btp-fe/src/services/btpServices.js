@@ -61,3 +61,14 @@ export const getTransferHistoryByTxHash = (txHash) => {
 export const tokenToUsd = async (token, amount) => {
   return fetchAPI(`${baseBTPNetwork}/converter?token=${token}&amount=${amount}&convert_to=usd`);
 };
+
+export const sendLog = async (payload) => {
+  return fetchAPI('', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    baseURL: process.env.REACT_APP_LOGS_ENDPOINT,
+  });
+};
