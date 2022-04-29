@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 'use strict';
 const { logger } = require('../../common');
 const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME, REGISTERED_TOKENS_TABLE } = require('../../common');
@@ -133,7 +134,7 @@ async function getNetworkById(id) {
 
 async function getVolumeToken24hByNid(name, networkId) {
   try {
-    const at24hAgo = new Date().getTime() - 24*60*60*1000; // current_time(milisecond) - 24h(milisecond)
+    const at24hAgo = new Date().getTime() - 24 * 60 * 60 * 1000; // current_time(milisecond) - 24h(milisecond)
     const {
       rows: [result],
     } = await pgPool.query(

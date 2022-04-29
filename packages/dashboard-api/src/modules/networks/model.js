@@ -9,11 +9,10 @@ const {
   getVolumeTokenAllTimeByNid,
   getTotalMintValue,
   getTotalBurnValue,
-  getTokensbyNetworkId
+  getTokensbyNetworkId,
+  getNetworkById: getNetworkByIdInDB,
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
-
-
 
 async function getListNetworkConnectedIcon() {
   try {
@@ -125,4 +124,5 @@ async function getNetworkById(networkId) {
 module.exports = {
   getListNetworkConnectedIcon,
   getNetworkById,
+  getNetworkByIdInDB
 };

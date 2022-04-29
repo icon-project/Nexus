@@ -167,7 +167,19 @@ const createDatabaseQuery = [
 `CREATE INDEX transactions_token_name ON transactions (token_name);`,
 `CREATE INDEX transactions_update_at ON transactions (update_at DESC);`,
 `CREATE INDEX transfer_fees_created_time ON transfer_fees (created_time DESC);`,
-`CREATE INDEX transfer_fees_token_name ON transfer_fees (token_name);`
+`CREATE INDEX transfer_fees_token_name ON transfer_fees (token_name);`,
+
+// -- Create transaction_ips table for pushing a slack notification (log transaction to slack) --
+`CREATE TABLE IF NOT EXISTS public.transaction_ips
+(
+    tx_hash character varying(100) NOT NULL,
+	ip character varying(50) NOT NULL,
+    network_id character varying(20) NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT now(),
+    updated_at timestamp without time zone,
+	CONSTRAINT transaction_ip_pkey PRIMARY KEY (tx_hash, network_id)
+)`
+
 ];
 
 module.exports = {

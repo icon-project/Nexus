@@ -20,6 +20,7 @@ const BUY_TOKENS_PROTOTYPE = 'BuyTokens(int,Address,bytes,int,int)';
 const BUY_TOKENS_END_PROTOTYPE = 'BuyTokensEnd(int,Address,bytes,str,int,int)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const logger = createLogger();
+const { logTxHashToSlack } = require('../../slack-bot');
 
 /*
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
@@ -48,6 +49,19 @@ async function confirmTransferEnd(event, txInfo) {
     }
 
     txInfo.error = TRANSACTION_STATUS.failed === statusCode ? web3.utils.hexToUtf8(data[2]) : '';
+
+    // Log a transaction to slack channel when update transaction's status
+    logTxHashToSlack(
+      transaction.to_address,
+      transaction.from_address,
+      transaction.tx_hash,
+      transaction.block_time,
+      transaction.btp_fee,
+      transaction.network_fee,
+      statusCode,
+      transaction.value,
+      transaction.network_id
+    );
     await setTransactionConfirmed([transaction], txInfo, statusCode);
   } catch (error) {
     logger.error('icon:confirmTransferEnd failed confirm transaction %O', error);
@@ -122,6 +136,19 @@ async function handleTransactionStartEvent(event, txResult, transaction) {
   const totalVolume = calculateTotalVolume(transObj, latestTransaction);
 
   transObj.totalVolume = totalVolume;
+
+  // Log a transaction to slack channel
+  logTxHashToSlack(
+    transObj.toAddress,
+    transObj.fromAddress,
+    transObj.txHash,
+    transObj.blockTime,
+    transObj.btpFee,
+    transObj.networkFee,
+    transObj.status,
+    transObj.value,
+    transObj.networkId
+  );
   await saveTransaction(transObj);
 }
 
@@ -166,6 +193,19 @@ async function handleBuyTokenEvent(event, txResult, transaction) {
     const totalVolume = calculateTotalVolume(transObj, latestTransaction);
 
     transObj.totalVolume = totalVolume;
+
+    // Log a transaction to slack channel
+    logTxHashToSlack(
+      transObj.toAddress,
+      transObj.fromAddress,
+      transObj.txHash,
+      transObj.blockTime,
+      transObj.btpFee,
+      transObj.networkFee,
+      transObj.status,
+      transObj.value,
+      transObj.networkId
+    );
     await saveTransaction(transObj);
   } catch (error) {
     logger.error('icon:handleBuyTokenEvent failed save transaction %O', error);
@@ -192,6 +232,19 @@ async function handleBuyTokenEndEvent(event, txResult) {
     }
 
     transaction.error = TRANSACTION_STATUS.failed === statusCode ? data[0] : '';
+
+    // Log a transaction to slack channel when update transaction's status
+    logTxHashToSlack(
+      transaction.to_address,
+      transaction.from_address,
+      transaction.tx_hash,
+      transaction.block_time,
+      transaction.btp_fee,
+      transaction.network_fee,
+      statusCode,
+      transaction.value,
+      transaction.network_id
+    );
     await setTransactionConfirmed([transaction], transaction, statusCode);
   } catch (error) {
     logger.error('icon:handleBuyTokenEndEvent failed confirm transaction %O', error);

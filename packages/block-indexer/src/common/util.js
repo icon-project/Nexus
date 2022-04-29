@@ -3,7 +3,7 @@
 
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js').default;
-const { ICX_LOOP_UNIT } = require('./constants');
+const { ICX_LOOP_UNIT, TRANSACTION_STATUS } = require('./constants');
 const { createLogger } = require('./logger');
 
 const logger = createLogger();
@@ -46,9 +46,19 @@ function logDbError(message, error) {
   logger.error(`${message}: (${error.message}, ${error.detail})`);
 }
 
+function getNameOfTransactionStatus(digit) {
+  for (const [key, value] of Object.entries(TRANSACTION_STATUS)) {
+    if (value === digit) {
+      return key.toString();
+    }
+  }
+  return '';
+}
+
 module.exports = {
   hexToFixedAmount,
   hexToIcxUnit,
   tokenToUsd,
-  logDbError
+  logDbError,
+  getNameOfTransactionStatus
 };
