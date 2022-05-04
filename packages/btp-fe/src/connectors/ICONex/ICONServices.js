@@ -13,10 +13,15 @@ import {
   httpProvider,
   getCurrentChain,
 } from 'connectors/constants';
-import { chainConfigs, chainList } from 'connectors/chainConfigs';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 import { requestICONexSigning, requestHanaSigning } from './events';
-import Request, { convertToICX, convertToLoopUnit, makeICXCall } from './utils';
+import Request, {
+  convertToICX,
+  convertToLoopUnit,
+  makeICXCall,
+  getICONBSHAddressforEachChain,
+} from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
 import { wallets } from 'utils/constants';
@@ -155,7 +160,7 @@ export const sendNativeCoin = (tx) => {
  */
 export const reclaim = async ({ coinName, value }) => {
   const transaction = {
-    to: ICONchain.BSH_ADDRESS, // TODO: change to the proper ICON BSH Address
+    to: getICONBSHAddressforEachChain(coinName),
   };
 
   const options = {
@@ -304,15 +309,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     } = getCurrentChain();
 
     const customPayload = getBalanceOf?.payload || {};
-    const chain = chainList.find(
-      ({ COIN_SYMBOL, id }) => COIN_SYMBOL === symbol || symbol.endsWith(id),
-    );
-
-    if (!chain) {
-      console.log('relevant chain not found');
-      return 0;
-    }
-    const ICONBSHAddress = chain.ICON_BSH_ADDRESS;
+    const ICONBSHAddress = getICONBSHAddressforEachChain(symbol);
     delete customPayload.symbol;
 
     const payload = {
