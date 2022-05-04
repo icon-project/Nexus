@@ -303,30 +303,20 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       methods: { getBalanceOf = {} },
     } = getCurrentChain();
 
-    // TODO: check refundable balance for ICX_H ICX_B
     const customPayload = getBalanceOf?.payload || {};
-    const chain = chainList.find(({ COIN_SYMBOL }) => COIN_SYMBOL === symbol);
-    console.log('🚀 ~ file: ICONServices.js ~ line 305 ~ getBalanceOf ~ chain', chain);
-    console.log('🚀 ~ file: ICONServices.js ~ line 298 ~ getBalanceOf ~ symbol', symbol);
+    const chain = chainList.find(
+      ({ COIN_SYMBOL, id }) => COIN_SYMBOL === symbol || symbol.endsWith(id),
+    );
 
     if (!chain) {
       console.log('relevant chain not found');
       return 0;
     }
     const ICONBSHAddress = chain.ICON_BSH_ADDRESS;
-
-    const bshAddressToken =
-      customPayload.symbol === symbol && customPayload.to
-        ? customPayload.to
-        : await getBSHAddressOfCoinName(symbol, ICONBSHAddress);
-
-    if (!bshAddressToken) throw new Error('BSH address not found');
-
     delete customPayload.symbol;
 
     const payload = {
       dataType: 'call',
-      to: bshAddressToken,
       data: {
         method: 'balanceOf',
         params: {
@@ -338,7 +328,15 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
 
     if (refundable) {
       payload.to = ICONBSHAddress;
-      payload.data.params._coinName = symbol;
+      payload.data.params._coinName = symbol.split('-')[0];
+    } else {
+      const bshAddressToken =
+        symbol === customPayload.symbol && customPayload.to
+          ? customPayload.to
+          : await getBSHAddressOfCoinName(symbol.split('-')[0], ICONBSHAddress);
+
+      if (!bshAddressToken) throw new Error('BSH address not found');
+      payload.to = bshAddressToken;
     }
 
     const balance = await makeICXCall(payload);
