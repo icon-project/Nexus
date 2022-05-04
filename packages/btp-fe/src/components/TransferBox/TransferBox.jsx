@@ -71,6 +71,7 @@ export const TransferBox = () => {
                   isConnected={isConnected}
                   nativeCoin={unit}
                   networkId={id}
+                  sendingInfo={sendingInfo}
                 />
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>

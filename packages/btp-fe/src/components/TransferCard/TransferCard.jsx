@@ -60,7 +60,14 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({ setStep, setSendingInfo, isConnected, nativeCoin, networkId }) => {
+export const TransferCard = ({
+  setStep,
+  setSendingInfo,
+  isConnected,
+  nativeCoin,
+  networkId,
+  sendingInfo,
+}) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -75,17 +82,24 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected, nativeCoin,
   };
 
   const getTartgetChains = () => {
-    const targetChains = chainList.map(({ CHAIN_NAME, id }) => ({
+    const targetChains = chainList.map(({ CHAIN_NAME, id, ...others }) => ({
       value: id,
       label: CHAIN_NAME,
+      ...others,
     }));
 
     if (!nativeCoin) return targetChains;
-    return targetChains.filter(({ value }) =>
-      nativeCoin === chainConfigs.ICON.COIN_SYMBOL
-        ? value !== chainConfigs.ICON.id
-        : value === chainConfigs.ICON.id,
-    );
+    if (nativeCoin !== chainConfigs.ICON.COIN_SYMBOL) {
+      return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);
+    }
+    if (
+      nativeCoin === chainConfigs.ICON.COIN_SYMBOL &&
+      sendingInfo.token === chainConfigs.ICON.COIN_SYMBOL
+    ) {
+      return targetChains.filter(({ value }) => value !== chainConfigs.ICON.id);
+    } else {
+      return targetChains.filter(({ COIN_SYMBOL }) => sendingInfo.token === COIN_SYMBOL);
+    }
   };
 
   return (
