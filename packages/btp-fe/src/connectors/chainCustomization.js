@@ -9,4 +9,7 @@ export const custom = {
       },
     },
   },
+  HARMONY: {
+    disableWrappedCoin: true,
+  },
 };

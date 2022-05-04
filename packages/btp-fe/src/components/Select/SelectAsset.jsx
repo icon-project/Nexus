@@ -35,10 +35,10 @@ const Item = ({ symbol, children, ...props }) => {
   );
 };
 
-const SelectAsset = ({ onChange, nativeCoin }) => {
+const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
   /* eslint-disable react/display-name */
   const getOptions = () => {
-    const options = chainList.map(({ CHAIN_NAME, COIN_SYMBOL }) => ({
+    const options = chainList.map(({ CHAIN_NAME, COIN_SYMBOL, ...others }) => ({
       value: COIN_SYMBOL,
       label: COIN_SYMBOL,
       renderLabel: () => (
@@ -51,10 +51,17 @@ const SelectAsset = ({ onChange, nativeCoin }) => {
           {CHAIN_NAME}
         </Item>
       ),
+      ...others,
     }));
 
     if (!nativeCoin) return options;
-    return options.filter(({ value }) => value === nativeCoin);
+
+    const chain = options.find((option) => option.id === networkId);
+    if (chain && chain.disableWrappedCoin) {
+      return [chain];
+    } else {
+      return options.filter((option) => !option.disableWrappedCoin);
+    }
   };
 
   return <Select options={getOptions()} onChange={onChange} name="token" />;

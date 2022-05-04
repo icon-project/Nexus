@@ -46,7 +46,7 @@ export const TransferBox = () => {
 
   const isCurrentStep = (s) => s === step;
 
-  const { unit } = account;
+  const { unit, id } = account;
   const usdRate = useTokenToUsd(sendingInfo.token, 1, isCurrentStep(1));
 
   const onSendingInfoChange = (info = {}) => {
@@ -70,6 +70,7 @@ export const TransferBox = () => {
                   setSendingInfo={onSendingInfoChange}
                   isConnected={isConnected}
                   nativeCoin={unit}
+                  networkId={id}
                 />
               </div>
               <div className={`container ${isCurrentStep(1) && 'active'}`}>

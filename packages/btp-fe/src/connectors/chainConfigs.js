@@ -24,8 +24,17 @@ export const customzeChain = (chainId = '') => {
       }
     });
   }
+
   if (methods) {
     chainConfigs[chainId].methods = methods;
+  }
+
+  for (const c in custom) {
+    delete custom[c].ABI;
+    delete custom[c].methods;
+    for (const prop in custom[c]) {
+      chainConfigs[c][prop] = custom[c][prop];
+    }
   }
 };
 
