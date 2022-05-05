@@ -88,7 +88,7 @@ export const getTxResult = (txHash) => {
  * @param {object} tx Transaction object
  */
 export const setApproveForSendNonNativeCoin = async (tx) => {
-  const { coinName, value } = tx;
+  const { coinName, value, network } = tx;
   const bshAddress = await getBSHAddressOfCoinName(coinName);
 
   const transaction = {
@@ -99,7 +99,7 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
     builder: new CallTransactionBuilder(),
     method: 'approve',
     params: {
-      spender: ICONchain.BSH_ADDRESS,
+      spender: chainConfigs[network].ICON_BSH_ADDRESS,
       amount: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
@@ -114,11 +114,10 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
  * Send non-native token which was approved
  */
 export const sendNonNativeCoin = () => {
-  const transaction = {
-    to: ICONchain.BSH_ADDRESS,
-  };
-
   const { coinName, value, to, network } = window[txPayload];
+  const transaction = {
+    to: chainConfigs[network].ICON_BSH_ADDRESS,
+  };
 
   const options = {
     builder: new CallTransactionBuilder(),
@@ -278,11 +277,11 @@ export const getBTPfee = async (id, network) => {
  * @param {string} coinName Token's name, ex: ICX, DEV,
  * @returns {string} BSH address corresponding to the coinName
  */
-export const getBSHAddressOfCoinName = async (coinName, ICONBSHAddress) => {
+export const getBSHAddressOfCoinName = async (coinName) => {
   try {
     const payload = {
       dataType: 'call',
-      to: ICONBSHAddress,
+      to: getICONBSHAddressforEachChain(coinName),
       data: {
         method: 'coinAddress',
         params: {
@@ -330,7 +329,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       const bshAddressToken =
         symbol === customPayload.symbol && customPayload.to
           ? customPayload.to
-          : await getBSHAddressOfCoinName(symbol.split('-')[0], ICONBSHAddress);
+          : await getBSHAddressOfCoinName(symbol.split('-')[0]);
 
       if (!bshAddressToken) throw new Error('BSH address not found');
       payload.to = bshAddressToken;
