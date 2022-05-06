@@ -82,6 +82,21 @@ export const TransferCard = ({
   };
 
   const getTartgetChains = () => {
+    /* 
+    We have 6 transfer cases supported for now => explain the options of dropdowns
+
+    [From ICON] 
+    Transfer ICX to BSC 
+    Transfer BNB to BSC
+    Transfer ICX to Harmony
+
+    [From BSC]
+    Transfer BNB to ICON 
+    Transfer ICX to ICON 
+
+    From Harmony 
+    Transfer ONE to ICON 
+    */
     const targetChains = chainList.map(({ CHAIN_NAME, id, ...others }) => ({
       value: id,
       label: CHAIN_NAME,

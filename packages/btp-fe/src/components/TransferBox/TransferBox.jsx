@@ -78,6 +78,7 @@ export const TransferBox = () => {
                 <Details
                   isCurrent={isCurrentStep(1)}
                   setStep={memoizedSetStep}
+                  step={step}
                   tokenValue={tokenValue}
                   usdRate={usdRate}
                   setTokenValue={memoizedSetTokenValue}

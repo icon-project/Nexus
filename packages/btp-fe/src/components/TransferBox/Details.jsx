@@ -129,10 +129,20 @@ export const icons = {
 };
 
 export const Details = memo(
-  ({ setStep, setTokenValue, isValidForm, isCurrent, sendingInfo, account, usdRate, form }) => {
+  ({
+    setStep,
+    step,
+    setTokenValue,
+    isValidForm,
+    isCurrent,
+    sendingInfo,
+    account,
+    usdRate,
+    form,
+  }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet } = account;
-    const [currentBalance] = useTokenBalance(token);
+    const [currentBalance] = useTokenBalance(token, step);
 
     const max = maxValue(currentBalance, 'Insufficient balance');
 
