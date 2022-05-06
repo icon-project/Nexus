@@ -60,7 +60,9 @@ export const customization = {
 - `ABI: array (optional)`: List of ABIs, existing ABI will be overrided, a new ABI will be added. (/src/connectors/Metamask/ABI.js is an exmaple)
 - `methods: object (optional)`: Place your customization on existing methods mentioned above here
   - `newName: string (optional)`: rename an existing method.
-  - `params: function (options)`: customize a method's params. The function will receive the UI input's values as params and must return an array of customized params in order.
+  - `params: function (optional)`: customize a method's params. The function will receive the UI input's values as params and must return an array of customized params in order.
+- `disableWrappedCoin: boolean (optional)`: disable transfer for wrapped coin
+
 
 
 
