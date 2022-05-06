@@ -17,7 +17,7 @@ class Web3BlockIndexer {
     this.blockHeight = config.blockHeight;
     this.config = { ...config };
     this.web3 = web3;
-
+    this.networkName = config.networkName;
     logger.info(`${config.networkName} event map: %O`, eventMap);
     logger.info(`${config.networkName} map: %O`, actionMap);
 

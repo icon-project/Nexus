@@ -16,7 +16,7 @@ const {
 
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,bytes)';
-const BUY_TOKENS_PROTOTYPE = 'BuyTokens(int,Address,bytes,int,int)';
+const BUY_TOKENS_PROTOTYPE = 'BuyTokens(int,Address,bytes,int,int,int)';
 const BUY_TOKENS_END_PROTOTYPE = 'BuyTokensEnd(int,Address,bytes,str,int,int)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const logger = createLogger();
@@ -161,13 +161,13 @@ async function handleTransactionEndEvent(event, txResult) {
   await confirmTransferEnd(event, { txHash: txResult.txHash });
 }
 
-// BuyTokens(int seq_num, Address icx_address, bytes hmy_address, str success_failure_message, int amount, int fee);
+// BuyTokens(int seq_num, Address icx_address, bytes hmy_address, str success_failure_message, int amount, int fee, int icxUSDPrice);
 async function handleBuyTokenEvent(event, txResult, transaction) {
   if (BUY_TOKENS_PROTOTYPE !== event.indexed[0]) {
     return;
   }
 
-  logger.info(`icon:handleBuyTokenEvent get TransferEnd event in tx ${txResult.txHash}`);
+  logger.info(`icon:handleBuyTokenEvent get BuyTokens event in tx ${txResult.txHash}`);
   const data = event.data;
   const value = parseInt(data[0].toString('hex'), 16) / ICX_LOOP_UNIT;
   const btpFee = parseInt(data[1].toString('hex'), 16) / ICX_LOOP_UNIT;
