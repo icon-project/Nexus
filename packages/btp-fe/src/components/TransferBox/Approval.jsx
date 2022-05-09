@@ -14,7 +14,6 @@ import { getService } from 'services/transfer';
 import { Header, Text, SubTitle } from 'components/Typography';
 import { Icon } from 'components/Icon/Icon';
 import { ControlButtons } from './ControlButtons';
-import { icons } from './Details';
 
 import { colors } from 'components/Styles/Colors';
 
@@ -168,7 +167,7 @@ export const Approval = memo(
           <div className="send">
             <Text className="md">Send</Text>
             <div className="sender">
-              <Icon iconURL={icons[token]} size="s" />
+              <Icon icon={token} size="s" />
               <Text className="md sender--alias">{token}</Text>
               <Text className="sm sender--name">{currentNetwork}</Text>
             </div>

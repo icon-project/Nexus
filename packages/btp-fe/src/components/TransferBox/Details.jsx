@@ -13,17 +13,7 @@ import { media } from 'components/Styles/Media';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
-import { wallets } from 'utils/constants';
 import { chainConfigs } from 'connectors/chainConfigs';
-
-import metaMaskIcon from 'assets/images/metal-mask.svg';
-import iconexIcon from 'assets/images/icon-ex.svg';
-import moonbeamIcon from 'assets/images/moonbeam.jpeg';
-import hanaIcon from 'assets/images/hana-wallet.png';
-import binanceIcon from 'assets/images/binance-icon.svg';
-import ethIcon from 'assets/images/eth-icon.svg';
-import nearIcon from 'assets/images/near-icon.svg';
-import HamornyICon from 'assets/images/harmony-icon.png';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -116,18 +106,6 @@ const fields = {
   recipient: 'recipient',
 };
 
-export const icons = {
-  [wallets.iconex]: iconexIcon,
-  ICX: iconexIcon,
-  [wallets.metamask]: metaMaskIcon,
-  DEV: moonbeamIcon,
-  [wallets.hana]: hanaIcon,
-  BNB: binanceIcon,
-  ETH: ethIcon,
-  NEAR: nearIcon,
-  ONE: HamornyICon,
-};
-
 export const Details = memo(
   ({
     setStep,
@@ -179,7 +157,7 @@ export const Details = memo(
           <Text className="sm label">Wallet balance</Text>
           <WalletBalance>
             <div className="left">
-              <Icon iconURL={icons[wallet]} />
+              <Icon icon={wallet} />
               <Text className="md wallet-name">{wallet}</Text>
             </div>
             <div className="right">
@@ -199,7 +177,7 @@ export const Details = memo(
               Send
             </Text>
             <div className="sender">
-              <Icon iconURL={icons[token]} size="s" />
+              <Icon icon={token} size="s" />
               <Text className="md sender--name">
                 {token} ({currentNetwork})
               </Text>
