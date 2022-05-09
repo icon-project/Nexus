@@ -4,6 +4,7 @@ import {
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
   signingActions,
+  getCurrentChain,
 } from 'connectors/constants';
 import { ABI } from './ABI';
 
@@ -12,6 +13,7 @@ import { toChecksumAddress } from './utils';
 import { wallets } from 'utils/constants';
 import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
 import { chainList, customzeChain } from 'connectors/chainConfigs';
+import { sendLog } from 'services/btpServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -175,6 +177,10 @@ class Ethereum {
 
               default:
                 this.getEthereumAccounts();
+                sendLog({
+                  txHash,
+                  network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
+                });
 
                 modal.openModal({
                   icon: 'checkIcon',

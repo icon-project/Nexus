@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSelect } from 'hooks/useRematch';
 import { getService } from 'services/transfer';
 
-export const useTokenBalance = (currentSymbol) => {
+export const useTokenBalance = (currentSymbol, step) => {
   const [token, setToken] = useState({ balance: null, symbol: currentSymbol });
 
   const {
@@ -27,7 +27,7 @@ export const useTokenBalance = (currentSymbol) => {
           });
       }
     }
-  }, [currentSymbol, currentNetwork]);
+  }, [currentSymbol, currentNetwork, step]);
 
   return [token.balance, token.symbol];
 };

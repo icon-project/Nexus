@@ -7,22 +7,13 @@ import { TokenInput, TextInput } from 'components/Input';
 import { Icon } from 'components/Icon';
 import { Header, Text } from 'components/Typography';
 import { ControlButtons } from './ControlButtons';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
 
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
-import { wallets } from 'utils/constants';
-
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
-
-import metaMaskIcon from 'assets/images/metal-mask.svg';
-import iconexIcon from 'assets/images/icon-ex.svg';
-import moonbeamIcon from 'assets/images/moonbeam.jpeg';
-import hanaIcon from 'assets/images/hana-wallet.png';
-import binanceIcon from 'assets/images/binance-icon.svg';
-import ethIcon from 'assets/images/eth-icon.svg';
-import nearIcon from 'assets/images/near-icon.svg';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 const Wrapper = styled.div`
   padding-top: 23px;
@@ -115,22 +106,21 @@ const fields = {
   recipient: 'recipient',
 };
 
-export const icons = {
-  [wallets.iconex]: iconexIcon,
-  ICX: iconexIcon,
-  [wallets.metamask]: metaMaskIcon,
-  DEV: moonbeamIcon,
-  [wallets.hana]: hanaIcon,
-  BNB: binanceIcon,
-  ETH: ethIcon,
-  NEAR: nearIcon,
-};
-
 export const Details = memo(
-  ({ setStep, setTokenValue, isValidForm, isCurrent, sendingInfo, account, usdRate, form }) => {
+  ({
+    setStep,
+    step,
+    setTokenValue,
+    isValidForm,
+    isCurrent,
+    sendingInfo,
+    account,
+    usdRate,
+    form,
+  }) => {
     const { token, network } = sendingInfo;
     const { balance, currentNetwork, wallet } = account;
-    const [currentBalance] = useTokenBalance(token);
+    const [currentBalance] = useTokenBalance(token, step);
 
     const max = maxValue(currentBalance, 'Insufficient balance');
 
@@ -167,7 +157,7 @@ export const Details = memo(
           <Text className="sm label">Wallet balance</Text>
           <WalletBalance>
             <div className="left">
-              <Icon iconURL={icons[wallet]} />
+              <Icon icon={wallet} />
               <Text className="md wallet-name">{wallet}</Text>
             </div>
             <div className="right">
@@ -187,7 +177,7 @@ export const Details = memo(
               Send
             </Text>
             <div className="sender">
-              <Icon iconURL={icons[token]} size="s" />
+              <Icon icon={token} size="s" />
               <Text className="md sender--name">
                 {token} ({currentNetwork})
               </Text>
@@ -197,7 +187,7 @@ export const Details = memo(
             <Text className="md" color={colors.graySubText}>
               To
             </Text>
-            <Text className="md">{network}</Text>
+            <Text className="md">{chainConfigs[network]?.CHAIN_NAME}</Text>
           </div>
         </Addresses>
         <ControlButtons

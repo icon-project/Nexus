@@ -187,7 +187,7 @@ const Header = () => {
   }, []);
 
   const {
-    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork },
+    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork, id },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -280,6 +280,7 @@ const Header = () => {
                 shortedAddress={shortedAddress}
                 onDisconnectWallet={onDisconnectWallet}
                 onSwitchWallet={onSwitchWallet}
+                networkID={id}
               />
             </Modal>
           ) : (

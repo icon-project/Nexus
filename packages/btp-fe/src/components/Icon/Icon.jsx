@@ -5,7 +5,6 @@ import styled from 'styled-components/macro';
 import { wallets } from 'utils/constants';
 
 import { ReactComponent as metaMaskIcon } from 'assets/images/metal-mask.svg';
-import { ReactComponent as iconexIcon } from 'assets/images/icon-ex.svg';
 import { ReactComponent as ethIcon } from 'assets/images/eth-icon.svg';
 import { ReactComponent as copyIcon } from 'assets/images/copy-icon.svg';
 import { ReactComponent as binanceIcon } from 'assets/images/binance-icon.svg';
@@ -13,6 +12,9 @@ import { ReactComponent as btcIcon } from 'assets/images/btc-icon.svg';
 import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
 import { ReactComponent as nearIcon } from 'assets/images/near-icon.svg';
 
+import HamornyICon from 'assets/images/harmony-icon.png';
+import hanaIcon from 'assets/images/hana-wallet.png';
+import iconexIcon from 'assets/images/icon-ex.png';
 import MBIcon from 'assets/images/moonbeam.jpeg';
 
 const sizes = {
@@ -54,6 +56,7 @@ export const Icon = memo(
       metamask: metaMaskIcon,
       ICX: iconexIcon,
       [wallets.iconex]: iconexIcon,
+      [wallets.hana]: hanaIcon,
       ETH: ethIcon,
       copy: copyIcon,
       binance: binanceIcon,
@@ -62,6 +65,7 @@ export const Icon = memo(
       bch: bchIcon,
       DEV: MBIcon,
       NEAR: nearIcon,
+      ONE: HamornyICon,
     };
 
     const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.ICX;
@@ -100,6 +104,7 @@ Icon.propTypes = {
   icon: PropTypes.oneOf([
     wallets.metamask,
     wallets.iconex,
+    wallets.hana,
     'ICX',
     'ETH',
     'copy',
@@ -109,6 +114,8 @@ Icon.propTypes = {
     'bch',
     'DEV',
     'NEAR',
+    'ONE',
+    '',
   ]),
   /** Display icon with URL */
   iconURL: PropTypes.string,

@@ -1,6 +1,7 @@
 import { IconAmount, IconUtil } from 'icon-sdk-js';
 import { SUCCESS_TRANSACTION } from 'utils/constants';
 import { httpProvider } from 'connectors/constants';
+import { chainList } from 'connectors/chainConfigs';
 
 export default class Request {
   constructor(method, params) {
@@ -44,4 +45,17 @@ export const makeICXCall = async (payload) => {
 export const resetTransferStep = () => {
   const event = new Event(SUCCESS_TRANSACTION);
   document.dispatchEvent(event);
+};
+
+export const getICONBSHAddressforEachChain = (coinName) => {
+  const chain = chainList.find(
+    ({ COIN_SYMBOL, id }) => COIN_SYMBOL === coinName || coinName.endsWith(id),
+  );
+
+  if (!chain) {
+    console.error('relevant chain not found');
+    return null;
+  }
+
+  return chain.ICON_BSH_ADDRESS;
 };

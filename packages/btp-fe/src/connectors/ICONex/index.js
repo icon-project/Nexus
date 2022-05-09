@@ -2,6 +2,7 @@ import { FailedBidContent } from 'components/NotificationModal/FailedBidContent'
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 import { getBalance, sendTransaction, getTxResult, sendNonNativeCoin } from './ICONServices';
+import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
@@ -11,6 +12,7 @@ import {
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
   signingActions,
+  getCurrentChain,
 } from 'connectors/constants';
 import { chainConfigs, customzeChain } from 'connectors/chainConfigs';
 
@@ -105,6 +107,11 @@ const eventHandler = async (event) => {
                     },
                   });
 
+                  sendLog({
+                    txHash,
+                    network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
+                  });
+
                   // latency time fo fetching new balance
                   setTimeout(async () => {
                     var balance = await getBalance(address);
@@ -182,6 +189,7 @@ const getAccountInfo = async (address) => {
       wallet,
       unit: 'ICX',
       currentNetwork: chainConfigs.ICON?.CHAIN_NAME,
+      id,
     });
   } catch (err) {
     console.log('Err: ', err);

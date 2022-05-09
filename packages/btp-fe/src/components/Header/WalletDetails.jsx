@@ -7,7 +7,7 @@ import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 import { getService } from 'services/transfer';
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, chainConfigs } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -138,12 +138,8 @@ const RefundSelector = styled(Select)`
     margin: 0 11.67px;
   }
 
-  > .md {
-    width: 42px;
-  }
-
   > ul {
-    width: 100%;
+    left: 0;
   }
 `;
 
@@ -166,12 +162,14 @@ export const WalletDetails = ({
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
+  networkID,
 }) => {
   const [selectedToken, setSelectedToken] = useState(unit);
   const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
   const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
+  const ICONChain = chainConfigs.ICON;
 
   const tokens = [
     { label: unit, value: unit },
@@ -179,6 +177,23 @@ export const WalletDetails = ({
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== unit),
   ];
+
+  const refundedTokens = [
+    ...chainList
+      .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
+      .filter((item) => item.label !== unit),
+  ];
+
+  if (networkID === ICONChain?.id) {
+    chainList.forEach((chain) => {
+      if (chain.id !== ICONChain?.id) {
+        const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
+        refundedTokens.unshift({ label: value, value });
+      }
+    });
+  } else {
+    refundedTokens.unshift({ label: unit, value: unit });
+  }
 
   const onTokenChange = async (evt) => {
     setSelectedToken(evt.target.value);
@@ -213,7 +228,7 @@ export const WalletDetails = ({
         <div className="select-refund">
           <RefundSelector
             className="padding-content"
-            options={tokens}
+            options={refundedTokens}
             onChange={onChangeRefundSelect}
           />
           <Text className="md">{refund}</Text>
