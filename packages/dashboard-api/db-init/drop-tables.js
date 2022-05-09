@@ -14,7 +14,8 @@ const dropTableQuery = [
   `DROP TABLE IF EXISTS public.transfer_fees;`,
   `DROP TABLE IF EXISTS public.relay_rewards`,
   `DROP TABLE IF EXISTS public.bids`,
-  `DROP TABLE IF EXISTS public.auctions`
+  `DROP TABLE IF EXISTS public.auctions`,
+  `DROP TABLE IF EXISTS public.transaction_ips`,
 ];
 module.exports = {
   dropTableQuery
