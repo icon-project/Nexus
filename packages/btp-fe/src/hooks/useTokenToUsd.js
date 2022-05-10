@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { tokenToUsd } from 'services/btpServices';
 
-function useTokenToUsd(unit, balance, shouldFetch = true) {
+function useTokenToUsd(symbol, balance, shouldFetch = true) {
   const [usdBalance, setUsdBalance] = useState(0);
   useEffect(() => {
     const getUsbalance = async () => {
-      if (!unit || !balance) {
+      if (!symbol || !balance) {
         setUsdBalance(0);
       } else {
         try {
-          const usdBalance = await tokenToUsd(unit, balance);
+          const usdBalance = await tokenToUsd(symbol, balance);
           setUsdBalance(parseFloat(usdBalance?.content[0]?.value));
         } catch (error) {
           console.log(error);
@@ -17,7 +17,7 @@ function useTokenToUsd(unit, balance, shouldFetch = true) {
       }
     };
     if (shouldFetch) getUsbalance();
-  }, [balance, unit, shouldFetch]);
+  }, [balance, symbol, shouldFetch]);
 
   return usdBalance;
 }

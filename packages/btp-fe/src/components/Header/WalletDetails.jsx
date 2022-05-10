@@ -157,31 +157,31 @@ const ActionBtn = styled.button`
 
 export const WalletDetails = ({
   networkName,
-  unit,
+  symbol,
   address,
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
   networkID,
 }) => {
-  const [selectedToken, setSelectedToken] = useState(unit);
-  const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
+  const [selectedToken, setSelectedToken] = useState(symbol);
+  const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
   const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
   const ICONChain = chainConfigs.ICON;
 
   const tokens = [
-    { label: unit, value: unit },
+    { label: symbol, value: symbol },
     ...chainList
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
-      .filter((item) => item.label !== unit),
+      .filter((item) => item.label !== symbol),
   ];
 
   const refundedTokens = [
     ...chainList
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
-      .filter((item) => item.label !== unit),
+      .filter((item) => item.label !== symbol),
   ];
 
   if (networkID === ICONChain?.id) {
@@ -192,7 +192,7 @@ export const WalletDetails = ({
       }
     });
   } else {
-    refundedTokens.unshift({ label: unit, value: unit });
+    refundedTokens.unshift({ label: symbol, value: symbol });
   }
 
   const onTokenChange = async (evt) => {
@@ -280,7 +280,7 @@ WalletDetails.propTypes = {
   /** Display network's name */
   networkName: PropTypes.string,
   /** Display network's symbol */
-  unit: PropTypes.string,
+  symbol: PropTypes.string,
   /** Display connected address */
   address: PropTypes.string,
   /** Display connected address in short */

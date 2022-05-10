@@ -46,7 +46,7 @@ export const TransferBox = () => {
 
   const isCurrentStep = (s) => s === step;
 
-  const { unit, id } = account;
+  const { symbol, id } = account;
   const usdRate = useTokenToUsd(sendingInfo.token, 1, isCurrentStep(1));
 
   const onSendingInfoChange = (info = {}) => {
@@ -69,7 +69,7 @@ export const TransferBox = () => {
                   setStep={memoizedSetStep}
                   setSendingInfo={onSendingInfoChange}
                   isConnected={isConnected}
-                  nativeCoin={unit}
+                  nativeCoin={symbol}
                   networkId={id}
                   sendingInfo={sendingInfo}
                 />
