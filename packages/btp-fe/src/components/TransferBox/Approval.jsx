@@ -117,7 +117,7 @@ export const Approval = memo(
     const [BTPFee, setBTPFee] = useState(0);
     const { recipient, tokenAmount = 0 } = values;
     const { token, network } = sendingInfo;
-    const { currentNetwork, unit, id } = account;
+    const { currentNetwork, symbol, id } = account;
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
@@ -137,7 +137,7 @@ export const Approval = memo(
     }));
 
     const onApprove = () => {
-      const isSendingNativeCoin = unit === token;
+      const isSendingNativeCoin = symbol === token;
       const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token, network };
       openModal({
         icon: 'loader',
@@ -222,7 +222,7 @@ Approval.propTypes = {
   }),
   account: PropTypes.shape({
     currentNetwork: PropTypes.string,
-    unit: PropTypes.string,
+    symbol: PropTypes.string,
   }),
   /** react-final-form object */
   form: PropTypes.object,

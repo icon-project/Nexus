@@ -137,7 +137,7 @@ class Ethereum {
           address,
           balance: ethers.utils.formatEther(balance),
           wallet,
-          unit: COIN_SYMBOL,
+          symbol: COIN_SYMBOL,
           currentNetwork: CHAIN_NAME,
           id: id,
         });

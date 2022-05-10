@@ -187,7 +187,7 @@ const getAccountInfo = async (address) => {
       address,
       balance,
       wallet,
-      unit: 'ICX',
+      symbol: 'ICX',
       currentNetwork: chainConfigs.ICON?.CHAIN_NAME,
       id,
     });

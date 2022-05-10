@@ -187,7 +187,7 @@ const Header = () => {
   }, []);
 
   const {
-    accountInfo: { address, balance, unit, wallet, cancelConfirmation, currentNetwork, id },
+    accountInfo: { address, balance, symbol, wallet, cancelConfirmation, currentNetwork, id },
   } = useSelect(({ account }) => ({
     accountInfo: account.selectAccountInfo,
   }));
@@ -275,7 +275,7 @@ const Header = () => {
             <Modal display setDisplay={setShowModal} title={wallet && mockWallets[wallet].title}>
               <WalletDetails
                 networkName={currentNetwork}
-                unit={unit}
+                symbol={symbol}
                 address={address}
                 shortedAddress={shortedAddress}
                 onDisconnectWallet={onDisconnectWallet}
@@ -334,7 +334,7 @@ const Header = () => {
             <span className="wallet-info">
               <Text className="xs address">{shortedAddress}</Text>
               <SubTitle className="md bold">
-                {toSeparatedNumberString(balance)} {unit}
+                {toSeparatedNumberString(balance)} {symbol}
               </SubTitle>
             </span>
           </div>
