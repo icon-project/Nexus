@@ -1,5 +1,6 @@
 'use strict';
 
+const Web3 = require('web3');
 const { createLogger } = require('../common');
 const { getRegisteredTokens } = require('../modules/tokens/model');
 const iconIndexer = require('../modules/icon-indexer');
@@ -9,7 +10,7 @@ const moonbeamBshAbi = require('../modules/web3-indexer/abi/moonbeam/abi.bsh_cor
 const bscBshAbi = require('../modules/web3-indexer/abi/bsc/BSHPeriphery.json');
 const { getMoonbeamEventMap, getBscEventMap } = require('../modules/common/events');
 const { getMoonbeamActionMap, getBscActionMap } = require('../modules/common/actions');
-const Web3 = require('web3');
+const { initBMCAddressMap, initBSHAddressMap } = require('../modules/common/addresses');
 const logger = createLogger();
 
 async function start(indexerName) {
@@ -18,10 +19,12 @@ async function start(indexerName) {
 
   const name = indexerName.toUpperCase();
   switch (name) {
-    case 'ICON':
+    case 'ICON': {
+      initBMCAddressMap();
+      initBSHAddressMap();
       iconIndexer.start();
       break;
-
+    }
     case 'MOONBEAM': {
       const web3 = new Web3(process.env.MOONBEAM_API_URL);
 
@@ -39,8 +42,8 @@ async function start(indexerName) {
         bshAbi: moonbeamBshAbi
       }, eventMap, actionMap, web3);
       indexer.start();
-    }
       break;
+    }
 
     case 'BSC': {
       const web3 = new Web3(process.env.BSC_API_URL);

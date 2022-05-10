@@ -28,7 +28,7 @@ const updateRegisteredTokens = async () => {
         token_id character varying(50) COLLATE pg_catalog."default" NOT NULL,
         active integer NOT NULL DEFAULT 1,
         CONSTRAINT registered_tokens_pkey PRIMARY KEY (tx_hash),
-        CONSTRAINT registered_tokens_network_id_token_name UNIQUE (network_id, token_name)
+        CONSTRAINT registered_tokens_network_id_token_name UNIQUE (network_id, contract_address, token_name)
         );`,
       // -- Delete all rows --
       `DELETE FROM registered_tokens;`

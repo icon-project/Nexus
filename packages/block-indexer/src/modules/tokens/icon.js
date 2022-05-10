@@ -5,6 +5,7 @@ const IconService = require('icon-sdk-js').default;
 const { createLogger } = require('../../common');
 const { saveToken } = require('./repository');
 const { refreshRegisteredTokens } = require('./model');
+const { getBSHAddressesMap } = require('../common/addresses');
 
 const httpProvider = new IconService.HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
@@ -12,7 +13,9 @@ const logger = createLogger();
 
 // Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L103
 async function handleTokenRegister(transaction) {
-  if (process.env.ICON_NATIVE_COIN_BSH_ADDRESS === transaction.to && 'register' === transaction.data.method) {
+  const bshAddresses = getBSHAddressesMap();
+  // TODO: should remove this line after ICON BMC is merged.
+  if (bshAddresses.has(transaction.to) && 'register' === transaction.data.method) {
     logger.info('Found token register on %s', transaction.txHash);
     await registerIRC2Token(transaction);
   }

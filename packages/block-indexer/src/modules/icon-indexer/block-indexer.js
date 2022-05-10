@@ -15,6 +15,7 @@ const { handleMintBurnEvents } = require('../mint-burn/icon');
 const { handleTokenRegister } = require('../tokens/icon');
 const { handleRelayerAction } = require('./relay-candidate');
 const { handleRelayAction } = require('../relays/icon');
+const { getBMCAddressesMap } = require('../common/addresses');
 
 const logger = createLogger();
 
@@ -22,6 +23,7 @@ const httpProvider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(httpProvider);
 let blockHeight = Number(process.env.ICON_BLOCK_HEIGHT);
 const indexInterval = Number(process.env.ICON_INDEX_INTERVAL);
+let bmcAddressesMap;
 
 async function runTransactionHandlers(transaction, txResult, block) {
   try {
@@ -84,7 +86,8 @@ async function runBlockHandlers(block) {
     if (tx.to) {
       const tokenMap = await getRegisteredTokens();
 
-      if (process.env.ICON_BMC_ADDRESS === tx.to || process.env.ICON_WPS_BMC === tx.to || tokenMap.has(tx.to)) {
+      // TODO: should remove this line after ICON BMC is merged.
+      if (bmcAddressesMap.has(tx.to) || tokenMap.has(tx.to)) {
         await retryGetTransactionResult(tx, block);
       } else {
         await runTransactionHandlers(tx, null, block);
@@ -150,11 +153,9 @@ async function start() {
   // Continue from last indexed block?
   if (blockHeight === -1) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
-
-    if (blockHeight > 0) {
-      ++blockHeight;
-    }
   }
+  // TODO: should remove this line after ICON BMC is merged.
+  bmcAddressesMap = getBMCAddressesMap();
 
   const block = await iconService.getLastBlock().execute();
 
