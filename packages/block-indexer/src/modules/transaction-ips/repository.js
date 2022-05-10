@@ -14,7 +14,7 @@ async function getTransactionIP(txHash, networkId) {
     }
     return null;
   } catch (error) {
-    logger.info(error);
+    logger.error(error);
     return null;
   }
 }
@@ -28,7 +28,7 @@ async function updateTransactionIP(txHash, networkId, sentToSlack, data) {
     }
     return null;
   } catch (error) {
-    logger.info(error);
+    logger.error(error);
     return null;
   }
 }
@@ -42,7 +42,7 @@ async function createTransactionIP(txHash, networkId, sentToSlack, data) {
     }
     return null;
   } catch (error) {
-    logger.info(error);
+    logger.error(error);
     return null;
   }
 }
