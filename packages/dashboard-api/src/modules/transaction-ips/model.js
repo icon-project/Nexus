@@ -7,8 +7,10 @@ const iconService = new IconService(provider);
 const Web3 = require('web3');
 const nearApi = require('near-api-js');
 const { logger } = require('../../common');
-const { createTransactionIP, getTransactionIP } = require('./repository');
+const { insertTransactionIP, getTransactionIP, updateTransactionIP } = require('./repository');
 const networkModel = require('../networks/model');
+const _ = require('lodash');
+const { sendToSlack } = require('../../slack-bot');
 const networkMap = new Map();
 
 const getNetworkInCache = async (networkId) => {
@@ -61,6 +63,29 @@ const getTransactionReceipt = async ({ txHash, networkId, signerId }) => {
   } catch (error) {
     logger.error(error);
     return null;
+  }
+};
+
+const createTransactionIP = async (txHash, ip, networkId) => {
+  try {
+    const transaction = await getTransactionIP(txHash, networkId);
+    // if transaction does not exist, create it
+    if (!transaction) {
+      return await insertTransactionIP(txHash, ip, networkId, false);
+    } else {
+      // if transaction exists, check sentToSlack = false, send it to slack
+      const sentToSlack = _.get(transaction, 'sentToSlack', true);
+      if (sentToSlack === false) {
+        const data = _.get(transaction, 'data', {});
+        data.user_ip_addr = ip;
+        const logFileName = `${process.env.SLACK_REPORT_FILE_NAME_RREFIX}[${(new Date()).toISOString()}][${ip}].log`;
+        await sendToSlack(data, logFileName);
+        return await updateTransactionIP(txHash, networkId, true, ip, data);
+      }
+    }
+    return null;
+  } catch (error) {
+    logger.error(error);
   }
 };
 

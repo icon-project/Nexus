@@ -4,12 +4,10 @@
 const HttpStatus = require('@tiendq/http-status');
 const _ = require('lodash');
 const model = require('./model');
-const requestIp = require('request-ip');
 const { getNetworkInCache } = require('./model');
 
 async function createTransactionIP(request, response) {
-  // client's ip when receive request
-  const clientIp = requestIp.getClientIp(request);
+  const clientIp = request.headers['x-forwarded-for'];
   // transaction hash
   const txHash = _.get(request, 'body.txHash', null);
   // network's id
@@ -32,8 +30,8 @@ async function createTransactionIP(request, response) {
   }
 
   // check tx_hash exists in database
-  const txHashInDB = await model.getTransactionIP(txHash, clientIp, networkId);
-  if (txHashInDB) {
+  const txHashInDB = await model.getTransactionIP(txHash, networkId);
+  if (txHashInDB && txHashInDB.ip) {
     return response.status(HttpStatus.OK).json(null);
   }
 
@@ -50,5 +48,5 @@ async function createTransactionIP(request, response) {
 }
 
 module.exports = {
-  createTransactionIP,
+  createTransactionIP
 };
