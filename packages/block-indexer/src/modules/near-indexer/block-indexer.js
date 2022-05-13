@@ -4,7 +4,7 @@ const debug = require('debug')('near');
 const debugTx = require('debug')('near_tx');
 const nearApi = require('near-api-js');
 const { createLogger } = require('../../common');
-const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
+const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../web3-indexer/repository');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
 const pollingInterval = Number(process.env.POLLING_INTERVAL);
@@ -104,17 +104,15 @@ async function getHeadBlockNumber() {
 }
 
 async function start() {
-  if (-1 === blockHeight) {
+  if (blockHeight === -1) {
     blockHeight = await getIndexedBlockHeight(process.env.NEAR_NETWORK_ID);
 
-    if (blockHeight > 0)
-      ++ blockHeight;
+    if (blockHeight > 0) { ++blockHeight; }
   }
 
   const height = await getHeadBlockNumber();
 
-  if (0 === blockHeight || blockHeight > height)
-    blockHeight = height;
+  if (blockHeight === 0 || blockHeight > height) { blockHeight = height; }
 
   logger.info('Starting NEAR block indexer at block %d...', blockHeight);
   await retryGetBlockData();
