@@ -95,7 +95,7 @@ export const TransferCard = ({
     Transfer BNB to ICON 
     Transfer ICX to ICON 
 
-    From Harmony 
+    [From Harmony]
     Transfer ONE to ICON
     Transfer ICX to ICON 
     */
