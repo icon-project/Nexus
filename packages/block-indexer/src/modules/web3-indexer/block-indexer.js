@@ -3,7 +3,7 @@
 const debug = require('debug')('web3-block-indexer');
 const debugTx = require('debug')('web3-tx');
 const { createLogger } = require('../../common');
-const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../bsc-indexer/repository');
+const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('./repository');
 const { getRegisteredTokens } = require('../tokens/model');
 const { Web3MintBurnHandler } = require('../mint-burn/web3');
 const { Web3TransactionHandler } = require('../transactions/web3');
