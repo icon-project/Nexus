@@ -83,19 +83,21 @@ export const TransferCard = ({
 
   const getTartgetChains = () => {
     /* 
-    We have 6 transfer cases supported for now => explain the options of dropdowns
+    We have 8 transfer cases supported for now => explain the options of dropdowns
 
     [From ICON] 
     Transfer ICX to BSC 
     Transfer BNB to BSC
     Transfer ICX to Harmony
+    Transfer ONE to Harmony
 
     [From BSC]
     Transfer BNB to ICON 
     Transfer ICX to ICON 
 
-    From Harmony 
-    Transfer ONE to ICON 
+    [From Harmony]
+    Transfer ONE to ICON
+    Transfer ICX to ICON 
     */
     const targetChains = chainList.map(({ CHAIN_NAME, id, ...others }) => ({
       value: id,
@@ -135,7 +137,12 @@ export const TransferCard = ({
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={getTartgetChains()} onChange={onChange} name="network" />
+          <Select
+            options={getTartgetChains()}
+            onChange={onChange}
+            name="network"
+            dependInput={sendingInfo.token}
+          />
         </div>
 
         <div className="button-section">

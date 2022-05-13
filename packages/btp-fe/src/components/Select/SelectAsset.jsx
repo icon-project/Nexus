@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { chainList } from 'connectors/chainConfigs';
+import { chainConfigs, chainList } from 'connectors/chainConfigs';
 
 const StyledItem = styled.div`
   display: flex;
@@ -54,14 +54,13 @@ const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
       ...others,
     }));
 
-    if (!nativeCoin) return options;
-
-    const chain = options.find((option) => option.id === networkId);
-    if (chain && chain.disableWrappedCoin) {
-      return [chain];
-    } else {
-      return options.filter((option) => !option.disableWrappedCoin);
+    if (!nativeCoin || networkId === chainConfigs.ICON.id) {
+      return options;
     }
+
+    return options.filter(
+      (option) => option.id === networkId || option.id === chainConfigs.ICON.id,
+    );
   };
 
   return <Select options={getOptions()} onChange={onChange} name="token" />;
