@@ -309,6 +309,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
 
     const customPayload = getBalanceOf?.payload || {};
     const ICONBSHAddress = getICONBSHAddressforEachChain(symbol);
+
     delete customPayload.symbol;
 
     const payload = {
