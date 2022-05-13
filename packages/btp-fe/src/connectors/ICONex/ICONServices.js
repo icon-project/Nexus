@@ -327,11 +327,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
       payload.to = ICONBSHAddress;
       payload.data.params._coinName = symbol.split('-')[0];
     } else {
-      const bshAddressToken =
-        symbol === customPayload.symbol && customPayload.to
-          ? customPayload.to
-          : await getBSHAddressOfCoinName(symbol.split('-')[0]);
-
+      const bshAddressToken = await getBSHAddressOfCoinName(symbol.split('-')[0]);
       if (!bshAddressToken) throw new Error('BSH address not found');
       payload.to = bshAddressToken;
     }
