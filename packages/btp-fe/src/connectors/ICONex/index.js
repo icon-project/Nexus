@@ -125,6 +125,7 @@ const eventHandler = async (event) => {
               resetTransferStep();
             } catch (err) {
               if (err && /(Pending|Executing)/g.test(err)) return;
+              clearInterval(checkTxRs);
               reject(err);
             }
           }, 2000);
