@@ -1,18 +1,24 @@
 'use strict';
 const { logger, pgPool } = require('../../common');
+const RETURNING_FIELDS = 'RETURNING tx_hash, ip, network_id, sent_to_slack, data';
+
+function parseTransactionIP(row) {
+  const record = row || {};
+  return {
+    txHash: record.tx_hash,
+    ip: record.ip,
+    networkId: record.network_id,
+    sentToSlack: record.sent_to_slack,
+    data: record.data
+  };
+}
 
 async function insertTransactionIP(txHash, ip, networkId, sentToSlack) {
-  const query = 'INSERT INTO transaction_ips (tx_hash, ip, network_id, sent_to_slack) VALUES ($1, $2, $3, $4) RETURNING tx_hash, ip, network_id, sent_to_slack';
+  const query = 'INSERT INTO transaction_ips (tx_hash, ip, network_id, sent_to_slack) VALUES ($1, $2, $3, $4) ' + RETURNING_FIELDS;
   try {
     const { rows } = await pgPool.query(query, [txHash, ip, networkId, sentToSlack]);
     if (rows.length > 0) {
-      const record = rows[0];
-      return {
-        txHash: record.tx_hash,
-        ip: record.ip,
-        sentToSlack: record.sent_to_slack,
-        networkId: record.network_id
-      };
+      return parseTransactionIP(rows[0]);
     }
     return null;
   } catch (error) {
@@ -22,17 +28,11 @@ async function insertTransactionIP(txHash, ip, networkId, sentToSlack) {
 }
 
 async function updateTransactionIP(txHash, networkId, sentToSlack, ip, data) {
-  const query = 'UPDATE transaction_ips SET sent_to_slack = $1, ip = $2, data = $3, updated_at = NOW() WHERE tx_hash = $4 AND network_id = $5 RETURNING tx_hash, ip, network_id, sent_to_slack';
+  const query = 'UPDATE transaction_ips SET sent_to_slack = $1, ip = $2, data = $3, updated_at = NOW() WHERE tx_hash = $4 AND network_id = $5 ' + RETURNING_FIELDS;
   try {
     const { rows } = await pgPool.query(query, [sentToSlack, ip, data, txHash, networkId]);
     if (rows.length > 0) {
-      const record = rows[0];
-      return {
-        ip: record.ip,
-        networkId: record.network_id,
-        txHash: record.tx_hash,
-        sentToSlack: record.sent_to_slack
-      };
+      return parseTransactionIP(rows[0]);
     }
     return null;
   } catch (error) {
@@ -49,13 +49,7 @@ async function getTransactionIP(txHash, networkID) {
   try {
     const { rows } = await pgPool.query(query, [txHash, networkID]);
     if (rows.length > 0) {
-      const record = rows[0];
-      return {
-        txHash: record.tx_hash,
-        ip: record.ip,
-        sentToSlack: record.sent_to_slack,
-        data: record.data
-      };
+      return parseTransactionIP(rows[0]);
     }
     return null;
   } catch (error) {
