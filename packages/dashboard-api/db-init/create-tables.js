@@ -175,7 +175,7 @@ const createDatabaseQuery = [
     tx_hash character varying(100) NOT NULL,
 	ip character varying(50),
     network_id character varying(20) NOT NULL,
-    sent_to_slack boolean NOT NULL DEFAULT true,
+    sent_to_slack boolean,
     data json,
     created_at timestamp without time zone NOT NULL DEFAULT now(),
     updated_at timestamp without time zone,
