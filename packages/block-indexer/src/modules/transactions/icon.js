@@ -21,7 +21,6 @@ const BUY_TOKENS_END_PROTOTYPE = 'BuyTokensEnd(int,Address,bytes,str,int,int)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const logger = createLogger();
 const { logTxHashToSlack } = require('../../slack-bot');
-const { getBMCAddressesMap } = require('../common/addresses');
 
 /*
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
@@ -75,14 +74,13 @@ async function handleTransactionEvents(txResult, transaction) {
   }
 
   const tokenMap = await getRegisteredTokens();
-  const bmcAddressesMap = getBMCAddressesMap();
 
   if (tokenMap.has(txResult.to)) {
     for (const event of txResult.eventLogs) {
       await handleTransactionStartEvent(event, txResult, transaction);
       await handleBuyTokenEvent(event, txResult, transaction);
     }
-  } else if (bmcAddressesMap.has(txResult.to)) {
+  } else if (process.env.ICON_BMC_ADDRESS === txResult.to || process.env.ICON_WPS_BMC === txResult.to) {
     for (const event of txResult.eventLogs) {
       await handleTransactionEndEvent(event, txResult);
       await handleBuyTokenEndEvent(event, txResult, transaction);

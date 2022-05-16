@@ -3,7 +3,7 @@
     {
       "name": "dashboard-api",
       "script": "./index.js",
-      "cwd": "./",
+      "cwd": "/home/ubuntu/deploy/btp-dashboard/packages/dashboard-api",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
         "NODE_ENV": "production"

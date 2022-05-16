@@ -3,14 +3,14 @@
 const BMC_ADDRESS_MAP = new Map();
 const BSH_ADDRESS_MAP = new Map();
 
-function setBMCAddressMap() {
+function initBMCAddressMap() {
   BMC_ADDRESS_MAP.set(process.env.ICON_BMC_ADDRESS, 'BSC');
-  BMC_ADDRESS_MAP.set(process.env.ICON_WPS_BMC, 'WPS');
-  BMC_ADDRESS_MAP.set(process.env.ICON_HMNY_BMC_ADDRESS, 'HARMONY');
+  BMC_ADDRESS_MAP.set('cx9e5c0a749ee94c01febe04702184002a76a84f84', 'WPS');
+  BMC_ADDRESS_MAP.set('cxa2cc386e9db2a72ea6724cbfd12f936a90ba63d2', 'HARMONY');
 }
-function setBSHAddressMap() {
+function initBSHAddressMap() {
   BSH_ADDRESS_MAP.set(process.env.ICON_NATIVE_COIN_BSH_ADDRESS, 'BSC');
-  BSH_ADDRESS_MAP.set(process.env.ICON_NATIVE_COIN_HMNY_BSH_ADDRESS, 'HARMONY');
+  BSH_ADDRESS_MAP.set('cxc9d0ca76b1c8a036499a46a8e67999ade1ad333b', 'HARMONY');
 }
 
 function getBMCAddressesMap() {
@@ -22,8 +22,8 @@ function getBSHAddressesMap() {
 }
 
 module.exports = {
-  setBMCAddressMap,
-  setBSHAddressMap,
+  initBMCAddressMap,
+  initBSHAddressMap,
   getBMCAddressesMap,
   getBSHAddressesMap
 };
