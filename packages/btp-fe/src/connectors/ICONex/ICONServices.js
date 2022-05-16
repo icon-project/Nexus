@@ -1,4 +1,4 @@
-import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
+import { IconUtil, IconConverter, IconBuilder, HttpProvider } from 'icon-sdk-js';
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
@@ -62,6 +62,18 @@ export const sendTransaction = async (signature) => {
     return await httpProvider.request(request).execute();
   } catch (err) {
     throw new Error(err.message || err);
+  }
+};
+
+export const estimateStep = async (tx) => {
+  try {
+    const request = new Request('debug_estimateStep', tx);
+    return await new HttpProvider(chainConfigs.ICON?.RPC_URL + '/debug/v3')
+      .request(request)
+      .execute();
+  } catch (err) {
+    console.error(err);
+    return null;
   }
 };
 
@@ -203,7 +215,7 @@ export const placeBid = (auctionName, value, fas) => {
  * @param {object} transaction
  * @param {onject} options
  */
-export const signTx = (transaction = {}, options = {}) => {
+export const signTx = async (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder, nid, timestamp } = options;
 

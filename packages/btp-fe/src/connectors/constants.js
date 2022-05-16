@@ -34,6 +34,6 @@ export const signingActions = {
 export const rawTransaction = 'rawTransaction';
 export const txPayload = 'txPayload';
 export const serverEndpoint = process.env.REACT_APP_BTP_ENDPOINT;
-export const httpProvider = new HttpProvider(chainConfigs.ICON?.RPC_URL);
+export const httpProvider = new HttpProvider(chainConfigs.ICON?.RPC_URL + '/v3');
 export const iconService = new IconService(httpProvider);
 export const getCurrentChain = () => chainConfigs[store.getState().account.id] || {};
