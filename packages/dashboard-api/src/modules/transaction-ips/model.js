@@ -75,7 +75,7 @@ const createTransactionIP = async (txHash, ip, networkId) => {
     } else {
       // if transaction exists, check sentToSlack = false, send it to slack
       const sentToSlack = _.get(transaction, 'sentToSlack', true);
-      if (sentToSlack === false) {
+      if (sentToSlack === false && ip) {
         const data = _.get(transaction, 'data', {});
         data.user_ip_addr = ip;
         const logFileName = `${process.env.SLACK_REPORT_FILE_NAME_RREFIX}[${(new Date()).toISOString()}][${ip}].log`;
