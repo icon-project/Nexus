@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { signingActions, rawTransaction, getCurrentChain } from 'connectors/constants';
 
 import { convertToICX } from 'connectors/ICONex/utils';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, checkIsToken } from 'connectors/chainConfigs';
 import { toChecksumAddress } from './utils';
 import { roundNumber } from 'utils/app';
 import { EthereumInstance } from 'connectors/MetaMask';
@@ -78,13 +78,18 @@ export const transfer = async (tx, sendNativeCoin, token) => {
   } else {
     window[rawTransaction] = tx;
     window[signingActions.globalName] = signingActions.approve;
+    const isToken = checkIsToken(token);
+
     data = EthereumInstance.ABI.encodeFunctionData(
       approve.newName || 'approve',
-      approve.params ? approve.params({ amount: value, coinName: token }) : [BSH_CORE, value],
+      approve.params
+        ? approve.params({ amount: value, coinName: token })
+        : [isToken ? process.env.REACT_APP_CHAIN_BSC_BSH_PROXY : BSH_CORE, value],
     );
+
     txParams = {
       ...txParams,
-      to: getCurrentChain()['BSH_' + token],
+      to: isToken ? process.env.REACT_APP_CHAIN_BSC_BEP20 : getCurrentChain()['BSH_' + token],
     };
     delete txParams.value;
   }
@@ -122,7 +127,7 @@ export const sendNoneNativeCoin = async () => {
 
   await EthereumInstance.sendTransaction({
     from: EthereumInstance.ethereum.selectedAddress,
-    to: BSH_CORE,
+    to: checkIsToken(coinName) ? process.env.REACT_APP_CHAIN_BSC_BSH_PROXY : BSH_CORE,
     gas: GAS_LIMIT,
     data,
   });

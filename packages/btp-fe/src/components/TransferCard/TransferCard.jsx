@@ -6,7 +6,7 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-import { chainList, chainConfigs, getTokenList } from 'connectors/chainConfigs';
+import { chainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -106,8 +106,7 @@ export const TransferCard = ({
     }));
 
     if (!nativeCoin) return targetChains;
-    const isToken = getTokenList().find((token) => token.symbol === sendingInfo.token);
-    if (isToken) {
+    if (checkIsToken(sendingInfo.token)) {
       if (nativeCoin === chainConfigs.ICON.COIN_SYMBOL) {
         return targetChains.filter(({ value }) => value === chainConfigs.BSC.id);
       }

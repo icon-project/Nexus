@@ -29,6 +29,7 @@ class Ethereum {
     this.ABI = new ethers.utils.Interface(ABI);
     this.contract = null;
     this.BEP20Contract = null;
+    this.PROXYContract = null;
   }
 
   get getEthereum() {
@@ -130,12 +131,11 @@ class Ethereum {
 
         if (!currentNetwork) throw new Error('not found chain config');
 
-        const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE, BEP20 } = currentNetwork;
+        const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE, BEP20, BSH_PROXY } = currentNetwork;
 
         this.contract = new ethers.Contract(BSH_CORE, ABI, this.provider);
-        if (BEP20) {
-          this.BEP20Contract = new ethers.Contract(BEP20, ABI, this.provider);
-        }
+        this.BEP20Contract = new ethers.Contract(BEP20, ABI, this.provider);
+        this.PROXYContract = new ethers.Contract(BSH_PROXY, ABI, this.provider);
 
         customzeChain(id);
         account.setAccountInfo({

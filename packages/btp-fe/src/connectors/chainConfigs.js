@@ -53,3 +53,4 @@ export const getTokenList = () => {
 
   return tokenList;
 };
+export const checkIsToken = (token) => getTokenList().find((t) => t.symbol === token);
