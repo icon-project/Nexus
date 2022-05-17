@@ -1,1 +1,5 @@
-export const custom = {};
+export const custom = {
+  BSC: {
+    tokens: [{ symbol: 'ETH', chain: 'Binance Smart Chain' }],
+  },
+};
