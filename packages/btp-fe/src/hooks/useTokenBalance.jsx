@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { useSelect } from 'hooks/useRematch';
 import { getService } from 'services/transfer';
+import { getTokenList } from 'connectors/chainConfigs';
 
 export const useTokenBalance = (currentSymbol, step) => {
   const [token, setToken] = useState({ balance: null, symbol: currentSymbol });
@@ -20,8 +21,9 @@ export const useTokenBalance = (currentSymbol, step) => {
       if (isNativeCoin) {
         setToken({ balance, symbol: symbol });
       } else {
+        const isToken = getTokenList().find((token) => token.symbol === currentSymbol);
         getService()
-          .getBalanceOf({ address, symbol: currentSymbol })
+          .getBalanceOf({ address, symbol: currentSymbol, isToken: !!isToken })
           .then((result) => {
             setToken({ balance: result, symbol: currentSymbol });
           });

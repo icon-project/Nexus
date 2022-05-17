@@ -313,15 +313,13 @@ export const getBSHAddressOfCoinName = async (coinName) => {
  * @param {object} payload
  * @returns {string} non-native token balance or refundable balance in a user-friendly format
  */
-export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
+export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV', isToken }) => {
   try {
     const {
       methods: { getBalanceOf = {} },
     } = getCurrentChain();
 
     const customPayload = getBalanceOf?.payload || {};
-    const ICONBSHAddress = getICONBSHAddressforEachChain(symbol);
-
     delete customPayload.symbol;
 
     const payload = {
@@ -336,8 +334,10 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     };
 
     if (refundable) {
-      payload.to = ICONBSHAddress;
+      payload.to = getICONBSHAddressforEachChain(symbol);
       payload.data.params._coinName = symbol.split('-')[0];
+    } else if (isToken) {
+      payload.to = process.env.REACT_APP_CHAIN_ICON_IRC2_ADDRESS;
     } else {
       const bshAddressToken = await getBSHAddressOfCoinName(symbol.split('-')[0]);
       if (!bshAddressToken) throw new Error('BSH address not found');

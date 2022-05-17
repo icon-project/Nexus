@@ -64,7 +64,10 @@ const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
     }
 
     return options.filter(
-      (option) => option.id === networkId || option.id === chainConfigs.ICON.id,
+      (option) =>
+        option.id === networkId ||
+        option.id === chainConfigs.ICON.id ||
+        networkId === option.chainId,
     );
   };
 

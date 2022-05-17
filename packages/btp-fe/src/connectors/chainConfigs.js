@@ -47,7 +47,7 @@ export const getTokenList = () => {
   let tokenList = [];
   for (const c in custom) {
     if (custom[c].tokens.length > 0) {
-      tokenList = [...tokenList, ...custom[c].tokens];
+      tokenList = [...tokenList, ...custom[c].tokens.map((prop) => ({ ...prop, chainId: c }))];
     }
   }
 
