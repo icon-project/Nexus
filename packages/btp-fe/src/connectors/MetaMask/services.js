@@ -10,10 +10,10 @@ import { EthereumInstance } from 'connectors/MetaMask';
 
 const ICONchain = chainConfigs.ICON || {};
 
-export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
+export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX', isToken }) => {
   try {
     let balance = 0;
-    if (symbol === 'ETH') {
+    if (isToken) {
       balance = await EthereumInstance.BEP20Contract.balanceOf(address);
     } else {
       balance = await EthereumInstance.contract.getBalanceOf(address, symbol);
