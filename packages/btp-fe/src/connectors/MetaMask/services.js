@@ -8,15 +8,20 @@ import { toChecksumAddress } from './utils';
 import { roundNumber } from 'utils/app';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-export const serviceName = 'TODO';
 const ICONchain = chainConfigs.ICON || {};
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {
-    const balance = await EthereumInstance.contract.getBalanceOf(address, symbol);
+    let balance = 0;
+    if (symbol === 'ETH') {
+      balance = await EthereumInstance.BEP20Contract.balanceOf(address);
+    } else {
+      balance = await EthereumInstance.contract.getBalanceOf(address, symbol);
+    }
+
     return refundable
       ? convertToICX(balance._refundableBalance._hex)
-      : roundNumber(convertToICX(balance[0]._hex), 6);
+      : roundNumber(convertToICX(balance._hex || balance[0]._hex), 6);
   } catch (err) {
     console.log('Err: ', err);
     return 0;

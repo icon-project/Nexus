@@ -28,6 +28,7 @@ class Ethereum {
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
     this.ABI = new ethers.utils.Interface(ABI);
     this.contract = null;
+    this.BEP20Contract = null;
   }
 
   get getEthereum() {
@@ -129,9 +130,13 @@ class Ethereum {
 
         if (!currentNetwork) throw new Error('not found chain config');
 
-        const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE } = currentNetwork;
+        const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE, BEP20 } = currentNetwork;
 
         this.contract = new ethers.Contract(BSH_CORE, ABI, this.provider);
+        if (BEP20) {
+          this.BEP20Contract = new ethers.Contract(BEP20, ABI, this.provider);
+        }
+
         customzeChain(id);
         account.setAccountInfo({
           address,
@@ -139,7 +144,7 @@ class Ethereum {
           wallet,
           symbol: COIN_SYMBOL,
           currentNetwork: CHAIN_NAME,
-          id: id,
+          id,
         });
       }
     } catch (error) {

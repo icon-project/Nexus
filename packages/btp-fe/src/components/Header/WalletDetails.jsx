@@ -173,6 +173,7 @@ export const WalletDetails = ({
 
   const tokens = [
     { label: symbol, value: symbol },
+    { label: 'ETH', value: 'ETH' },
     ...chainList
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== symbol),
