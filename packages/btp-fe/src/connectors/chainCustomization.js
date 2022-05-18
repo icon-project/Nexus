@@ -1,5 +1,5 @@
 export const custom = {
-  BSC: {
+  HARMONY: {
     tokens: [{ symbol: 'ETH', chain: 'Binance Smart Chain' }],
   },
 };

@@ -51,6 +51,8 @@ export const reclaim = async ({ coinName, value }) => {
 export const transfer = async (tx, sendNativeCoin, token) => {
   const {
     BSH_CORE,
+    BSH_PROXY,
+    BEP20,
     GAS_LIMIT,
     methods: { transferNativeCoin = {}, approve = {} },
   } = getCurrentChain();
@@ -84,12 +86,12 @@ export const transfer = async (tx, sendNativeCoin, token) => {
       approve.newName || 'approve',
       approve.params
         ? approve.params({ amount: value, coinName: token })
-        : [isToken ? process.env.REACT_APP_CHAIN_BSC_BSH_PROXY : BSH_CORE, value],
+        : [isToken ? BSH_PROXY : BSH_CORE, value],
     );
 
     txParams = {
       ...txParams,
-      to: isToken ? process.env.REACT_APP_CHAIN_BSC_BEP20 : getCurrentChain()['BSH_' + token],
+      to: isToken ? BEP20 : getCurrentChain()['BSH_' + token],
     };
     delete txParams.value;
   }
@@ -106,6 +108,7 @@ export const transfer = async (tx, sendNativeCoin, token) => {
 export const sendNoneNativeCoin = async () => {
   const {
     BSH_CORE,
+    BSH_PROXY,
     GAS_LIMIT,
     methods: { transfer = {} },
   } = getCurrentChain();
@@ -127,7 +130,7 @@ export const sendNoneNativeCoin = async () => {
 
   await EthereumInstance.sendTransaction({
     from: EthereumInstance.ethereum.selectedAddress,
-    to: checkIsToken(coinName) ? process.env.REACT_APP_CHAIN_BSC_BSH_PROXY : BSH_CORE,
+    to: checkIsToken(coinName) ? BSH_PROXY : BSH_CORE,
     gas: GAS_LIMIT,
     data,
   });
