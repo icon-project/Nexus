@@ -354,3 +354,45 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     return 0;
   }
 };
+
+export const approveIRC2 = (tx) => {
+  const { value } = tx;
+
+  const transaction = {
+    to: process.env.REACT_APP_CHAIN_ICON_IRC2_ADDRESS,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      _to: process.env.REACT_APP_CHAIN_ICON_TOKEN_BSH,
+      _value: IconConverter.toHex(convertToLoopUnit(value)),
+    },
+  };
+
+  window[txPayload] = tx;
+  window[signingActions.globalName] = signingActions.approveIRC2;
+  signTx(transaction, options);
+};
+
+export const transferIRC2 = () => {
+  const { coinName, value, to, network } = window[txPayload];
+
+  const transaction = {
+    to: process.env.REACT_APP_CHAIN_ICON_TOKEN_BSH,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      tokenName: coinName,
+      value: IconConverter.toHex(convertToLoopUnit(value)),
+      to: `btp://${chainConfigs[network].NETWORK_ADDRESS}/${to}`,
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(transaction, options);
+};

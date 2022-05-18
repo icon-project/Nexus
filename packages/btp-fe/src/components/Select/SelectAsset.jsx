@@ -38,7 +38,7 @@ const Item = ({ symbol, children, ...props }) => {
 const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
   /* eslint-disable react/display-name */
   const getOptions = () => {
-    const options = [...getTokenList(), ...chainList].map(
+    const options = [...chainList, ...getTokenList()].map(
       ({ CHAIN_NAME, COIN_SYMBOL, symbol, chain, ...others }) => {
         const tokenSymbol = COIN_SYMBOL || symbol;
         return {

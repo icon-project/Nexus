@@ -134,8 +134,10 @@ class Ethereum {
         const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE, BEP20, BSH_PROXY } = currentNetwork;
 
         this.contract = new ethers.Contract(BSH_CORE, ABI, this.provider);
-        this.BEP20Contract = new ethers.Contract(BEP20, ABI, this.provider);
-        this.PROXYContract = new ethers.Contract(BSH_PROXY, ABI, this.provider);
+        if (BEP20 && BSH_PROXY) {
+          this.BEP20Contract = new ethers.Contract(BEP20, ABI, this.provider);
+          this.PROXYContract = new ethers.Contract(BSH_PROXY, ABI, this.provider);
+        }
 
         customzeChain(id);
         account.setAccountInfo({

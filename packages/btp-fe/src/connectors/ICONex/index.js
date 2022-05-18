@@ -1,7 +1,13 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import { getBalance, sendTransaction, getTxResult, sendNonNativeCoin } from './ICONServices';
+import {
+  getBalance,
+  sendTransaction,
+  getTxResult,
+  sendNonNativeCoin,
+  transferIRC2,
+} from './ICONServices';
 import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
@@ -93,6 +99,17 @@ const eventHandler = async (event) => {
                     button: {
                       text: 'Transfer',
                       onClick: sendNonNativeCoin,
+                    },
+                  });
+                  break;
+
+                case signingActions.approveIRC2:
+                  modal.openModal({
+                    icon: 'checkIcon',
+                    desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
+                    button: {
+                      text: 'Transfer',
+                      onClick: transferIRC2,
                     },
                   });
                   break;

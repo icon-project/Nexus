@@ -29,6 +29,7 @@ export const signingActions = {
   deposit: 'deposit',
   receiver: 'receiver',
   approve: 'approve',
+  approveIRC2: 'approveIRC2',
 };
 
 export const rawTransaction = 'rawTransaction';
