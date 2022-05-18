@@ -19,7 +19,7 @@ import { media } from 'components/Styles/Media';
 import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
-import { toSeparatedNumberString } from 'utils/app';
+import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { serverEndpoint } from 'connectors/constants';
 import { chainList } from 'connectors/chainConfigs';
 
@@ -45,7 +45,18 @@ const columns = [
   {
     title: 'Details',
     dataIndex: 'txHash',
-    width: '480px',
+    render: (txHash) => hashShortener(txHash),
+    width: '230px',
+  },
+  {
+    title: 'Source',
+    dataIndex: 'networkNameSrc',
+    width: '150px',
+  },
+  {
+    title: 'Destination',
+    dataIndex: 'networkNameDst',
+    width: '150px',
   },
   {
     title: 'Time',
@@ -57,7 +68,7 @@ const columns = [
     title: 'Amount',
     dataIndex: 'value',
     render: (text, dataSource) => text + ' ' + dataSource.tokenName?.toUpperCase(),
-    width: '300px',
+    width: '250px',
   },
   {
     title: 'Status',
