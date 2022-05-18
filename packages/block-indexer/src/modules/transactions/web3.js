@@ -185,7 +185,7 @@ class Web3TransactionHandler {
           TRANSFER_END_EVENT
         );
       }
-      await setTransactionConfirmed([updatingTx], txData, statusCode);
+      await setTransactionConfirmed(updatingTx, txData, statusCode);
     } catch (error) {
       logger.error(`${this.networkName}:handleTransferEndEvent fails: ${error.message} in tx ${tx.hash}`);
     }

@@ -21,6 +21,7 @@ const BUY_TOKENS_END_PROTOTYPE = 'BuyTokensEnd(int,Address,bytes,str,int,int)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const logger = createLogger();
 const { logTxHashToSlack } = require('../../slack-bot');
+const { getBMCAddressesMap } = require('../common/addresses');
 
 /*
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
@@ -63,7 +64,7 @@ async function confirmTransferEnd(event, txInfo) {
       transaction.network_id,
       TRANSFER_END_EVENT
     );
-    await setTransactionConfirmed([transaction], txInfo, statusCode);
+    await setTransactionConfirmed(transaction, txInfo, statusCode);
   } catch (error) {
     logger.error('icon:confirmTransferEnd failed confirm transaction %O', error);
   }
@@ -75,13 +76,14 @@ async function handleTransactionEvents(txResult, transaction) {
   }
 
   const tokenMap = await getRegisteredTokens();
+  const bmcAddressesMap = getBMCAddressesMap();
 
   if (tokenMap.has(txResult.to)) {
     for (const event of txResult.eventLogs) {
       await handleTransactionStartEvent(event, txResult, transaction);
       await handleBuyTokenEvent(event, txResult, transaction);
     }
-  } else if (process.env.ICON_BMC_ADDRESS === txResult.to || process.env.ICON_WPS_BMC === txResult.to) {
+  } else if (bmcAddressesMap.has(txResult.to)) {
     for (const event of txResult.eventLogs) {
       await handleTransactionEndEvent(event, txResult);
       await handleBuyTokenEndEvent(event, txResult, transaction);
@@ -232,9 +234,9 @@ async function handleBuyTokenEndEvent(event, txResult) {
     let statusCode = transaction.status;
     if (data[0] === 'success') {
       statusCode = TRANSACTION_STATUS.success;
+    } else {
+      statusCode = TRANSACTION_STATUS.failed;
     }
-
-    transaction.error = TRANSACTION_STATUS.failed === statusCode ? data[0] : '';
 
     // Log a transaction to slack channel when update transaction's status
     logTxHashToSlack(
@@ -249,7 +251,12 @@ async function handleBuyTokenEndEvent(event, txResult) {
       transaction.network_id,
       BUY_TOKEN_END_EVENT
     );
-    await setTransactionConfirmed([transaction], transaction, statusCode);
+
+    const txInfo = {
+      txHash: txResult.txHash,
+      error: TRANSACTION_STATUS.failed === statusCode ? data[0] : ''
+    };
+    await setTransactionConfirmed(transaction, txInfo, statusCode);
   } catch (error) {
     logger.error('icon:handleBuyTokenEndEvent failed confirm transaction %O', error);
   }

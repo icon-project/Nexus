@@ -12,7 +12,9 @@ const {
 
 async function getTransactions(page = 0, limit = 20, from, to, assestName, startDate, endDate) {
   let offset = page * limit;
-  let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME} WHERE value <> $1`;
+  let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME} INNER JOIN ${NETWORK_TBL_NAME}
+  ON ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.networkId} = ${NETWORK_TBL_NAME}.id WHERE value <> $1`;
+
   const limitOffset = ' ORDER BY block_time DESC LIMIT $2 OFFSET $3';
   let params = [0, limit, offset];
 
@@ -55,6 +57,8 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName, start
           txHash: row.tx_hash,
           status: row.status,
           blockTime: Number(row.block_time),
+          networkNameSrc: row.name,
+          toAddress: row.to_address,
         });
 
         total = row.total;
