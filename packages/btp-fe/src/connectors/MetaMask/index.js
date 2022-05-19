@@ -154,6 +154,15 @@ class Ethereum {
     }
   }
 
+  async refreshBalance() {
+    const address = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
+    const balance = await this.getProvider.getBalance(address);
+
+    account.setAccountInfo({
+      balance: ethers.utils.formatEther(balance),
+    });
+  }
+
   async sendTransaction(txParams) {
     try {
       modal.openModal({
@@ -183,7 +192,7 @@ class Ethereum {
                 break;
 
               default:
-                this.getEthereumAccounts();
+                this.refreshBalance();
                 sendLog({
                   txHash,
                   network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
