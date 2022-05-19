@@ -93,23 +93,16 @@ const eventHandler = async (event) => {
                   break;
 
                 case signingActions.approve:
-                  modal.openModal({
-                    icon: 'checkIcon',
-                    desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
-                    button: {
-                      text: 'Transfer',
-                      onClick: sendNonNativeCoin,
-                    },
-                  });
-                  break;
-
                 case signingActions.approveIRC2:
                   modal.openModal({
                     icon: 'checkIcon',
                     desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
                     button: {
                       text: 'Transfer',
-                      onClick: transferIRC2,
+                      onClick:
+                        window[signingActions.globalName] === signingActions.approve
+                          ? sendNonNativeCoin
+                          : transferIRC2,
                     },
                   });
                   break;

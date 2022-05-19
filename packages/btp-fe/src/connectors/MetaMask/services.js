@@ -13,6 +13,7 @@ const ICONchain = chainConfigs.ICON || {};
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX', isToken }) => {
   try {
     let balance = 0;
+    // ETH is the only one ERC20 token so far, others are coin.
     if (isToken) {
       balance = await EthereumInstance.BEP20Contract.balanceOf(address);
     } else {
