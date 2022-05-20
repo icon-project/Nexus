@@ -1,5 +1,6 @@
 'use strict';
-const { logger, pgPool } = require('../../common');
+const { createLogger, pgPool } = require('../../common');
+const logger = createLogger();
 const RETURNING_FIELDS = 'RETURNING tx_hash, ip, network_id, sent_to_slack, data';
 
 function parseTransactionIP(row) {

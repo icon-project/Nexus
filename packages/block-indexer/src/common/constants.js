@@ -30,6 +30,8 @@ const MINT_EVENT = 'mint';
 const BURN_EVENT = 'burn';
 const TRANSFER_START_EVENT = 'TransferStart';
 const TRANSFER_END_EVENT = 'TransferEnd';
+const BUY_TOKEN_EVENT = 'BuyTokenEvent';
+const BUY_TOKEN_END_EVENT = 'BuyTokenEndEvent';
 const TRANSFER_SINGLE_EVENT = 'TransferSingle';
 const ADD_RELAY_ACTION = 'addRelay';
 const REMOVE_RELAY_ACTION = 'removeRelay';
@@ -47,5 +49,7 @@ module.exports = {
   TRANSFER_END_EVENT,
   TRANSFER_SINGLE_EVENT,
   ADD_RELAY_ACTION,
-  REMOVE_RELAY_ACTION
+  REMOVE_RELAY_ACTION,
+  BUY_TOKEN_EVENT,
+  BUY_TOKEN_END_EVENT
 };
