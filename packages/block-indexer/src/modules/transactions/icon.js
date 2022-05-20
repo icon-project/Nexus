@@ -4,7 +4,7 @@
 const { decode } = require('rlp');
 const { IconConverter } = require('icon-sdk-js').default;
 const Web3 = require('web3');
-const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT } = require('../../common');
+const { createLogger, TRANSACTION_STATUS, ICX_LOOP_UNIT, TRANSFER_START_EVENT, TRANSFER_END_EVENT, BUY_TOKEN_EVENT, BUY_TOKEN_END_EVENT } = require('../../common');
 const { getRegisteredTokens } = require('../tokens/model');
 const { calculateTotalVolume } = require('./model');
 const {
@@ -60,7 +60,8 @@ async function confirmTransferEnd(event, txInfo) {
       transaction.network_fee,
       statusCode,
       transaction.value,
-      transaction.network_id
+      transaction.network_id,
+      TRANSFER_END_EVENT
     );
     await setTransactionConfirmed([transaction], txInfo, statusCode);
   } catch (error) {
@@ -147,7 +148,8 @@ async function handleTransactionStartEvent(event, txResult, transaction) {
     transObj.networkFee,
     transObj.status,
     transObj.value,
-    transObj.networkId
+    transObj.networkId,
+    TRANSFER_START_EVENT
   );
   await saveTransaction(transObj);
 }
@@ -204,7 +206,8 @@ async function handleBuyTokenEvent(event, txResult, transaction) {
       transObj.networkFee,
       transObj.status,
       transObj.value,
-      transObj.networkId
+      transObj.networkId,
+      BUY_TOKEN_EVENT
     );
     await saveTransaction(transObj);
   } catch (error) {
@@ -243,7 +246,8 @@ async function handleBuyTokenEndEvent(event, txResult) {
       transaction.network_fee,
       statusCode,
       transaction.value,
-      transaction.network_id
+      transaction.network_id,
+      BUY_TOKEN_END_EVENT
     );
     await setTransactionConfirmed([transaction], transaction, statusCode);
   } catch (error) {

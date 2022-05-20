@@ -126,7 +126,8 @@ class Web3TransactionHandler {
         txData.networkFee,
         txData.status,
         txData.value,
-        txData.networkId
+        txData.networkId,
+        TRANSFER_START_EVENT
       );
       await saveTransaction(txData);
     } catch (error) {
@@ -180,7 +181,8 @@ class Web3TransactionHandler {
           updatingTx.network_fee,
           statusCode,
           updatingTx.value,
-          updatingTx.network_id
+          updatingTx.network_id,
+          TRANSFER_END_EVENT
         );
       }
       await setTransactionConfirmed([updatingTx], txData, statusCode);

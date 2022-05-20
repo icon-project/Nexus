@@ -79,8 +79,8 @@ const createTransactionIP = async (txHash, ip, networkId) => {
         const data = _.get(transaction, 'data', {});
         data.user_ip_addr = ip;
         const logFileName = `${process.env.SLACK_REPORT_FILE_NAME_RREFIX}[${(new Date()).toISOString()}][${ip}].log`;
-        await sendToSlack(data, logFileName);
-        return await updateTransactionIP(txHash, networkId, true, ip, data);
+        const result = await sendToSlack(data, logFileName);
+        return await updateTransactionIP(txHash, networkId, result, ip, data);
       }
     }
     return null;
