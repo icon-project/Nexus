@@ -6,7 +6,7 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-import { chainList, chainConfigs } from 'connectors/chainConfigs';
+import { chainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -106,6 +106,15 @@ export const TransferCard = ({
     }));
 
     if (!nativeCoin) return targetChains;
+    if (checkIsToken(sendingInfo.token)) {
+      if (nativeCoin === chainConfigs.ICON.COIN_SYMBOL) {
+        return targetChains.filter(({ value }) => value === chainConfigs.HARMONY.id);
+      }
+      if (nativeCoin === chainConfigs.HARMONY.COIN_SYMBOL) {
+        return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);
+      }
+    }
+
     if (nativeCoin !== chainConfigs.ICON.COIN_SYMBOL) {
       return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);
     }

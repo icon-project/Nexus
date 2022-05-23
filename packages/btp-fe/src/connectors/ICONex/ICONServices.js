@@ -13,7 +13,7 @@ import {
   httpProvider,
   getCurrentChain,
 } from 'connectors/constants';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, getTokenList } from 'connectors/chainConfigs';
 
 import { requestICONexSigning, requestHanaSigning } from './events';
 import Request, {
@@ -313,15 +313,13 @@ export const getBSHAddressOfCoinName = async (coinName) => {
  * @param {object} payload
  * @returns {string} non-native token balance or refundable balance in a user-friendly format
  */
-export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV' }) => {
+export const getBalanceOf = async ({ address, refundable = false, symbol, isToken }) => {
   try {
     const {
       methods: { getBalanceOf = {} },
     } = getCurrentChain();
 
     const customPayload = getBalanceOf?.payload || {};
-    const ICONBSHAddress = getICONBSHAddressforEachChain(symbol);
-
     delete customPayload.symbol;
 
     const payload = {
@@ -336,8 +334,11 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     };
 
     if (refundable) {
-      payload.to = ICONBSHAddress;
+      payload.to = getICONBSHAddressforEachChain(symbol);
       payload.data.params._coinName = symbol.split('-')[0];
+    } else if (isToken) {
+      const targetChain = getTokenList().find((token) => token.symbol === symbol);
+      payload.to = chainConfigs[targetChain.chainId].ICON_IRC2_ADDRESS;
     } else {
       const bshAddressToken = await getBSHAddressOfCoinName(symbol.split('-')[0]);
       if (!bshAddressToken) throw new Error('BSH address not found');
@@ -353,4 +354,48 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'DEV'
     console.log('getBalanceOf err', err);
     return 0;
   }
+};
+
+export const approveIRC2 = (tx) => {
+  const { value, network } = tx;
+  const { ICON_IRC2_ADDRESS, ICON_TOKEN_BSH_ADDRESS } = chainConfigs[network];
+
+  const transaction = {
+    to: ICON_IRC2_ADDRESS,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      _to: ICON_TOKEN_BSH_ADDRESS,
+      _value: IconConverter.toHex(convertToLoopUnit(value)),
+    },
+  };
+
+  window[txPayload] = tx;
+  window[signingActions.globalName] = signingActions.approveIRC2;
+  signTx(transaction, options);
+};
+
+export const transferIRC2 = () => {
+  const { coinName, value, to, network } = window[txPayload];
+  const { NETWORK_ADDRESS, ICON_TOKEN_BSH_ADDRESS } = chainConfigs[network];
+
+  const transaction = {
+    to: ICON_TOKEN_BSH_ADDRESS,
+  };
+
+  const options = {
+    builder: new CallTransactionBuilder(),
+    method: 'transfer',
+    params: {
+      tokenName: coinName,
+      value: IconConverter.toHex(convertToLoopUnit(value)),
+      to: `btp://${NETWORK_ADDRESS}/${to}`,
+    },
+  };
+
+  window[signingActions.globalName] = signingActions.transfer;
+  signTx(transaction, options);
 };

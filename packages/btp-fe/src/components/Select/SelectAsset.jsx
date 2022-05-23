@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { chainConfigs, chainList } from 'connectors/chainConfigs';
+import { chainConfigs, chainList, getTokenList } from 'connectors/chainConfigs';
 
 const StyledItem = styled.div`
   display: flex;
@@ -38,28 +38,36 @@ const Item = ({ symbol, children, ...props }) => {
 const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
   /* eslint-disable react/display-name */
   const getOptions = () => {
-    const options = chainList.map(({ CHAIN_NAME, COIN_SYMBOL, ...others }) => ({
-      value: COIN_SYMBOL,
-      label: COIN_SYMBOL,
-      renderLabel: () => (
-        <TextWithIcon icon={COIN_SYMBOL} width="24px">
-          {COIN_SYMBOL}
-        </TextWithIcon>
-      ),
-      renderItem: () => (
-        <Item icon={COIN_SYMBOL} symbol={COIN_SYMBOL}>
-          {CHAIN_NAME}
-        </Item>
-      ),
-      ...others,
-    }));
+    const options = [...chainList, ...getTokenList()].map(
+      ({ CHAIN_NAME, COIN_SYMBOL, symbol, chain, ...others }) => {
+        const tokenSymbol = COIN_SYMBOL || symbol;
+        return {
+          value: tokenSymbol,
+          label: tokenSymbol,
+          renderLabel: () => (
+            <TextWithIcon icon={tokenSymbol} width="24px">
+              {tokenSymbol}
+            </TextWithIcon>
+          ),
+          renderItem: () => (
+            <Item icon={tokenSymbol} symbol={tokenSymbol}>
+              {CHAIN_NAME || chain}
+            </Item>
+          ),
+          ...others,
+        };
+      },
+    );
 
     if (!nativeCoin || networkId === chainConfigs.ICON.id) {
       return options;
     }
 
     return options.filter(
-      (option) => option.id === networkId || option.id === chainConfigs.ICON.id,
+      (option) =>
+        option.id === networkId ||
+        option.id === chainConfigs.ICON.id ||
+        networkId === option.chainId,
     );
   };
 
