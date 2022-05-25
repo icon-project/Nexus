@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-const { healthCheckBlockIndexer, cachingCurrentBlockHeight } = require('./health-check');
+const { healthCheckBlockIndexer, cachingCurrentBlockHeight } = require('../modules/health-check/models');
+const { parseIndexerHealthCheckPeriod } = require('../common/util');
 
 const cron = require('node-cron');
 module.exports = {
@@ -7,16 +8,12 @@ module.exports = {
     // This cronjob just run on icon block-indexer ec2
     const indexer = process.argv[2];
     if (indexer.toUpperCase() === 'ICON') {
-      await cachingCurrentBlockHeight();
-      const iconTimeChecking = 5; // minutes
-      const harmonyTimeChecking = 10; // minutes
-      cron.schedule(`*/${iconTimeChecking} * * * *`, async () => {
-        await healthCheckBlockIndexer([process.env.ICON_NETWORK_ID, process.env.BSC_NETWORK_ID]);
-      });
-
-      cron.schedule(`*/${harmonyTimeChecking} * * * *`, async () => {
-        await healthCheckBlockIndexer([process.env.HARMONY_NETWORK_ID]);
-      });
+      const healthCheckParams = parseIndexerHealthCheckPeriod();
+      await Promise.all(healthCheckParams.map(async e => {
+        cron.schedule(`*/${e.period} * * * *`, async () => {
+          await healthCheckBlockIndexer(e.networkId, e.period);
+        });
+      }));
     }
     return null;
   }

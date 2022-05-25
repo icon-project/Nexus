@@ -22,6 +22,9 @@ const TRANSACTION_TBL_NAME = 'transactions';
 const NETWORK_TBL_NAME = 'networks';
 const REGISTERED_TOKENS_TABLE = 'registered_tokens';
 
+const BLOCK_INDEXER_STOPPED = (lastBlock, indexerName) => `🐛 *${indexerName}*-indexer was \`STOPPED\` at block \`${lastBlock}\` 🚫`;
+const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good ✅`;
+
 const TRANSACTION_TBL = {
   id: 'id',
   fromAddress: 'from_address',
@@ -51,5 +54,7 @@ module.exports = {
   CURRENCIES,
   COINs,
   ICX_LOOP_UNIT,
-  REGISTERED_TOKENS_TABLE
+  REGISTERED_TOKENS_TABLE,
+  BLOCK_INDEXER_STOPPED,
+  BLOCK_INDEXER_HEALTHY
 };

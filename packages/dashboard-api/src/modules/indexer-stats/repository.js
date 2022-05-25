@@ -1,6 +1,5 @@
 'use strict';
-const { createLogger, pgPool } = require('../../common');
-const logger = createLogger();
+const { pgPool, logger } = require('../../common');
 
 async function getIndexerStatByNetworkId(networkId) {
   const query = 'SELECT * FROM indexer_stats WHERE network_id = $1';
