@@ -1,12 +1,10 @@
 
 'use strict';
 
-const bmcAbi = require('../bsc-indexer/abi/BMCManagement.json');
-const moonbeamBmcAbi = require('../web3-indexer/abi/moonbeam/abi.bmc_management.json');
-const moonbeamBshAbi = require('../web3-indexer/abi/moonbeam/abi.bsh_core.json');
+const bmcAbi = require('../web3-indexer/abi/bsc/BMCManagement.json');
+const bshAbi = require('../web3-indexer/abi/bsc/BSHCore.json');
 
 const bscActionMap = new Map();
-const moonbeamActionMap = new Map();
 
 // Build a map of [action hash, action]
 function getActionInfoFromAbi(web3, contractAbi, actionNames) {
@@ -31,26 +29,12 @@ function getBscActionMap(web3) {
 
     for (const action of actions) { bscActionMap.set(action.action.name, action); }
 
-    actions = getActionInfoFromAbi(web3, moonbeamBshAbi, ['register']);
+    actions = getActionInfoFromAbi(web3, bshAbi, ['register']);
 
     for (const action of actions) { bscActionMap.set(action.action.name, action); }
   }
 
   return bscActionMap;
-}
-
-function getMoonbeamActionMap(web3) {
-  if (moonbeamActionMap.size === 0) {
-    let actions = getActionInfoFromAbi(web3, moonbeamBmcAbi, ['addRelay', 'removeRelay']);
-
-    for (const action of actions) { moonbeamActionMap.set(action.action.name, action); }
-
-    actions = getActionInfoFromAbi(web3, moonbeamBshAbi, ['register']);
-
-    for (const action of actions) { moonbeamActionMap.set(action.action.name, action); }
-  }
-
-  return moonbeamActionMap;
 }
 
 function decodeActionInput(web3, actionMap, actionName, encodedInput) {
@@ -62,6 +46,5 @@ function decodeActionInput(web3, actionMap, actionName, encodedInput) {
 module.exports = {
   getActionInfoFromAbi,
   getBscActionMap,
-  decodeActionInput,
-  getMoonbeamActionMap
+  decodeActionInput
 };

@@ -31,17 +31,13 @@ async function findTxBySerialNumber(serialNumber, networkId, contractAddress) {
 }
 
 /**
- * Update confirmed status and block info when the transactions has event TransferEnd
- * @param {*} transactions
+ * Update confirmed status and block info when the transaction has event TransferEnd
+ * @param {*} transaction
  * @param {*} txInfo
  */
-async function setTransactionConfirmed(transactions, txInfo, status) {
+async function setTransactionConfirmed(transaction, txInfo, status) {
   try {
-    const client = await pgPool.connect();
-    await client.query('BEGIN');
-
-    for (const tx of transactions) {
-      const query = `
+    const query = `
         UPDATE ${TRANSACTION_TBL_NAME}
         SET
           ${TRANSACTION_TBL.status} = $1,
@@ -50,14 +46,9 @@ async function setTransactionConfirmed(transactions, txInfo, status) {
           ${TRANSACTION_TBL.updateAt} = NOW()
         WHERE ${TRANSACTION_TBL.txHash} = $5`;
 
-      const values = [status, txInfo.txHash, txInfo.error, txInfo.logId || '', tx.tx_hash];
-
-      await client.query(query, values);
-      debug('setTransactionConfirmed SQL %s %O:', query, values);
-    }
-
-    await client.query('COMMIT');
-    // logger.info(`setTransactionConfirmed saved transaction in txHash ${txInfo.txHash}`);
+    const values = [status, txInfo.txHash, txInfo.error, txInfo.logId || '', transaction.tx_hash];
+    await pgPool.query(query, values);
+    debug('setTransactionConfirmed SQL %s %O:', query, values);
   } catch (error) {
     logger.error('setTransactionConfirmed fails: %s, %s', error.message, error.detail);
   }

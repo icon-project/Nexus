@@ -4,7 +4,7 @@
       "name": "moonbeam-indexer",
       "script": "./index.js",
       "args": "moonbeam",
-      "cwd": "/home/ubuntu/deploy/btp-dashboard/packages/block-indexer",
+      "cwd": "./",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
         "NODE_ENV": "production",
