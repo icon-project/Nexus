@@ -12,6 +12,7 @@ const { createNetworksRoute } = require('../modules/networks');
 // FAS: const { createFeeRoute } = require('../modules/fees');
 const { createRelayCandidateRoute } = require('../modules/relay-candidates');
 const { createTransactionIPRoute } = require('../modules/transaction-ips');
+const { createHealthCheckRoute } = require('../modules/health-check/route');
 
 const app = express();
 const version = process.env.API_VERSION;
@@ -27,6 +28,7 @@ app.use(`/${version}/transactions`, createTransRoute());
 app.use(`/${version}/transaction-ips`, createTransactionIPRoute());
 // FAS: app.use(`/${version}/fees`, createFeeRoute());
 app.use(`/${version}/relay-candidates`, createRelayCandidateRoute());
+app.use(`/${version}/health-check`, createHealthCheckRoute());
 app.use(errorHandlerMiddleware(logger));
 
 module.exports = app;

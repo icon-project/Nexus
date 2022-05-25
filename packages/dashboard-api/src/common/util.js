@@ -43,9 +43,23 @@ async function tokenToUsd(name, value) {
   return 0;
 }
 
+function parseIndexerHealthCheckPeriod() {
+  const indexers = process.env.HEALTH_CHECK_PERIOD;
+  return indexers.split('||').map(e => {
+    const element = e.replace(' ', '');
+    const indexer = element.split('|');
+    return {
+      networkId: indexer[0],
+      name: indexer[1],
+      period: parseInt(indexer[2], 10)
+    };
+  });
+}
+
 module.exports = {
   hexToFixedAmount,
   hexToIcxUnit,
   numberToFixedAmount,
   tokenToUsd,
+  parseIndexerHealthCheckPeriod
 };
