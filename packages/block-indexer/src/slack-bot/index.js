@@ -18,6 +18,8 @@ const client = new WebClient(process.env.SLACK_TOKEN, {
   teamId: process.env.SLACK_TEAM_ID
 });
 
+const errorClient = new WebClient(process.env.SLACK_BUG_TOKEN);
+
 async function logTxHashToSlack(toAddress, fromAddress, txHash, blockTime, btpFee, networkFee, status, value, networkId, eventType = null) {
   try {
     const data = {
@@ -37,7 +39,7 @@ async function logTxHashToSlack(toAddress, fromAddress, txHash, blockTime, btpFe
       if (!transaction) {
         const logFileName = `${process.env.SLACK_REPORT_FILE_NAME_RREFIX}[${(new Date()).toISOString()}].log`;
         // send to slack
-        const result = await sendToSlack(data, logFileName);
+        const result = await sendFileToSlack(data, logFileName);
         // create record in transaction_ips
         await createTransactionIP(txHash, networkId, result, data);
       }
@@ -54,7 +56,7 @@ async function logTxHashToSlack(toAddress, fromAddress, txHash, blockTime, btpFe
           data.user_ip_addr = ip;
           const logFileName = `${process.env.SLACK_REPORT_FILE_NAME_RREFIX}[${(new Date()).toISOString()}][${ip}].log`;
           // send to slack
-          const result = await sendToSlack(data, logFileName);
+          const result = await sendFileToSlack(data, logFileName);
           // update sending status (sent_to_slack = true)
           await updateTransactionIP(txHash, networkId, result, data);
         }
@@ -65,7 +67,7 @@ async function logTxHashToSlack(toAddress, fromAddress, txHash, blockTime, btpFe
   }
 }
 
-const sendToSlack = async (data, logFileName) => {
+const sendFileToSlack = async (data, logFileName) => {
   try {
     // 1. write log file
     writeFileSync(`${__dirname}/${logFileName}`, JSON.stringify(data));
@@ -84,6 +86,16 @@ const sendToSlack = async (data, logFileName) => {
   }
 };
 
+const sendErrorToSlack = async (error) => {
+  try {
+    const message = (typeof error) === 'string' ? error : ((typeof error) === 'object' ? error.message : JSON.stringify(error));
+    errorClient.chat.postMessage({ channel: process.env.SLACK_BUG_CHANNEL_ID, text: message });
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
 module.exports = {
-  logTxHashToSlack
+  logTxHashToSlack,
+  sendErrorToSlack
 };

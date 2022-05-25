@@ -4,6 +4,7 @@ const http = require('http');
 const { createLogger } = require('../common');
 const app = require('./app');
 const blockIndexer = require('./block-indexer');
+const { cronStart } = require('../cron');
 
 const logger = createLogger();
 
@@ -21,6 +22,9 @@ async function start() {
   // usage: index.js <indexer>
   const args = process.argv.slice(2);
   await blockIndexer.start(args[0] || '');
+
+  // start cronjob
+  cronStart();
 }
 
 module.exports = {
