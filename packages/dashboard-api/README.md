@@ -3,6 +3,15 @@
 ## Drop, re-create, and initial database
 `$ node ./db-init/index.js`
 
+## Slack command for checking block-indexer'status
+
+Go to slack's workspace, create slack app then go to feature `Slash Commands` and configure commands
+
+- `/bsc`: `<domain>`/v1/health-check/?apiKey=`<apiKey>`&indexer=bsc
+- `/icon`: `<domain>`/v1/health-check/?apiKey=`<apiKey>`&indexer=icon
+- `/harmony`: `<domain>`/v1/health-check/?apiKey=`<apiKey>`&indexer=harmony
+
+
 ## Development Environment
 
 PostgreSQL container
