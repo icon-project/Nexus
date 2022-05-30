@@ -5,8 +5,7 @@ const { indexerCommandHealthCheck } = require('./model');
 
 module.exports = {
   healthCheck: async (req, res) => {
-    const indexerName = _.get(req, 'query.indexer', '');
-    const message = await indexerCommandHealthCheck(indexerName);
+    const message = await indexerCommandHealthCheck();
     if (message) {
       res.send(message);
     } else {

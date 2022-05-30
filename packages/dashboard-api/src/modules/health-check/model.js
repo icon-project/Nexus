@@ -4,32 +4,23 @@ const { logger, BLOCK_INDEXER_STOPPED, parseIndexerHealthCheckPeriod, BLOCK_INDE
 const { getIndexerStatByNetworkId } = require('../indexer-stats/repository');
 const moment = require('moment');
 
-const indexerCommandHealthCheck = async (indexerName) => {
+const indexerCommandHealthCheck = async () => {
   try {
-    let indexerCheckParams = null;
-    let indexerStat = null;
     const healthCheckParams = parseIndexerHealthCheckPeriod();
+    let message = '';
     await Promise.all(healthCheckParams.map(async e => {
-      if (e.name.toUpperCase() === indexerName.toUpperCase()) {
-        indexerCheckParams = e;
-        indexerStat = await getIndexerStatByNetworkId(e.networkId);
+      const indexerStat = await getIndexerStatByNetworkId(e.networkId);
+      const updateAt = moment(indexerStat.updateAt);
+      const checkTime = moment().subtract(e.period, 'minutes');
+      // If indexerStat.updatAt < currentTime - period => Push error to slack
+      if (!updateAt.isValid() || updateAt.isBefore(checkTime)) {
+        message += BLOCK_INDEXER_STOPPED(indexerStat.blockHeight, indexerStat.name) + '\n';
+      } else {
+        message += BLOCK_INDEXER_HEALTHY(indexerStat.blockHeight, indexerStat.name) + '\n';
       }
       return null;
     }));
-
-    // If server does not have the indexer checking params from .env or the indexer from client does not exist in database => return null
-    if (!indexerCheckParams || !indexerStat) {
-      return null;
-    }
-
-    const updateAt = moment(indexerStat.updateAt);
-    const checkTime = moment().subtract(indexerCheckParams.period, 'minutes');
-    // If indexerStat.updatAt < currentTime - period => Push error to slack
-    if (!updateAt.isValid() || updateAt.isBefore(checkTime)) {
-      return BLOCK_INDEXER_STOPPED(indexerStat.blockHeight, indexerStat.name);
-    } else {
-      return BLOCK_INDEXER_HEALTHY(indexerStat.blockHeight, indexerStat.name);
-    }
+    return message;
   } catch (error) {
     logger.error(error);
     return null;

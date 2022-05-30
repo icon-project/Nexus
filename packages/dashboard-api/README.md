@@ -7,9 +7,7 @@
 
 Go to slack's workspace, create slack app then go to feature `Slash Commands` and configure commands
 
-- `/bsc`: `<domain>`/v1/health-check/?apiKey=`<apiKey>`&indexer=bsc
-- `/icon`: `<domain>`/v1/health-check/?apiKey=`<apiKey>`&indexer=icon
-- `/harmony`: `<domain>`/v1/health-check/?apiKey=`<apiKey>`&indexer=harmony
+- `/btp-status`: `<domain>`/v1/health-check/?apiKey=`<SLACK_COMMAND_API_KEY>`
 
 
 ## Development Environment
