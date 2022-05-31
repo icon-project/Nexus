@@ -23,7 +23,7 @@ const NETWORK_TBL_NAME = 'networks';
 const REGISTERED_TOKENS_TABLE = 'registered_tokens';
 
 const BLOCK_INDEXER_STOPPED = (lastBlock, indexerName) => `🐛 *${indexerName}*-indexer was \`STOPPED\` at block \`${lastBlock}\` 🚫`;
-const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good ✅`;
+const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good at block \`${lastBlock}\` ✅`;
 
 const TRANSACTION_TBL = {
   id: 'id',
