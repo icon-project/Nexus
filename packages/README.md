@@ -45,3 +45,6 @@ $ crontab -e
 
 $ crontab -l
 ```
+
+## 3. Architecture
+<img src="./architecture/btp-architecture.png" alt="MarineGEO circle logo" style="height:703px; width:1349px;"/>
