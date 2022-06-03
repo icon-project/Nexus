@@ -438,7 +438,7 @@ ALTER TABLE token_prices
     DROP COLUMN cmc_id,
     ADD COLUMN coingecko_id character varying(50) NOT NULL,
     ADD CONSTRAINT token_prices_pkey PRIMARY KEY (coingecko_id)
-    
+
 INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('ethereum', 'ETH', 3823.55, 1);
 INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('dev-protocol', 'DEV', 0.01, 1);
 INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('icon', 'ICX', 2.09, 1);
@@ -454,3 +454,6 @@ CREATE TABLE IF NOT EXISTS public.transaction_ips
     updated_at timestamp without time zone,
 	CONSTRAINT transaction_ip_pkey PRIMARY KEY (tx_hash, network_id)
 )
+
+ALTER TABLE transactions
+    ADD COLUMN wps_data json

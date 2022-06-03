@@ -19,6 +19,7 @@ const TRANSACTION_TBL = {
   networkFee: 'network_fee',
   status: 'status',
   totalVolume: 'total_volume',
+  wpsData: 'wps_data',
   createAt: 'create_at',
   updateAt: 'update_at'
 };

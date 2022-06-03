@@ -138,6 +138,7 @@ const createDatabaseQuery = [
     contract_address character varying(100) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
     log_id1 character varying(50),
     log_id2 character varying(50),
+    wps_data json,
     CONSTRAINT transactions_pkey PRIMARY KEY (tx_hash),
     CONSTRAINT transactions_serial_network_contract_key UNIQUE (serial_number, network_id, contract_address)
 );`,

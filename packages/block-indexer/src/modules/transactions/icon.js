@@ -16,8 +16,8 @@ const {
 
 const TRANFER_START_PROTOTYPE = 'TransferStart(Address,str,int,bytes)';
 const TRANFER_END_PROTOTYPE = 'TransferEnd(Address,int,int,bytes)';
-const BUY_TOKENS_PROTOTYPE = 'BuyTokens(int,Address,bytes,int,int,int)';
-const BUY_TOKENS_END_PROTOTYPE = 'BuyTokensEnd(int,Address,bytes,str,int,int)';
+const BUY_TOKENS_PROTOTYPE = 'BuyTokens(int,Address,bytes,int,int,int,int)';
+const BUY_TOKENS_END_PROTOTYPE = 'BuyTokensEnd(int,Address,bytes,int,str,int,int)';
 const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const logger = createLogger();
 const { logTxHashToSlack } = require('../../slack-bot');
@@ -173,9 +173,12 @@ async function handleBuyTokenEvent(event, txResult, transaction) {
 
   logger.info(`icon:handleBuyTokenEvent get BuyTokens event in tx ${txResult.txHash}`);
   const data = event.data;
-  const value = parseInt(data[0].toString('hex'), 16) / ICX_LOOP_UNIT;
-  const btpFee = parseInt(data[1].toString('hex'), 16) / ICX_LOOP_UNIT;
-
+  const value = parseInt(data[1].toString('hex'), 16) / ICX_LOOP_UNIT;
+  const btpFee = parseInt(data[2].toString('hex'), 16) / ICX_LOOP_UNIT;
+  const wpsData = {
+    id: data[0],
+    icxPrice: parseInt(data[3].toString('hex'), 16) / ICX_LOOP_UNIT
+  };
   // Ref: https://www.icondev.io/docs/step-estimation#transaction-fee
   const transObj = {
     fromAddress: event.indexed[2],
@@ -189,7 +192,8 @@ async function handleBuyTokenEvent(event, txResult, transaction) {
     networkId: process.env.ICON_NETWORK_ID,
     btpFee: btpFee,
     networkFee: (txResult.stepPrice.c[0] * txResult.stepUsed.c[0]) / ICX_LOOP_UNIT,
-    contractAddress: event.scoreAddress // Ref: #426
+    contractAddress: event.scoreAddress, // Ref: #426
+    wpsData
   };
   try {
     // Calculating total volume when the system has a new transaction.
@@ -231,8 +235,14 @@ async function handleBuyTokenEndEvent(event, txResult) {
 
     if (!transaction) return;
 
+    transaction.wps_data = {
+      ...transaction.wps_data,
+      mintedTokensCount: IconConverter.toNumber(data[2]),
+      refundableAmount: parseInt(data[3].toString('hex'), 16) / ICX_LOOP_UNIT
+    };
+
     let statusCode = transaction.status;
-    if (data[0] === 'success') {
+    if (data[1] === '') {
       statusCode = TRANSACTION_STATUS.success;
     } else {
       statusCode = TRANSACTION_STATUS.failed;
@@ -254,7 +264,7 @@ async function handleBuyTokenEndEvent(event, txResult) {
 
     const txInfo = {
       txHash: txResult.txHash,
-      error: TRANSACTION_STATUS.failed === statusCode ? data[0] : ''
+      error: TRANSACTION_STATUS.failed === statusCode ? data[1] : ''
     };
     await setTransactionConfirmed(transaction, txInfo, statusCode);
   } catch (error) {

@@ -43,10 +43,11 @@ async function setTransactionConfirmed(transaction, txInfo, status) {
           ${TRANSACTION_TBL.status} = $1,
           tx_hash_end = $2,
           tx_error = $3, log_id2 = $4,
+          wps_data = $6,
           ${TRANSACTION_TBL.updateAt} = NOW()
         WHERE ${TRANSACTION_TBL.txHash} = $5`;
 
-    const values = [status, txInfo.txHash, txInfo.error, txInfo.logId || '', transaction.tx_hash];
+    const values = [status, txInfo.txHash, txInfo.error, txInfo.logId || '', transaction.tx_hash, transaction.wps_data];
     await pgPool.query(query, values);
     debug('setTransactionConfirmed SQL %s %O:', query, values);
   } catch (error) {
@@ -60,9 +61,9 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.fromAddress}, ${TRANSACTION_TBL.tokenName}, ${TRANSACTION_TBL.serialNumber},
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
-      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume},
+      ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.wpsData},
       contract_address, log_id1)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`;
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`;
 
     const insertValues = [
       transaction.fromAddress,
@@ -77,6 +78,7 @@ async function saveTransaction(transaction) {
       transaction.networkFee,
       transaction.status,
       transaction.totalVolume,
+      transaction.wpsData,
       transaction.contractAddress,
       transaction.logId || ''
     ];
