@@ -25,7 +25,7 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName, start
 
   if (to) {
     query += ` AND ${TRANSACTION_TBL.toAddress} ~ $${params.length + 1}`;
-    params.push(to);
+    params.push(`^btp://${to}`);
   }
 
   if (assestName) {
