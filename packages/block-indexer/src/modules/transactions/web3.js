@@ -175,7 +175,7 @@ class Web3TransactionHandler {
         logTxHashToSlack(
           updatingTx.to_address,
           updatingTx.from_address,
-          updatingTx.tx_hash,
+          txData.txHash,
           updatingTx.block_time,
           updatingTx.btp_fee,
           updatingTx.network_fee,

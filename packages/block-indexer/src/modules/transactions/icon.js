@@ -55,7 +55,7 @@ async function confirmTransferEnd(event, txInfo) {
     logTxHashToSlack(
       transaction.to_address,
       transaction.from_address,
-      transaction.tx_hash,
+      txInfo.txHash,
       transaction.block_time,
       transaction.btp_fee,
       transaction.network_fee,
@@ -252,7 +252,7 @@ async function handleBuyTokenEndEvent(event, txResult) {
     logTxHashToSlack(
       transaction.to_address,
       transaction.from_address,
-      transaction.tx_hash,
+      txResult.txHash,
       transaction.block_time,
       transaction.btp_fee,
       transaction.network_fee,
