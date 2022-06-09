@@ -19,9 +19,9 @@ import { media } from 'components/Styles/Media';
 import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
-import { tokenOptionList } from 'utils/constants';
-import { toSeparatedNumberString } from 'utils/app';
+import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { serverEndpoint } from 'connectors/constants';
+import { chainList } from 'connectors/chainConfigs';
 
 import VectorSrc from 'assets/images/vector.svg';
 
@@ -45,7 +45,18 @@ const columns = [
   {
     title: 'Details',
     dataIndex: 'txHash',
-    width: '480px',
+    render: (txHash) => hashShortener(txHash),
+    width: '230px',
+  },
+  {
+    title: 'Source',
+    dataIndex: 'networkNameSrc',
+    width: '150px',
+  },
+  {
+    title: 'Destination',
+    dataIndex: 'networkNameDst',
+    width: '150px',
   },
   {
     title: 'Time',
@@ -57,7 +68,7 @@ const columns = [
     title: 'Amount',
     dataIndex: 'value',
     render: (text, dataSource) => text + ' ' + dataSource.tokenName?.toUpperCase(),
-    width: '300px',
+    width: '250px',
   },
   {
     title: 'Status',
@@ -201,11 +212,11 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All assets</Text>,
       renderItem: () => <Text className="md">All assets</Text>,
     },
-    ...tokenOptionList.map(({ symbol }) => ({
-      value: symbol,
-      label: symbol,
-      renderLabel: () => <TextWithIcon icon={symbol}>{symbol}</TextWithIcon>,
-      renderItem: () => <TextWithIcon icon={symbol}>{symbol}</TextWithIcon>,
+    ...chainList.map(({ COIN_SYMBOL }) => ({
+      value: COIN_SYMBOL,
+      label: COIN_SYMBOL,
+      renderLabel: () => <TextWithIcon icon={COIN_SYMBOL}>{COIN_SYMBOL}</TextWithIcon>,
+      renderItem: () => <TextWithIcon icon={COIN_SYMBOL}>{COIN_SYMBOL}</TextWithIcon>,
     })),
   ];
 

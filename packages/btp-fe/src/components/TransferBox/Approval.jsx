@@ -14,7 +14,6 @@ import { getService } from 'services/transfer';
 import { Header, Text, SubTitle } from 'components/Typography';
 import { Icon } from 'components/Icon/Icon';
 import { ControlButtons } from './ControlButtons';
-import { icons } from './Details';
 
 import { colors } from 'components/Styles/Colors';
 
@@ -118,12 +117,12 @@ export const Approval = memo(
     const [BTPFee, setBTPFee] = useState(0);
     const { recipient, tokenAmount = 0 } = values;
     const { token, network } = sendingInfo;
-    const { currentNetwork, unit } = account;
+    const { currentNetwork, symbol, id } = account;
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
       if (isCurrent)
-        getBTPfee().then((result) => {
+        getBTPfee(id, network).then((result) => {
           setBTPFee((result / 10000) * tokenAmount);
         });
     }, [isCurrent]);
@@ -138,14 +137,14 @@ export const Approval = memo(
     }));
 
     const onApprove = () => {
-      const isSendingNativeCoin = unit === token;
-      const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token };
+      const isSendingNativeCoin = symbol === token;
+      const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token, network };
       openModal({
         icon: 'loader',
         desc: 'Waiting for confirmation in your wallet.',
       });
 
-      getService()?.transfer(tx, isSendingNativeCoin, network);
+      getService()?.transfer(tx, isSendingNativeCoin, token);
     };
 
     return (
@@ -168,7 +167,7 @@ export const Approval = memo(
           <div className="send">
             <Text className="md">Send</Text>
             <div className="sender">
-              <Icon iconURL={icons[token]} size="s" />
+              <Icon icon={token} size="s" />
               <Text className="md sender--alias">{token}</Text>
               <Text className="sm sender--name">{currentNetwork}</Text>
             </div>
@@ -223,7 +222,7 @@ Approval.propTypes = {
   }),
   account: PropTypes.shape({
     currentNetwork: PropTypes.string,
-    unit: PropTypes.string,
+    symbol: PropTypes.string,
   }),
   /** react-final-form object */
   form: PropTypes.object,

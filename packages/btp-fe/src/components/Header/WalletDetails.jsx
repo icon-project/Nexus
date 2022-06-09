@@ -6,8 +6,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { getBalanceToken } from 'utils/constants';
 import { getService } from 'services/transfer';
+import { chainList, chainConfigs } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -138,12 +138,8 @@ const RefundSelector = styled(Select)`
     margin: 0 11.67px;
   }
 
-  > .md {
-    width: 42px;
-  }
-
   > ul {
-    width: 100%;
+    left: 0;
   }
 `;
 
@@ -161,24 +157,44 @@ const ActionBtn = styled.button`
 
 export const WalletDetails = ({
   networkName,
-  unit,
+  symbol,
   address,
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
+  networkID,
 }) => {
-  const [selectedToken, setSelectedToken] = useState(unit);
-  const [selectedRefundToken, setSelectedRefundToken] = useState(unit);
+  const [selectedToken, setSelectedToken] = useState(symbol);
+  const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
   const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
+  const ICONChain = chainConfigs.ICON;
 
   const tokens = [
-    { label: unit, value: unit },
-    ...getBalanceToken()
-      .map((symbol) => ({ label: symbol, value: symbol }))
-      .filter((item) => item.label !== unit),
+    { label: symbol, value: symbol },
+    { label: 'ETH', value: 'ETH' },
+    ...chainList
+      .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
+      .filter((item) => item.label !== symbol),
   ];
+
+  const refundedTokens = [
+    ...chainList
+      .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
+      .filter((item) => item.label !== symbol),
+  ];
+
+  if (networkID === ICONChain?.id) {
+    chainList.forEach((chain) => {
+      if (chain.id !== ICONChain?.id) {
+        const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
+        refundedTokens.unshift({ label: value, value });
+      }
+    });
+  } else {
+    refundedTokens.unshift({ label: symbol, value: symbol });
+  }
 
   const onTokenChange = async (evt) => {
     setSelectedToken(evt.target.value);
@@ -213,7 +229,7 @@ export const WalletDetails = ({
         <div className="select-refund">
           <RefundSelector
             className="padding-content"
-            options={tokens}
+            options={refundedTokens}
             onChange={onChangeRefundSelect}
           />
           <Text className="md">{refund}</Text>
@@ -265,7 +281,7 @@ WalletDetails.propTypes = {
   /** Display network's name */
   networkName: PropTypes.string,
   /** Display network's symbol */
-  unit: PropTypes.string,
+  symbol: PropTypes.string,
   /** Display connected address */
   address: PropTypes.string,
   /** Display connected address in short */

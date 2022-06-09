@@ -94,6 +94,7 @@ const Select = ({
   loading,
   onChange = () => {},
   name: fieldName,
+  dependInput,
   ...ots
 }) => {
   const ref = useRef();
@@ -105,10 +106,14 @@ const Select = ({
     if (!loading) {
       setSelectedValue(options[0] || {});
       onChange({
-        target: { value: options[0] ? options[0].value : '', name: fieldName, type: 'input' },
+        target: {
+          value: options[0] ? options[0].value : '',
+          name: fieldName,
+          type: 'input',
+        },
       });
     }
-  }, [loading, options.length]);
+  }, [loading, options.length, dependInput]);
 
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);

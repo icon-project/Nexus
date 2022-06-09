@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 
 import { useSelect } from 'hooks/useRematch';
 import { getService } from 'services/transfer';
+import { getTokenList } from 'connectors/chainConfigs';
 
-export const useTokenBalance = (currentSymbol) => {
+export const useTokenBalance = (currentSymbol, step) => {
   const [token, setToken] = useState({ balance: null, symbol: currentSymbol });
 
   const {
-    accountInfo: { address, balance, unit, currentNetwork },
+    accountInfo: { address, balance, symbol, currentNetwork },
   } = useSelect(({ account: { selectAccountInfo } }) => ({
     accountInfo: selectAccountInfo,
   }));
@@ -15,19 +16,20 @@ export const useTokenBalance = (currentSymbol) => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (currentNetwork && currentSymbol) {
-      const isNativeCoin = currentSymbol === unit;
+      const isNativeCoin = currentSymbol === symbol;
 
       if (isNativeCoin) {
-        setToken({ balance, symbol: unit });
+        setToken({ balance, symbol: symbol });
       } else {
+        const isToken = getTokenList().find((token) => token.symbol === currentSymbol);
         getService()
-          .getBalanceOf({ address, symbol: currentSymbol })
+          .getBalanceOf({ address, symbol: currentSymbol, isToken: !!isToken })
           .then((result) => {
             setToken({ balance: result, symbol: currentSymbol });
           });
       }
     }
-  }, [currentSymbol, currentNetwork]);
+  }, [currentSymbol, currentNetwork, step]);
 
   return [token.balance, token.symbol];
 };

@@ -6,7 +6,7 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-import { getTartgetNetwork } from 'utils/constants';
+import { chainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -60,7 +60,14 @@ const StyledCard = styled.div`
   `}
 `;
 
-export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetwork }) => {
+export const TransferCard = ({
+  setStep,
+  setSendingInfo,
+  isConnected,
+  nativeCoin,
+  networkId,
+  sendingInfo,
+}) => {
   const onChange = (values) => {
     const {
       target: { value, name },
@@ -74,6 +81,53 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetw
     setStep(1);
   };
 
+  const getTartgetChains = () => {
+    /* 
+    We have 8 transfer cases supported for now => explain the options of dropdowns
+
+    [From ICON] 
+    Transfer ICX to BSC 
+    Transfer BNB to BSC
+    Transfer ICX to Harmony
+    Transfer ONE to Harmony
+
+    [From BSC]
+    Transfer BNB to ICON 
+    Transfer ICX to ICON 
+
+    [From Harmony]
+    Transfer ONE to ICON
+    Transfer ICX to ICON 
+    */
+    const targetChains = chainList.map(({ CHAIN_NAME, id, ...others }) => ({
+      value: id,
+      label: CHAIN_NAME,
+      ...others,
+    }));
+
+    if (!nativeCoin) return targetChains;
+    if (checkIsToken(sendingInfo.token)) {
+      if (nativeCoin === chainConfigs.ICON.COIN_SYMBOL) {
+        return targetChains.filter(({ value }) => value === chainConfigs.HARMONY.id);
+      }
+      if (nativeCoin === chainConfigs.HARMONY.COIN_SYMBOL) {
+        return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);
+      }
+    }
+
+    if (nativeCoin !== chainConfigs.ICON.COIN_SYMBOL) {
+      return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);
+    }
+    if (
+      nativeCoin === chainConfigs.ICON.COIN_SYMBOL &&
+      sendingInfo.token === chainConfigs.ICON.COIN_SYMBOL
+    ) {
+      return targetChains.filter(({ value }) => value !== chainConfigs.ICON.id);
+    } else {
+      return targetChains.filter(({ COIN_SYMBOL }) => sendingInfo.token === COIN_SYMBOL);
+    }
+  };
+
   return (
     <StyledCard>
       <Header className="sm bold center">Transfer</Header>
@@ -85,14 +139,19 @@ export const TransferCard = ({ setStep, setSendingInfo, isConnected, currentNetw
 
         <div className="send">
           <Text className="md">Send</Text>
-          <SelectAsset onChange={onChange} currentNetwork={currentNetwork} />
+          <SelectAsset onChange={onChange} nativeCoin={nativeCoin} networkId={networkId} />
         </div>
 
         <div className="devider" />
 
         <div className="to">
           <Text className="md">To</Text>
-          <Select options={getTartgetNetwork(currentNetwork)} onChange={onChange} name="network" />
+          <Select
+            options={getTartgetChains()}
+            onChange={onChange}
+            name="network"
+            dependInput={sendingInfo.token}
+          />
         </div>
 
         <div className="button-section">

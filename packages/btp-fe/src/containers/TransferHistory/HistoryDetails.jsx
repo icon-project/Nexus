@@ -134,7 +134,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Amount</Text>
               <Text className="md">
-                {details.value} {details.tokenName} (= $
+                {details.value} {details.tokenName} (~ $
                 {toSeparatedNumberString(tokenPrice * details.value)})
               </Text>
             </div>
@@ -172,8 +172,8 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Network fee</Text>
               <Text className="md">
-                {details.networkFee} {details.tokenName} ( $
-                {tokenPrice * toSeparatedNumberString(details.networkFee)})
+                {details.networkFee} {details.tokenName} (~ $
+                {toSeparatedNumberString(tokenPrice * details.networkFee)})
               </Text>
             </div>
 

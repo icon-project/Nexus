@@ -61,7 +61,7 @@ export const getNearAccountInfo = async () => {
       address: accountInfo.accountId,
       balance: ethers.utils.formatUnits(balance.total, 24),
       wallet: wallets.near,
-      unit: nativeTokens[connectedNetWorks.near].symbol,
+      symbol: nativeTokens[connectedNetWorks.near].symbol,
       currentNetwork: connectedNetWorks.near,
     });
   }

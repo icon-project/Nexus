@@ -34,7 +34,7 @@ const governance = {
     },
     async getRelayCandidates({ page, limit }) {
       try {
-        const relayCandidates = (await getRelayCandidates(page, limit)).content;
+        const relayCandidates = (await getRelayCandidates(page, limit))?.content;
         this.setGovernanceState(['relayCandidates', relayCandidates || []]);
         return relayCandidates;
       } catch (error) {

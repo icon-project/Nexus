@@ -6,7 +6,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
-import { getTokenOptions } from 'utils/constants';
+import { chainConfigs, chainList, getTokenList } from 'connectors/chainConfigs';
 
 const StyledItem = styled.div`
   display: flex;
@@ -35,24 +35,43 @@ const Item = ({ symbol, children, ...props }) => {
   );
 };
 
-const SelectAsset = ({ onChange, currentNetwork }) => {
+const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
   /* eslint-disable react/display-name */
-  const options = getTokenOptions(currentNetwork).map(({ symbol, netWorkLabel }) => ({
-    value: symbol,
-    label: symbol,
-    renderLabel: () => (
-      <TextWithIcon icon={symbol} width="24px">
-        {symbol}
-      </TextWithIcon>
-    ),
-    renderItem: () => (
-      <Item icon={symbol} symbol={symbol}>
-        {netWorkLabel}
-      </Item>
-    ),
-  }));
+  const getOptions = () => {
+    const options = [...chainList, ...getTokenList()].map(
+      ({ CHAIN_NAME, COIN_SYMBOL, symbol, chain, ...others }) => {
+        const tokenSymbol = COIN_SYMBOL || symbol;
+        return {
+          value: tokenSymbol,
+          label: tokenSymbol,
+          renderLabel: () => (
+            <TextWithIcon icon={tokenSymbol} width="24px">
+              {tokenSymbol}
+            </TextWithIcon>
+          ),
+          renderItem: () => (
+            <Item icon={tokenSymbol} symbol={tokenSymbol}>
+              {CHAIN_NAME || chain}
+            </Item>
+          ),
+          ...others,
+        };
+      },
+    );
 
-  return <Select options={options} onChange={onChange} name="token" />;
+    if (!nativeCoin || networkId === chainConfigs.ICON.id) {
+      return options;
+    }
+
+    return options.filter(
+      (option) =>
+        option.id === networkId ||
+        option.id === chainConfigs.ICON.id ||
+        networkId === option.chainId,
+    );
+  };
+
+  return <Select options={getOptions()} onChange={onChange} name="token" />;
 };
 
 export default SelectAsset;

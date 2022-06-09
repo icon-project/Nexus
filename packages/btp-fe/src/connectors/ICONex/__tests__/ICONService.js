@@ -2,8 +2,8 @@ import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { connectedNetWorks, PAIRED_NETWORKS, pairedNetworks } from 'utils/constants';
-import { BSC_NODE, signingActions, getCurrentICONexNetwork } from 'connectors/constants';
+import { signingActions } from 'connectors/constants';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
@@ -17,6 +17,7 @@ jest.mock('store', () => {
         openModal: jest.fn(),
       },
     },
+    getState: jest.fn().mockImplementation(() => ({ account: {} })),
   };
 });
 
@@ -36,7 +37,7 @@ describe('ICONService', () => {
     const tx = txBuilder
       .from(transactions.from)
       .to(transactions.to)
-      .stepLimit(IconConverter.toBigNumber(getCurrentICONexNetwork().stepLimit))
+      .stepLimit(IconConverter.toBigNumber(chainConfigs.ICON?.STEP_LIMIT))
       .nid(IconConverter.toBigNumber(options.nid))
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))
@@ -55,37 +56,23 @@ describe('ICONService', () => {
   });
 
   describe('transfer', () => {
-    test('send native coin on BSC side', () => {
-      const network = connectedNetWorks.bsc;
+    test('send native coin', () => {
       const mock_sendNativeCoin = jest.spyOn(ICONService, 'sendNativeCoin').mockImplementation();
 
-      transfer({}, true, network);
+      transfer({}, true);
 
       expect(mock_sendNativeCoin).toBeCalledTimes(1);
-      expect(mock_sendNativeCoin.mock.calls[0][1]).toBe(BSC_NODE.networkAddress);
       expect(window[signingActions.globalName]).toBe(signingActions.transfer);
     });
 
-    test('send non-native coin on BSC side', () => {
-      localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-BSC']);
-      const mock_depositTokensIntoBSH = jest
-        .spyOn(ICONService, 'depositTokensIntoBSH')
-        .mockImplementation();
-
-      transfer(null, null, connectedNetWorks.bsc, false);
-
-      expect(mock_depositTokensIntoBSH).toBeCalledTimes(1);
-    });
-
-    test('send non-native coin on Moonbeam side', () => {
-      localStorage.setItem(PAIRED_NETWORKS, pairedNetworks['ICON-Moonbeam']);
-      const mock_sendNonNativeCoin = jest
+    test('send token', () => {
+      const mock_setApproval = jest
         .spyOn(ICONService, 'setApproveForSendNonNativeCoin')
         .mockImplementation();
 
-      transfer({}, null, connectedNetWorks.moonbeam, false);
+      transfer(null, null, null, false);
 
-      expect(mock_sendNonNativeCoin).toBeCalledTimes(1);
+      expect(mock_setApproval).toBeCalledTimes(1);
     });
   });
 });

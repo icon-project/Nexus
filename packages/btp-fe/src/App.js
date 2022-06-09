@@ -4,10 +4,13 @@ import { HelmetProvider } from 'react-helmet-async';
 import Routes from './Routes';
 import { addICONexListener } from './connectors/ICONex';
 
+require('connectors/chainConfigs');
+
 addICONexListener();
 
 function App() {
   console.log('--version: ', process.env.REACT_APP_VERSION);
+
   return (
     <HelmetProvider>
       <Routes />

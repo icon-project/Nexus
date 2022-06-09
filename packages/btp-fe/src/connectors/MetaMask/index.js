@@ -3,18 +3,17 @@ import store from 'store';
 import {
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  MOON_BEAM_NODE,
-  BSC_NODE,
-  allowedNetworkIDs,
   signingActions,
+  getCurrentChain,
 } from 'connectors/constants';
-import { ABI } from './abi/ABI';
+import { ABI } from './ABI';
 
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
-import { wallets, nativeTokens } from 'utils/constants';
-import { sendNoneNativeCoinBSC } from 'connectors/MetaMask/services/BSCServices';
-import { sendNoneNativeCoin } from 'connectors/MetaMask/services/MoonbeamServices';
+import { wallets } from 'utils/constants';
+import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
+import { chainList, customzeChain } from 'connectors/chainConfigs';
+import { sendLog } from 'services/btpServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
@@ -28,12 +27,9 @@ class Ethereum {
     this.ethereum = window.ethereum;
     this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
     this.ABI = new ethers.utils.Interface(ABI);
-
-    // Moonbeam
-    this.contract = new ethers.Contract(MOON_BEAM_NODE.BSHCore, ABI, this.provider);
-    // BSC
-    this.contract_BSC = new ethers.Contract(BSC_NODE.BSHCore, ABI, this.provider);
-    this.contractBEP20TKN_BSC = new ethers.Contract(BSC_NODE.BEP20TKN, ABI, this.provider);
+    this.contract = null;
+    this.BEP20Contract = null;
+    this.PROXYContract = null;
   }
 
   get getEthereum() {
@@ -71,7 +67,9 @@ class Ethereum {
   isAllowedNetwork() {
     if (
       this.ethereum.chainId &&
-      !Object.keys(allowedNetworkIDs.metamask).includes(this.ethereum.chainId)
+      !chainList
+        .map((chain) => chain.NETWORK_ADDRESS?.split('.')[0])
+        .includes(this.ethereum.chainId)
     ) {
       modal.openModal({
         desc:
@@ -107,11 +105,13 @@ class Ethereum {
   }
 
   chainChangedListener() {
-    if (this.isMetaMaskConnected()) {
+    try {
       this.getEthereum.on('chainChanged', (chainId) => {
         console.log('Change Network', chainId);
         window.location.reload();
       });
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -125,19 +125,42 @@ class Ethereum {
         const address = toChecksumAddress(accounts[0]);
         localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
         const balance = await this.getProvider.getBalance(address);
-        const currentNetwork = allowedNetworkIDs.metamask[this.getEthereum.chainId];
+        const currentNetwork = chainList.find((chain) =>
+          chain.NETWORK_ADDRESS.startsWith(this.getEthereum.chainId),
+        );
 
+        if (!currentNetwork) throw new Error('not found chain config');
+
+        const { CHAIN_NAME, id, COIN_SYMBOL, BSH_CORE, BEP20, BSH_PROXY } = currentNetwork;
+
+        this.contract = new ethers.Contract(BSH_CORE, ABI, this.provider);
+        if (BEP20 && BSH_PROXY) {
+          this.BEP20Contract = new ethers.Contract(BEP20, ABI, this.provider);
+          this.PROXYContract = new ethers.Contract(BSH_PROXY, ABI, this.provider);
+        }
+
+        customzeChain(id);
         account.setAccountInfo({
           address,
           balance: ethers.utils.formatEther(balance),
           wallet,
-          unit: nativeTokens[currentNetwork].symbol,
-          currentNetwork,
+          symbol: COIN_SYMBOL,
+          currentNetwork: CHAIN_NAME,
+          id,
         });
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async refreshBalance() {
+    const address = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
+    const balance = await this.getProvider.getBalance(address);
+
+    account.setAccountInfo({
+      balance: ethers.utils.formatEther(balance),
+    });
   }
 
   async sendTransaction(txParams) {
@@ -157,16 +180,6 @@ class Ethereum {
         if (result) {
           if (result.status === 1) {
             switch (window[signingActions.globalName]) {
-              case signingActions.deposit:
-                modal.openModal({
-                  icon: 'checkIcon',
-                  desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
-                  button: {
-                    text: 'Transfer',
-                    onClick: () => sendNoneNativeCoinBSC(),
-                  },
-                });
-                break;
               case signingActions.approve:
                 modal.openModal({
                   icon: 'checkIcon',
@@ -179,7 +192,11 @@ class Ethereum {
                 break;
 
               default:
-                this.getEthereumAccounts();
+                this.refreshBalance();
+                sendLog({
+                  txHash,
+                  network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
+                });
 
                 modal.openModal({
                   icon: 'checkIcon',
@@ -218,7 +235,7 @@ class Ethereum {
           icon: 'exclamationPointIcon',
           desc: 'Transaction rejected.',
           button: {
-            text: 'Dissmiss',
+            text: 'Dismiss',
             onClick: () => modal.setDisplay(false),
           },
         });

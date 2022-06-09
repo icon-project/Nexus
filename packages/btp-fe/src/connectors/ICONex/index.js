@@ -5,9 +5,10 @@ import {
   getBalance,
   sendTransaction,
   getTxResult,
-  sendNoneNativeCoinBSC,
   sendNonNativeCoin,
+  transferIRC2,
 } from './ICONServices';
+import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
 
@@ -16,9 +17,10 @@ import {
   TYPES,
   ADDRESS_LOCAL_STORAGE,
   CONNECTED_WALLET_LOCAL_STORAGE,
-  getCurrentICONexNetwork,
   signingActions,
+  getCurrentChain,
 } from 'connectors/constants';
+import { chainConfigs, customzeChain } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
@@ -27,6 +29,18 @@ const eventHandler = async (event) => {
   const address = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
 
   console.info('%cICONex event', 'color: green;', event.detail);
+
+  if (payload.error) {
+    modal.openModal({
+      icon: 'xIcon',
+      desc: payload.error.message,
+      button: {
+        text: 'Try again',
+        onClick: () => modal.setDisplay(false),
+      },
+    });
+    return;
+  }
 
   switch (type) {
     // request for wallet address confirm
@@ -47,13 +61,14 @@ const eventHandler = async (event) => {
       break;
 
     case TYPES.RESPONSE_SIGNING:
+    case TYPES.RESPONSE_JSON_RPC:
       try {
         modal.openModal({
           icon: 'loader',
           desc: 'Please wait a moment.',
         });
 
-        const txHash = await sendTransaction(payload);
+        const txHash = payload.result || (await sendTransaction(payload));
 
         await new Promise((resolve, reject) => {
           const checkTxRs = setInterval(async () => {
@@ -77,24 +92,17 @@ const eventHandler = async (event) => {
                   });
                   break;
 
-                case signingActions.deposit:
-                  modal.openModal({
-                    icon: 'checkIcon',
-                    desc: `You've deposited your tokens successfully! Please click the Transfer button to continue.`,
-                    button: {
-                      text: 'Transfer',
-                      onClick: sendNoneNativeCoinBSC,
-                    },
-                  });
-                  break;
-
                 case signingActions.approve:
+                case signingActions.approveIRC2:
                   modal.openModal({
                     icon: 'checkIcon',
                     desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
                     button: {
                       text: 'Transfer',
-                      onClick: sendNonNativeCoin,
+                      onClick:
+                        window[signingActions.globalName] === signingActions.approve
+                          ? sendNonNativeCoin
+                          : transferIRC2,
                     },
                   });
                   break;
@@ -107,6 +115,11 @@ const eventHandler = async (event) => {
                       text: 'Continue transfer',
                       onClick: () => modal.setDisplay(false),
                     },
+                  });
+
+                  sendLog({
+                    txHash,
+                    network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
                   });
 
                   // latency time fo fetching new balance
@@ -122,6 +135,7 @@ const eventHandler = async (event) => {
               resetTransferStep();
             } catch (err) {
               if (err && /(Pending|Executing)/g.test(err)) return;
+              clearInterval(checkTxRs);
               reject(err);
             }
           }, 2000);
@@ -153,11 +167,12 @@ const eventHandler = async (event) => {
       }
       break;
     case TYPES.CANCEL_SIGNING:
+    case TYPES.CANCEL_JSON_RPC:
       modal.openModal({
         icon: 'exclamationPointIcon',
         desc: 'Transaction rejected.',
         button: {
-          text: 'Dissmiss',
+          text: 'Dismiss',
           onClick: () => modal.setDisplay(false),
         },
       });
@@ -177,12 +192,15 @@ const getAccountInfo = async (address) => {
   try {
     const wallet = localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE);
     const balance = +(await getBalance(address));
+    const id = 'ICON';
+    customzeChain(id);
     await account.setAccountInfo({
       address,
       balance,
       wallet,
-      unit: 'ICX',
-      currentNetwork: getCurrentICONexNetwork().name,
+      symbol: 'ICX',
+      currentNetwork: chainConfigs.ICON?.CHAIN_NAME,
+      id,
     });
   } catch (err) {
     console.log('Err: ', err);
