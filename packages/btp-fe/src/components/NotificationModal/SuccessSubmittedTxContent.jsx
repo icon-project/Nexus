@@ -32,7 +32,7 @@ export const SuccessSubmittedTxContent = () => {
       <Text className="md">Your transaction was submitted successfully.</Text>
       <Link
         className="sm bold"
-        to="/transfer/history"
+        to="/history"
         center
         onClick={() => {
           setDisplay(false);

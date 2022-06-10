@@ -49,6 +49,7 @@ const NavStyled = styled.ul`
 
 const buttonContents = [
   { text: 'Transfer', effect: null },
+  { text: 'History', effect: null },
   // { text: 'Overview', effect: null },
   { text: 'Network', effect: null },
   // { text: 'Governance', effect: null },

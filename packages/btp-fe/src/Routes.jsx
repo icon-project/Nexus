@@ -22,7 +22,7 @@ function Routes() {
           <Switch>
             <Redirect from="/" to="/transfer" exact />
             <Route path="/transfer" exact component={Transfer} />
-            <Route path="/transfer/history" exact component={TransferHistory} />
+            <Route path="/history" exact component={TransferHistory} />
             <Route path="/overview" exact component={Overview} />
             <Route path="/network" exact component={NetworkPage} />
             <Route path="/governance" exact component={Governance} />
