@@ -49,9 +49,9 @@ const NavStyled = styled.ul`
 
 const buttonContents = [
   { text: 'Transfer', effect: null },
-  { text: 'Overview', effect: null },
+  // { text: 'Overview', effect: null },
   { text: 'Network', effect: null },
-  { text: 'Governance', effect: null },
+  // { text: 'Governance', effect: null },
   // { text: 'Auction', effect: null },
 ];
 const Button = ({ text, ...ots }) => {
