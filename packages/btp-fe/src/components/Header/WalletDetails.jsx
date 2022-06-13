@@ -200,7 +200,7 @@ export const WalletDetails = ({
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const defaultOption = selectedRefundToken[0]?.label;
-    if (['ICX', 'ETH'].includes(defaultOption)) return; // TODO: handle ICX and ETH token
+    if (['ICX'].includes(defaultOption)) return; // TODO: handle ICX
 
     getService()
       ?.getBalanceOf({
