@@ -22,12 +22,13 @@ const sendToSlack = async (data, logFileName) => {
       initial_comment: '',
       file: createReadStream(path.resolve(__dirname, logFileName))
     });
-    // 3. remove log file
-    unlinkSync(`${__dirname}/${logFileName}`);
     return true;
   } catch (error) {
     logger.error(error);
     return false;
+  } finally {
+    // 3. remove log file
+    unlinkSync(`${__dirname}/${logFileName}`);
   }
 };
 
