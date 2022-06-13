@@ -180,23 +180,7 @@ export const WalletDetails = ({
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
   // const ICONChain = chainConfigs.ICON;
 
-  // const refundedTokens = [
-  //   ...chainList
-  //     .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
-  //     .filter((item) => item.label !== symbol),
-  // ];
-
-  // if (networkID === ICONChain?.id) {
-  //   chainList.forEach((chain) => {
-  //     if (chain.id !== ICONChain?.id) {
-  //       const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
-  //       refundedTokens.unshift({ label: value, value });
-  //     }
-  //   });
-  // } else {
-  //   refundedTokens.unshift({ label: symbol, value: symbol });
-  // }
-
+  // This useEffect handles query refundable balance
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const defaultOption = selectedRefundToken[0]?.label;
