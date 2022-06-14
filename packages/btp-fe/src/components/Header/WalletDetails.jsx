@@ -7,7 +7,7 @@ import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 import { getService } from 'services/transfer';
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, chainConfigs } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -162,7 +162,7 @@ export const WalletDetails = ({
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
-  // networkID,
+  networkID,
 }) => {
   const tokens = [
     { label: symbol, value: symbol },
@@ -173,34 +173,53 @@ export const WalletDetails = ({
   ];
 
   const [selectedToken, setSelectedToken] = useState(symbol);
-  const [selectedRefundToken, setSelectedRefundToken] = useState([tokens[0]]);
+  const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
   const [refundedTokens, setRefundedTokens] = useState([]);
   const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
-  // const ICONChain = chainConfigs.ICON;
+  const ICONChain = chainConfigs.ICON;
 
   // This useEffect handles query refundable balance
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    const defaultOption = selectedRefundToken[0]?.label;
-    if (['ICX'].includes(defaultOption)) return; // TODO: handle ICX
-
-    getService()
-      ?.getBalanceOf({
-        address,
-        refundable: true,
-        symbol: defaultOption,
-      })
-      .then((refund) => {
-        setRefund(refund);
-        setRefundedTokens({ label: defaultOption, value: refund });
+    if (networkID === ICONChain?.id && selectedToken === ICONChain?.COIN_SYMBOL) {
+      chainList.forEach((chain) => {
+        if (chain.id !== ICONChain?.id) {
+          const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
+          getService()
+            ?.getBalanceOf({
+              address,
+              refundable: true,
+              symbol: value,
+            })
+            .then((refund) => {
+              if (refund > 0) {
+                setRefundedTokens((state) => [...state, { label: value, value }]);
+              }
+            });
+        }
       });
-  }, [selectedRefundToken]);
+    } else {
+      getService()
+        ?.getBalanceOf({
+          address,
+          refundable: true,
+          symbol: selectedRefundToken,
+        })
+        .then((refund) => {
+          if (refund > 0) {
+            setRefund(refund);
+            setRefundedTokens([{ label: selectedRefundToken, value: selectedRefundToken }]);
+          }
+        });
+    }
+  }, [selectedToken]);
 
   const onTokenChange = async (evt) => {
+    setRefundedTokens([]);
     setSelectedToken(evt.target.value);
-    setSelectedRefundToken([{ label: evt.target.value }]);
+    setSelectedRefundToken(evt.target.value);
   };
 
   const onChangeRefundSelect = async (e) => {
@@ -227,7 +246,7 @@ export const WalletDetails = ({
       </Header>
 
       <Text className="md dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
-      {refund > 0 && (
+      {refundedTokens.length > 0 && (
         <>
           <Text className="sm sub-title">Refunds</Text>
           <div className="box-container">
