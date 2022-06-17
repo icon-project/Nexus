@@ -11,7 +11,7 @@ const logger = createLogger();
 class Web3RelayHandler {
   constructor(config, actionMap, web3) {
     this.networkName = config.name;
-    this.bmcMgmtAddress = config.bmcMgmtAddress;
+    this.bmcManagementAddress = config.bmcManagementAddress;
     this.web3 = web3;
     this.actionMap = actionMap;
   }
@@ -95,7 +95,7 @@ class Web3RelayHandler {
   }
 
   async run(tx, block) {
-    if (this.bmcMgmtAddress !== tx.to.toLowerCase()) { return false; }
+    if (this.bmcManagementAddress !== tx.to) { return false; }
 
     let actionInput = this.getAddRelayAction(tx.input);
 

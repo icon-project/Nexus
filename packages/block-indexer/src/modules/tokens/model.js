@@ -10,9 +10,9 @@ const registeredTokens = new Map();
 async function getRegisteredTokens() {
   if (0 === registeredTokens.size) {
     const tokens = await findAllTokens();
-
-    for (const token of tokens)
+    for (const token of tokens) {
       registeredTokens.set(token.contract_address.toLowerCase(), token);
+    }
   }
 
   return registeredTokens;

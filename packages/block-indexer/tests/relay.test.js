@@ -1,9 +1,12 @@
 /* eslint-disable no-undef */
 'use strict';
-
+const Web3 = require('web3');
+const { getBscEventMap } = require('../src/modules/common/events');
+const { getBscActionMap } = require('../src/modules/common/actions');
+const { Web3BlockIndexer } = require('../src/modules/web3-indexer');
 const { Pool } = require('pg');
 const iconRelayHandler = require('../src/modules/relays/icon');
-const moonbeamRelayHandler = require('../src/modules/relays/moonbeam');
+const bscBshAbi = require('../src/modules/web3-indexer/abi/bsc/BSHPeriphery.json');
 
 const addIconRelayTx = {
   timestamp: 1629099103257950,
@@ -208,7 +211,21 @@ test('should add Moonbeam relay', async () => {
   pool.query.mockResolvedValueOnce({ rows: [{ address: relays[0].address }] });
   pool.query.mockResolvedValueOnce({ rows: [{}] });
 
-  await moonbeamRelayHandler.handleRelayActions(addMoonbeamRelayBlock.transactions[0], addMoonbeamRelayBlock);
+  const web3 = new Web3(process.env.MOONBEAM_API_URL);
+  const eventMap = getBscEventMap(web3);
+  const actionMap = getBscActionMap(web3);
+  const indexer = new Web3BlockIndexer({
+    networkName: 'MOONBEAM',
+    blockHeight: Number(process.env.MOONBEAM_BLOCK_HEIGHT),
+    networkId: process.env.MOONBEAM_NETWORK_ID,
+    endpointUrl: process.env.MOONBEAM_API_URL,
+    bshAddress: process.env.MOONBEAM_BSH_CORE_ADDRESS,
+    bmcAddress: process.env.MOONBEAM_BMC_ADDRESS,
+    bmcManagementAddress: process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS,
+    bshAbi: bscBshAbi
+  }, eventMap, actionMap, web3);
+
+  await indexer.relayHandler.run(addMoonbeamRelayBlock.transactions[0], addMoonbeamRelayBlock);
 
   expect(pool.query).toBeCalledTimes(3);
   expect(pool.query).nthCalledWith(1,
@@ -231,7 +248,21 @@ test('should remove Moonbeam relay', async () => {
   pool.query.mockResolvedValueOnce({ rows: [] });
   pool.query.mockResolvedValueOnce({ rows: [{ address: relay.address }] });
 
-  await moonbeamRelayHandler.handleRelayActions(removeMoonbeamRelayBlock.transactions[0], removeMoonbeamRelayBlock);
+  const web3 = new Web3(process.env.MOONBEAM_API_URL);
+  const eventMap = getBscEventMap(web3);
+  const actionMap = getBscActionMap(web3);
+  const indexer = new Web3BlockIndexer({
+    networkName: 'MOONBEAM',
+    blockHeight: Number(process.env.MOONBEAM_BLOCK_HEIGHT),
+    networkId: process.env.MOONBEAM_NETWORK_ID,
+    endpointUrl: process.env.MOONBEAM_API_URL,
+    bshAddress: process.env.MOONBEAM_BSH_CORE_ADDRESS,
+    bmcAddress: process.env.MOONBEAM_BMC_ADDRESS,
+    bmcManagementAddress: process.env.MOONBEAM_BMC_MANAGEMENT_ADDRESS,
+    bshAbi: bscBshAbi
+  }, eventMap, actionMap, web3);
+
+  await indexer.relayHandler.run(removeMoonbeamRelayBlock.transactions[0], removeMoonbeamRelayBlock);
 
   expect(pool.query).toBeCalledTimes(1);
   expect(pool.query).toBeCalledWith('UPDATE relays SET updated_at = NOW(), server_status = $2, unregistered_time = $3  WHERE address = $1',
