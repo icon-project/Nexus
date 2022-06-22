@@ -156,7 +156,7 @@ export const TransferCard = ({
 
         <div className="button-section">
           {isConnected ? (
-            <PrimaryButton width={416} height={64} onClick={onNext} type="button" disabled>
+            <PrimaryButton width={416} height={64} onClick={onNext} type="button">
               Next
             </PrimaryButton>
           ) : (
