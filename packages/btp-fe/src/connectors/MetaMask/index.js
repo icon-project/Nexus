@@ -12,7 +12,7 @@ import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
 import { wallets } from 'utils/constants';
 import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
-import { chainList, customzeChain } from 'connectors/chainConfigs';
+import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs';
 import { sendLog } from 'services/btpServices';
 
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
@@ -68,7 +68,9 @@ class Ethereum {
     if (
       this.ethereum.chainId &&
       !chainList
-        .map((chain) => chain.NETWORK_ADDRESS?.split('.')[0])
+        .map((chain) =>
+          chain.id === chainConfigs.ICON.id ? '' : chain.NETWORK_ADDRESS?.split('.')[0],
+        )
         .includes(this.ethereum.chainId)
     ) {
       modal.openModal({
