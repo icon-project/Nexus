@@ -167,6 +167,7 @@ const Header = () => {
   );
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
+  const [showConnector, setShowConnector] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
@@ -199,7 +200,7 @@ const Header = () => {
   useEffect(() => {
     if (address) {
       setLoading(false);
-      setShowDetail(true);
+      setShowConnector(false);
     }
   }, [address]);
 
@@ -208,6 +209,7 @@ const Header = () => {
   const toggleModal = () => {
     setShowModal((prev) => !prev);
     setShowDetail(false);
+    setShowConnector(true);
   };
 
   const handleConnect = async (e) => {
@@ -271,51 +273,60 @@ const Header = () => {
               display
               setDisplay={setShowModal}
             />
-          ) : showDetail ? (
-            <Modal display setDisplay={setShowModal} title={wallet && mockWallets[wallet].title}>
-              <WalletDetails
-                networkName={currentNetwork}
-                symbol={symbol}
-                address={address}
-                shortedAddress={shortedAddress}
-                onDisconnectWallet={onDisconnectWallet}
-                onSwitchWallet={onSwitchWallet}
-                networkID={id}
-              />
-            </Modal>
           ) : (
-            <Modal
-              title="Connect a wallet"
-              button={{ onClick: handleConnect, text: 'Next' }}
-              display
-              setDisplay={setShowModal}
-            >
-              <div className="connect-a-wallet-card">
-                <WalletSelector
-                  type={wallets.metamask}
-                  wallet={mockWallets}
-                  active={selectedWallet == wallets.metamask}
-                  onClick={() => handleSelectWallet(wallets.metamask)}
-                  isInstalled={EthereumInstance.isMetaMaskInstalled()}
-                />
-                <WalletSelector
-                  type={wallets.iconex}
-                  wallet={mockWallets}
-                  active={selectedWallet == wallets.iconex}
-                  onClick={() => handleSelectWallet(wallets.iconex)}
-                  isCheckingInstalled={checkingICONexInstalled}
-                  isInstalled={isICONexInstalled()}
-                />
-                <WalletSelector
-                  type={wallets.hana}
-                  wallet={mockWallets}
-                  active={selectedWallet == wallets.hana}
-                  onClick={() => handleSelectWallet(wallets.hana)}
-                  isCheckingInstalled={checkingICONexInstalled}
-                  isInstalled={isICONexInstalled()}
-                />
-              </div>
-            </Modal>
+            <>
+              {showDetail && (
+                <Modal
+                  display
+                  setDisplay={setShowModal}
+                  title={wallet && mockWallets[wallet].title}
+                >
+                  <WalletDetails
+                    networkName={currentNetwork}
+                    symbol={symbol}
+                    address={address}
+                    shortedAddress={shortedAddress}
+                    onDisconnectWallet={onDisconnectWallet}
+                    onSwitchWallet={onSwitchWallet}
+                    networkID={id}
+                  />
+                </Modal>
+              )}
+              {showConnector && (
+                <Modal
+                  title="Connect a wallet"
+                  button={{ onClick: handleConnect, text: 'Next' }}
+                  display
+                  setDisplay={setShowModal}
+                >
+                  <div className="connect-a-wallet-card">
+                    <WalletSelector
+                      type={wallets.metamask}
+                      wallet={mockWallets}
+                      active={selectedWallet == wallets.metamask}
+                      onClick={() => handleSelectWallet(wallets.metamask)}
+                      isInstalled={EthereumInstance.isMetaMaskInstalled()}
+                    />
+                    <WalletSelector
+                      type={wallets.iconex}
+                      wallet={mockWallets}
+                      active={selectedWallet == wallets.iconex}
+                      onClick={() => handleSelectWallet(wallets.iconex)}
+                      isCheckingInstalled={checkingICONexInstalled}
+                      isInstalled={isICONexInstalled()}
+                    />
+                    <WalletSelector
+                      type={wallets.hana}
+                      wallet={mockWallets}
+                      active={selectedWallet == wallets.hana}
+                      onClick={() => handleSelectWallet(wallets.hana)}
+                      isCheckingInstalled={checkingICONexInstalled}
+                      isInstalled={isICONexInstalled()}
+                    />
+                  </div>
+                </Modal>
+              )}
+            </>
           )}
         </>
       )}
