@@ -16,6 +16,7 @@ export const useTokenBalance = (currentSymbol, step) => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (currentNetwork && currentSymbol) {
+      setToken({ balance: 0, symbol: currentSymbol });
       const isNativeCoin = currentSymbol === symbol;
 
       if (isNativeCoin) {
