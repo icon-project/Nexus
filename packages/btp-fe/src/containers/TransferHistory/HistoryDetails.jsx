@@ -17,6 +17,7 @@ import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 const StyledHistoryDetails = styled.div`
   width: 100%;
@@ -91,13 +92,18 @@ const getStatus = (statusCode) => {
     text,
   };
 };
-const CopyAddress = ({ text }) => {
+const CopyAddress = ({ text, networkNameSrc }) => {
   return (
     <CopyToClipboard text={text}>
-      <span className="copy-address">
+      <a
+        href={chainConfigs[networkNameSrc]?.EXPLORE_URL + text}
+        className="copy-address"
+        target="_blank"
+        rel="noreferrer"
+      >
         {hashShortener(text)}
         <Icon icon="copy" color="#878491" width="18.33px" />
-      </span>
+      </a>
     </CopyToClipboard>
   );
 };
@@ -127,7 +133,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Transaction hash</Text>
               <Text className="md">
-                <CopyAddress text={details.txHash} />
+                <CopyAddress text={details.txHash} networkNameSrc={details.networkNameSrc} />
               </Text>
             </div>
 
