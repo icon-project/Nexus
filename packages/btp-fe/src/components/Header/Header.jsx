@@ -254,6 +254,8 @@ const Header = () => {
   const onSwitchWallet = () => {
     resetTransferStep();
     setShowDetail(false);
+    setShowModal(true);
+    setShowConnector(true);
   };
 
   const onAvatarClicked = () => {
