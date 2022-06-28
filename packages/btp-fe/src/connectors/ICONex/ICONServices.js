@@ -15,7 +15,7 @@ import {
 } from 'connectors/constants';
 import { chainConfigs, getTokenList } from 'connectors/chainConfigs';
 
-import { requestICONexSigning, requestHanaSigning } from './events';
+import { requestSigning } from './events';
 import Request, {
   convertToICX,
   convertToLoopUnit,
@@ -24,7 +24,6 @@ import Request, {
 } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { wallets } from 'utils/constants';
 export { transfer } from './transfer';
 
 const { modal } = store.dispatch;
@@ -248,21 +247,11 @@ export const signTx = async (transaction = {}, options = {}) => {
   }
 
   tx = tx.build();
-
   const rawTx = IconConverter.toRawTransaction(tx);
-
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
-  if (store.getState().account.wallet === wallets.hana) {
-    requestHanaSigning(rawTx);
-  } else {
-    requestICONexSigning({
-      from,
-      hash: transactionHash,
-    });
-  }
-
+  requestSigning(rawTx);
   return transactionHash;
 };
 

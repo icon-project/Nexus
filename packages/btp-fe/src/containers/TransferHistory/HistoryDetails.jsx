@@ -92,21 +92,27 @@ const getStatus = (statusCode) => {
     text,
   };
 };
-const CopyAddress = ({ text, networkNameSrc }) => {
+
+const CopyAddress = ({ text, href }) => {
   return (
     <CopyToClipboard text={text}>
-      <a
-        href={chainConfigs[networkNameSrc]?.EXPLORE_URL + text}
-        className="copy-address"
-        target="_blank"
-        rel="noreferrer"
-      >
+      <a href={href} className="copy-address" target="_blank" rel="noreferrer">
         {hashShortener(text)}
         <Icon icon="copy" color="#878491" width="18.33px" />
       </a>
     </CopyToClipboard>
   );
 };
+
+const exploreURL = {
+  ICON: {
+    transaction: 'transaction/',
+  },
+  HARMONY: {
+    transaction: 'tx/',
+  },
+};
+
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
@@ -133,7 +139,14 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Transaction hash</Text>
               <Text className="md">
-                <CopyAddress text={details.txHash} networkNameSrc={details.networkNameSrc} />
+                <CopyAddress
+                  text={details.txHash}
+                  href={
+                    chainConfigs[details.networkNameSrc]?.EXPLORE_URL +
+                    exploreURL[details.networkNameSrc]?.transaction +
+                    details.txHash
+                  }
+                />
               </Text>
             </div>
 
@@ -163,7 +176,14 @@ export const HistoryDetails = ({ txHash, onClose }) => {
               <Text className="md">From</Text>
               <Text className="md">
                 <span className="hide-in-mobile">({details.networkNameSrc || 'Unknown'}) </span>
-                <CopyAddress text={details.fromAddress} />
+                <CopyAddress
+                  text={details.fromAddress}
+                  href={
+                    chainConfigs[details.networkNameSrc]?.EXPLORE_URL +
+                    'address/' +
+                    details.fromAddress
+                  }
+                />
               </Text>
             </div>
 
@@ -171,7 +191,14 @@ export const HistoryDetails = ({ txHash, onClose }) => {
               <Text className="md">To</Text>
               <Text className="md">
                 <span className="hide-in-mobile">({details.networkNameDst || 'Unknown'}) </span>
-                <CopyAddress text={details.toAddress} />
+                <CopyAddress
+                  text={details.toAddress}
+                  href={
+                    chainConfigs[details.networkNameDst]?.EXPLORE_URL +
+                    'address/' +
+                    details.toAddress.split('/')[3]
+                  }
+                />
               </Text>
             </div>
 

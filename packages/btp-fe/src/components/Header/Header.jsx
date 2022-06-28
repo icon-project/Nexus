@@ -145,12 +145,12 @@ const mockWallets = {
   },
   [wallets.iconex]: {
     id: 'iconex',
-    title: 'ICONex Wallet',
+    title: 'ICON Wallet',
     icon: ICONex,
   },
   [wallets.hana]: {
     id: 'hana',
-    title: 'Hana Wallet',
+    title: 'ICON Wallet',
     icon: Hana,
   },
   [wallets.near]: {
@@ -314,14 +314,6 @@ const Header = () => {
                       wallet={mockWallets}
                       active={selectedWallet == wallets.iconex}
                       onClick={() => handleSelectWallet(wallets.iconex)}
-                      isCheckingInstalled={checkingICONexInstalled}
-                      isInstalled={isICONexInstalled()}
-                    />
-                    <WalletSelector
-                      type={wallets.hana}
-                      wallet={mockWallets}
-                      active={selectedWallet == wallets.hana}
-                      onClick={() => handleSelectWallet(wallets.hana)}
                       isCheckingInstalled={checkingICONexInstalled}
                       isInstalled={isICONexInstalled()}
                     />
