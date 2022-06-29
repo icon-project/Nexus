@@ -145,6 +145,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   } = details || {};
 
   const tokenPrice = useTokenToUsd(tokenName, 1);
+  const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -214,8 +215,11 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Network fee</Text>
               <Text className="md">
-                {networkFee} {chainConfigs[networkNameSrc]?.COIN_SYMBOL} (~ $
-                {toSeparatedNumberString(tokenPrice * networkFee)})
+                {networkFee} {nativeToken} (~ $
+                {toSeparatedNumberString(
+                  (tokenName === nativeToken ? tokenPrice : nativeTokenPrice) * networkFee,
+                )}
+                )
               </Text>
             </div>
 
