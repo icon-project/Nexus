@@ -116,6 +116,7 @@ const exploreURL = {
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
+
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
@@ -128,7 +129,23 @@ export const HistoryDetails = ({ txHash, onClose }) => {
     };
     getTransactionDetails();
   }, [txHash]);
-  const tokenPrice = useTokenToUsd(details.tokenName, 1);
+
+  const {
+    tokenName,
+    networkNameSrc,
+    value,
+    status,
+    blockTime,
+    fromAddress,
+    networkNameDst,
+    toAddress,
+    networkFee,
+    bptFee,
+    nativeToken,
+  } = details || {};
+
+  const tokenPrice = useTokenToUsd(tokenName, 1);
+  const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -140,11 +157,11 @@ export const HistoryDetails = ({ txHash, onClose }) => {
               <Text className="md">Transaction hash</Text>
               <Text className="md">
                 <CopyAddress
-                  text={details.txHash}
+                  text={txHash}
                   href={
-                    chainConfigs[details.networkNameSrc]?.EXPLORE_URL +
-                    exploreURL[details.networkNameSrc]?.transaction +
-                    details.txHash
+                    chainConfigs[networkNameSrc]?.EXPLORE_URL +
+                    exploreURL[networkNameSrc]?.transaction +
+                    txHash
                   }
                 />
               </Text>
@@ -153,21 +170,20 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Amount</Text>
               <Text className="md">
-                {details.value} {details.tokenName} (~ $
-                {toSeparatedNumberString(tokenPrice * details.value)})
+                {value} {tokenName} (~ ${toSeparatedNumberString(tokenPrice * value)})
               </Text>
             </div>
 
             <div className="content">
               <Text className="md">Status</Text>
-              <Tag color={getStatus(details.status).color}>{getStatus(details.status).text}</Tag>
+              <Tag color={getStatus(status).color}>{getStatus(status).text}</Tag>
             </div>
             <div className="content">
               <Text className="md">Time</Text>
               <Text className="md">
-                {dayjs(details.blockTime).fromNow()}{' '}
+                {dayjs(blockTime).fromNow()}{' '}
                 <span className="hide-in-mobile">
-                  ({dayjs(details.blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
+                  ({dayjs(blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
                 </span>
               </Text>
             </div>
@@ -175,14 +191,10 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">From</Text>
               <Text className="md">
-                <span className="hide-in-mobile">({details.networkNameSrc || 'Unknown'}) </span>
+                <span className="hide-in-mobile">({networkNameSrc || 'Unknown'}) </span>
                 <CopyAddress
-                  text={details.fromAddress}
-                  href={
-                    chainConfigs[details.networkNameSrc]?.EXPLORE_URL +
-                    'address/' +
-                    details.fromAddress
-                  }
+                  text={fromAddress}
+                  href={chainConfigs[networkNameSrc]?.EXPLORE_URL + 'address/' + fromAddress}
                 />
               </Text>
             </div>
@@ -190,13 +202,11 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">To</Text>
               <Text className="md">
-                <span className="hide-in-mobile">({details.networkNameDst || 'Unknown'}) </span>
+                <span className="hide-in-mobile">({networkNameDst || 'Unknown'}) </span>
                 <CopyAddress
-                  text={details.toAddress}
+                  text={toAddress}
                   href={
-                    chainConfigs[details.networkNameDst]?.EXPLORE_URL +
-                    'address/' +
-                    details.toAddress.split('/')[3]
+                    chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddress.split('/')[3]
                   }
                 />
               </Text>
@@ -205,15 +215,18 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Network fee</Text>
               <Text className="md">
-                {details.networkFee} {details.tokenName} (~ $
-                {toSeparatedNumberString(tokenPrice * details.networkFee)})
+                {networkFee} {nativeToken} (~ $
+                {toSeparatedNumberString(
+                  (tokenName === nativeToken ? tokenPrice : nativeTokenPrice) * networkFee,
+                )}
+                )
               </Text>
             </div>
 
             <div className="content btp-fee">
               <Text className="md">BTP fee</Text>
               <Text className="md">
-                {details.bptFee} {details.nativeToken}
+                {bptFee} {nativeToken}
               </Text>
             </div>
           </div>
