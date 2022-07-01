@@ -25,14 +25,14 @@ import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
 import Hana from 'assets/images/hana-wallet.png';
 import NEAR from 'assets/images/near-icon.svg';
-// import logo from 'assets/images/logo-nexus-white.png';
+import logo from 'assets/images/logo-nexus-white.png';
 
 const { darkBG, grayText, grayLine } = colors;
 
 const StyledHeader = styled.header`
   height: 80px;
   width: 100%;
-  padding: 0 160px 0 40.5px;
+  padding: 0 40.5px;
   color: ${grayText};
   background-color: ${darkBG};
   border-bottom: 1px solid ${grayLine};
@@ -133,9 +133,26 @@ const StyledHeader = styled.header`
   `}
 `;
 
-// const Logo = styled.img`
-//   width: 42.65px;
-// `;
+const Logo = styled.img`
+  width: 42.65px;
+  margin-right: 5px;
+`;
+
+const BetaText = styled.div`
+  margin-right: 35px;
+  display: flex;
+  align-items: flex-end;
+
+  > .subtitle-text {
+    font-weight: bold;
+    margin-right: 3px;
+  }
+
+  .subtitle-text,
+  .plain-text {
+    margin-bottom: -6px;
+  }
+`;
 
 const mockWallets = {
   [wallets.metamask]: {
@@ -324,7 +341,12 @@ const Header = () => {
           )}
         </>
       )}
-      {/* <Logo src={logo} alt="btp logo" /> */}
+      <BetaText>
+        <Logo src={logo} alt="btp logo" />
+
+        <SubTitle>(BETA)</SubTitle>
+        <Text>Powered by ICON Bridge</Text>
+      </BetaText>
 
       <HamburgerButton
         className={`menu-icon ${showMenu && 'active'}`}

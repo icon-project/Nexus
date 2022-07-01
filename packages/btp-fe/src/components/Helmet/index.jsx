@@ -5,7 +5,7 @@ import { Helmet as ReactHelmet } from 'react-helmet-async';
 export const Helmet = memo(({ title, children }) => {
   return (
     <ReactHelmet>
-      <title>BTP - {title}</title>
+      <title>Nexus - {title}</title>
       {children}
     </ReactHelmet>
   );

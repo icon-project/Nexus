@@ -29,7 +29,9 @@ export const SuccessSubmittedTxContent = () => {
   }));
   return (
     <Wrapper>
-      <Text className="md">Your transaction was submitted successfully.</Text>
+      <Text className="md">
+        Nexus is in Beta. Please use at your own risk. Click here for full Terms of Use.
+      </Text>
       <Link
         className="sm bold"
         to="/history"
