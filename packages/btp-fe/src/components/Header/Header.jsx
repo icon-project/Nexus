@@ -32,7 +32,7 @@ const { darkBG, grayText, grayLine } = colors;
 const StyledHeader = styled.header`
   height: 80px;
   width: 100%;
-  padding: 0 160px 0 40.5px;
+  padding: 0 40.5px;
   color: ${grayText};
   background-color: ${darkBG};
   border-bottom: 1px solid ${grayLine};
@@ -141,10 +141,16 @@ const Logo = styled.img`
 const BetaText = styled.div`
   margin-right: 100px;
   display: flex;
+  align-items: flex-end;
 
   > .subtitle-text {
     font-weight: bold;
     margin-right: 3px;
+  }
+
+  .subtitle-text,
+  .plain-text {
+    margin-bottom: -6px;
   }
 `;
 
@@ -335,8 +341,9 @@ const Header = () => {
           )}
         </>
       )}
-      <Logo src={logo} alt="btp logo" />
       <BetaText>
+        <Logo src={logo} alt="btp logo" />
+
         <SubTitle>(BETA)</SubTitle>
         <Text>Powered by ICON Bridge</Text>
       </BetaText>
