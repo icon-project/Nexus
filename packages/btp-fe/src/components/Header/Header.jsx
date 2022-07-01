@@ -139,7 +139,7 @@ const Logo = styled.img`
 `;
 
 const BetaText = styled.div`
-  margin-right: 100px;
+  margin-right: 35px;
   display: flex;
   align-items: flex-end;
 
