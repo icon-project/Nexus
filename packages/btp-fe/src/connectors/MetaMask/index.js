@@ -177,7 +177,7 @@ class Ethereum {
 
       const checkTxRs = setInterval(async () => {
         if (txInPoolIntervalTrigger) {
-          txInPoolIntervalTrigger = txInPoolData;
+          txInPoolData = txInPoolIntervalTrigger;
         }
 
         if (!txInPoolIntervalTrigger && !mintedTx && !replacementTx) {
