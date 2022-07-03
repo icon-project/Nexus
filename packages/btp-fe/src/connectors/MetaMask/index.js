@@ -5,7 +5,7 @@ import { ABI } from './ABI';
 
 import { toChecksumAddress } from './utils';
 import { findReplacementTx } from './findReplacementTx';
-import { handleFailedTx, handleSuccessTx } from './handleNotification';
+import { handleFailedTx, handleSuccessTx, handleError } from './handleNotification';
 import { wallets } from 'utils/constants';
 import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs';
 
@@ -172,9 +172,10 @@ class Ethereum {
       let txInPoolData = null;
 
       const safeReorgHeight = (await this.getProvider.getBlockNumber()) - 20;
-      let mintedTx = null;
+      let minedTx = null;
       let replacementTx = null;
 
+      // For checking replacement tx by speeding up or cancelling tx from MetaMask
       const checkTxRs = setInterval(async () => {
         console.log(
           '🚀 ~ file: index.js ~ line 182 ~ Ethereum ~ checkTxRs ~ txInPoolIntervalTrigger',
@@ -190,7 +191,7 @@ class Ethereum {
           txInPoolData = txInPoolIntervalTrigger;
         }
 
-        if (!txInPoolIntervalTrigger && !mintedTx && !replacementTx) {
+        if (!txInPoolIntervalTrigger && !minedTx && !replacementTx) {
           if (!txInPoolData) {
             console.error('No current transaction information.');
             clearInterval(checkTxRs);
@@ -220,8 +221,8 @@ class Ethereum {
 
       // Emitted when the transaction has been mined
       this.provider.once(txHash, (transaction) => {
-        mintedTx = transaction;
         clearInterval(checkTxRs);
+        minedTx = transaction;
         if (transaction.status === 1) {
           handleSuccessTx(txHash);
         } else {
@@ -229,26 +230,7 @@ class Ethereum {
         }
       });
     } catch (error) {
-      if (error.code === 4001) {
-        modal.openModal({
-          icon: 'exclamationPointIcon',
-          desc: 'Transaction rejected.',
-          button: {
-            text: 'Dismiss',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
-        return;
-      } else {
-        modal.openModal({
-          icon: 'xIcon',
-          desc: error.message,
-          button: {
-            text: 'Back to transfer',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
-      }
+      handleError(error);
     }
   }
 }

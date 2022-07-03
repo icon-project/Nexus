@@ -56,4 +56,27 @@ const handleFailedTx = (message) => {
   });
 };
 
-export { handleFailedTx, handleSuccessTx };
+const handleError = (error) => {
+  if (error.code === 4001) {
+    modal.openModal({
+      icon: 'exclamationPointIcon',
+      desc: 'Transaction rejected.',
+      button: {
+        text: 'Dismiss',
+        onClick: () => modal.setDisplay(false),
+      },
+    });
+    return;
+  } else {
+    modal.openModal({
+      icon: 'xIcon',
+      desc: error.message,
+      button: {
+        text: 'Back to transfer',
+        onClick: () => modal.setDisplay(false),
+      },
+    });
+  }
+};
+
+export { handleFailedTx, handleSuccessTx, handleError };
