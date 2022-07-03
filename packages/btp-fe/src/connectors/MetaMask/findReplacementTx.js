@@ -5,10 +5,6 @@ import { ethers } from 'ethers';
 const failedMessage = 'Transaction failed';
 export async function getTransactionByNonce(provider, startSearch, from, nonce) {
   const currentNonce = (await provider.getTransactionCount(from, 'latest')) - 1;
-  console.log(
-    '🚀 ~ file: findReplacementTx.js ~ line 5 ~ getTransactionByNonce ~ currentNonce',
-    currentNonce,
-  );
 
   // Transaction still pending
   if (currentNonce < nonce) return null;
@@ -46,10 +42,7 @@ export async function getTransactionByNonce(provider, startSearch, from, nonce) 
 
 export async function findReplacementTx(provider, startSearch, tx, event) {
   const transaction = await getTransactionByNonce(provider, startSearch, tx.from, tx.nonce);
-  console.log(
-    '🚀 ~ file: findReplacementTx.js ~ line 41 ~ findReplacementTx ~ transaction',
-    transaction,
-  );
+  
   // Transaction still pending
   if (!transaction) return null;
 

@@ -177,16 +177,6 @@ class Ethereum {
 
       // For checking replacement tx by speeding up or cancelling tx from MetaMask
       const checkTxRs = setInterval(async () => {
-        console.log(
-          '🚀 ~ file: index.js ~ line 182 ~ Ethereum ~ checkTxRs ~ txInPoolIntervalTrigger',
-          txInPoolIntervalTrigger,
-        );
-
-        console.log(
-          '🚀 ~ file: index.js ~ line 177 ~ Ethereum ~ sendTransaction ~ replacementTx',
-          replacementTx,
-        );
-
         if (txInPoolIntervalTrigger) {
           txInPoolData = txInPoolIntervalTrigger;
         }
@@ -205,7 +195,6 @@ class Ethereum {
               data: txInPoolData.data,
             });
           } catch (error) {
-            console.log('🚀 ~ file: index.js ~ line 207 ~ Ethereum ~ checkTxRs ~ error', error);
             clearInterval(checkTxRs);
             handleFailedTx(error?.message);
           }
@@ -217,7 +206,7 @@ class Ethereum {
           clearInterval(checkTxRs);
           handleSuccessTx(replacementTx.hash);
         }
-      }, 4000);
+      }, 3000);
 
       // Emitted when the transaction has been mined
       this.provider.once(txHash, (transaction) => {
