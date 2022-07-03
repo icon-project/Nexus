@@ -14,7 +14,7 @@ function App() {
   console.log('--version: ', process.env.REACT_APP_VERSION);
 
   store.dispatch.modal.openModal({
-    children: <BetaNotification />,
+    children: <BetaNotification setDisplay={store.dispatch.modal.setDisplay} />,
     button: {
       text: 'Confirm',
       onClick: () => store.dispatch.modal.setDisplay(false),

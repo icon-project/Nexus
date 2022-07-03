@@ -71,6 +71,8 @@ export const transfer = async (tx, sendNativeCoin, token) => {
 
   let data = null;
   if (sendNativeCoin) {
+    window[signingActions.globalName] = signingActions.transfer;
+
     data = EthereumInstance.ABI.encodeFunctionData(
       transferNativeCoin.newName || 'transferNativeCoin',
       transferNativeCoin.params
