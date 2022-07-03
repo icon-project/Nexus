@@ -45,10 +45,10 @@ const handleSuccessTx = (txHash) => {
   }
 };
 
-const handleFailedTx = () => {
+const handleFailedTx = (message) => {
   modal.openModal({
     icon: 'xIcon',
-    desc: 'Transaction failed',
+    desc: message || 'Transaction failed',
     button: {
       text: 'Back to transfer',
       onClick: () => modal.setDisplay(false),

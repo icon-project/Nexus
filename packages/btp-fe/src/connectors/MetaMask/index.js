@@ -204,8 +204,9 @@ class Ethereum {
               data: txInPoolData.data,
             });
           } catch (error) {
+            console.log('🚀 ~ file: index.js ~ line 207 ~ Ethereum ~ checkTxRs ~ error', error);
             clearInterval(checkTxRs);
-            handleFailedTx();
+            handleFailedTx(error?.message);
           }
         } else {
           txInPoolIntervalTrigger = await this.provider.getTransaction(txHash);

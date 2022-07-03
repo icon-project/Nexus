@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 
+const failedMessage = 'Transaction failed';
 export async function getTransactionByNonce(provider, startSearch, from, nonce) {
   const currentNonce = (await provider.getTransactionCount(from, 'latest')) - 1;
   console.log(
@@ -14,7 +15,8 @@ export async function getTransactionByNonce(provider, startSearch, from, nonce) 
   // Check nonce was used inside ]startSearch - 1, 'latest'].
   if (nonce <= startSearchNonce) {
     const error = `Nonce ${nonce} from ${from} is used before block ${startSearch}`;
-    throw new Error(error);
+    console.error(error);
+    throw new Error(failedMessage);
   }
 
   // Binary search the block containing the transaction between startSearch and latest.
@@ -62,7 +64,9 @@ export async function findReplacementTx(provider, startSearch, tx, event) {
     const error = `Failed to validate transaction recipient.
         Expected ${tx.to}, got ${transaction.to}.
         Transaction was dropped and replaced by '${transaction.hash}'`;
-    throw new Error(error);
+
+    console.error(error);
+    throw new Error(failedMessage);
   }
 
   if (tx.data) {
@@ -70,7 +74,9 @@ export async function findReplacementTx(provider, startSearch, tx, event) {
       const error = `Failed to validate transaction data.
         Expected ${tx.data}, got ${transaction.data}.
         Transaction was dropped and replaced by '${transaction.hash}'`;
-      throw new Error(error);
+
+      console.error(error);
+      throw new Error(failedMessage);
     }
   }
 
@@ -79,7 +85,9 @@ export async function findReplacementTx(provider, startSearch, tx, event) {
       const error = `Failed to validate transaction value.
         Expected ${tx.value}, got ${transaction.value.toString()}.
         Transaction was dropped and replaced by '${transaction.hash}'`;
-      throw new Error(error);
+
+      console.error(error);
+      throw new Error(failedMessage);
     }
   }
 
@@ -95,7 +103,9 @@ export async function findReplacementTx(provider, startSearch, tx, event) {
     if (!foundEvent || !event.validate({ returnValues: foundEvent.args })) {
       const error = `Failed to validate event.
         Transaction was dropped and replaced by '${transaction.hash}'`;
-      throw new Error(error);
+
+      console.error(error);
+      throw new Error(failedMessage);
     }
   }
   return transaction;
