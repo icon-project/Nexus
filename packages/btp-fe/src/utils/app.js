@@ -46,4 +46,12 @@ const shortenNumber = (num) => {
   }
 };
 
-export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString };
+const deplay = (delayInms = 1000) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(2);
+    }, delayInms);
+  });
+};
+
+export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString, deplay };

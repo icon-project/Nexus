@@ -11,6 +11,7 @@ import {
 import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
+import { deplay } from 'utils/app';
 
 import store from 'store';
 import {
@@ -69,6 +70,7 @@ const eventHandler = async (event) => {
         });
 
         const txHash = payload.result || (await sendTransaction(payload));
+        await deplay();
 
         await new Promise((resolve, reject) => {
           const checkTxRs = setInterval(async () => {
