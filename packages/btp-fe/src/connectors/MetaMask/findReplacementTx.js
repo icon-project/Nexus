@@ -1,3 +1,5 @@
+// Author: https://github.com/aurora-is-near/rainbow-bridge-client/tree/main/packages/find-replacement-tx
+
 import { ethers } from 'ethers';
 
 const failedMessage = 'Transaction failed';
