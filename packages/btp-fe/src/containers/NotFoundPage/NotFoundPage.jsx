@@ -47,7 +47,7 @@ const NotFoundPage = () => {
       <Header className="xs" color="white">
         Something’s missing
       </Header>
-      <Link className="md bold" to="/overview">
+      <Link className="md bold" to="/">
         <img width="8px" height="14px" className="icon" src={backArrow} />
         Go back to Home
       </Link>
