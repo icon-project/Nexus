@@ -42,7 +42,7 @@ export async function getTransactionByNonce(provider, startSearch, from, nonce) 
 
 export async function findReplacementTx(provider, startSearch, tx, event) {
   const transaction = await getTransactionByNonce(provider, startSearch, tx.from, tx.nonce);
-  
+
   // Transaction still pending
   if (!transaction) return null;
 
