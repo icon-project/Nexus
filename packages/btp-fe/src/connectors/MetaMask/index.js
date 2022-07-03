@@ -1,21 +1,13 @@
 import { ethers } from 'ethers';
 import store from 'store';
-import {
-  ADDRESS_LOCAL_STORAGE,
-  CONNECTED_WALLET_LOCAL_STORAGE,
-  signingActions,
-  getCurrentChain,
-} from 'connectors/constants';
+import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { ABI } from './ABI';
 
-import { resetTransferStep } from 'connectors/ICONex/utils';
 import { toChecksumAddress } from './utils';
+import { findReplacementTx } from './findReplacementTx';
+import { handleFailedTx, handleSuccessTx, handleError } from './handleNotification';
 import { wallets } from 'utils/constants';
-import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
 import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs';
-import { sendLog } from 'services/btpServices';
-
-import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 const { modal, account } = store.dispatch;
 
@@ -176,82 +168,58 @@ class Ethereum {
         method: 'eth_sendTransaction',
         params: [txParams],
       });
-      let result = null;
+      let txInPoolIntervalTrigger = await this.provider.getTransaction(txHash);
+      let txInPoolData = null;
 
+      const safeReorgHeight = (await this.getProvider.getBlockNumber()) - 20;
+      let minedTx = null;
+      let replacementTx = null;
+
+      // For checking replacement tx by speeding up or cancelling tx from MetaMask
       const checkTxRs = setInterval(async () => {
-        if (result) {
-          if (result.status === 1) {
-            switch (window[signingActions.globalName]) {
-              case signingActions.approve:
-                modal.openModal({
-                  icon: 'checkIcon',
-                  desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
-                  button: {
-                    text: 'Transfer',
-                    onClick: sendNoneNativeCoin,
-                  },
-                });
-                break;
-
-              default:
-                this.refreshBalance();
-                sendLog({
-                  txHash,
-                  network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
-                });
-
-                modal.openModal({
-                  icon: 'checkIcon',
-                  children: <SuccessSubmittedTxContent />,
-                  button: {
-                    text: 'Continue transfer',
-                    onClick: () => {
-                      // back to transfer box
-                      resetTransferStep();
-                      modal.setDisplay(false);
-                    },
-                  },
-                });
-                break;
-            }
-          } else {
-            clearInterval(checkTxRs);
-            modal.openModal({
-              icon: 'xIcon',
-              desc: 'Transaction failed',
-              button: {
-                text: 'Back to transfer',
-                onClick: () => modal.setDisplay(false),
-              },
-            });
-          }
-
-          clearInterval(checkTxRs);
-        } else {
-          result = await this.provider.getTransactionReceipt(txHash);
+        if (txInPoolIntervalTrigger) {
+          txInPoolData = txInPoolIntervalTrigger;
         }
-      }, 4000);
+
+        if (!txInPoolIntervalTrigger && !minedTx && !replacementTx) {
+          if (!txInPoolData) {
+            console.error('No current transaction information.');
+            clearInterval(checkTxRs);
+            return;
+          }
+          try {
+            replacementTx = await findReplacementTx(this.provider, safeReorgHeight, {
+              nonce: txInPoolData.nonce,
+              from: txInPoolData.from,
+              to: txInPoolData.to,
+              data: txInPoolData.data,
+            });
+          } catch (error) {
+            clearInterval(checkTxRs);
+            handleFailedTx(error?.message);
+          }
+        } else {
+          txInPoolIntervalTrigger = await this.provider.getTransaction(txHash);
+        }
+
+        if (replacementTx) {
+          clearInterval(checkTxRs);
+          handleSuccessTx(replacementTx.hash);
+        }
+      }, 3000);
+
+      // Emitted when the transaction has been mined
+      this.provider.once(txHash, (transaction) => {
+        clearInterval(checkTxRs);
+        minedTx = transaction;
+        if (transaction.status === 1) {
+          handleSuccessTx(txHash);
+        } else {
+          handleFailedTx();
+        }
+      });
     } catch (error) {
-      if (error.code === 4001) {
-        modal.openModal({
-          icon: 'exclamationPointIcon',
-          desc: 'Transaction rejected.',
-          button: {
-            text: 'Dismiss',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
-        return;
-      } else {
-        modal.openModal({
-          icon: 'xIcon',
-          desc: error.message,
-          button: {
-            text: 'Back to transfer',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
-      }
+      handleError(error);
     }
   }
 }

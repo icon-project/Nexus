@@ -120,7 +120,7 @@ export const Details = memo(
   }) => {
     const { token, network } = sendingInfo;
     const { currentNetwork, wallet } = account;
-    const [currentBalance] = useTokenBalance(token, step);
+    const [currentBalance] = useTokenBalance(token, step, step !== 0);
 
     const max = maxValue(currentBalance, 'Insufficient balance');
 
