@@ -176,6 +176,16 @@ class Ethereum {
       let replacementTx = null;
 
       const checkTxRs = setInterval(async () => {
+        console.log(
+          '🚀 ~ file: index.js ~ line 182 ~ Ethereum ~ checkTxRs ~ txInPoolIntervalTrigger',
+          txInPoolIntervalTrigger,
+        );
+
+        console.log(
+          '🚀 ~ file: index.js ~ line 177 ~ Ethereum ~ sendTransaction ~ replacementTx',
+          replacementTx,
+        );
+
         if (txInPoolIntervalTrigger) {
           txInPoolData = txInPoolIntervalTrigger;
         }
@@ -186,12 +196,17 @@ class Ethereum {
             clearInterval(checkTxRs);
             return;
           }
-          replacementTx = await findReplacementTx(this.provider, safeReorgHeight, {
-            nonce: txInPoolData.nonce,
-            from: txInPoolData.from,
-            to: txInPoolData.to,
-            data: txInPoolData.data,
-          });
+          try {
+            replacementTx = await findReplacementTx(this.provider, safeReorgHeight, {
+              nonce: txInPoolData.nonce,
+              from: txInPoolData.from,
+              to: txInPoolData.to,
+              data: txInPoolData.data,
+            });
+          } catch (error) {
+            clearInterval(checkTxRs);
+            handleFailedTx();
+          }
         } else {
           txInPoolIntervalTrigger = await this.provider.getTransaction(txHash);
         }
