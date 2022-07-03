@@ -134,23 +134,27 @@ const StyledHeader = styled.header`
 `;
 
 const Logo = styled.img`
-  width: 42.65px;
-  margin-right: 5px;
+  width: 42px;
+  height: 36px;
+  object-fit: cover;
+  object-position: 0 0;
 `;
 
 const BetaText = styled.div`
-  margin-right: 35px;
+  margin-right: 50px;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
 
-  > .subtitle-text {
-    font-weight: bold;
-    margin-right: 3px;
+  > div {
+    display: flex;
+    align-items: flex-end;
+    margin-top: 7px;
   }
 
-  .subtitle-text,
-  .plain-text {
-    margin-bottom: -6px;
+  .subtitle-text {
+    font-weight: bold;
+    margin-right: 3px;
   }
 `;
 
@@ -343,9 +347,10 @@ const Header = () => {
       )}
       <BetaText>
         <Logo src={logo} alt="btp logo" />
-
-        <SubTitle>(BETA)</SubTitle>
-        <Text>Powered by ICON Bridge</Text>
+        <div>
+          <SubTitle className="sm">NEXUS (BETA)</SubTitle>
+          <Text>Powered by ICON Bridge</Text>
+        </div>
       </BetaText>
 
       <HamburgerButton

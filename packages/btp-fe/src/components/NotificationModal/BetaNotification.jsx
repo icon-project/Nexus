@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { Text } from 'components/Typography';
+import { NavLink } from 'react-router-dom';
 
 const Wrapper = styled.div`
   a {
@@ -9,18 +10,19 @@ const Wrapper = styled.div`
   }
 `;
 
-export const BetaNotification = () => {
+export const BetaNotification = ({ setDisplay }) => {
   return (
     <Wrapper>
       <Text className="md">
         Nexus is in Beta. Please use at your own risk.{' '}
-        <a
-          href="https://docs.google.com/document/d/149WaRX1ajU1z5urKbxhe7wUYsj-zEgbwFleJPWpuWMA/edit"
-          target="_blank"
-          rel="noreferrer"
+        <NavLink
+          to="/terms-of-use"
+          onClick={() => {
+            setDisplay(false);
+          }}
         >
           Click here
-        </a>{' '}
+        </NavLink>{' '}
         for full Terms of Use.
       </Text>
     </Wrapper>
