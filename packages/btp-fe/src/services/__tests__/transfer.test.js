@@ -16,9 +16,7 @@ describe('services/transfer', () => {
     const service = getService(wallets.iconex, 'ICON');
     expect(service.default).toBe(ICONServices);
   });
-});
 
-describe('services/transfer', () => {
   test('getting service for MetaMask wallet', () => {
     const service = getService(wallets.metamask, 'Harmony');
     expect(service.default).toBe(MoonbeamServices);
