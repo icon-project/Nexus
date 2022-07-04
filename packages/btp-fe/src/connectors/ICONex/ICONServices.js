@@ -214,7 +214,7 @@ export const placeBid = (auctionName, value, fas) => {
  * @param {object} transaction
  * @param {onject} options
  */
-export const signTx = async (transaction = {}, options = {}) => {
+export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder, nid, timestamp } = options;
 
