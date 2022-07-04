@@ -3,6 +3,7 @@ import store from 'store';
 import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { ABI } from './ABI';
 
+import { ConflictNetworkWarning } from 'components/NotificationModal/ConflictNetworkWarning';
 import { toChecksumAddress } from './utils';
 import { findReplacementTx } from './findReplacementTx';
 import { handleFailedTx, handleSuccessTx, handleError } from './handleNotification';
@@ -65,9 +66,9 @@ class Ethereum {
         )
         .includes(this.ethereum.chainId)
     ) {
+      const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
       modal.openModal({
-        desc:
-          'The connected wallet is conflicted with your Source or Destination blockchain. Please change your blockchain option or reconnect a new wallet.',
+        children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
         button: {
           text: 'Okay',
           onClick: () => modal.setDisplay(false),
