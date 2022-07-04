@@ -15,4 +15,5 @@ test('render', () => {
       /(Nexus is in Beta. Please use at your own risk.)*(Click here)*(for full Terms of Use.)/i,
     ),
   ).toBeInTheDocument();
+  expect(screen.getByRole('link')).toHaveAttribute('href', '/terms-of-use');
 });
