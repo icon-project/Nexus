@@ -115,12 +115,17 @@ const exploreURL = {
 
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
+  console.log('🚀 ~ file: HistoryDetails.jsx ~ line 118 ~ HistoryDetails ~ details', details);
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
         const transferData = await getTransferHistoryByTxHash(txHash);
+        console.log(
+          '🚀 ~ file: HistoryDetails.jsx ~ line 125 ~ getTransactionDetails ~ transferData',
+          transferData,
+        );
         setDetails(transferData.content);
         setIsFetching(false);
       } catch (error) {
@@ -145,6 +150,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   } = details || {};
 
   const tokenPrice = useTokenToUsd(tokenName, 1);
+  console.log('🚀 ~ file: HistoryDetails.jsx ~ line 148 ~ HistoryDetails ~ tokenPrice', tokenPrice);
   const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
@@ -206,7 +212,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                 <CopyAddress
                   text={toAddress}
                   href={
-                    chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddress.split('/')[3]
+                    chainConfigs[networkNameDst]?.EXPLORE_URL +
+                    'address/' +
+                    toAddress?.split('/')[3]
                   }
                 />
               </Text>
