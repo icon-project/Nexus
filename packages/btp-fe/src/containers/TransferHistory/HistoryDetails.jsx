@@ -69,7 +69,6 @@ const StyledHistoryDetails = styled.div`
 
   .icon {
     margin-left: 8.83px;
-    vertical-align: middle;
   }
 
   ${media.md`
@@ -100,13 +99,15 @@ const CopyAddress = ({ text, href }) => {
   return (
     <>
       {href && (
-        <a href={href} className="copy-address" target="_blank" rel="noreferrer">
-          {hashShortener(text)}
-        </a>
+        <>
+          <a href={href} className="copy-address" target="_blank" rel="noreferrer">
+            {hashShortener(text)}
+          </a>
+          <CopyToClipboard text={text}>
+            <Icon icon="copy" color="#878491" width="18.33px" />
+          </CopyToClipboard>
+        </>
       )}
-      <CopyToClipboard text={text}>
-        <Icon icon="copy" color="#878491" width="18.33px" />
-      </CopyToClipboard>
     </>
   );
 };
