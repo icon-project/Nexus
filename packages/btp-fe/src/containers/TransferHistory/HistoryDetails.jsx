@@ -61,14 +61,17 @@ const StyledHistoryDetails = styled.div`
     justify-content: space-between;
     margin-bottom: 9px;
   }
+
   .copy-address {
     cursor: pointer;
     color: ${colors.tertiaryBase};
-    > .icon {
-      margin-left: 8.83px;
-      vertical-align: middle;
-    }
   }
+
+  .icon {
+    margin-left: 8.83px;
+    vertical-align: middle;
+  }
+
   ${media.md`
     .hide-in-mobile {
       display: none;
@@ -95,12 +98,16 @@ const getStatus = (statusCode) => {
 
 const CopyAddress = ({ text, href }) => {
   return (
-    <CopyToClipboard text={text}>
-      <a href={href} className="copy-address" target="_blank" rel="noreferrer">
-        {hashShortener(text)}
+    <>
+      {href && (
+        <a href={href} className="copy-address" target="_blank" rel="noreferrer">
+          {hashShortener(text)}
+        </a>
+      )}
+      <CopyToClipboard text={text}>
         <Icon icon="copy" color="#878491" width="18.33px" />
-      </a>
-    </CopyToClipboard>
+      </CopyToClipboard>
+    </>
   );
 };
 
@@ -194,7 +201,11 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                 <span className="hide-in-mobile">({networkNameSrc || 'Unknown'}) </span>
                 <CopyAddress
                   text={fromAddress}
-                  href={chainConfigs[networkNameSrc]?.EXPLORE_URL + 'address/' + fromAddress}
+                  href={
+                    networkNameSrc
+                      ? chainConfigs[networkNameSrc]?.EXPLORE_URL + 'address/' + fromAddress
+                      : null
+                  }
                 />
               </Text>
             </div>
@@ -206,7 +217,11 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                 <CopyAddress
                   text={toAddress}
                   href={
-                    chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddress.split('/')[3]
+                    networkNameDst
+                      ? chainConfigs[networkNameDst]?.EXPLORE_URL +
+                        'address/' +
+                        toAddress.split('/')[3]
+                      : null
                   }
                 />
               </Text>
