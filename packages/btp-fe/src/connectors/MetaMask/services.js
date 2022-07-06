@@ -33,7 +33,6 @@ export const reclaim = async ({ coinName, value }) => {
   const {
     BSH_CORE,
     GAS_LIMIT,
-    GAS_PRICE,
     methods: { reclaim = {} },
   } = getCurrentChain();
 
@@ -46,7 +45,6 @@ export const reclaim = async ({ coinName, value }) => {
     from: EthereumInstance.ethereum.selectedAddress,
     to: BSH_CORE,
     gas: GAS_LIMIT,
-    gasPrice: GAS_PRICE,
     data,
   });
 };
@@ -57,7 +55,6 @@ export const transfer = async (tx, sendNativeCoin, token) => {
     BSH_PROXY,
     BEP20,
     GAS_LIMIT,
-    GAS_PRICE,
     methods: { transferNativeCoin = {}, approve = {} },
   } = getCurrentChain();
 
@@ -105,7 +102,6 @@ export const transfer = async (tx, sendNativeCoin, token) => {
   txParams = {
     ...txParams,
     gas: GAS_LIMIT,
-    gasPrice: GAS_PRICE,
     data,
   };
 
@@ -117,7 +113,6 @@ export const sendNoneNativeCoin = async () => {
     BSH_CORE,
     BSH_PROXY,
     GAS_LIMIT,
-    GAS_PRICE,
     methods: { transfer = {} },
   } = getCurrentChain();
 
@@ -140,7 +135,6 @@ export const sendNoneNativeCoin = async () => {
     from: EthereumInstance.ethereum.selectedAddress,
     to: checkIsToken(coinName) ? BSH_PROXY : BSH_CORE,
     gas: GAS_LIMIT,
-    gasPrice: GAS_PRICE,
     data,
   });
 };
