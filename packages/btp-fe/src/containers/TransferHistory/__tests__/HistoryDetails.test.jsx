@@ -55,16 +55,14 @@ test('render', async () => {
 
   expect(screen.getByText('From')).toBeInTheDocument();
   expect(screen.getByText('(ICON)')).toBeInTheDocument();
-  expect(screen.getByText('btp://...47c5')).toHaveAttribute(
-    'href',
-    'https://explorer.pops.one/address/0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5',
+  expect(screen.getByText('btp://...47c5').getAttribute('href')).toMatch(
+    /^https:\/\/.*\/address\/0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5$/,
   );
 
   expect(screen.getByText('To')).toBeInTheDocument();
   expect(screen.getByText('(HARMONY)')).toBeInTheDocument();
-  expect(screen.getByText('hxeffc...f224')).toHaveAttribute(
-    'href',
-    'https://berlin.tracker.solidwallet.io/address/hxeffc184905bfff5db8879914690ba6e5cab2f224',
+  expect(screen.getByText('hxeffc...f224').getAttribute('href')).toMatch(
+    /^https:\/\/.*\/address\/hxeffc184905bfff5db8879914690ba6e5cab2f224$/,
   );
 
   expect(screen.getByText('Network fee')).toBeInTheDocument();
