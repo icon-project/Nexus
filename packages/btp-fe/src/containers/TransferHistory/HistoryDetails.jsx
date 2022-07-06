@@ -104,7 +104,9 @@ const CopyAddress = ({ text, href }) => {
             {hashShortener(text)}
           </a>
           <CopyToClipboard text={text}>
-            <Icon icon="copy" color="#878491" width="18.33px" />
+            <span>
+              <Icon icon="copy" color="#878491" width="18.33px" />
+            </span>
           </CopyToClipboard>
         </>
       )}
