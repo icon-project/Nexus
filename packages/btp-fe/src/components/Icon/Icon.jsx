@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import styled from 'styled-components/macro';
 import { wallets } from 'utils/constants';
+import { colors } from 'components/Styles/Colors';
 
 import { ReactComponent as metaMaskIcon } from 'assets/images/metal-mask.svg';
 import { ReactComponent as ethIcon } from 'assets/images/eth-icon.svg';
@@ -48,6 +49,18 @@ const SVGWrapper = styled.span`
       ${({ color }) => (color ? `fill: ${color}` : '')}
     }
   }
+
+  &.copy {
+    cursor: pointer;
+
+    :active {
+      svg {
+        path {
+          fill: ${colors.brandSecondaryBG};
+        }
+      }
+    }
+  }
 `;
 
 export const Icon = memo(
@@ -74,7 +87,7 @@ export const Icon = memo(
     return (
       <>
         {!isImagePath ? (
-          <SVGWrapper color={color} width={width} size={size} className="icon">
+          <SVGWrapper color={color} width={width} size={size} className={`icon ${icon}`}>
             <MySource />
           </SVGWrapper>
         ) : (
@@ -84,7 +97,7 @@ export const Icon = memo(
             loading="lazy"
             width={width}
             size={size}
-            className="icon"
+            className={`icon ${icon}`}
             {...props}
           />
         )}
