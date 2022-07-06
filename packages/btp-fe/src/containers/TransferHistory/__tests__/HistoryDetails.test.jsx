@@ -25,7 +25,7 @@ jest.mock('services/btpServices', () => {
         networkNameSrc: 'ICON',
         nativeToken: 'ICX',
         txError: '',
-        networkNameDst: 'HARMONY',
+        networkNameDst: '',
       },
     }),
   };
@@ -54,13 +54,10 @@ test('render', async () => {
   expect(screen.getByText('(Jul-03-2022 04:28:08 PM +07:00)')).toBeInTheDocument();
 
   expect(screen.getByText('From')).toBeInTheDocument();
-  expect(screen.getByText('(ICON)')).toBeInTheDocument();
-  expect(screen.getByText('btp://...47c5').getAttribute('href')).toMatch(
-    /^https:\/\/.*\/address\/0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5$/,
-  );
+  expect(screen.getByText('(Unknown)')).toBeInTheDocument();
 
   expect(screen.getByText('To')).toBeInTheDocument();
-  expect(screen.getByText('(HARMONY)')).toBeInTheDocument();
+  expect(screen.getByText('(ICON)')).toBeInTheDocument();
   expect(screen.getByText('hxeffc...f224').getAttribute('href')).toMatch(
     /^https:\/\/.*\/address\/hxeffc184905bfff5db8879914690ba6e5cab2f224$/,
   );
