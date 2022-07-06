@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import store from 'store';
 import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { ABI } from './ABI';
@@ -165,9 +165,11 @@ class Ethereum {
         desc: 'Waiting for confirmation in your wallet.',
       });
 
+      const gasPrice = utils.hexValue((await this.provider.getGasPrice()) * 1.04);
+
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
-        params: [txParams],
+        params: [{ ...txParams, gasPrice }],
       });
       let txInPoolIntervalTrigger = await this.provider.getTransaction(txHash);
       let txInPoolData = null;
