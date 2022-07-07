@@ -131,11 +131,13 @@ export const sendNoneNativeCoin = async () => {
   );
 
   window[signingActions.globalName] = signingActions.transfer;
-
-  await EthereumInstance.sendTransaction({
+  const params = {
     from: EthereumInstance.ethereum.selectedAddress,
     to: checkIsToken(coinName) ? BSH_PROXY : BSH_CORE,
     gas: GAS_LIMIT,
     data,
-  });
+  };
+
+  await EthereumInstance.sendTransaction(params);
+  return params;
 };
