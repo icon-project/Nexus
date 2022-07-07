@@ -1,5 +1,7 @@
+import { ethers } from 'ethers';
 import { getBalanceOf, transfer } from '../services';
-import * as constans from 'connectors/constants';
+import * as constants from 'connectors/constants';
+import * as chainConfigs from 'connectors/chainConfigs';
 import { EthereumInstance } from 'connectors/MetaMask';
 
 const fromAddress = '0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5';
@@ -43,7 +45,7 @@ describe('MetaMask/services', () => {
     expect(refundableBalance).toEqual('772.776604466852825856');
   });
 
-  test.only('transfer native coin', async () => {
+  test('transfer native coin', async () => {
     const functionName = 'transferNativeCoin';
     const ABI = {
       encodeFunctionData: jest.fn(),
@@ -55,13 +57,14 @@ describe('MetaMask/services', () => {
       }),
     });
 
-    jest.spyOn(constans, 'getCurrentChain').mockImplementation(() => currentChain);
+    jest.spyOn(constants, 'getCurrentChain').mockImplementation(() => currentChain);
     const encodeFunctionDataSpy = jest
       .spyOn(ABI, 'encodeFunctionData')
       .mockImplementation(() => functionName);
 
     const params = await transfer({ value: '10', to: toAddress }, true);
 
+    expect(window[constants.signingActions.globalName]).toEqual(constants.signingActions.transfer);
     expect(encodeFunctionDataSpy).toHaveBeenCalledWith(functionName, [
       expect.stringMatching(/(^btp:\/\/)*(\/hx6d338536ac11a0a2db06fb21fe8903e617a6764d)$/),
     ]);
@@ -72,6 +75,41 @@ describe('MetaMask/services', () => {
       gas: expect.anything(),
       to: currentChain.BSH_CORE,
       value: '0x8ac7230489e80000',
+    });
+  });
+
+  test.only('approve non-native coin', async () => {
+    const functionName = 'approve';
+    const amount = '10';
+    const ABI = {
+      encodeFunctionData: jest.fn(),
+    };
+
+    Object.defineProperty(EthereumInstance, 'ABI', {
+      get: jest.fn(() => {
+        return ABI;
+      }),
+    });
+
+    jest.spyOn(constants, 'getCurrentChain').mockImplementation(() => currentChain);
+    jest.spyOn(chainConfigs, 'checkIsToken').mockImplementation(() => true);
+    const encodeFunctionDataSpy = jest
+      .spyOn(ABI, 'encodeFunctionData')
+      .mockImplementation(() => functionName);
+
+    const params = await transfer({ value: amount, to: toAddress }, false);
+
+    expect(window[constants.signingActions.globalName]).toEqual(constants.signingActions.approve);
+    expect(encodeFunctionDataSpy).toHaveBeenCalledWith(functionName, [
+      currentChain.BSH_PROXY,
+      ethers.utils.parseEther(amount)._hex,
+    ]);
+
+    expect(params).toEqual({
+      data: functionName,
+      from: fromAddress,
+      gas: expect.anything(),
+      to: currentChain.BEP20,
     });
   });
 });
