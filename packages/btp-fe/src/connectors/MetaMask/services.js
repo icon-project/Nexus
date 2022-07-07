@@ -106,6 +106,7 @@ export const transfer = async (tx, sendNativeCoin, token) => {
   };
 
   await EthereumInstance.sendTransaction(txParams);
+  return txParams;
 };
 
 export const sendNoneNativeCoin = async () => {
