@@ -9,6 +9,14 @@ import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
 import { convertToLoopUnit } from '../utils';
 
+const amount = 10;
+const toAddress = '0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5';
+const harmonyChain = {
+  network: 'HARMONY',
+  ICON_BSH_ADDRESS: 'cxe24a2f5f46227ba91962d172945875c805f63e63',
+  NETWORK_ADDRESS: '0x6357d2e0.hmny',
+};
+
 jest.mock('store', () => {
   return {
     dispatch: {
@@ -57,11 +65,23 @@ describe('ICONService', () => {
 
   describe('transfer', () => {
     test('send native coin', () => {
-      const mock_sendNativeCoin = jest.spyOn(ICONService, 'sendNativeCoin').mockImplementation();
+      const mock_sendNativeCoin = jest.spyOn(ICONService, 'sendNativeCoin');
+      Object.defineProperty(chainConfigs, harmonyChain.network, harmonyChain);
 
-      transfer({}, true);
+      const result = transfer(
+        { value: amount, network: harmonyChain.network, to: toAddress },
+        true,
+      );
 
       expect(mock_sendNativeCoin).toBeCalledTimes(1);
+      expect(result).toEqual({
+        transaction: { value: amount, to: harmonyChain.ICON_BSH_ADDRESS },
+        options: {
+          builder: expect.anything(),
+          method: 'transferNativeCoin',
+          params: { _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}` },
+        },
+      });
       expect(window[signingActions.globalName]).toBe(signingActions.transfer);
     });
 
