@@ -279,6 +279,10 @@ export const getBTPfee = async (id, network) => {
  * @returns {string} BSH address corresponding to the coinName
  */
 export const getBSHAddressOfCoinName = async (coinName) => {
+  console.log(
+    '🚀 ~ file: ICONServices.js ~ line 282 ~ getBSHAddressOfCoinName ~ coinName',
+    coinName,
+  );
   try {
     const payload = {
       dataType: 'call',

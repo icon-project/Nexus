@@ -7,7 +7,7 @@ import { chainConfigs } from 'connectors/chainConfigs';
 
 import * as ICONService from '../ICONServices';
 import { transfer } from '../transfer';
-import { convertToLoopUnit } from '../utils';
+import * as utils from '../utils';
 
 const amount = 10;
 const toAddress = '0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5';
@@ -50,7 +50,7 @@ describe('ICONService', () => {
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))
       .timestamp(options.timestamp)
-      .value(convertToLoopUnit(transactions.value))
+      .value(utils.convertToLoopUnit(transactions.value))
       .method(options.method)
       .params(options.params)
       .build();
@@ -85,12 +85,17 @@ describe('ICONService', () => {
       expect(window[signingActions.globalName]).toBe(signingActions.transfer);
     });
 
-    test('send token', () => {
+    test('send token', async () => {
       const mock_setApproval = jest
         .spyOn(ICONService, 'setApproveForSendNonNativeCoin')
         .mockImplementation();
+      jest.spyOn(ICONService, 'getBSHAddressOfCoinName');
 
-      transfer(null, null, null, false);
+      await transfer(
+        { coinName: 'ICX', value: amount, network: harmonyChain.network },
+        false,
+        'ICX',
+      );
 
       expect(mock_setApproval).toBeCalledTimes(1);
     });
