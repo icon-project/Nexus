@@ -18,7 +18,8 @@
     "generate": "plop --plopfile scripts/generators/index.js",
     "lint": "eslint --ext .jsx,.js --ignore-path .gitignore",
     "lint:fix": "yarn lint --fix",
-    "prettify": "prettier --write"
+    "prettify": "prettier --write",
+    "cypress:open": "NETWORK_NAME=mainnet SECRET_WORDS='warfare, rally, mosquito, expose, scrap, diamond, portion, donate, miracle, bullet, powder, silver' npx synpress run -cf synpress.json"
   },
   "browserslist": {
     "production": [
@@ -141,6 +142,7 @@
     "@storybook/addon-links": "6.3.12",
     "@storybook/react": "6.3.12",
     "@svgr/webpack": "5.4.0",
+    "@synthetixio/synpress": "1.2.0",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "12.1.10",
@@ -156,6 +158,7 @@
     "camelcase": "6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "css-loader": "4.3.0",
+    "cypress": "10.3.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint": "7.17.0",
