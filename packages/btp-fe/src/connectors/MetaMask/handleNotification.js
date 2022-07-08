@@ -31,7 +31,7 @@ const handleSuccessTx = (txHash) => {
 
       modal.openModal({
         icon: 'checkIcon',
-        children: <SuccessSubmittedTxContent />,
+        children: <SuccessSubmittedTxContent setDisplay={modal.setDisplay} />,
         button: {
           text: 'Continue transfer',
           onClick: () => {

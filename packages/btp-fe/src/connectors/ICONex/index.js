@@ -112,7 +112,7 @@ const eventHandler = async (event) => {
                 case signingActions.transfer:
                   modal.openModal({
                     icon: 'checkIcon',
-                    children: <SuccessSubmittedTxContent />,
+                    children: <SuccessSubmittedTxContent setDisplay={modal.setDisplay} />,
                     button: {
                       text: 'Continue transfer',
                       onClick: () => modal.setDisplay(false),

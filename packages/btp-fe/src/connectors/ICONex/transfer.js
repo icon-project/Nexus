@@ -7,7 +7,7 @@ export const transfer = (tx, isSendingNativeCoin, token) => {
   const isToken = checkIsToken(token);
 
   if (isSendingNativeCoin) {
-    sendNativeCoin(tx);
+    return sendNativeCoin(tx);
   } else if (isToken) {
     approveIRC2(tx);
   } else {

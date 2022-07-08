@@ -1,9 +1,7 @@
 import styled from 'styled-components/macro';
 import { Link, Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
-
 import arrowIcon from 'assets/images/blue-up-arrow.svg';
-import { useDispatch } from 'hooks/useRematch';
 
 const Wrapper = styled.div`
   text-align: center;
@@ -23,10 +21,7 @@ const Wrapper = styled.div`
   }
 `;
 
-export const SuccessSubmittedTxContent = () => {
-  const { setDisplay } = useDispatch(({ modal: { setDisplay } }) => ({
-    setDisplay,
-  }));
+export const SuccessSubmittedTxContent = ({ setDisplay }) => {
   return (
     <Wrapper>
       <Text className="md">Your transaction was submitted successfully.</Text>
