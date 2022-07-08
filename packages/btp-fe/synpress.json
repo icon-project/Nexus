@@ -6,6 +6,7 @@
     "screenshotsFolder": "cypress/screenshots",
     "videosFolder": "cypress/videos",
     "video": false,
+    "screenshot": false,
     "chromeWebSecurity": true,
     "viewportWidth": 1366,
     "viewportHeight": 850,

@@ -318,7 +318,7 @@ const Header = () => {
               {showConnector && (
                 <Modal
                   title="Connect a wallet"
-                  button={{ onClick: handleConnect, text: 'Next' }}
+                  button={{ onClick: handleConnect, text: 'Next', id: 'do-connecting-wallet' }}
                   display
                   setDisplay={setShowModal}
                 >

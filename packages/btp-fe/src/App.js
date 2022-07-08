@@ -16,6 +16,7 @@ function App() {
   store.dispatch.modal.openModal({
     children: <BetaNotification setDisplay={store.dispatch.modal.setDisplay} />,
     button: {
+      id: 'abc',
       text: 'Confirm',
       onClick: () => store.dispatch.modal.setDisplay(false),
     },
