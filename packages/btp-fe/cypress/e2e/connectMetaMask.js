@@ -17,6 +17,19 @@ describe('connect MetaMask', () => {
     cy.acceptMetamaskAccess().then((connected) => {
       expect(connected).to.be.true;
     });
+    cy.get('#assest-selector').click();
+    cy.get('#ONE-select-item').click();
+    cy.get('#transfer-next-button').click();
+
+    cy.get('input[name=tokenAmount]').type('0.1');
+    cy.get('input[name=recipient]').type('hxeffc184905bfff5db8879914690ba6e5cab2f224');
+    cy.get('#Transfer-button').click();
+    cy.get('#Approve-button').click();
+
+    cy.confirmMetamaskTransaction().then((confirmed) => {
+      expect(confirmed).to.be.true;
+    });
+
     cy.get('#duy').click();
   });
 });

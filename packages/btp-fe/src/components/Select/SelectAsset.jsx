@@ -71,7 +71,7 @@ const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
     );
   };
 
-  return <Select options={getOptions()} onChange={onChange} name="token" />;
+  return <Select options={getOptions()} onChange={onChange} name="token" id="assest-selector" />;
 };
 
 export default SelectAsset;

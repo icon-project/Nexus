@@ -146,6 +146,7 @@ const Select = ({
             const { label, name, value, renderItem } = opt;
             return (
               <li
+                id={value + '-select-item'}
                 key={idx}
                 onClick={() => {
                   setSelectedValue(opt);
