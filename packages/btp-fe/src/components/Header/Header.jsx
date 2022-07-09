@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
+import { NavLink } from 'react-router-dom';
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
@@ -145,12 +146,7 @@ const BetaText = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  > div {
-    display: flex;
-    align-items: flex-end;
-    margin-top: 7px;
-  }
+  text-align: center;
 
   .subtitle-text {
     font-weight: bold;
@@ -346,11 +342,10 @@ const Header = () => {
         </>
       )}
       <BetaText>
-        <Logo src={logo} alt="btp logo" />
-        <div>
-          <SubTitle className="sm">NEXUS (BETA)</SubTitle>
-          <Text>Powered by ICON Bridge</Text>
-        </div>
+        <NavLink to="/">
+          <Logo src={logo} alt="btp logo" />
+          <SubTitle>NEXUS (BETA)</SubTitle>
+        </NavLink>
       </BetaText>
 
       <HamburgerButton
