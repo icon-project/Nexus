@@ -50,7 +50,7 @@ export const resetTransferStep = () => {
 /**
  * Get BSH address
  * @param {string} coinName
- * @returns {string} BSH address on ICON side for that coin OR token
+ * @returns {string} BSH address on ICON side for that coin OR token from other chains
  */
 export const getICONBSHAddressforEachChain = (coinName) => {
   const chain = chainList.find(({ COIN_SYMBOL, id, tokens }) => {

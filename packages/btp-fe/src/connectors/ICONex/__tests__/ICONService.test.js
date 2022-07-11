@@ -6,6 +6,7 @@ import { signingActions } from 'connectors/constants';
 import { chainConfigs } from 'connectors/chainConfigs';
 
 import * as ICONService from '../ICONServices';
+import * as constants from 'connectors/constants';
 import { transfer } from '../transfer';
 import * as utils from '../utils';
 
@@ -27,6 +28,10 @@ jest.mock('store', () => {
     },
     getState: jest.fn().mockImplementation(() => ({ account: {} })),
   };
+});
+
+beforeEach(() => {
+  jest.clearAllMocks();
 });
 
 describe('ICONService', () => {
@@ -107,6 +112,35 @@ describe('ICONService', () => {
             amount: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
+      });
+    });
+  });
+
+  describe('getBalanceOf', () => {
+    test('refundable', async () => {
+      const symbol = 'ONE';
+      const ONEBSHAddress = 'abc';
+      jest
+        .spyOn(constants, 'getCurrentChain')
+        .mockImplementation(() => ({ methods: { getBalanceOf: {} } }));
+      jest.spyOn(utils, 'getICONBSHAddressforEachChain').mockImplementation(() => ONEBSHAddress);
+      const mock_makeICXCall = jest
+        .spyOn(utils, 'makeICXCall')
+        .mockImplementation(() => Promise.resolve({ refundable: '0x29e46e036aab4e8b00' }));
+
+      const balance = await ICONService.getBalanceOf({
+        refundable: true,
+        symbol,
+        address: toAddress,
+      });
+      expect(balance).toBe('772.776604466852825856');
+      expect(mock_makeICXCall).toHaveBeenCalledWith({
+        data: {
+          method: 'balanceOf',
+          params: { _coinName: symbol, _owner: toAddress },
+        },
+        dataType: 'call',
+        to: ONEBSHAddress,
       });
     });
   });
