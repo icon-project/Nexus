@@ -2,8 +2,8 @@ import { IconUtil, IconConverter, IconBuilder } from 'icon-sdk-js';
 const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { signingActions } from 'connectors/constants';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { signingActions, txPayload } from 'connectors/constants';
+import * as chainConfigs from 'connectors/chainConfigs';
 
 import * as ICONService from '../ICONServices';
 import * as constants from 'connectors/constants';
@@ -14,8 +14,11 @@ const amount = 10;
 const toAddress = '0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5';
 const harmonyChain = {
   network: 'HARMONY',
+  COIN_SYMBOL: 'ONE',
   ICON_BSH_ADDRESS: 'cxe24a2f5f46227ba91962d172945875c805f63e63',
   NETWORK_ADDRESS: '0x6357d2e0.hmny',
+  ICON_IRC2_ADDRESS: 'abc',
+  ICON_TOKEN_BSH_ADDRESS: 'xyz',
 };
 
 jest.mock('store', () => {
@@ -30,6 +33,14 @@ jest.mock('store', () => {
   };
 });
 
+jest.mock('connectors/chainConfigs', () => ({
+  chainConfigs: {
+    HARMONY: harmonyChain,
+  },
+  checkIsToken: jest.fn(),
+  chainList: [harmonyChain],
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -43,14 +54,14 @@ describe('ICONService', () => {
       params: { _coinName: 'DEV' },
       nid: '0x58eb1c',
       timestamp: '123',
+      stepLimit: 2500000,
     };
 
     const txBuilder = new CallTransactionBuilder();
-
     const tx = txBuilder
       .from(transactions.from)
       .to(transactions.to)
-      .stepLimit(IconConverter.toBigNumber(chainConfigs.ICON?.STEP_LIMIT))
+      .stepLimit(IconConverter.toBigNumber(options.stepLimit))
       .nid(IconConverter.toBigNumber(options.nid))
       .nonce(IconConverter.toBigNumber(1))
       .version(IconConverter.toBigNumber(3))
@@ -62,7 +73,6 @@ describe('ICONService', () => {
 
     const rawTx = IconConverter.toRawTransaction(tx);
     const hash = serialize(rawTx);
-
     const result = ICONService.signTx(transactions, options);
 
     expect(result).toBe(hash);
@@ -71,7 +81,6 @@ describe('ICONService', () => {
   describe('transfer', () => {
     test('send native coin', async () => {
       const mock_sendNativeCoin = jest.spyOn(ICONService, 'sendNativeCoin');
-      Object.defineProperty(chainConfigs, harmonyChain.network, harmonyChain);
 
       const result = await transfer(
         { value: amount, network: harmonyChain.network, to: toAddress },
@@ -95,13 +104,15 @@ describe('ICONService', () => {
       const tokenBSHAddress = 'xyz';
       jest.spyOn(utils, 'makeICXCall').mockImplementation(() => Promise.resolve(tokenBSHAddress));
 
-      const result = await transfer(
-        { coinName: 'ICX', value: amount, network: harmonyChain.network },
-        false,
-        'ICX',
-      );
+      const tx = {
+        coinName: harmonyChain.COIN_SYMBOL,
+        value: amount,
+        network: harmonyChain.network,
+      };
+      const result = await transfer(tx, false, harmonyChain.COIN_SYMBOL);
 
       expect(mock_setApproval).toBeCalledTimes(1);
+      expect(tx).toEqual(window[txPayload]);
       expect(result).toEqual({
         transaction: { to: tokenBSHAddress },
         options: {
@@ -110,6 +121,31 @@ describe('ICONService', () => {
           params: {
             spender: harmonyChain.ICON_BSH_ADDRESS,
             amount: IconConverter.toHex(utils.convertToLoopUnit(amount)),
+          },
+        },
+      });
+    });
+
+    test('approveIRC2', async () => {
+      jest.spyOn(chainConfigs, 'checkIsToken').mockImplementation(() => true);
+
+      const tx = {
+        value: amount,
+        network: harmonyChain.network,
+        coinName: harmonyChain.COIN_SYMBOL,
+      };
+      const result = await transfer(tx, false);
+
+      expect(tx).toEqual(window[txPayload]);
+      expect(signingActions.approveIRC2).toEqual(window[signingActions.globalName]);
+      expect(result).toEqual({
+        transaction: { to: harmonyChain.ICON_IRC2_ADDRESS },
+        options: {
+          builder: expect.anything(),
+          method: 'transfer',
+          params: {
+            _to: harmonyChain.ICON_TOKEN_BSH_ADDRESS,
+            _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
       });
@@ -133,6 +169,7 @@ describe('ICONService', () => {
         symbol,
         address: toAddress,
       });
+
       expect(balance).toBe('772.776604466852825856');
       expect(mock_makeICXCall).toHaveBeenCalledWith({
         data: {
