@@ -150,6 +150,32 @@ describe('ICONService', () => {
         },
       });
     });
+
+    test('transferIRC2', async () => {
+      const tx = {
+        coinName: harmonyChain.COIN_SYMBOL,
+        value: amount,
+        to: toAddress,
+        network: harmonyChain.network,
+      };
+
+      ICONService.approveIRC2(tx);
+      const result = ICONService.transferIRC2();
+
+      expect(window[signingActions.globalName]).toBe(signingActions.transfer);
+      expect(result).toEqual({
+        transaction: { to: harmonyChain.ICON_TOKEN_BSH_ADDRESS },
+        options: {
+          builder: expect.anything(),
+          method: 'transfer',
+          params: {
+            to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
+            tokenName: harmonyChain.COIN_SYMBOL,
+            value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
+          },
+        },
+      });
+    });
   });
 
   describe('getBalanceOf', () => {

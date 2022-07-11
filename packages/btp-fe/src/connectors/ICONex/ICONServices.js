@@ -391,4 +391,6 @@ export const transferIRC2 = () => {
 
   window[signingActions.globalName] = signingActions.transfer;
   signTx(transaction, options);
+
+  return { transaction, options };
 };
