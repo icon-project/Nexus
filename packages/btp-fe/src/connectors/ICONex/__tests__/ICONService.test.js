@@ -126,6 +126,35 @@ describe('ICONService', () => {
       });
     });
 
+    test('sendNonNativeCoin', async () => {
+      jest.spyOn(utils, 'makeICXCall').mockImplementation(() => {});
+
+      const tx = {
+        coinName: harmonyChain.COIN_SYMBOL,
+        value: amount,
+        network: harmonyChain.network,
+        to: toAddress,
+      };
+
+      await ICONService.setApproveForSendNonNativeCoin(tx);
+      const result = ICONService.sendNonNativeCoin();
+
+      expect(tx).toEqual(window[txPayload]);
+      expect(window[signingActions.globalName]).toBe(signingActions.transfer);
+      expect(result).toEqual({
+        transaction: { to: harmonyChain.ICON_BSH_ADDRESS },
+        options: {
+          builder: expect.anything(),
+          method: 'transfer',
+          params: {
+            _coinName: harmonyChain.COIN_SYMBOL,
+            _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
+            _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
+          },
+        },
+      });
+    });
+
     test('approveIRC2', async () => {
       jest.spyOn(chainConfigs, 'checkIsToken').mockImplementation(() => true);
 
