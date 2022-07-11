@@ -64,11 +64,11 @@ describe('ICONService', () => {
   });
 
   describe('transfer', () => {
-    test('send native coin', () => {
+    test('send native coin', async () => {
       const mock_sendNativeCoin = jest.spyOn(ICONService, 'sendNativeCoin');
       Object.defineProperty(chainConfigs, harmonyChain.network, harmonyChain);
 
-      const result = transfer(
+      const result = await transfer(
         { value: amount, network: harmonyChain.network, to: toAddress },
         true,
       );
@@ -85,19 +85,29 @@ describe('ICONService', () => {
       expect(window[signingActions.globalName]).toBe(signingActions.transfer);
     });
 
-    test('send token', async () => {
-      const mock_setApproval = jest
-        .spyOn(ICONService, 'setApproveForSendNonNativeCoin')
-        .mockImplementation();
-      jest.spyOn(ICONService, 'getBSHAddressOfCoinName');
+    test('setApproveForSendNonNativeCoin', async () => {
+      const mock_setApproval = jest.spyOn(ICONService, 'setApproveForSendNonNativeCoin');
+      const tokenBSHAddress = 'xyz';
+      jest.spyOn(utils, 'makeICXCall').mockImplementation(() => Promise.resolve(tokenBSHAddress));
 
-      await transfer(
+      const result = await transfer(
         { coinName: 'ICX', value: amount, network: harmonyChain.network },
         false,
         'ICX',
       );
 
       expect(mock_setApproval).toBeCalledTimes(1);
+      expect(result).toEqual({
+        transaction: { to: tokenBSHAddress },
+        options: {
+          builder: expect.anything(),
+          method: 'approve',
+          params: {
+            spender: harmonyChain.ICON_BSH_ADDRESS,
+            amount: IconConverter.toHex(utils.convertToLoopUnit(amount)),
+          },
+        },
+      });
     });
   });
 });
