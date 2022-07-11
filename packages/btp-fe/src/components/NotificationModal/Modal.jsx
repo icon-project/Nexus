@@ -87,7 +87,7 @@ const Content = styled.div`
   }
 
   ${media.md`
-    width: 100%;
+    width: 90%;
     overflow: auto;
   `}
 `;

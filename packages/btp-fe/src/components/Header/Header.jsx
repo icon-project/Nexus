@@ -84,6 +84,10 @@ const StyledHeader = styled.header`
     min-width: 170px;
     border-radius: 100px;
     text-align: center;
+
+    ${media.md`
+      width: 50%;
+    `};
   }
 
   .menu-icon {
@@ -109,9 +113,9 @@ const StyledHeader = styled.header`
       left: 0;
       z-index: 101;
       padding: 0 20px;
+      border-radius: 0 0 20px 20px;
 
-
-      min-height: calc(100vh - 80px);
+      min-height: calc(70vh - 80px);
       width: 100%;
       background-color: ${grayLine};
       flex-direction: column-reverse;
