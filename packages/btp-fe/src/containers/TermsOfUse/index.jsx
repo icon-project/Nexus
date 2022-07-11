@@ -1,22 +1,32 @@
 import styled from 'styled-components/macro';
+import { NavLink } from 'react-router-dom';
 
 import { Text, Header } from 'components/Typography';
 import { Helmet } from 'components/Helmet';
 import { media } from 'components/Styles/Media';
+import { Icon } from 'components/Icon';
+import closeIcon from 'assets/images/close-icon.svg';
 
 const PageWrapper = styled.div`
   text-align: center;
   padding: 80px 20%;
 
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 50px;
+
+    .header-text {
+      text-align: center;
+      margin-top: 30px;
+    }
+  }
+
   .plain-text {
     margin-bottom: 15px;
     text-align: justify;
     text-justify: inter-word;
-  }
-
-  .header-text {
-    text-align: center;
-    margin-bottom: 50px;
   }
 
   ${media.md`
@@ -28,7 +38,13 @@ const TermsOfUse = () => {
   return (
     <PageWrapper>
       <Helmet title="Terms of use" />
-      <Header className="sm">TERMS OF USE</Header>
+      <div className="heading">
+        <span></span>
+        <Header className="sm">TERMS OF USE</Header>
+        <NavLink to="/">
+          <Icon iconURL={closeIcon} size="s" />
+        </NavLink>
+      </div>
 
       <Text className="md">
         All goods or services provided through the Nexus application (the “Protocol”) are provided

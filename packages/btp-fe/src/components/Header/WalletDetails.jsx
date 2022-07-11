@@ -94,6 +94,11 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
+      
+      button {
+        width: 50%;
+      }
+
       > .disconnect-btn {
         margin-right: 10px;
       }
