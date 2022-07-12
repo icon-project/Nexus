@@ -47,10 +47,19 @@ export const resetTransferStep = () => {
   document.dispatchEvent(event);
 };
 
+/**
+ * Get BSH address
+ * @param {string} coinName
+ * @returns {string} BSH address on ICON side for that coin OR token from other chains
+ */
 export const getICONBSHAddressforEachChain = (coinName) => {
-  const chain = chainList.find(
-    ({ COIN_SYMBOL, id }) => COIN_SYMBOL === coinName || coinName.endsWith(id),
-  );
+  const chain = chainList.find(({ COIN_SYMBOL, id, tokens }) => {
+    if (tokens && tokens.length > 0) {
+      const hasToken = tokens.find(({ symbol }) => symbol === coinName);
+      if (hasToken) return true;
+    }
+    return COIN_SYMBOL === coinName || coinName.endsWith(id);
+  });
 
   if (!chain) {
     console.error('relevant chain not found');

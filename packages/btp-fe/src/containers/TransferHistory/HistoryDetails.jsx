@@ -17,6 +17,7 @@ import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { Text } from 'components/Typography';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 const StyledHistoryDetails = styled.div`
   width: 100%;
@@ -60,14 +61,16 @@ const StyledHistoryDetails = styled.div`
     justify-content: space-between;
     margin-bottom: 9px;
   }
+
   .copy-address {
     cursor: pointer;
     color: ${colors.tertiaryBase};
-    > .icon {
-      margin-left: 8.83px;
-      vertical-align: middle;
-    }
   }
+
+  .icon {
+    margin-left: 8.83px;
+  }
+
   ${media.md`
     .hide-in-mobile {
       display: none;
@@ -91,19 +94,39 @@ const getStatus = (statusCode) => {
     text,
   };
 };
-const CopyAddress = ({ text }) => {
+
+const CopyAddress = ({ text, href, copyText }) => {
   return (
-    <CopyToClipboard text={text}>
-      <span className="copy-address">
-        {hashShortener(text)}
-        <Icon icon="copy" color="#878491" width="18.33px" />
-      </span>
-    </CopyToClipboard>
+    <>
+      {href && (
+        <>
+          <a href={href} className="copy-address" target="_blank" rel="noreferrer">
+            {hashShortener(text)}
+          </a>
+          <CopyToClipboard text={copyText || text}>
+            <span>
+              <Icon icon="copy" color="#878491" width="18.33px" />
+            </span>
+          </CopyToClipboard>
+        </>
+      )}
+    </>
   );
 };
+
+const exploreURL = {
+  ICON: {
+    transaction: 'transaction/',
+  },
+  HARMONY: {
+    transaction: 'tx/',
+  },
+};
+
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
+
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
@@ -116,7 +139,25 @@ export const HistoryDetails = ({ txHash, onClose }) => {
     };
     getTransactionDetails();
   }, [txHash]);
-  const tokenPrice = useTokenToUsd(details.tokenName, 1);
+
+  const {
+    tokenName,
+    networkNameSrc,
+    value,
+    status,
+    blockTime,
+    fromAddress,
+    networkNameDst,
+    toAddress,
+    networkFee,
+    bptFee,
+    nativeToken,
+  } = details || {};
+
+  const tokenPrice = useTokenToUsd(tokenName, 1);
+  const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
+  const toAddresssOnly = toAddress?.split('/')[3];
+
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -127,28 +168,34 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">Transaction hash</Text>
               <Text className="md">
-                <CopyAddress text={details.txHash} />
+                <CopyAddress
+                  text={txHash}
+                  href={
+                    chainConfigs[networkNameSrc]?.EXPLORE_URL +
+                    exploreURL[networkNameSrc]?.transaction +
+                    txHash
+                  }
+                />
               </Text>
             </div>
 
             <div className="content">
               <Text className="md">Amount</Text>
               <Text className="md">
-                {details.value} {details.tokenName} (~ $
-                {toSeparatedNumberString(tokenPrice * details.value)})
+                {value} {tokenName} (~ ${toSeparatedNumberString(tokenPrice * value)})
               </Text>
             </div>
 
             <div className="content">
               <Text className="md">Status</Text>
-              <Tag color={getStatus(details.status).color}>{getStatus(details.status).text}</Tag>
+              <Tag color={getStatus(status).color}>{getStatus(status).text}</Tag>
             </div>
             <div className="content">
               <Text className="md">Time</Text>
               <Text className="md">
-                {dayjs(details.blockTime).fromNow()}{' '}
+                {dayjs(blockTime).fromNow()}{' '}
                 <span className="hide-in-mobile">
-                  ({dayjs(details.blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
+                  ({dayjs(blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
                 </span>
               </Text>
             </div>
@@ -156,31 +203,49 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content">
               <Text className="md">From</Text>
               <Text className="md">
-                <span className="hide-in-mobile">({details.networkNameSrc || 'Unknown'}) </span>
-                <CopyAddress text={details.fromAddress} />
+                <span className="hide-in-mobile">({networkNameSrc || 'Unknown'}) </span>
+                <CopyAddress
+                  text={fromAddress}
+                  href={
+                    networkNameSrc
+                      ? chainConfigs[networkNameSrc]?.EXPLORE_URL + 'address/' + fromAddress
+                      : null
+                  }
+                />
               </Text>
             </div>
 
             <div className="content">
               <Text className="md">To</Text>
               <Text className="md">
-                <span className="hide-in-mobile">({details.networkNameDst || 'Unknown'}) </span>
-                <CopyAddress text={details.toAddress} />
+                <span className="hide-in-mobile">({networkNameDst || 'Unknown'}) </span>
+                <CopyAddress
+                  text={toAddress}
+                  copyText={toAddresssOnly}
+                  href={
+                    networkNameDst
+                      ? chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddresssOnly
+                      : null
+                  }
+                />
               </Text>
             </div>
 
             <div className="content">
               <Text className="md">Network fee</Text>
               <Text className="md">
-                {details.networkFee} {details.tokenName} (~ $
-                {toSeparatedNumberString(tokenPrice * details.networkFee)})
+                {networkFee} {nativeToken} (~ $
+                {toSeparatedNumberString(
+                  (tokenName === nativeToken ? tokenPrice : nativeTokenPrice) * networkFee,
+                )}
+                )
               </Text>
             </div>
 
             <div className="content btp-fee">
               <Text className="md">BTP fee</Text>
               <Text className="md">
-                {details.bptFee} {details.nativeToken}
+                {bptFee} {nativeToken}
               </Text>
             </div>
           </div>

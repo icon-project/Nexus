@@ -29,7 +29,7 @@ const Transfer = () => {
     <TransferStyled>
       <Helmet title="Transfer" />
 
-      <NavLink to={`/transfer/history`}>
+      <NavLink to="/history">
         <SubTitle className="sm bold" color={colors.tertiaryBase}>
           Transfer history
         </SubTitle>

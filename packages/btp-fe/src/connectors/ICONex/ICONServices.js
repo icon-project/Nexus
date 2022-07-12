@@ -15,7 +15,7 @@ import {
 } from 'connectors/constants';
 import { chainConfigs, getTokenList } from 'connectors/chainConfigs';
 
-import { requestICONexSigning, requestHanaSigning } from './events';
+import { requestSigning } from './events';
 import Request, {
   convertToICX,
   convertToLoopUnit,
@@ -24,7 +24,6 @@ import Request, {
 } from './utils';
 import store from 'store';
 import { roundNumber } from 'utils/app';
-import { wallets } from 'utils/constants';
 export { transfer } from './transfer';
 
 const { modal } = store.dispatch;
@@ -215,9 +214,9 @@ export const placeBid = (auctionName, value, fas) => {
  * @param {object} transaction
  * @param {onject} options
  */
-export const signTx = async (transaction = {}, options = {}) => {
+export const signTx = (transaction = {}, options = {}) => {
   const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
-  const { method, params, builder, nid, timestamp } = options;
+  const { method, params, builder, nid, stepLimit, timestamp } = options;
 
   if (!modal.isICONexWalletConnected()) {
     return;
@@ -233,7 +232,7 @@ export const signTx = async (transaction = {}, options = {}) => {
   let tx = txBuilder
     .from(from)
     .to(to)
-    .stepLimit(IconConverter.toBigNumber(ICONchain.STEP_LIMIT))
+    .stepLimit(IconConverter.toBigNumber(stepLimit || ICONchain.STEP_LIMIT))
     .nid(IconConverter.toBigNumber(nid || ICONchain.NETWORK_ADDRESS?.split('.')[0]))
     .nonce(IconConverter.toBigNumber(1))
     .version(IconConverter.toBigNumber(3))
@@ -248,21 +247,11 @@ export const signTx = async (transaction = {}, options = {}) => {
   }
 
   tx = tx.build();
-
   const rawTx = IconConverter.toRawTransaction(tx);
-
   window[rawTransaction] = rawTx;
   const transactionHash = serialize(rawTx);
 
-  if (store.getState().account.wallet === wallets.hana) {
-    requestHanaSigning(rawTx);
-  } else {
-    requestICONexSigning({
-      from,
-      hash: transactionHash,
-    });
-  }
-
+  requestSigning(rawTx);
   return transactionHash;
 };
 
@@ -337,9 +326,11 @@ export const getBalanceOf = async ({ address, refundable = false, symbol, isToke
       payload.to = getICONBSHAddressforEachChain(symbol);
       payload.data.params._coinName = symbol.split('-')[0];
     } else if (isToken) {
+      // call to IRC2 address if token
       const targetChain = getTokenList().find((token) => token.symbol === symbol);
       payload.to = chainConfigs[targetChain.chainId].ICON_IRC2_ADDRESS;
     } else {
+      // call to coin BSH address if coin
       const bshAddressToken = await getBSHAddressOfCoinName(symbol.split('-')[0]);
       if (!bshAddressToken) throw new Error('BSH address not found');
       payload.to = bshAddressToken;
@@ -375,7 +366,9 @@ export const approveIRC2 = (tx) => {
 
   window[txPayload] = tx;
   window[signingActions.globalName] = signingActions.approveIRC2;
+
   signTx(transaction, options);
+  return { transaction, options };
 };
 
 export const transferIRC2 = () => {
@@ -398,4 +391,6 @@ export const transferIRC2 = () => {
 
   window[signingActions.globalName] = signingActions.transfer;
   signTx(transaction, options);
+
+  return { transaction, options };
 };

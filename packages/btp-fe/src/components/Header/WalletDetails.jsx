@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -94,6 +94,11 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
+      
+      button {
+        width: 50%;
+      }
+
       > .disconnect-btn {
         margin-right: 10px;
       }
@@ -164,13 +169,6 @@ export const WalletDetails = ({
   onSwitchWallet,
   networkID,
 }) => {
-  const [selectedToken, setSelectedToken] = useState(symbol);
-  const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
-  const [refund, setRefund] = useState(0);
-  const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
-  const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
-  const ICONChain = chainConfigs.ICON;
-
   const tokens = [
     { label: symbol, value: symbol },
     { label: 'ETH', value: 'ETH' },
@@ -179,25 +177,54 @@ export const WalletDetails = ({
       .filter((item) => item.label !== symbol),
   ];
 
-  const refundedTokens = [
-    ...chainList
-      .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
-      .filter((item) => item.label !== symbol),
-  ];
+  const [selectedToken, setSelectedToken] = useState(symbol);
+  const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
+  const [refundedTokens, setRefundedTokens] = useState([]);
+  const [refund, setRefund] = useState(0);
+  const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
+  const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
+  const ICONChain = chainConfigs.ICON;
 
-  if (networkID === ICONChain?.id) {
-    chainList.forEach((chain) => {
-      if (chain.id !== ICONChain?.id) {
-        const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
-        refundedTokens.unshift({ label: value, value });
-      }
-    });
-  } else {
-    refundedTokens.unshift({ label: symbol, value: symbol });
-  }
+  // This useEffect handles query refundable balance
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (networkID === ICONChain?.id && selectedToken === ICONChain?.COIN_SYMBOL) {
+      chainList.forEach((chain) => {
+        if (chain.id !== ICONChain?.id) {
+          const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
+          getService()
+            ?.getBalanceOf({
+              address,
+              refundable: true,
+              symbol: value,
+            })
+            .then((refund) => {
+              if (refund > 0) {
+                setRefundedTokens((state) => [...state, { label: value, value }]);
+              }
+            });
+        }
+      });
+    } else {
+      getService()
+        ?.getBalanceOf({
+          address,
+          refundable: true,
+          symbol: selectedRefundToken,
+        })
+        .then((refund) => {
+          if (refund > 0) {
+            setRefund(refund);
+            setRefundedTokens([{ label: selectedRefundToken, value: selectedRefundToken }]);
+          }
+        });
+    }
+  }, [selectedToken]);
 
   const onTokenChange = async (evt) => {
+    setRefundedTokens([]);
     setSelectedToken(evt.target.value);
+    setSelectedRefundToken(evt.target.value);
   };
 
   const onChangeRefundSelect = async (e) => {
@@ -223,31 +250,35 @@ export const WalletDetails = ({
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
       </Header>
 
-      <Text className="md dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
-      <Text className="sm sub-title">Refunds</Text>
-      <div className="box-container">
-        <div className="select-refund">
-          <RefundSelector
-            className="padding-content"
-            options={refundedTokens}
-            onChange={onChangeRefundSelect}
-          />
-          <Text className="md">{refund}</Text>
-        </div>
+      <Text className="md dark-text">~ ${toSeparatedNumberString(usdBalance)}</Text>
+      {refundedTokens.length > 0 && (
+        <>
+          <Text className="sm sub-title">Refunds</Text>
+          <div className="box-container">
+            <div className="select-refund">
+              <RefundSelector
+                className="padding-content"
+                options={refundedTokens}
+                onChange={onChangeRefundSelect}
+              />
+              <Text className="md">{refund}</Text>
+            </div>
 
-        <ActionBtn
-          onClick={() => {
-            if (refund > 0)
-              getService().reclaim({
-                coinName: selectedRefundToken,
-                value: refund,
-              });
-          }}
-        >
-          <img src={refundIcon} alt="refund-icon" />
-          Receive
-        </ActionBtn>
-      </div>
+            <ActionBtn
+              onClick={() => {
+                if (refund > 0)
+                  getService().reclaim({
+                    coinName: selectedRefundToken,
+                    value: refund,
+                  });
+              }}
+            >
+              <img src={refundIcon} alt="refund-icon" />
+              Receive
+            </ActionBtn>
+          </div>
+        </>
+      )}
       <Text className="sm sub-title">Wallet Address</Text>
       <div className="box-container">
         <Text title={address} className="md padding-content">

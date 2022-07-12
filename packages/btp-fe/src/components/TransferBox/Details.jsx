@@ -119,8 +119,8 @@ export const Details = memo(
     form,
   }) => {
     const { token, network } = sendingInfo;
-    const { balance, currentNetwork, wallet } = account;
-    const [currentBalance] = useTokenBalance(token, step);
+    const { currentNetwork, wallet } = account;
+    const [currentBalance] = useTokenBalance(token, step, step !== 0);
 
     const max = maxValue(currentBalance, 'Insufficient balance');
 
@@ -165,7 +165,7 @@ export const Details = memo(
                 {toSeparatedNumberString(currentBalance)} {token}
               </Text>
               <Text className="xs" color={colors.graySubText}>
-                = ${toSeparatedNumberString(usdRate * balance)}
+                = ${currentBalance === 0 ? 0 : toSeparatedNumberString(usdRate * currentBalance)}
               </Text>
             </div>
           </WalletBalance>

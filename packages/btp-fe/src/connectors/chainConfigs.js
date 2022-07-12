@@ -43,6 +43,11 @@ export const customzeChain = (chainId = '') => {
 };
 
 export const chainList = Object.values(chainConfigs);
+
+/**
+ * get token list (e.g: ETH)
+ * @returns {array}
+ */
 export const getTokenList = () => {
   let tokenList = [];
   for (const c in custom) {

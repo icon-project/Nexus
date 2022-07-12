@@ -63,7 +63,7 @@ export const TransferBox = () => {
         onSubmit={onSubmit}
         render={({ handleSubmit, values, valid, form }) => {
           return (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className={`container ${isCurrentStep(0) && 'active'}`}>
                 <TransferCard
                   setStep={memoizedSetStep}

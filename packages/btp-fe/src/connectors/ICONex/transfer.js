@@ -2,15 +2,15 @@ import { sendNativeCoin, setApproveForSendNonNativeCoin, approveIRC2 } from './I
 import { signingActions } from 'connectors/constants';
 import { checkIsToken } from 'connectors/chainConfigs';
 
-export const transfer = (tx, isSendingNativeCoin, token) => {
+export const transfer = async (tx, isSendingNativeCoin, token) => {
   window[signingActions.globalName] = signingActions.transfer;
   const isToken = checkIsToken(token);
 
   if (isSendingNativeCoin) {
-    sendNativeCoin(tx);
+    return sendNativeCoin(tx);
   } else if (isToken) {
-    approveIRC2(tx);
+    return approveIRC2(tx);
   } else {
-    setApproveForSendNonNativeCoin(tx);
+    return await setApproveForSendNonNativeCoin(tx);
   }
 };

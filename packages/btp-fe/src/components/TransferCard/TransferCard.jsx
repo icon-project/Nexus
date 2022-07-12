@@ -46,6 +46,11 @@ const StyledCard = styled.div`
 
   .button-section {
     margin-top: 42px;
+
+    .plain-text {
+      text-align: center;
+      margin-bottom: 20px;
+    }
   }
 
   .to,
@@ -155,6 +160,8 @@ export const TransferCard = ({
         </div>
 
         <div className="button-section">
+          <Text className="sm">Powered by ICON Bridge</Text>
+
           {isConnected ? (
             <PrimaryButton width={416} height={64} onClick={onNext} type="button">
               Next
