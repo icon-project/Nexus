@@ -95,7 +95,7 @@ const getStatus = (statusCode) => {
   };
 };
 
-const CopyAddress = ({ text, href }) => {
+const CopyAddress = ({ text, href, copyText }) => {
   return (
     <>
       {href && (
@@ -103,7 +103,7 @@ const CopyAddress = ({ text, href }) => {
           <a href={href} className="copy-address" target="_blank" rel="noreferrer">
             {hashShortener(text)}
           </a>
-          <CopyToClipboard text={text}>
+          <CopyToClipboard text={copyText || text}>
             <span>
               <Icon icon="copy" color="#878491" width="18.33px" />
             </span>
@@ -156,6 +156,8 @@ export const HistoryDetails = ({ txHash, onClose }) => {
 
   const tokenPrice = useTokenToUsd(tokenName, 1);
   const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
+  const toAddresssOnly = toAddress?.split('/')[3];
+
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -219,11 +221,10 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                 <span className="hide-in-mobile">({networkNameDst || 'Unknown'}) </span>
                 <CopyAddress
                   text={toAddress}
+                  copyText={toAddresssOnly}
                   href={
                     networkNameDst
-                      ? chainConfigs[networkNameDst]?.EXPLORE_URL +
-                        'address/' +
-                        toAddress.split('/')[3]
+                      ? chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddresssOnly
                       : null
                   }
                 />
