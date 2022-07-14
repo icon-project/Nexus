@@ -22,13 +22,13 @@ const HanaWalletSimulation = () => {
   const address = 'hx6d338536ac11a0a2db06fb21fe8903e617a6764d';
   const privateKey = 'ad06b6bd754a4ccfe83c75884106efbe69e9f9ee30087225016a1219fa8dfd9a';
 
-  const { setAppState } = useDispatch(({ app: { setAppState } }) => ({
-    setAppState,
+  const { setE2EState } = useDispatch(({ e2e: { setE2EState } }) => ({
+    setE2EState,
   }));
 
   useEffect(() => {
-    setAppState(['E2ETestMode', true]);
-  }, [setAppState]);
+    setE2EState(['E2ETestMode', true]);
+  }, [setE2EState]);
 
   useEffect(() => {
     const handler = (event) => {

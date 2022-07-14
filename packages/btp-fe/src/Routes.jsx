@@ -7,6 +7,7 @@ import Transfer from 'containers/Transfer';
 import TransferHistory from 'containers/TransferHistory';
 import TermsOfUse from 'containers/TermsOfUse';
 import HanaWalletSimulation from 'containers/HanaWalletSimulation';
+import HanaControlPannel from 'containers/HanaWalletSimulation/HanaControlPannel';
 
 // import Overview from 'containers/Overview';
 // import FeeAuctionPage from 'containers/FeeAuctionPage';
@@ -37,6 +38,7 @@ function Routes() {
             <Route path="*" component={NotFoundPage} />
           </Switch>
           <ModalWrapper />
+          <HanaControlPannel />
         </Layout>
       </ErrorBoundary>
     </BrowserRouter>
