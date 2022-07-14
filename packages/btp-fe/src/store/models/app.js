@@ -2,6 +2,7 @@ import { fetchAPI } from 'utils/fetch';
 
 const app = {
   state: {
+    E2ETestMode: false,
     appInfo: {
       content: {
         minted: [],
@@ -39,6 +40,9 @@ const app = {
           0,
         );
       });
+    },
+    selectE2ETestMode() {
+      return slice((state) => state.E2ETestMode);
     },
   }),
 };

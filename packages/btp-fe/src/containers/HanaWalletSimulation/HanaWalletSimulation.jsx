@@ -2,13 +2,33 @@ import { useEffect } from 'react';
 import IconService, { IconBuilder } from 'icon-sdk-js';
 import styled from 'styled-components/macro';
 
+import { Header, SubTitle } from 'components/Typography';
+import { Icon } from 'components/Icon';
+
+import { useDispatch } from 'hooks/useRematch';
+
+import checkIcon from 'assets/images/green-checked-icon.svg';
+
 const Wrapper = styled.div`
-  color: white;
+  padding: 80px;
+  text-align: center;
+
+  > img {
+    margin: 50px 0 20px;
+  }
 `;
 
 const HanaWalletSimulation = () => {
   const address = 'hx6d338536ac11a0a2db06fb21fe8903e617a6764d';
   const privateKey = 'ad06b6bd754a4ccfe83c75884106efbe69e9f9ee30087225016a1219fa8dfd9a';
+
+  const { setAppState } = useDispatch(({ app: { setAppState } }) => ({
+    setAppState,
+  }));
+
+  useEffect(() => {
+    setAppState(['E2ETestMode', true]);
+  }, [setAppState]);
 
   useEffect(() => {
     const handler = (event) => {
@@ -105,7 +125,14 @@ const HanaWalletSimulation = () => {
     window.addEventListener('ICONEX_RELAY_REQUEST', handler);
   }, []);
 
-  return <Wrapper>abc</Wrapper>;
+  return (
+    <Wrapper>
+      <Header className="sm">E2E Test setting up ...</Header>
+      <Icon iconURL={checkIcon} width="100px" />
+
+      <SubTitle className="md">All set!</SubTitle>
+    </Wrapper>
+  );
 };
 
 export default HanaWalletSimulation;
