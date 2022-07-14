@@ -1,8 +1,14 @@
 import { useEffect } from 'react';
+import IconService, { IconBuilder } from 'icon-sdk-js';
+import styled from 'styled-components/macro';
+
+const Wrapper = styled.div`
+  color: white;
+`;
 
 const HanaWalletSimulation = () => {
   const address = 'hx6d338536ac11a0a2db06fb21fe8903e617a6764d';
-  //   const privateKey = 'abc';
+  const privateKey = 'ad06b6bd754a4ccfe83c75884106efbe69e9f9ee30087225016a1219fa8dfd9a';
 
   useEffect(() => {
     const handler = (event) => {
@@ -33,6 +39,60 @@ const HanaWalletSimulation = () => {
             },
           });
           break;
+        case 'REQUEST_ADDRESS':
+          responseEvt = new CustomEvent('ICONEX_RELAY_RESPONSE', {
+            detail: {
+              type: 'RESPONSE_ADDRESS',
+              payload: address,
+            },
+          });
+          break;
+        case 'REQUEST_JSON-RPC':
+          const {
+            params: {
+              from,
+              nid,
+              nonce,
+              stepLimit,
+              timestamp,
+              to,
+              value,
+              version,
+              data: { method, params },
+            },
+          } = payload;
+          const { CallTransactionBuilder } = IconBuilder;
+
+          let txObj = new CallTransactionBuilder()
+            .from(from)
+            .to(to)
+            .stepLimit(stepLimit)
+            .nid(nid)
+            .nonce(nonce)
+            .version(version)
+            .timestamp(timestamp)
+            .params(params);
+          if (value) {
+            txObj = txObj.value(value);
+          }
+
+          if (method) {
+            txObj = txObj.method(method).params(params);
+          }
+
+          txObj = txObj.build();
+          console.log('🚀 ~ file: HanaWalletSimulation.jsx ~ line 76 ~ handler ~ txObj', txObj);
+
+          responseEvt = new CustomEvent('ICONEX_RELAY_RESPONSE', {
+            detail: {
+              type: 'RESPONSE_JSON-RPC',
+              payload: new IconService.SignedTransaction(
+                txObj,
+                new IconService.IconWallet.loadPrivateKey(privateKey),
+              ).getSignature(),
+            },
+          });
+          break;
         default:
           break;
       }
@@ -43,13 +103,9 @@ const HanaWalletSimulation = () => {
     };
 
     window.addEventListener('ICONEX_RELAY_REQUEST', handler);
-
-    // return () => {
-    //   window.removeEventListener('ICONEX_RELAY_REQUEST', handler, true);
-    // };
   }, []);
 
-  return 'abc';
+  return <Wrapper>abc</Wrapper>;
 };
 
 export default HanaWalletSimulation;
