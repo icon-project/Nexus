@@ -3,17 +3,19 @@ import { Layout } from 'components/Layout';
 
 import NetworkPage from 'containers/NetworkPage';
 import NotFoundPage from 'containers/NotFoundPage';
-// import Governance from 'containers/Governance';
 import Transfer from 'containers/Transfer';
 import TransferHistory from 'containers/TransferHistory';
 import TermsOfUse from 'containers/TermsOfUse';
+import HanaWalletSimulation from 'containers/HanaWalletSimulation';
+
 // import Overview from 'containers/Overview';
 // import FeeAuctionPage from 'containers/FeeAuctionPage';
 // import FeeAuctionDetails from 'containers/FeeAuctionDetails';
+// import Governance from 'containers/Governance';
 
 import { ModalWrapper } from 'components/NotificationModal';
-
 import ErrorBoundary from './ErrorBoundary';
+import { hanaWalletSimulationRoute } from 'utils/constants';
 
 function Routes() {
   return (
@@ -24,9 +26,11 @@ function Routes() {
             <Redirect from="/" to="/transfer" exact />
             <Route path="/transfer" exact component={Transfer} />
             <Route path="/history" exact component={TransferHistory} />
-            {/* <Route path="/overview" exact component={Overview} /> */}
             <Route path="/network" exact component={NetworkPage} />
             <Route path="/terms-of-use" exact component={TermsOfUse} />
+            <Route path={hanaWalletSimulationRoute} exact component={HanaWalletSimulation} />
+
+            {/* <Route path="/overview" exact component={Overview} /> */}
             {/* <Route path="/governance" exact component={Governance} /> */}
             {/* <Route path="/auction" exact component={FeeAuctionPage} /> */}
             {/* <Route path="/auction/:id" exact component={FeeAuctionDetails} /> */}

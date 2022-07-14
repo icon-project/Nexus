@@ -200,6 +200,7 @@ const Header = () => {
       // case wallets.near:
       //   getNearAccountInfo();
     }
+
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
       checkICONexInstalled(() => {

@@ -6,3 +6,4 @@ export const wallets = {
 };
 
 export const SUCCESS_TRANSACTION = 'SUCCESS_TRANSACTION';
+export const hanaWalletSimulationRoute = '/abc';
