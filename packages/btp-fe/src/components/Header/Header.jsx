@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
+import { NavLink } from 'react-router-dom';
 
 import Nav from './Nav';
 import { WalletSelector } from './WalletSelector';
@@ -83,6 +84,10 @@ const StyledHeader = styled.header`
     min-width: 170px;
     border-radius: 100px;
     text-align: center;
+
+    ${media.md`
+      width: 50%;
+    `};
   }
 
   .menu-icon {
@@ -108,9 +113,9 @@ const StyledHeader = styled.header`
       left: 0;
       z-index: 101;
       padding: 0 20px;
+      border-radius: 0 0 20px 20px;
 
-
-      min-height: calc(100vh - 80px);
+      min-height: calc(70vh - 80px);
       width: 100%;
       background-color: ${grayLine};
       flex-direction: column-reverse;
@@ -145,12 +150,7 @@ const BetaText = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  > div {
-    display: flex;
-    align-items: flex-end;
-    margin-top: 7px;
-  }
+  text-align: center;
 
   .subtitle-text {
     font-weight: bold;
@@ -347,11 +347,10 @@ const Header = () => {
         </>
       )}
       <BetaText>
-        <Logo src={logo} alt="btp logo" />
-        <div>
-          <SubTitle className="sm">NEXUS (BETA)</SubTitle>
-          <Text>Powered by ICON Bridge</Text>
-        </div>
+        <NavLink to="/">
+          <Logo src={logo} alt="btp logo" />
+          <SubTitle>NEXUS (BETA)</SubTitle>
+        </NavLink>
       </BetaText>
 
       <HamburgerButton

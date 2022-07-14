@@ -94,6 +94,11 @@ const Wrapper = styled.div`
     overflow: auto;
 
     .control-buttons {
+      
+      button {
+        width: 50%;
+      }
+
       > .disconnect-btn {
         margin-right: 10px;
       }
@@ -245,7 +250,7 @@ export const WalletDetails = ({
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
       </Header>
 
-      <Text className="md dark-text">= ${toSeparatedNumberString(usdBalance)}</Text>
+      <Text className="md dark-text">~ ${toSeparatedNumberString(usdBalance)}</Text>
       {refundedTokens.length > 0 && (
         <>
           <Text className="sm sub-title">Refunds</Text>

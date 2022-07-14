@@ -153,27 +153,25 @@ const TransferHistoryStyled = styled.div`
       align-items: center;
       margin: 20px 0 0;
 
+      button {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+
       .select-asset {
         width: 100%;
-        margin: 0 0 30px !important;
       }
 
       .select-network {
         flex-direction: column;
         width: 100%;
+        margin-bottom: 30px;
 
         > .exchange-icon {
           display: none;
         }
-
-        button {
-          width: 100%;
-          margin-bottom: 10px;
-        }
       }
     }
-    
-  
   `};
 `;
 

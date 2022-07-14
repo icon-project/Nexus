@@ -40,9 +40,8 @@ test('render', async () => {
 
   expect(screen.getByText('Transfer details')).toBeInTheDocument();
   expect(screen.getByText('Transaction hash')).toBeInTheDocument();
-  expect(screen.getByText('0xc7f3...cba9')).toHaveAttribute(
-    'href',
-    'https://berlin.tracker.solidwallet.io/transaction/0xc7f33feea2df8a2fc622952443f8ce1be6a61703768af9a28e725108d488cba9',
+  expect(screen.getByText('0xc7f3...cba9').getAttribute('href')).toMatch(
+    /^https:\/\/.*\/transaction\/0xc7f33feea2df8a2fc622952443f8ce1be6a61703768af9a28e725108d488cba9$/,
   );
 
   expect(screen.getByText('Amount')).toBeInTheDocument();
@@ -63,6 +62,5 @@ test('render', async () => {
   );
 
   expect(screen.getByText('Network fee')).toBeInTheDocument();
-
   expect(screen.getByText('BTP fee')).toBeInTheDocument();
 });
