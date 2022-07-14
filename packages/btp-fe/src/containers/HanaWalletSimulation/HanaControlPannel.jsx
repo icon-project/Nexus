@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
+import IconService, { IconBuilder } from 'icon-sdk-js';
+
 import { SubTitle, Text } from 'components/Typography';
+import { useSelect } from 'hooks/useRematch';
 
 const Wrapper = styled.div`
   width: 300px;
+  z-index: 1000;
   border-radius: 20px 20px 0 0;
 
   transition: right 1s;
   position: fixed;
-  top: 100px;
+  top: 150px;
   right: ${({ $hide }) => ($hide ? '-100%' : '0')};
 
   background-color: rgb(244, 246, 248);
@@ -60,38 +64,123 @@ const ButtonControl = styled.div`
 `;
 
 const HanaControlPannel = () => {
-  const [displayConnectingRequest] = useState(false);
-  const [displaySigningRequest] = useState(true);
-  const [hide, setHide] = useState(false);
+  const [displayConnectingRequest, setDisplayConnectingRequest] = useState(false);
+  const [hide, setHide] = useState(true);
 
-  const toggleHide = () => {
-    setHide(!hide);
-  };
+  const {
+    selectHanaWallet: {
+      keys: { address, privateKey },
+      content,
+    },
+  } = useSelect(({ e2e: { selectHanaWallet } }) => ({
+    selectHanaWallet,
+  }));
+
+  useEffect(() => {
+    if (content) {
+      if (content === 'connecting') {
+        setDisplayConnectingRequest(true);
+      } else {
+        setDisplayConnectingRequest(false);
+      }
+      setHide(false);
+    }
+  }, [content]);
 
   const onCancel = () => {
-    toggleHide();
+    window.dispatchEvent(
+      new CustomEvent('ICONEX_RELAY_RESPONSE', {
+        detail: {
+          type: 'CANCEL_JSON-RPC',
+        },
+      }),
+    );
+    setHide(true);
+  };
+
+  const onAuthorize = () => {
+    window.dispatchEvent(
+      new CustomEvent('ICONEX_RELAY_RESPONSE', {
+        detail: {
+          type: 'RESPONSE_ADDRESS',
+          payload: address,
+        },
+      }),
+    );
+
+    setHide(true);
+  };
+
+  const onSigning = () => {
+    const tx = window['e2eTx'];
+
+    const {
+      params: {
+        from,
+        nid,
+        nonce,
+        stepLimit,
+        timestamp,
+        to,
+        value,
+        version,
+        data: { method, params },
+      },
+    } = tx;
+    const { CallTransactionBuilder } = IconBuilder;
+
+    let txObj = new CallTransactionBuilder()
+      .from(from)
+      .to(to)
+      .stepLimit(stepLimit)
+      .nid(nid)
+      .nonce(nonce)
+      .version(version)
+      .timestamp(timestamp)
+      .params(params);
+    if (value) {
+      txObj = txObj.value(value);
+    }
+
+    if (method) {
+      txObj = txObj.method(method).params(params);
+    }
+
+    txObj = txObj.build();
+
+    window.dispatchEvent(
+      new CustomEvent('ICONEX_RELAY_RESPONSE', {
+        detail: {
+          type: 'RESPONSE_JSON-RPC',
+          payload: new IconService.SignedTransaction(
+            txObj,
+            new IconService.IconWallet.loadPrivateKey(privateKey),
+          ).getSignature(),
+        },
+      }),
+    );
+
+    setHide(true);
   };
 
   return (
     <Wrapper $hide={hide}>
       <SubTitle className="md">HANA WALLET (simulation)</SubTitle>
 
-      {displayConnectingRequest && (
+      {displayConnectingRequest ? (
         <ConnectingRequest>
           <Text className="sm">Nexus would like to connect to your Hana wallet.</Text>
           <ButtonControl>
             <button onClick={onCancel}>Cancel</button>
-            <button>Authorize</button>
+            <button onClick={onAuthorize}>Authorize</button>
           </ButtonControl>
         </ConnectingRequest>
-      )}
-
-      {displaySigningRequest && (
+      ) : (
         <SigningRequest>
           <Text className="sm">Nexus would like to sign a transaction.</Text>
           <ButtonControl>
             <button onClick={onCancel}>Cancel</button>
-            <button>Sign</button>
+            <button onClick={onSigning}>Sign</button>
           </ButtonControl>
         </SigningRequest>
       )}

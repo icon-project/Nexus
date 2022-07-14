@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import IconService, { IconBuilder } from 'icon-sdk-js';
 import styled from 'styled-components/macro';
 
 import { Header, SubTitle } from 'components/Typography';
 import { Icon } from 'components/Icon';
 
-import { useDispatch } from 'hooks/useRematch';
+import { useDispatch, useSelect } from 'hooks/useRematch';
 
 import checkIcon from 'assets/images/green-checked-icon.svg';
 
@@ -19,11 +18,17 @@ const Wrapper = styled.div`
 `;
 
 const HanaWalletSimulation = () => {
-  const address = 'hx6d338536ac11a0a2db06fb21fe8903e617a6764d';
-  const privateKey = 'ad06b6bd754a4ccfe83c75884106efbe69e9f9ee30087225016a1219fa8dfd9a';
-
-  const { setE2EState } = useDispatch(({ e2e: { setE2EState } }) => ({
+  const { setE2EState, setHanaWallet } = useDispatch(({ e2e: { setE2EState, setHanaWallet } }) => ({
     setE2EState,
+    setHanaWallet,
+  }));
+
+  const {
+    selectHanaWallet: {
+      keys: { address },
+    },
+  } = useSelect(({ e2e: { selectHanaWallet } }) => ({
+    selectHanaWallet,
   }));
 
   useEffect(() => {
@@ -33,11 +38,6 @@ const HanaWalletSimulation = () => {
   useEffect(() => {
     const handler = (event) => {
       const { type, payload } = event.detail;
-      console.log(
-        '🚀 ~ file: HanaWalletSimulation.jsx ~ line 6 ~ window.addEventListener ~ event',
-        event,
-      );
-
       let responseEvt = null;
 
       switch (type) {
@@ -60,58 +60,11 @@ const HanaWalletSimulation = () => {
           });
           break;
         case 'REQUEST_ADDRESS':
-          responseEvt = new CustomEvent('ICONEX_RELAY_RESPONSE', {
-            detail: {
-              type: 'RESPONSE_ADDRESS',
-              payload: address,
-            },
-          });
+          setHanaWallet(['content', 'connecting']);
           break;
         case 'REQUEST_JSON-RPC':
-          const {
-            params: {
-              from,
-              nid,
-              nonce,
-              stepLimit,
-              timestamp,
-              to,
-              value,
-              version,
-              data: { method, params },
-            },
-          } = payload;
-          const { CallTransactionBuilder } = IconBuilder;
-
-          let txObj = new CallTransactionBuilder()
-            .from(from)
-            .to(to)
-            .stepLimit(stepLimit)
-            .nid(nid)
-            .nonce(nonce)
-            .version(version)
-            .timestamp(timestamp)
-            .params(params);
-          if (value) {
-            txObj = txObj.value(value);
-          }
-
-          if (method) {
-            txObj = txObj.method(method).params(params);
-          }
-
-          txObj = txObj.build();
-          console.log('🚀 ~ file: HanaWalletSimulation.jsx ~ line 76 ~ handler ~ txObj', txObj);
-
-          responseEvt = new CustomEvent('ICONEX_RELAY_RESPONSE', {
-            detail: {
-              type: 'RESPONSE_JSON-RPC',
-              payload: new IconService.SignedTransaction(
-                txObj,
-                new IconService.IconWallet.loadPrivateKey(privateKey),
-              ).getSignature(),
-            },
-          });
+          setHanaWallet(['content', 'signing']);
+          window['e2eTx'] = payload;
           break;
         default:
           break;
@@ -123,7 +76,7 @@ const HanaWalletSimulation = () => {
     };
 
     window.addEventListener('ICONEX_RELAY_REQUEST', handler);
-  }, []);
+  }, [address, setHanaWallet]);
 
   return (
     <Wrapper>
