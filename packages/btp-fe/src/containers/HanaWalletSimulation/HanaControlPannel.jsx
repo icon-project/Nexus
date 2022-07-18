@@ -172,7 +172,9 @@ const HanaControlPannel = () => {
           <Text className="sm">Nexus would like to connect to your Hana wallet.</Text>
           <ButtonControl>
             <button onClick={onCancel}>Cancel</button>
-            <button onClick={onAuthorize}>Authorize</button>
+            <button onClick={onAuthorize} id="hana-simulation-authorize-button">
+              Authorize
+            </button>
           </ButtonControl>
         </ConnectingRequest>
       ) : (

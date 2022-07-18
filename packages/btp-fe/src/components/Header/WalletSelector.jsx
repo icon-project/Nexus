@@ -65,7 +65,7 @@ export const WalletSelector = ({
 }) => {
   return (
     <StyledWalletItem
-      className="wallet-selector"
+      className={`${wallet[type].id}-wallet-selector${isCheckingInstalled ? '-checking' : ''}`}
       autoFocus={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >

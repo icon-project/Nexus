@@ -1,5 +1,5 @@
 describe('connect MetaMask', () => {
-  it('connect MetaMask', () => {
+  test.skip('connect MetaMask', () => {
     cy.addMetamaskNetwork({
       networkName: 'harmony mainnet',
       rpcUrl: 'https://api.harmony.one',
