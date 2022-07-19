@@ -6,7 +6,7 @@ import NotFoundPage from 'containers/NotFoundPage';
 import Transfer from 'containers/Transfer';
 import TransferHistory from 'containers/TransferHistory';
 import TermsOfUse from 'containers/TermsOfUse';
-import HanaWalletSimulation from 'containers/E2ETestingSetup';
+import E2ETestingSetup from 'containers/E2ETestingSetup';
 import HanaControlPannel from 'containers/E2ETestingSetup/HanaControlPannel';
 
 // import Overview from 'containers/Overview';
@@ -16,7 +16,7 @@ import HanaControlPannel from 'containers/E2ETestingSetup/HanaControlPannel';
 
 import { ModalWrapper } from 'components/NotificationModal';
 import ErrorBoundary from './ErrorBoundary';
-import { hanaWalletSimulationRoute } from 'utils/constants';
+import { E2ETestingRoute } from 'utils/constants';
 
 function Routes() {
   return (
@@ -29,7 +29,7 @@ function Routes() {
             <Route path="/history" exact component={TransferHistory} />
             <Route path="/network" exact component={NetworkPage} />
             <Route path="/terms-of-use" exact component={TermsOfUse} />
-            <Route path={hanaWalletSimulationRoute} exact component={HanaWalletSimulation} />
+            <Route path={E2ETestingRoute} exact component={E2ETestingSetup} />
 
             {/* <Route path="/overview" exact component={Overview} /> */}
             {/* <Route path="/governance" exact component={Governance} /> */}

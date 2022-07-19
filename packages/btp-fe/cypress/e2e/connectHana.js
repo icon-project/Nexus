@@ -1,6 +1,8 @@
+import { E2ETestingRoute } from '../../src/utils/constants';
+
 describe('interact with Hana', () => {
   it('connect Hana', () => {
-    cy.visit('http://localhost:3000/abc');
+    cy.visit(E2ETestingRoute);
     cy.get('header a[href="/transfer"]').click();
 
     cy.get('.connect-to-wallet-btn').click();
