@@ -101,7 +101,7 @@ class Ethereum {
 
   chainChangedListener() {
     try {
-      this.getEthereum.on('chainChanged', (chainId) => {
+      this.ethereum?.on('chainChanged', (chainId) => {
         console.log('Change Network', chainId);
         window.location.reload();
       });

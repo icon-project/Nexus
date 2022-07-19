@@ -6,3 +6,4 @@ export const wallets = {
 };
 
 export const SUCCESS_TRANSACTION = 'SUCCESS_TRANSACTION';
+export const E2ETestingRoute = '/E2ETestingRoute';

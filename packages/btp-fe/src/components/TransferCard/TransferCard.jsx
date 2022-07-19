@@ -163,7 +163,13 @@ export const TransferCard = ({
           <Text className="sm">Powered by ICON Bridge</Text>
 
           {isConnected ? (
-            <PrimaryButton width={416} height={64} onClick={onNext} type="button">
+            <PrimaryButton
+              width={416}
+              height={64}
+              onClick={onNext}
+              type="button"
+              id="transfer-next-button"
+            >
               Next
             </PrimaryButton>
           ) : (

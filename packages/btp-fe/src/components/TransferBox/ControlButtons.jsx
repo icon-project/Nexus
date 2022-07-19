@@ -45,7 +45,7 @@ export const ControlButtons = ({
       <button className="back-button" onClick={onBack} type="button">
         Back
       </button>
-      <StyledButton onClick={onExecute} type="submit">
+      <StyledButton onClick={onExecute} type="submit" id={executeLabel + '-button'}>
         {executeLabel}
       </StyledButton>
     </Wrapper>
