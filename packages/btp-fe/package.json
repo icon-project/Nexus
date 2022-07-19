@@ -19,7 +19,7 @@
     "lint": "eslint --ext .jsx,.js --ignore-path .gitignore",
     "lint:fix": "yarn lint --fix",
     "prettify": "prettier --write",
-    "synpress:run": "env-cmd -f .env.e2e npx synpress run -cf synpress.json",
+    "synpress:run": "SKIP_METAMASK_SETUP=true env-cmd -f .env.e2e npx synpress run -cf synpress.json",
     "cypress:open": "cypress open"
 
   },

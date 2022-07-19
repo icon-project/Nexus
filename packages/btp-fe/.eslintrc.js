@@ -24,6 +24,7 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
     React: 'writable',
     cy: true,
+    before: true,
   },
   parserOptions: {
     ecmaFeatures: {
