@@ -10,9 +10,6 @@ import { media } from 'components/Styles/Media';
 const NavStyled = styled.ul`
   display: flex;
   flex-flow: nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 auto 0 0;
 
   > li {
     a.active {
