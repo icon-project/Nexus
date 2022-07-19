@@ -10,6 +10,6 @@ describe('connect Hana', () => {
     cy.wait(2000);
     cy.get('#hana-simulation-authorize-button').click();
 
-    cy.get('#duy').click();
+    // cy.get('#duy').click();
   });
 });

@@ -19,7 +19,7 @@
     "lint": "eslint --ext .jsx,.js --ignore-path .gitignore",
     "lint:fix": "yarn lint --fix",
     "prettify": "prettier --write",
-    "synpress:open": "NETWORK_NAME=mainnet SECRET_WORDS='warfare, rally, mosquito, expose, scrap, diamond, portion, donate, miracle, bullet, powder, silver' npx synpress run -cf synpress.json",
+    "synpress:run": "env-cmd -f .env.e2e npx synpress run -cf synpress.json",
     "cypress:open": "cypress open"
 
   },
