@@ -69,8 +69,6 @@ const eventHandler = async (event) => {
           desc: 'Please wait a moment.',
         });
 
-        if (payload) return;
-
         const txHash = payload.result || (await sendTransaction(payload));
         await deplay();
 
