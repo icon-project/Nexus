@@ -28,7 +28,7 @@ import Hana from 'assets/images/hana-wallet.png';
 import NEAR from 'assets/images/near-icon.svg';
 import logo from 'assets/images/logo-nexus-white.png';
 
-const { darkBG, grayText, grayLine } = colors;
+const { darkBG, grayText, grayLine, primaryBrand } = colors;
 
 const StyledHeader = styled.header`
   height: 80px;
@@ -52,8 +52,20 @@ const StyledHeader = styled.header`
     flex: 1;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: nowrap;
     min-width: 305px;
+
+    .beta-text {
+      font-size: 12px;
+      padding: 0 60px;
+      text-align: center;
+
+      a {
+        font-weight: bold;
+        color: ${primaryBrand};
+      }
+    }
 
     .user-avatar {
       margin-left: 20px;
@@ -359,6 +371,11 @@ const Header = () => {
       />
       <div className="right-side">
         <Nav setShowMenu={setShowMenu} />
+        <SubTitle className="beta-text">
+          Nexus is in beta while ICON Bridge is currently being audited. Please ensure you have read
+          the <NavLink to="/terms-of-use">terms of use</NavLink>.
+        </SubTitle>
+
         {address ? (
           <div className="account-info">
             <SubTitle className="sm">{currentNetwork}</SubTitle>
