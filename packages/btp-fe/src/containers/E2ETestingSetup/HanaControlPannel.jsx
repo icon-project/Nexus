@@ -3,7 +3,6 @@ import styled from 'styled-components/macro';
 import IconService, { IconBuilder } from 'icon-sdk-js';
 
 import { SubTitle, Text } from 'components/Typography';
-import { useSelect } from 'hooks/useRematch';
 
 const Wrapper = styled.div`
   width: 300px;
@@ -66,26 +65,53 @@ const ButtonControl = styled.div`
 const HanaControlPannel = () => {
   const [displayConnectingRequest, setDisplayConnectingRequest] = useState(false);
   const [hide, setHide] = useState(true);
-
-  const {
-    selectHanaWallet: {
-      keys: { address, privateKey },
-      content,
-    },
-  } = useSelect(({ e2e: { selectHanaWallet } }) => ({
-    selectHanaWallet,
-  }));
+  const address = 'hx6d338536ac11a0a2db06fb21fe8903e617a6764d';
+  const privateKey = 'ad06b6bd754a4ccfe83c75884106efbe69e9f9ee30087225016a1219fa8dfd9a';
 
   useEffect(() => {
-    if (content) {
-      if (content === 'connecting') {
-        setDisplayConnectingRequest(true);
-      } else {
-        setDisplayConnectingRequest(false);
+    const handler = (event) => {
+      const { type, payload } = event.detail;
+      let responseEvt = null;
+
+      switch (type) {
+        case 'REQUEST_HAS_ADDRESS':
+          responseEvt = new CustomEvent('ICONEX_RELAY_RESPONSE', {
+            detail: {
+              type: 'RESPONSE_HAS_ADDRESS',
+              payload: {
+                hasAddress: payload === address,
+              },
+            },
+          });
+          break;
+
+        case 'REQUEST_HAS_ACCOUNT':
+          responseEvt = new CustomEvent('ICONEX_RELAY_RESPONSE', {
+            detail: {
+              type: 'RESPONSE_HAS_ACCOUNT',
+            },
+          });
+          break;
+        case 'REQUEST_ADDRESS':
+          setDisplayConnectingRequest(true);
+          setHide(false);
+
+          break;
+        case 'REQUEST_JSON-RPC':
+          setDisplayConnectingRequest(false);
+          window['e2eTx'] = payload;
+          break;
+        default:
+          break;
       }
-      setHide(false);
-    }
-  }, [content]);
+
+      if (responseEvt) {
+        window.dispatchEvent(responseEvt);
+      }
+    };
+
+    window.addEventListener('ICONEX_RELAY_REQUEST', handler);
+  }, []);
 
   const onCancel = () => {
     window.dispatchEvent(

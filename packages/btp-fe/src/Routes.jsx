@@ -6,8 +6,8 @@ import NotFoundPage from 'containers/NotFoundPage';
 import Transfer from 'containers/Transfer';
 import TransferHistory from 'containers/TransferHistory';
 import TermsOfUse from 'containers/TermsOfUse';
-import HanaWalletSimulation from 'containers/HanaWalletSimulation';
-import HanaControlPannel from 'containers/HanaWalletSimulation/HanaControlPannel';
+import HanaWalletSimulation from 'containers/E2ETestingSetup';
+import HanaControlPannel from 'containers/E2ETestingSetup/HanaControlPannel';
 
 // import Overview from 'containers/Overview';
 // import FeeAuctionPage from 'containers/FeeAuctionPage';
