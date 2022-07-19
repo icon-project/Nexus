@@ -7,10 +7,6 @@ const createICONexEvent = (type, payload) => {
 
 const requestHasAccount = () => {
   createICONexEvent(TYPES.REQUEST_HAS_ACCOUNT);
-  console.log(
-    '🚀 ~ file: events.js ~ line 10 ~ requestHasAccount ~ TYPES.REQUEST_HAS_ACCOUNT',
-    TYPES.REQUEST_HAS_ACCOUNT,
-  );
 };
 
 export const checkICONexInstalled = (callback) => {
