@@ -26,7 +26,7 @@ import { chainList } from 'connectors/chainConfigs';
 import VectorSrc from 'assets/images/vector.svg';
 
 const TableStyled = styled(Table)`
-  margin-top: 8px;
+  margin-top: 18px;
   overflow-x: auto;
 
   .select-asset-container {
