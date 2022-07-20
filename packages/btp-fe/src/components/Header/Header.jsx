@@ -79,6 +79,10 @@ const StyledHeader = styled.header`
       .wallet-info {
         margin-left: 8px;
 
+        .subtitle-text {
+          white-space: nowrap;
+        }
+
         .address {
           margin-bottom: 4px;
         }
