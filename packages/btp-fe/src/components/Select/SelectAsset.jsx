@@ -2,7 +2,6 @@ import styled from 'styled-components/macro';
 
 import { Text } from 'components/Typography';
 import { Icon } from 'components/Icon';
-import { TextWithIcon } from 'components/TextWithIcon';
 import { colors } from 'components/Styles/Colors';
 import Select from './Select';
 
@@ -11,7 +10,8 @@ import { chainConfigs, chainList, getTokenList } from 'connectors/chainConfigs';
 const StyledItem = styled.div`
   display: flex;
   align-items: center;
-  min-width: 160px;
+  min-width: ${({ $width }) => ($width ? $width : '160px')};
+  text-align: left;
 
   & .icon {
     margin-right: 12px;
@@ -23,9 +23,9 @@ const StyledItem = styled.div`
   }
 `;
 
-const Item = ({ symbol, children, ...props }) => {
+const Item = ({ symbol, children, width, ...props }) => {
   return (
-    <StyledItem>
+    <StyledItem $width={width}>
       <Icon {...props} width="24px" />
       <div className="info">
         <Text className="md">{symbol}</Text>
@@ -45,9 +45,9 @@ const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
           value: tokenSymbol,
           label: tokenSymbol,
           renderLabel: () => (
-            <TextWithIcon icon={tokenSymbol} width="24px">
-              {tokenSymbol}
-            </TextWithIcon>
+            <Item icon={tokenSymbol} symbol={tokenSymbol} width="100px">
+              {CHAIN_NAME || chain}
+            </Item>
           ),
           renderItem: () => (
             <Item icon={tokenSymbol} symbol={tokenSymbol}>
