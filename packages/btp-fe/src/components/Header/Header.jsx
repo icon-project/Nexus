@@ -30,6 +30,26 @@ import logo from 'assets/images/logo-nexus-white.png';
 
 const { darkBG, grayText, grayLine, primaryBrand } = colors;
 
+const Wrapper = styled.div`
+  .beta-text {
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+    background-color: ${primaryBrand};
+    padding: 8px 0;
+
+    a {
+      font-weight: bold;
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    ${media.md`
+      font-size: 10px;
+    `};
+  }
+`;
+
 const StyledHeader = styled.header`
   height: 80px;
   width: 100%;
@@ -55,17 +75,6 @@ const StyledHeader = styled.header`
     justify-content: space-between;
     flex-wrap: nowrap;
     min-width: 305px;
-
-    .beta-text {
-      font-size: 12px;
-      padding: 0 60px;
-      text-align: center;
-
-      a {
-        font-weight: bold;
-        color: ${primaryBrand};
-      }
-    }
 
     .user-avatar {
       margin-left: 20px;
@@ -302,102 +311,104 @@ const Header = () => {
   };
 
   return (
-    <StyledHeader $showMenu={showMenu}>
-      {showModal && (
-        <>
-          {loading && !cancelConfirmation ? (
-            <Modal
-              icon="loader"
-              desc="Please wait a moment."
-              width="352px"
-              display
-              setDisplay={setShowModal}
-            />
-          ) : (
-            <>
-              {showDetail && (
-                <Modal
-                  display
-                  setDisplay={setShowModal}
-                  title={wallet && mockWallets[wallet].title}
-                >
-                  <WalletDetails
-                    networkName={currentNetwork}
-                    symbol={symbol}
-                    address={address}
-                    shortedAddress={shortedAddress}
-                    onDisconnectWallet={onDisconnectWallet}
-                    onSwitchWallet={onSwitchWallet}
-                    networkID={id}
-                  />
-                </Modal>
-              )}
-              {showConnector && (
-                <Modal
-                  title="Connect a wallet"
-                  button={{ onClick: handleConnect, text: 'Next', id: 'do-connecting-wallet' }}
-                  display
-                  setDisplay={setShowModal}
-                >
-                  <div className="connect-a-wallet-card">
-                    <WalletSelector
-                      type={wallets.metamask}
-                      wallet={mockWallets}
-                      active={selectedWallet == wallets.metamask}
-                      onClick={() => handleSelectWallet(wallets.metamask)}
-                      isInstalled={EthereumInstance.isMetaMaskInstalled()}
+    <Wrapper>
+      <StyledHeader $showMenu={showMenu}>
+        {showModal && (
+          <>
+            {loading && !cancelConfirmation ? (
+              <Modal
+                icon="loader"
+                desc="Please wait a moment."
+                width="352px"
+                display
+                setDisplay={setShowModal}
+              />
+            ) : (
+              <>
+                {showDetail && (
+                  <Modal
+                    display
+                    setDisplay={setShowModal}
+                    title={wallet && mockWallets[wallet].title}
+                  >
+                    <WalletDetails
+                      networkName={currentNetwork}
+                      symbol={symbol}
+                      address={address}
+                      shortedAddress={shortedAddress}
+                      onDisconnectWallet={onDisconnectWallet}
+                      onSwitchWallet={onSwitchWallet}
+                      networkID={id}
                     />
-                    <WalletSelector
-                      type={wallets.iconex}
-                      wallet={mockWallets}
-                      active={selectedWallet == wallets.iconex}
-                      onClick={() => handleSelectWallet(wallets.iconex)}
-                      isCheckingInstalled={checkingICONexInstalled}
-                      isInstalled={isICONexInstalled()}
-                    />
-                  </div>
-                </Modal>
-              )}
-            </>
-          )}
-        </>
-      )}
-      <BetaText>
-        <NavLink to="/">
-          <Logo src={logo} alt="btp logo" />
-          <SubTitle>NEXUS (BETA)</SubTitle>
-        </NavLink>
-      </BetaText>
-
-      <HamburgerButton
-        className={`menu-icon ${showMenu && 'active'}`}
-        onClick={() => setShowMenu(!showMenu)}
-      />
-      <div className="right-side">
-        <Nav setShowMenu={setShowMenu} />
-        <SubTitle className="beta-text">
-          Nexus is in beta while ICON Bridge is currently being audited. Please ensure you have read
-          the <NavLink to="/terms-of-use">terms of use</NavLink>.
-        </SubTitle>
-
-        {address ? (
-          <div className="account-info">
-            <SubTitle className="sm">{currentNetwork}</SubTitle>
-            <Avatar className="user-avatar" size={48} onClick={onAvatarClicked} />
-            <span className="wallet-info">
-              <Text className="xs address">{shortedAddress}</Text>
-              <SubTitle className="md bold">
-                {toSeparatedNumberString(balance)} {symbol}
-              </SubTitle>
-            </span>
-          </div>
-        ) : (
-          <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
-            Connect a Wallet
-          </PrimaryButton>
+                  </Modal>
+                )}
+                {showConnector && (
+                  <Modal
+                    title="Connect a wallet"
+                    button={{ onClick: handleConnect, text: 'Next', id: 'do-connecting-wallet' }}
+                    display
+                    setDisplay={setShowModal}
+                  >
+                    <div className="connect-a-wallet-card">
+                      <WalletSelector
+                        type={wallets.metamask}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.metamask}
+                        onClick={() => handleSelectWallet(wallets.metamask)}
+                        isInstalled={EthereumInstance.isMetaMaskInstalled()}
+                      />
+                      <WalletSelector
+                        type={wallets.iconex}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.iconex}
+                        onClick={() => handleSelectWallet(wallets.iconex)}
+                        isCheckingInstalled={checkingICONexInstalled}
+                        isInstalled={isICONexInstalled()}
+                      />
+                    </div>
+                  </Modal>
+                )}
+              </>
+            )}
+          </>
         )}
-      </div>
-    </StyledHeader>
+        <BetaText>
+          <NavLink to="/">
+            <Logo src={logo} alt="btp logo" />
+            <SubTitle>NEXUS (BETA)</SubTitle>
+          </NavLink>
+        </BetaText>
+
+        <HamburgerButton
+          className={`menu-icon ${showMenu && 'active'}`}
+          onClick={() => setShowMenu(!showMenu)}
+        />
+        <div className="right-side">
+          <Nav setShowMenu={setShowMenu} />
+
+          {address ? (
+            <div className="account-info">
+              <SubTitle className="sm">{currentNetwork}</SubTitle>
+              <Avatar className="user-avatar" size={48} onClick={onAvatarClicked} />
+              <span className="wallet-info">
+                <Text className="xs address">{shortedAddress}</Text>
+                <SubTitle className="md bold">
+                  {toSeparatedNumberString(balance)} {symbol}
+                </SubTitle>
+              </span>
+            </div>
+          ) : (
+            <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+              Connect a Wallet
+            </PrimaryButton>
+          )}
+        </div>
+      </StyledHeader>
+      <SubTitle className="beta-text">
+        Nexus is in beta while ICON Bridge is currently being audited. Please ensure you have read
+        the <NavLink to="/terms-of-use">terms of use</NavLink>.
+      </SubTitle>
+    </Wrapper>
   );
 };
 
