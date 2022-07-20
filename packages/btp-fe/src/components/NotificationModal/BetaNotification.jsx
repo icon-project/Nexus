@@ -1,11 +1,10 @@
 import styled from 'styled-components/macro';
 import { Text } from 'components/Typography';
 import { NavLink } from 'react-router-dom';
-import { colors } from 'components/Styles/Colors';
 
 const Wrapper = styled.div`
   a {
-    color: ${colors.primaryBrand};
+    color: inherit;
     font-weight: bold;
     text-decoration: underline;
   }
