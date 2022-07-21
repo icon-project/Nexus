@@ -5,8 +5,8 @@ const { getTransactions, getTransactionByTxHash, countAllTransaction } = require
 
 const networkMap = new Map();
 
-async function getTrans(page, limit, from, to, assetName, startDate, endDate) {
-  const { transactions, total } = await getTransactions(page, limit, from, to, assetName, startDate, endDate);
+async function getTrans(page, limit, from, to, assetName, startDate, endDate, status) {
+  const { transactions, total } = await getTransactions(page, limit, from, to, assetName, startDate, endDate, status);
   for (const transaction of transactions) {
     transaction.networkNameDst = transaction.networkNameSrc;
 

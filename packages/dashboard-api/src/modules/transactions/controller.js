@@ -14,6 +14,7 @@ async function getTransHistory(request, response) {
   let limit = Number(request.query.limit) || 20;
   let startDate = _.get(request, 'query.startDate', null);
   let endDate = _.get(request, 'query.endDate', null);
+  let status = _.get(request, 'query.status', null);
   if ((new Date(startDate)).toString() === 'Invalid Date') {
     response.status(HttpStatus.BadRequest).json({ startDate: 'invalid' });
   }
@@ -21,7 +22,7 @@ async function getTransHistory(request, response) {
     response.status(HttpStatus.BadRequest).json({ endDate: 'invalid' });
   }
 
-  let transHistory = await model.getTrans(page, limit, from, to, assetName, startDate, endDate);
+  let transHistory = await model.getTrans(page, limit, from, to, assetName, startDate, endDate, status);
 
   if (!transHistory)
     return response.sendStatus(HttpStatus.NotFound);
