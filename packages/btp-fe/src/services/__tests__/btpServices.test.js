@@ -71,8 +71,8 @@ describe('services/btpServices', () => {
   });
 
   test('getTransferHistory', () => {
-    expect(getTransferHistory(0, 10, 'ETH', 'ICON', 'BSC')).toBe(
-      '/transactions?page=0&limit=10&assetName=ETH&from=ICON&to=BSC',
+    expect(getTransferHistory(0, 10, 'ETH', 'ICON', 'BSC', 1)).toBe(
+      '/transactions?page=0&limit=10&assetName=ETH&from=ICON&to=BSC&status=1',
     );
   });
 
