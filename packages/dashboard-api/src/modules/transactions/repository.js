@@ -10,7 +10,7 @@ const {
   NETWORK_TBL_NAME,
 } = require('../../common');
 
-async function getTransactions(page = 0, limit = 20, from, to, assestName, startDate, endDate) {
+async function getTransactions(page = 0, limit = 20, from, to, assestName, startDate, endDate, status) {
   let offset = page * limit;
   let query = `SELECT *, COUNT(*) OVER() as total FROM ${TRANSACTION_TBL_NAME} INNER JOIN ${NETWORK_TBL_NAME}
   ON ${TRANSACTION_TBL_NAME}.${TRANSACTION_TBL.networkId} = ${NETWORK_TBL_NAME}.id WHERE value <> $1`;
@@ -38,6 +38,9 @@ async function getTransactions(page = 0, limit = 20, from, to, assestName, start
   }
   if (endDate) {
     query += ` AND create_at <= '${endDate}'`;
+  }
+  if (status) {
+    query += ` AND status = '${status}'`;
   }
 
   query += limitOffset;
