@@ -203,7 +203,6 @@ const TransferHistory = () => {
     to: '',
     status: '',
   });
-  const { from, to, assetName, status } = filters;
 
   const { handleError, getNetworks } = useDispatch(
     ({ modal: { handleError }, network: { getNetworks } }) => ({
@@ -264,7 +263,7 @@ const TransferHistory = () => {
     });
   });
 
-  const fetchDataHandler = async ({ page, assetName, from, to, status = '' }) => {
+  const fetchDataHandler = async ({ page, assetName, from, to, status }) => {
     try {
       const transferData =
         (await getTransferHistory(page - 1, pagination.limit, assetName, from, to, status)) || {};
@@ -293,11 +292,8 @@ const TransferHistory = () => {
     if (value !== filters[selectorName]) {
       setFilters({ ...filters, [selectorName]: value });
       fetchDataHandler({
+        ...filters,
         page: 1,
-        assetName,
-        from,
-        to,
-        status,
         [selectorName]: value,
       });
     }
@@ -347,7 +343,7 @@ const TransferHistory = () => {
       <TableStyled
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
-        bodyText={'md'}
+        bodyText="md"
         columns={columns}
         dataSource={historySource}
         onRow={(r) => ({
@@ -355,7 +351,8 @@ const TransferHistory = () => {
         })}
         pagination={pagination}
         loading={isFetching}
-        getItemsHandler={(page) => () => fetchDataHandler({ page, assetName, from, to })}
+        getItemsHandler={(page) => () => fetchDataHandler({ ...filters, page })}
+        filterParams={JSON.stringify(filters)}
       />
       {showDetails && (
         <HistoryDetails
