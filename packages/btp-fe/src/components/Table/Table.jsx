@@ -102,7 +102,7 @@ export const Table = ({
   // fist load
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    getItemsHandler(current)();
+    if (getItemsHandler) getItemsHandler(current)();
   }, []);
 
   // onPagechanged
