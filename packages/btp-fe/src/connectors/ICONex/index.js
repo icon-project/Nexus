@@ -25,11 +25,13 @@ import { chainConfigs, customzeChain } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
-const eventHandler = async (event) => {
+export const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
   const address = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
 
-  console.info('%cICONex event', 'color: green;', event.detail);
+  if (process.env.JEST_WORKER_ID === undefined) {
+    console.info('%cICONex event', 'color: green;', event.detail);
+  }
 
   if (payload.error) {
     modal.openModal({
