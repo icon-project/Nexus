@@ -178,7 +178,7 @@ Select.propTypes = {
       /** Same as label */
       name: PropTypes.string,
       /** Value */
-      value: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       /** Custome label */
       renderItem: PropTypes.func,
     }),

@@ -5,5 +5,11 @@ export const wallets = {
   near: 'NEAR',
 };
 
+export const txStatus = {
+  FAILED: -1,
+  PENDING: 0,
+  SUCCESS: 1,
+};
+
 export const SUCCESS_TRANSACTION = 'SUCCESS_TRANSACTION';
 export const E2ETestingRoute = '/E2ETestingRoute';
