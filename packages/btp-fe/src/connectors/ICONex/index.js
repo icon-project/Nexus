@@ -103,10 +103,7 @@ export const eventHandler = async (event) => {
                     desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
                     button: {
                       text: 'Transfer',
-                      onClick:
-                        window[signingActions.globalName] === signingActions.approve
-                          ? sendNonNativeCoin
-                          : transferIRC2,
+                      onClick: sendNonNativeCoin,
                     },
                   });
                   break;
