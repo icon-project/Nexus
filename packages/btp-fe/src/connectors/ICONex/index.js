@@ -1,13 +1,7 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import {
-  getBalance,
-  sendTransaction,
-  getTxResult,
-  sendNonNativeCoin,
-  transferIRC2,
-} from './ICONServices';
+import { getBalance, sendTransaction, getTxResult, sendNonNativeCoin } from './ICONServices';
 import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
