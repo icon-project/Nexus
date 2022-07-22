@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 import { Text } from 'components/Typography';
 import { Icon } from 'components/Icon';
-import { colors } from 'components/Styles/Colors';
+import { colors, mixins } from 'components/Styles';
 import Select from './Select';
 
 import { chainConfigs, chainList, getTokenList } from 'connectors/chainConfigs';
@@ -20,6 +20,15 @@ const StyledItem = styled.div`
   .plain-text.xs {
     color: ${colors.grayScaleSubText};
     margin-top: 4px;
+  }
+`;
+
+const StyledSelect = styled(Select)`
+  ul {
+    max-height: 180px;
+    overflow-y: auto;
+
+    ${mixins.scrollBar};
   }
 `;
 
@@ -71,7 +80,9 @@ const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
     );
   };
 
-  return <Select options={getOptions()} onChange={onChange} name="token" id="assest-selector" />;
+  return (
+    <StyledSelect options={getOptions()} onChange={onChange} name="token" id="assest-selector" />
+  );
 };
 
 export default SelectAsset;
