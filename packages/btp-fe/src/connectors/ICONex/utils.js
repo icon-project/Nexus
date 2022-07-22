@@ -66,5 +66,5 @@ export const getICONBSHAddressforEachChain = (coinName) => {
     return null;
   }
 
-  return chain.ICON_BSH_ADDRESS;
+  return chain.BTS_CORE;
 };

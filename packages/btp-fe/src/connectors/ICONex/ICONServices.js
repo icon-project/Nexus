@@ -110,7 +110,7 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
     builder: new CallTransactionBuilder(),
     method: 'approve',
     params: {
-      spender: chainConfigs[network].ICON_BSH_ADDRESS,
+      spender: chainConfigs[network].BTS_CORE,
       amount: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
@@ -126,15 +126,17 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
  */
 export const sendNonNativeCoin = () => {
   const { coinName, value, to, network } = window[txPayload];
+  const { NETWORK_ADDRESS, BTS_CORE } = chainConfigs[network];
+
   const transaction = {
-    to: chainConfigs[network].ICON_BSH_ADDRESS,
+    to: BTS_CORE,
   };
 
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: `btp://${chainConfigs[network].NETWORK_ADDRESS}/${to}`,
+      _to: `btp://${NETWORK_ADDRESS}/${to}`,
       _value: IconConverter.toHex(convertToLoopUnit(value)),
       _coinName: coinName,
     },
@@ -182,30 +184,6 @@ export const reclaim = async ({ coinName, value }) => {
     },
   };
 
-  signTx(transaction, options);
-};
-
-/**
- * DEPRECATED: Place a bid for token
- * @param {string} auctionName
- * @param {number} value
- * @param {string} fas FAS address
- */
-export const placeBid = (auctionName, value, fas) => {
-  const transaction = {
-    to: fas || 'cxe3d36b26abbe6e1005eacf7e1111d5fefbdbdcad', // default FAS addess to our server
-    value,
-  };
-
-  const options = {
-    builder: new CallTransactionBuilder(),
-    method: 'bid',
-    params: {
-      _tokenName: auctionName,
-    },
-  };
-
-  window[signingActions.globalName] = signingActions.bid;
   signTx(transaction, options);
 };
 
@@ -262,7 +240,7 @@ export const signTx = (transaction = {}, options = {}) => {
  */
 export const getBTPfee = async (id, network) => {
   const fee = await makeICXCall({
-    to: chainConfigs[network]?.ICON_BSH_ADDRESS || chainConfigs[id]?.ICON_BSH_ADDRESS,
+    to: chainConfigs[network || id]?.BTS_CORE,
     dataType: 'call',
     data: {
       method: 'feeRatio',
@@ -347,19 +325,19 @@ export const getBalanceOf = async ({ address, refundable = false, symbol, isToke
   }
 };
 
-export const approveIRC2 = (tx) => {
-  const { value, network } = tx;
-  const { ICON_IRC2_ADDRESS, ICON_TOKEN_BSH_ADDRESS } = chainConfigs[network];
+export const approveIRC2 = async (tx) => {
+  const { value, network, coinName } = tx;
+  const bshAddress = await getBSHAddressOfCoinName(coinName);
 
   const transaction = {
-    to: ICON_IRC2_ADDRESS,
+    to: bshAddress,
   };
 
   const options = {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: ICON_TOKEN_BSH_ADDRESS,
+      _to: chainConfigs[network].BTS_CORE,
       _value: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
@@ -368,29 +346,5 @@ export const approveIRC2 = (tx) => {
   window[signingActions.globalName] = signingActions.approveIRC2;
 
   signTx(transaction, options);
-  return { transaction, options };
-};
-
-export const transferIRC2 = () => {
-  const { coinName, value, to, network } = window[txPayload];
-  const { NETWORK_ADDRESS, ICON_TOKEN_BSH_ADDRESS } = chainConfigs[network];
-
-  const transaction = {
-    to: ICON_TOKEN_BSH_ADDRESS,
-  };
-
-  const options = {
-    builder: new CallTransactionBuilder(),
-    method: 'transfer',
-    params: {
-      tokenName: coinName,
-      value: IconConverter.toHex(convertToLoopUnit(value)),
-      to: `btp://${NETWORK_ADDRESS}/${to}`,
-    },
-  };
-
-  window[signingActions.globalName] = signingActions.transfer;
-  signTx(transaction, options);
-
   return { transaction, options };
 };
