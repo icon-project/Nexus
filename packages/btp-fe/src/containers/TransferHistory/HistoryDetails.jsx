@@ -15,8 +15,7 @@ import { getTransferHistoryByTxHash } from 'services/btpServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 
 import { Text } from 'components/Typography';
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
+import { colors, media, mixins } from 'components/Styles';
 import { chainConfigs } from 'connectors/chainConfigs';
 
 const StyledHistoryDetails = styled.div`
@@ -25,6 +24,7 @@ const StyledHistoryDetails = styled.div`
   justify-content: center;
   top: 0;
   left: 0;
+
   .history-details {
     width: 100%;
     height: fit-content;
@@ -39,22 +39,28 @@ const StyledHistoryDetails = styled.div`
     ${media.smallDesktop`
       max-height: 65vh;
   `};
+
+    ${mixins.scrollBar};
   }
+
   .heading {
     text-align: center;
     margin-bottom: 33px;
     width: 100%;
     position: relative;
   }
+
   .content {
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 29px;
   }
+
   .btp-fee {
     margin-bottom: 0;
   }
+
   .internal-trx {
     width: 100%;
     display: flex;
@@ -162,7 +168,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
         {isFetching ? (
-          <Loader size={'24px'} borderSize={'2px'} />
+          <Loader size="24px" borderSize="2px" />
         ) : (
           <div className="history-details">
             <div className="content">

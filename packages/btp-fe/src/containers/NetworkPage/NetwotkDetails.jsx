@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 
 import { Text } from 'components/Typography';
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
+import { colors, media, mixins } from 'components/Styles';
 import { Loader } from 'components/Loader';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
@@ -22,17 +21,8 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr;
     max-height: 100vh;
   `};
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #57565a;
-  }
+  ${mixins.scrollBar};
 `;
 
 const NetworkWrapper = styled.div`
@@ -125,7 +115,7 @@ export const NetwotkDetails = ({ currentNetworkID }) => {
   return (
     <>
       {loading ? (
-        <Loader size="40px" borderSize="3px" />
+        <Loader size="24px" borderSize="2px" />
       ) : (
         <Wrapper>
           {networkDetails.map((detail) => (

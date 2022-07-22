@@ -14,6 +14,7 @@ import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
 import { ReactComponent as nearIcon } from 'assets/images/near-icon.svg';
 
 import HamornyICon from 'assets/images/harmony-icon.png';
+import defaultCoin from 'assets/images/default-coin.png';
 import hanaIcon from 'assets/images/hana-wallet.png';
 import iconexIcon from 'assets/images/icon-ex.png';
 import MBIcon from 'assets/images/moonbeam.jpeg';
@@ -79,9 +80,10 @@ export const Icon = memo(
       DEV: MBIcon,
       NEAR: nearIcon,
       ONE: HamornyICon,
+      defaultCoin,
     };
 
-    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.ICX;
+    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.defaultCoin;
     const isImagePath = iconURL || (typeof MySource === 'string' && MySource.includes('/'));
 
     return (
@@ -128,6 +130,8 @@ Icon.propTypes = {
     'DEV',
     'NEAR',
     'ONE',
+    'TBNB',
+    'TICX',
     '',
   ]),
   /** Display icon with URL */

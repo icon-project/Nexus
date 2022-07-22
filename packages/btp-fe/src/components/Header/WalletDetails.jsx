@@ -12,8 +12,7 @@ import { chainList, chainConfigs } from 'connectors/chainConfigs';
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
 import { TextMixin } from 'components/Typography/Text';
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
+import { colors, media, mixins } from 'components/Styles';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
 
@@ -26,9 +25,7 @@ const Wrapper = styled.div`
   max-height: 80vh;
   overflow-y: auto;
 
-  &::-webkit-scrollbar {
-    width: 0;
-  }
+  ${mixins.scrollBar};
 
   .network-name {
     margin-bottom: 42px;
