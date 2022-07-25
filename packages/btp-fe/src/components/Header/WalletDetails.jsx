@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -6,8 +6,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
-import { getService } from 'services/transfer';
-import { chainList, chainConfigs } from 'connectors/chainConfigs';
+// import { getService } from 'services/transfer';
+// import { chainList, chainConfigs } from 'connectors/chainConfigs';
+import { chainList } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -17,7 +18,7 @@ import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
 
 import copyIcon from 'assets/images/copy-icon.svg';
-import refundIcon from 'assets/images/refund-icon.svg';
+// import refundIcon from 'assets/images/refund-icon.svg';
 
 const { tertiaryBase, grayScaleSubText, grayLine } = colors;
 
@@ -127,23 +128,23 @@ const TokenSelector = styled(Select)`
   }
 `;
 
-const RefundSelector = styled(Select)`
-  padding: 0px 0px;
-  background-color: transparent !important;
-  display: inline-flex;
-  border-right: solid 1px ${grayLine};
-  border-radius: 0px;
-  margin-right: 11.67px;
+// const RefundSelector = styled(Select)`
+//   padding: 0px 0px;
+//   background-color: transparent !important;
+//   display: inline-flex;
+//   border-right: solid 1px ${grayLine};
+//   border-radius: 0px;
+//   margin-right: 11.67px;
 
-  &::after {
-    width: 9.33px;
-    margin: 0 11.67px;
-  }
+//   &::after {
+//     width: 9.33px;
+//     margin: 0 11.67px;
+//   }
 
-  > ul {
-    left: 0;
-  }
-`;
+//   > ul {
+//     left: 0;
+//   }
+// `;
 
 const ActionBtn = styled.button`
   ${TextMixin.xsBold};
@@ -164,7 +165,7 @@ export const WalletDetails = ({
   shortedAddress,
   onDisconnectWallet,
   onSwitchWallet,
-  networkID,
+  // networkID,
 }) => {
   const tokens = [
     { label: symbol, value: symbol },
@@ -175,68 +176,68 @@ export const WalletDetails = ({
   ];
 
   const [selectedToken, setSelectedToken] = useState(symbol);
-  const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
+  // const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
   const [refundedTokens, setRefundedTokens] = useState([]);
-  const [refund, setRefund] = useState(0);
+  // const [refund, setRefund] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
-  const ICONChain = chainConfigs.ICON;
+  // const ICONChain = chainConfigs.ICON;
 
   // This useEffect handles query refundable balance
   /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    if (networkID === ICONChain?.id && selectedToken === ICONChain?.COIN_SYMBOL) {
-      chainList.forEach((chain) => {
-        if (chain.id !== ICONChain?.id) {
-          const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
-          getService()
-            ?.getBalanceOf({
-              address,
-              refundable: true,
-              symbol: value,
-            })
-            .then((refund) => {
-              if (refund > 0) {
-                setRefundedTokens((state) => [...state, { label: value, value }]);
-              }
-            });
-        }
-      });
-    } else {
-      getService()
-        ?.getBalanceOf({
-          address,
-          refundable: true,
-          symbol: selectedRefundToken,
-        })
-        .then((refund) => {
-          if (refund > 0) {
-            setRefund(refund);
-            setRefundedTokens([{ label: selectedRefundToken, value: selectedRefundToken }]);
-          }
-        });
-    }
-  }, [selectedToken]);
+  // useEffect(() => {
+  //   if (networkID === ICONChain?.id && selectedToken === ICONChain?.COIN_SYMBOL) {
+  //     chainList.forEach((chain) => {
+  //       if (chain.id !== ICONChain?.id) {
+  //         const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
+  //         getService()
+  //           ?.getBalanceOf({
+  //             address,
+  //             refundable: true,
+  //             symbol: value,
+  //           })
+  //           .then((refund) => {
+  //             if (refund > 0) {
+  //               setRefundedTokens((state) => [...state, { label: value, value }]);
+  //             }
+  //           });
+  //       }
+  //     });
+  //   } else {
+  //     getService()
+  //       ?.getBalanceOf({
+  //         address,
+  //         refundable: true,
+  //         symbol: selectedRefundToken,
+  //       })
+  //       .then((refund) => {
+  //         if (refund > 0) {
+  //           setRefund(refund);
+  //           setRefundedTokens([{ label: selectedRefundToken, value: selectedRefundToken }]);
+  //         }
+  //       });
+  //   }
+  // }, [selectedToken]);
 
   const onTokenChange = async (evt) => {
     setRefundedTokens([]);
     setSelectedToken(evt.target.value);
-    setSelectedRefundToken(evt.target.value);
+    // setSelectedRefundToken(evt.target.value);
   };
 
-  const onChangeRefundSelect = async (e) => {
-    const { value } = e.target;
-    setSelectedRefundToken(value);
-    getService()
-      ?.getBalanceOf({
-        address,
-        refundable: true,
-        symbol: value,
-      })
-      .then((refund) => {
-        setRefund(refund);
-      });
-  };
+  // const onChangeRefundSelect = async (e) => {
+  //   const { value } = e.target;
+  //   setSelectedRefundToken(value);
+  //   getService()
+  //     ?.getBalanceOf({
+  //       address,
+  //       refundable: true,
+  //       symbol: value,
+  //     })
+  //     .then((refund) => {
+  //       setRefund(refund);
+  //     });
+  // };
 
   return (
     <Wrapper>
@@ -250,7 +251,7 @@ export const WalletDetails = ({
       <Text className="md dark-text">~ ${toSeparatedNumberString(usdBalance)}</Text>
       {refundedTokens.length > 0 && (
         <>
-          <Text className="sm sub-title">Refunds</Text>
+          {/* <Text className="sm sub-title">Refunds</Text>
           <div className="box-container">
             <div className="select-refund">
               <RefundSelector
@@ -273,7 +274,7 @@ export const WalletDetails = ({
               <img src={refundIcon} alt="refund-icon" />
               Receive
             </ActionBtn>
-          </div>
+          </div> */}
         </>
       )}
       <Text className="sm sub-title">Wallet Address</Text>
