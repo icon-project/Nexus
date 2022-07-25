@@ -113,7 +113,7 @@ export const TransferCard = ({
     if (!nativeCoin) return targetChains;
     if (checkIsToken(sendingInfo.token)) {
       if (nativeCoin === chainConfigs.ICON.COIN_SYMBOL) {
-        return targetChains.filter(({ value }) => value === chainConfigs.HARMONY.id);
+        return targetChains.filter(({ value }) => value === chainConfigs.BSC?.id);
       }
       if (nativeCoin === chainConfigs.HARMONY.COIN_SYMBOL) {
         return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);

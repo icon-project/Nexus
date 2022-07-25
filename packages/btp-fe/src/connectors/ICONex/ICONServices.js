@@ -149,7 +149,7 @@ export const sendNonNativeCoin = () => {
 export const sendNativeCoin = (tx) => {
   const { value, to, network } = tx;
   const transaction = {
-    to: chainConfigs[network]?.ICON_BSH_ADDRESS,
+    to: chainConfigs[network]?.BTS_CORE,
     value,
   };
 
