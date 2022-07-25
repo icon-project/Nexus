@@ -11,9 +11,8 @@ import {
   txPayload,
   iconService,
   httpProvider,
-  getCurrentChain,
 } from 'connectors/constants';
-import { chainConfigs, getTokenList } from 'connectors/chainConfigs';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 import { requestSigning } from './events';
 import Request, {
@@ -280,15 +279,8 @@ export const getBSHAddressOfCoinName = async (coinName) => {
  * @param {object} payload
  * @returns {string} non-native token balance or refundable balance in a user-friendly format
  */
-export const getBalanceOf = async ({ address, refundable = false, symbol, isToken }) => {
+export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
   try {
-    const {
-      methods: { getBalanceOf = {} },
-    } = getCurrentChain();
-
-    const customPayload = getBalanceOf?.payload || {};
-    delete customPayload.symbol;
-
     const payload = {
       dataType: 'call',
       data: {
@@ -297,18 +289,12 @@ export const getBalanceOf = async ({ address, refundable = false, symbol, isToke
           _owner: address,
         },
       },
-      ...customPayload,
     };
 
     if (refundable) {
       payload.to = getICONBSHAddressforEachChain(symbol);
       payload.data.params._coinName = symbol.split('-')[0];
-    } else if (isToken) {
-      // call to IRC2 address if token
-      const targetChain = getTokenList().find((token) => token.symbol === symbol);
-      payload.to = chainConfigs[targetChain.chainId].ICON_IRC2_ADDRESS;
     } else {
-      // call to coin BSH address if coin
       const bshAddressToken = await getBSHAddressOfCoinName(symbol.split('-')[0]);
       if (!bshAddressToken) throw new Error('BSH address not found');
       payload.to = bshAddressToken;

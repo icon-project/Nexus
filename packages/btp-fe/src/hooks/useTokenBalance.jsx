@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 import { useSelect } from 'hooks/useRematch';
 import { getService } from 'services/transfer';
-import { getTokenList } from 'connectors/chainConfigs';
 
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
@@ -28,9 +27,8 @@ export const useTokenBalance = (currentSymbol, step, shouldFetch = true) => {
         if (isNativeCoin) {
           setToken((prev) => ({ ...prev, [symbol]: balance }));
         } else {
-          const isToken = getTokenList().find((token) => token.symbol === currentSymbol);
           getService()
-            .getBalanceOf({ address, symbol: currentSymbol, isToken: !!isToken })
+            .getBalanceOf({ address, symbol: currentSymbol })
             .then((result) => {
               setToken((prev) => ({ ...prev, [currentSymbol]: result }));
             });
