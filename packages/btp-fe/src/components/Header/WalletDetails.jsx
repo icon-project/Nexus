@@ -8,7 +8,7 @@ import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 // import { getService } from 'services/transfer';
 // import { chainList, chainConfigs } from 'connectors/chainConfigs';
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, getTokenList } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -125,6 +125,10 @@ const TokenSelector = styled(Select)`
   > ul {
     top: calc(100% - 5px);
     width: 110px;
+    max-height: 130px;
+    overflow-y: auto;
+
+    ${mixins.scrollBar};
   }
 `;
 
@@ -169,11 +173,16 @@ export const WalletDetails = ({
 }) => {
   const tokens = [
     { label: symbol, value: symbol },
-    { label: 'ETH', value: 'ETH' },
+    ...getTokenList().map(({ symbol: COIN_SYMBOL }) => ({
+      label: COIN_SYMBOL,
+      value: COIN_SYMBOL,
+    })),
     ...chainList
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== symbol),
   ];
+
+  console.log(getTokenList());
 
   const [selectedToken, setSelectedToken] = useState(symbol);
   // const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
