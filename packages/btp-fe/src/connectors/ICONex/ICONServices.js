@@ -293,9 +293,9 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
     if (refundable) {
       payload.to = getICONBSHAddressforEachChain(symbol);
-      payload.data.params._coinName = symbol.split('-')[0];
+      payload.data.params._coinName = symbol;
     } else {
-      const bshAddressToken = await getBSHAddressOfCoinName(symbol.split('-')[0]);
+      const bshAddressToken = await getBSHAddressOfCoinName(symbol);
       if (!bshAddressToken) throw new Error('BSH address not found');
       payload.to = bshAddressToken;
     }
