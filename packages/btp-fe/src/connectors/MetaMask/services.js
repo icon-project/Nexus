@@ -3,26 +3,26 @@ import { ethers } from 'ethers';
 import { signingActions, rawTransaction, getCurrentChain } from 'connectors/constants';
 
 import { convertToICX } from 'connectors/ICONex/utils';
-import { chainConfigs, checkIsToken } from 'connectors/chainConfigs';
+import { chainConfigs } from 'connectors/chainConfigs';
 import { toChecksumAddress } from './utils';
 import { roundNumber } from 'utils/app';
 import { EthereumInstance } from 'connectors/MetaMask';
+import { ABI } from './ABI';
 
 const ICONchain = chainConfigs.ICON || {};
 
-export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX', isToken }) => {
+export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {
-    let balance = 0;
-    // ETH is the only one ERC20 token so far, others are coin.
-    if (isToken) {
-      balance = await EthereumInstance.BEP20Contract.balanceOf(address);
-    } else {
-      balance = await EthereumInstance.contract.getBalanceOf(address, symbol);
-    }
+    if (refundable) return 0; // TODO: implement query refundable balance
 
-    return refundable
-      ? convertToICX(balance._refundableBalance._hex)
-      : roundNumber(convertToICX(balance._hex || balance[0]._hex), 6);
+    const balance =
+      (await new ethers.Contract(
+        getCurrentChain()[symbol],
+        ABI,
+        EthereumInstance.provider,
+      ).balanceOf(address)) || 0;
+
+    return roundNumber(convertToICX(balance._hex || balance[0]._hex), 6);
   } catch (err) {
     console.log('Err: ', err);
     return 0;
@@ -30,16 +30,9 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX'
 };
 
 export const reclaim = async ({ coinName, value }) => {
-  const {
-    BSH_CORE,
-    GAS_LIMIT,
-    methods: { reclaim = {} },
-  } = getCurrentChain();
+  const { BSH_CORE, GAS_LIMIT } = getCurrentChain();
 
-  const data = EthereumInstance.ABI.encodeFunctionData(
-    reclaim.newName || 'reclaim',
-    reclaim.params ? reclaim.params({ amount: value, coinName }) : [coinName, value],
-  );
+  const data = EthereumInstance.ABI.encodeFunctionData('reclaim', [coinName, value]);
 
   await EthereumInstance.sendTransaction({
     from: EthereumInstance.ethereum.selectedAddress,
@@ -50,13 +43,7 @@ export const reclaim = async ({ coinName, value }) => {
 };
 
 export const transfer = async (tx, sendNativeCoin, token) => {
-  const {
-    BSH_CORE,
-    BSH_PROXY,
-    BEP20,
-    GAS_LIMIT,
-    methods: { transferNativeCoin = {}, approve = {} },
-  } = getCurrentChain();
+  const { BTS_CORE, GAS_LIMIT } = getCurrentChain();
 
   // https://docs.metamask.io/guide/sending-transactions.html#example
   const value = ethers.utils.parseEther(tx.value)._hex;
@@ -70,31 +57,22 @@ export const transfer = async (tx, sendNativeCoin, token) => {
   if (sendNativeCoin) {
     window[signingActions.globalName] = signingActions.transfer;
 
-    data = EthereumInstance.ABI.encodeFunctionData(
-      transferNativeCoin.newName || 'transferNativeCoin',
-      transferNativeCoin.params
-        ? transferNativeCoin.params({ amount: value, coinName: token, recipientAddress: to })
-        : [`btp://${ICONchain.NETWORK_ADDRESS}/${to}`],
-    );
+    data = EthereumInstance.ABI.encodeFunctionData('transferNativeCoin', [
+      `btp://${ICONchain.NETWORK_ADDRESS}/${to}`,
+    ]);
     txParams = {
       ...txParams,
-      to: BSH_CORE,
+      to: BTS_CORE,
     };
   } else {
     window[rawTransaction] = tx;
     window[signingActions.globalName] = signingActions.approve;
-    const isToken = checkIsToken(token);
 
-    data = EthereumInstance.ABI.encodeFunctionData(
-      approve.newName || 'approve',
-      approve.params
-        ? approve.params({ amount: value, coinName: token })
-        : [isToken ? BSH_PROXY : BSH_CORE, value],
-    );
+    data = EthereumInstance.ABI.encodeFunctionData('approve', [BTS_CORE, value]);
 
     txParams = {
       ...txParams,
-      to: isToken ? BEP20 : getCurrentChain()['BSH_' + token],
+      to: getCurrentChain()[token],
     };
     delete txParams.value;
   }
@@ -110,30 +88,21 @@ export const transfer = async (tx, sendNativeCoin, token) => {
 };
 
 export const sendNoneNativeCoin = async () => {
-  const {
-    BSH_CORE,
-    BSH_PROXY,
-    GAS_LIMIT,
-    methods: { transfer = {} },
-  } = getCurrentChain();
+  const { BTS_CORE, GAS_LIMIT } = getCurrentChain();
 
   const { value, to, coinName } = window[rawTransaction];
   const hexValue = ethers.utils.parseEther(value)._hex;
 
-  const data = EthereumInstance.ABI.encodeFunctionData(
-    transfer.newName || 'transfer',
-    transfer.params
-      ? transfer.params({
-          amount: hexValue,
-          recipientAddress: to,
-        })
-      : [coinName, hexValue, `btp://${ICONchain.NETWORK_ADDRESS}/${to}`],
-  );
+  const data = EthereumInstance.ABI.encodeFunctionData('transfer', [
+    coinName,
+    hexValue,
+    `btp://${ICONchain.NETWORK_ADDRESS}/${to}`,
+  ]);
 
   window[signingActions.globalName] = signingActions.transfer;
   const params = {
     from: EthereumInstance.ethereum.selectedAddress,
-    to: checkIsToken(coinName) ? BSH_PROXY : BSH_CORE,
+    to: BTS_CORE,
     gas: GAS_LIMIT,
     data,
   };

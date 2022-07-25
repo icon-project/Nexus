@@ -109,7 +109,7 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
     builder: new CallTransactionBuilder(),
     method: 'approve',
     params: {
-      spender: chainConfigs[network].BTS_CORE,
+      spender: chainConfigs[network].ICON_BTS_CORE,
       amount: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
@@ -125,10 +125,10 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
  */
 export const sendNonNativeCoin = () => {
   const { coinName, value, to, network } = window[txPayload];
-  const { NETWORK_ADDRESS, BTS_CORE } = chainConfigs[network];
+  const { NETWORK_ADDRESS, ICON_BTS_CORE } = chainConfigs[network];
 
   const transaction = {
-    to: BTS_CORE,
+    to: ICON_BTS_CORE,
   };
 
   const options = {
@@ -149,7 +149,7 @@ export const sendNonNativeCoin = () => {
 export const sendNativeCoin = (tx) => {
   const { value, to, network } = tx;
   const transaction = {
-    to: chainConfigs[network]?.BTS_CORE,
+    to: chainConfigs[network]?.ICON_BTS_CORE,
     value,
   };
 
@@ -239,7 +239,7 @@ export const signTx = (transaction = {}, options = {}) => {
  */
 export const getBTPfee = async (id, network) => {
   const fee = await makeICXCall({
-    to: chainConfigs[network || id]?.BTS_CORE,
+    to: chainConfigs[id]?.ICON_BTS_CORE || chainConfigs[network]?.ICON_BTS_CORE,
     dataType: 'call',
     data: {
       method: 'feeRatio',
@@ -292,8 +292,9 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
     };
 
     if (refundable) {
-      payload.to = getICONBSHAddressforEachChain(symbol);
-      payload.data.params._coinName = symbol;
+      // payload.to = getICONBSHAddressforEachChain(symbol);
+      // payload.data.params._coinName = symbol;
+      return 0; // TODO: implement query refundable balance
     } else {
       const bshAddressToken = await getBSHAddressOfCoinName(symbol);
       if (!bshAddressToken) throw new Error('BSH address not found');
@@ -323,7 +324,7 @@ export const approveIRC2 = async (tx) => {
     builder: new CallTransactionBuilder(),
     method: 'transfer',
     params: {
-      _to: chainConfigs[network].BTS_CORE,
+      _to: chainConfigs[network].ICON_BTS_CORE,
       _value: IconConverter.toHex(convertToLoopUnit(value)),
     },
   };
