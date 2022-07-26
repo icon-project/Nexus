@@ -11,5 +11,9 @@ export const txStatus = {
   SUCCESS: 1,
 };
 
+export const tokenTypes = {
+  IRC2: 'IRC2',
+};
+
 export const SUCCESS_TRANSACTION = 'SUCCESS_TRANSACTION';
 export const E2ETestingRoute = '/E2ETestingRoute';
