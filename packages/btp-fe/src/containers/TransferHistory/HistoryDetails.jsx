@@ -124,9 +124,6 @@ const exploreURL = {
   ICON: {
     transaction: 'transaction/',
   },
-  HARMONY: {
-    transaction: 'tx/',
-  },
 };
 
 export const HistoryDetails = ({ txHash, onClose }) => {
@@ -178,7 +175,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   text={txHash}
                   href={
                     chainConfigs[networkNameSrc]?.EXPLORE_URL +
-                    exploreURL[networkNameSrc]?.transaction +
+                    (exploreURL[networkNameSrc]?.transaction || 'tx/') +
                     txHash
                   }
                 />
