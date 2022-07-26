@@ -123,10 +123,6 @@ const TokenSelector = styled(Select)`
   > ul {
     top: calc(100% - 5px);
     width: 110px;
-    max-height: 130px;
-    overflow-y: auto;
-
-    ${mixins.scrollBar};
   }
 `;
 
@@ -250,7 +246,7 @@ export const WalletDetails = ({
       <Avatar className="user-avatar" size={120} />
       <Header className="md bold wallet-balance">
         {toSeparatedNumberString(currentBalance)}
-        <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
+        <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" maxHeight="130px" />
       </Header>
 
       <Text className="md dark-text">~ ${toSeparatedNumberString(usdBalance)}</Text>

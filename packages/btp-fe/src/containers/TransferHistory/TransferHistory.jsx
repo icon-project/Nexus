@@ -21,7 +21,7 @@ import { Text } from 'components/Typography';
 
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { serverEndpoint } from 'connectors/constants';
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, getTokenList } from 'connectors/chainConfigs';
 import { txStatus } from 'utils/constants';
 
 import VectorSrc from 'assets/images/vector.svg';
@@ -225,12 +225,16 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All assets</Text>,
       renderItem: () => <Text className="md">All assets</Text>,
     },
-    ...chainList.map(({ COIN_SYMBOL }) => ({
-      value: COIN_SYMBOL,
-      label: COIN_SYMBOL,
-      renderLabel: () => <TextWithIcon icon={COIN_SYMBOL}>{COIN_SYMBOL}</TextWithIcon>,
-      renderItem: () => <TextWithIcon icon={COIN_SYMBOL}>{COIN_SYMBOL}</TextWithIcon>,
-    })),
+    ...[...getTokenList(), ...chainList].map(({ symbol, COIN_SYMBOL }) => {
+      const value = COIN_SYMBOL || symbol;
+
+      return {
+        label: value,
+        value,
+        renderLabel: () => <TextWithIcon icon={value}>{value}</TextWithIcon>,
+        renderItem: () => <TextWithIcon icon={value}>{value}</TextWithIcon>,
+      };
+    }),
   ];
 
   const transactionStatus = [
@@ -310,6 +314,7 @@ const TransferHistory = () => {
               onChange={(e) => onSelectChange(e, 'assetName')}
               label="Assets type"
               options={assets}
+              maxHeight="180px"
             />
             <SelectWithBorder
               onChange={(e) => onSelectChange(e, 'status')}
