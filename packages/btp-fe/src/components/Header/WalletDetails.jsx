@@ -41,10 +41,10 @@ const Wrapper = styled.div`
   }
 
   .wallet-balance {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 4px;
+    margin: 0 auto 4px;
+    position: relative;
+    width: fit-content;
+    max-width: 227px;
   }
 
   .sub-title {
@@ -106,10 +106,13 @@ const Wrapper = styled.div`
 const TokenSelector = styled(Select)`
   border: solid 1px ${grayLine};
   padding: 4px 8px;
-  margin-left: 10px;
   display: inline-flex;
   height: 32px;
   min-width: 84px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(calc(100% + 10px), -50%);
 
   > .md {
     ${TextMixin.bold};
