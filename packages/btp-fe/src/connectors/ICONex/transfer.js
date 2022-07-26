@@ -9,7 +9,7 @@ export const transfer = async (tx, isSendingNativeCoin, token) => {
 
   if (isSendingNativeCoin) {
     return sendNativeCoin(tx);
-  } else if (isToken && isToken.type !== tokenTypes.IRC2) {
+  } else if (isToken && isToken.type === tokenTypes.IRC2) {
     return approveIRC2(tx);
   } else {
     return await setApproveForSendNonNativeCoin(tx);
