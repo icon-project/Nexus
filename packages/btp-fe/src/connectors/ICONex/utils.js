@@ -52,19 +52,7 @@ export const resetTransferStep = () => {
  * @param {string} coinName
  * @returns {string} BSH address on ICON side for that coin OR token from other chains
  */
-export const getICONBSHAddressforEachChain = (coinName) => {
-  const chain = chainList.find(({ COIN_SYMBOL, id, tokens }) => {
-    if (tokens && tokens.length > 0) {
-      const hasToken = tokens.find(({ symbol }) => symbol === coinName);
-      if (hasToken) return true;
-    }
-    return COIN_SYMBOL === coinName || coinName.endsWith(id);
-  });
-
-  if (!chain) {
-    console.error('relevant chain not found');
-    return null;
-  }
-
-  return chain.ICON_BTS_CORE;
+export const getICONBSHAddressforEachChain = () => {
+  // TODO: implement for mutil-chain, only 2 for current
+  return chainList[1]?.ICON_BTS_CORE;
 };
