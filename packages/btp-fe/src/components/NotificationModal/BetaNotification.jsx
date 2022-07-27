@@ -16,7 +16,7 @@ export const BetaNotification = ({ setDisplay }) => {
       <Text className="md">
         Nexus is in Beta. Please use at your own risk.{' '}
         <NavLink
-          to="/terms-of-use"
+          to={{ pathname: '/terms-of-use', state: { prevPath: location.pathname } }}
           onClick={() => {
             setDisplay(false);
           }}
