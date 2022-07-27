@@ -60,27 +60,7 @@ export let ABI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
     name: 'balanceOf',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-    constant: true,
-  },
-  {
-    name: 'getBalanceOf',
     inputs: [
       {
         internalType: 'address',
@@ -130,6 +110,24 @@ export let ABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_coinName',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'reclaim',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];
