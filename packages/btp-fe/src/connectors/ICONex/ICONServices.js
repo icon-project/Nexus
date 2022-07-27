@@ -261,7 +261,7 @@ export const getBSHAddressOfCoinName = async (coinName) => {
       dataType: 'call',
       to: getICONBSHAddressforEachChain(coinName),
       data: {
-        method: 'coinAddress',
+        method: 'coinId',
         params: {
           _coinName: coinName,
         },
@@ -292,9 +292,8 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
     };
 
     if (refundable) {
-      // payload.to = getICONBSHAddressforEachChain(symbol);
-      // payload.data.params._coinName = symbol;
-      return 0; // TODO: implement query refundable balance
+      payload.to = getICONBSHAddressforEachChain(symbol);
+      payload.data.params._coinName = symbol;
     } else {
       const bshAddressToken = await getBSHAddressOfCoinName(symbol);
       if (!bshAddressToken) throw new Error('BSH address not found');

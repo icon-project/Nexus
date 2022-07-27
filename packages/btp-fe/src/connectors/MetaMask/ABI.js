@@ -34,7 +34,6 @@ export let ABI = [
     outputs: [],
     stateMutability: 'payable',
     type: 'function',
-    payable: true,
   },
   {
     inputs: [
@@ -113,7 +112,6 @@ export let ABI = [
     ],
     stateMutability: 'view',
     type: 'function',
-    constant: true,
   },
   {
     inputs: [
@@ -122,20 +120,16 @@ export let ABI = [
         name: '_coinName',
         type: 'string',
       },
+    ],
+    name: 'coinId',
+    outputs: [
       {
-        internalType: 'uint256',
-        name: '_value',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: '_to',
-        type: 'string',
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
-    name: 'transferWrappedCoin',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
     type: 'function',
   },
 ];
