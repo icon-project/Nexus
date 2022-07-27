@@ -8,21 +8,32 @@ import { toChecksumAddress } from './utils';
 import { roundNumber } from 'utils/app';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { ABI } from './ABI';
+import { ABIOfToken } from './ABIOfToken';
 
 const ICONchain = chainConfigs.ICON || {};
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {
-    if (refundable) return 0; // TODO: implement query refundable balance
+    let balance = 0;
 
-    const balance =
-      (await new ethers.Contract(
-        getCurrentChain()[symbol],
+    if (refundable) {
+      balance = await new ethers.Contract(
+        getCurrentChain().BTS_CORE,
         ABI,
         EthereumInstance.provider,
-      ).balanceOf(address)) || 0;
+      ).balanceOf(address, symbol);
+    } else {
+      balance = await new ethers.Contract(
+        getCurrentChain()[symbol],
+        ABIOfToken,
+        EthereumInstance.provider,
+      ).balanceOf(address);
+    }
 
-    return roundNumber(convertToICX(balance._hex || balance[0]._hex), 6);
+    return roundNumber(
+      convertToICX(refundable ? balance._refundableBalance._hex : balance._hex || balance[0]._hex),
+      6,
+    );
   } catch (err) {
     console.log('Err: ', err);
     return 0;
