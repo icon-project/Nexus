@@ -406,7 +406,11 @@ const Header = () => {
       </StyledHeader>
       <SubTitle className="beta-text">
         Nexus is in beta while ICON Bridge is currently being audited. Please ensure you have read
-        the <NavLink to="/terms-of-use">terms of use</NavLink>.
+        the{' '}
+        <NavLink to={{ pathname: '/terms-of-use', state: { prevPath: location.pathname } }}>
+          terms of use
+        </NavLink>
+        .
       </SubTitle>
     </Wrapper>
   );
