@@ -91,7 +91,7 @@ export const Table = ({
   getItemsHandler,
   sortOptions = {},
   dataSource,
-  filterParams,
+  filterParams = '',
   ...rest
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -99,24 +99,18 @@ export const Table = ({
   const { totalItem, limit } = pagination;
   const { order, orderBy } = sortOptions;
 
-  // fist load
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    if (getItemsHandler) getItemsHandler(current)();
-  }, []);
-
-  // onPagechanged
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    if (getItemsHandler && current !== 1) getItemsHandler(current)();
-  }, [current]);
-
   // reset page index when params change
   useEffect(() => {
     if (filterParams) {
       setCurrent(1);
     }
   }, [filterParams]);
+
+  // onPagechanged
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (getItemsHandler) getItemsHandler(current)();
+  }, [current + filterParams]);
 
   // we don't set loading immediately to avoid blinking UI
   useEffect(() => {
