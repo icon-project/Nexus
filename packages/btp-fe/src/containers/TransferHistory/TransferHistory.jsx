@@ -291,11 +291,6 @@ const TransferHistory = () => {
 
     if (value !== filters[selectorName]) {
       setFilters({ ...filters, [selectorName]: value });
-      fetchDataHandler({
-        ...filters,
-        page: 1,
-        [selectorName]: value,
-      });
     }
   };
   return (
