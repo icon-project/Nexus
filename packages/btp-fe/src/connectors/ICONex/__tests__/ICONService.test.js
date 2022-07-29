@@ -15,7 +15,7 @@ const toAddress = '0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5';
 const harmonyChain = {
   network: 'HARMONY',
   COIN_SYMBOL: 'ONE',
-  ICON_BSH_ADDRESS: 'cxe24a2f5f46227ba91962d172945875c805f63e63',
+  ICON_BTS_CORE: 'cxe24a2f5f46227ba91962d172945875c805f63e63',
   NETWORK_ADDRESS: '0x6357d2e0.hmny',
   ICON_IRC2_ADDRESS: 'abc',
   ICON_TOKEN_BSH_ADDRESS: 'xyz',
@@ -89,7 +89,7 @@ describe('ICONService', () => {
 
       expect(mock_sendNativeCoin).toBeCalledTimes(1);
       expect(result).toEqual({
-        transaction: { value: amount, to: harmonyChain.ICON_BSH_ADDRESS },
+        transaction: { value: amount, to: harmonyChain.ICON_BTS_CORE },
         options: {
           builder: expect.anything(),
           method: 'transferNativeCoin',
@@ -119,7 +119,7 @@ describe('ICONService', () => {
           builder: expect.anything(),
           method: 'approve',
           params: {
-            spender: harmonyChain.ICON_BSH_ADDRESS,
+            spender: harmonyChain.ICON_BTS_CORE,
             amount: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
@@ -142,38 +142,13 @@ describe('ICONService', () => {
       expect(tx).toEqual(window[txPayload]);
       expect(window[signingActions.globalName]).toBe(signingActions.transfer);
       expect(result).toEqual({
-        transaction: { to: harmonyChain.ICON_BSH_ADDRESS },
+        transaction: { to: harmonyChain.ICON_BTS_CORE },
         options: {
           builder: expect.anything(),
           method: 'transfer',
           params: {
             _coinName: harmonyChain.COIN_SYMBOL,
             _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
-            _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
-          },
-        },
-      });
-    });
-
-    test('approveIRC2', async () => {
-      jest.spyOn(chainConfigs, 'checkIsToken').mockImplementation(() => true);
-
-      const tx = {
-        value: amount,
-        network: harmonyChain.network,
-        coinName: harmonyChain.COIN_SYMBOL,
-      };
-      const result = await transfer(tx, false);
-
-      expect(tx).toEqual(window[txPayload]);
-      expect(signingActions.approveIRC2).toEqual(window[signingActions.globalName]);
-      expect(result).toEqual({
-        transaction: { to: harmonyChain.ICON_IRC2_ADDRESS },
-        options: {
-          builder: expect.anything(),
-          method: 'transfer',
-          params: {
-            _to: harmonyChain.ICON_TOKEN_BSH_ADDRESS,
             _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
@@ -189,18 +164,18 @@ describe('ICONService', () => {
       };
 
       ICONService.approveIRC2(tx);
-      const result = ICONService.transferIRC2();
+      const result = ICONService.sendNonNativeCoin();
 
       expect(window[signingActions.globalName]).toBe(signingActions.transfer);
       expect(result).toEqual({
-        transaction: { to: harmonyChain.ICON_TOKEN_BSH_ADDRESS },
+        transaction: { to: harmonyChain.ICON_BTS_CORE },
         options: {
           builder: expect.anything(),
           method: 'transfer',
           params: {
-            to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
-            tokenName: harmonyChain.COIN_SYMBOL,
-            value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
+            _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
+            _coinName: harmonyChain.COIN_SYMBOL,
+            _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
       });

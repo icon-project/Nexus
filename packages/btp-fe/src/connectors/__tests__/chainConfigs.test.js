@@ -26,17 +26,12 @@ describe('connectors/chainConfigs', () => {
     delete chainConfigs.ICON;
 
     for (const key in chainConfigs) {
-      expect(chainConfigs[key].BEP20).toBeTruthy();
-      expect(chainConfigs[key].BSH_CORE).toBeTruthy();
-      expect(chainConfigs[key].BSH_ICX).toBeTruthy();
-      expect(chainConfigs[key].BSH_PROXY).toBeTruthy();
+      expect(chainConfigs[key].BTS_CORE).toBeTruthy();
       expect(chainConfigs[key].CHAIN_NAME).toBeTruthy();
       expect(chainConfigs[key].COIN_SYMBOL).toBeTruthy();
       expect(chainConfigs[key].EXPLORE_URL).toMatch(/^(https:\/\/).*(\/)$/);
       expect(chainConfigs[key].GAS_LIMIT).toBeTruthy();
-      expect(chainConfigs[key].ICON_BSH_ADDRESS).toBeTruthy();
-      expect(chainConfigs[key].ICON_IRC2_ADDRESS).toBeTruthy();
-      expect(chainConfigs[key].ICON_TOKEN_BSH_ADDRESS).toBeTruthy();
+      expect(chainConfigs[key].ICON_BTS_CORE).toBeTruthy();
       expect(chainConfigs[key].NETWORK_ADDRESS).toMatch(/./);
       expect(chainConfigs[key].RPC_URL).toBeTruthy();
       expect(chainConfigs[key].id).toBeTruthy();
