@@ -67,6 +67,18 @@ const TableStyled = styled(antdTable)`
 
   table {
     border-spacing: 0;
+    tr {
+      ${({ columns }) => {
+        return columns[0].width
+          ? columns
+              .map(
+                (col, idx) =>
+                  `td:nth-child(${idx + 1}),th:nth-child(${idx + 1}){min-width:${col.width};}`,
+              )
+              .join('')
+          : '';
+      }}
+    }
   }
 
   ${media.md`

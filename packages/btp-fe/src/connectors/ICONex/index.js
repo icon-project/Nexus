@@ -136,6 +136,7 @@ export const eventHandler = async (event) => {
           }, 2000);
         });
       } catch (err) {
+        console.error(err);
         switch (window[signingActions.globalName]) {
           case signingActions.bid:
             modal.openModal({
