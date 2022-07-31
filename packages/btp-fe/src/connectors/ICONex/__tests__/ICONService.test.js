@@ -3,7 +3,6 @@ const { CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
 import { signingActions, txPayload } from 'connectors/constants';
-import * as chainConfigs from 'connectors/chainConfigs';
 
 import * as ICONService from '../ICONServices';
 import * as constants from 'connectors/constants';

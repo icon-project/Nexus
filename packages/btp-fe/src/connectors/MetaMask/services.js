@@ -24,7 +24,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX'
       ).balanceOf(address, symbol);
     } else {
       balance = await new ethers.Contract(
-        getCurrentChain()[symbol],
+        await getCoinId(symbol),
         ABIOfToken,
         EthereumInstance.provider,
       ).balanceOf(address);
@@ -35,8 +35,16 @@ export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX'
       6,
     );
   } catch (err) {
-    console.log('Err: ', err);
+    console.error('Err: ', err);
     return 0;
+  }
+};
+
+export const getCoinId = async (coinName) => {
+  try {
+    return await EthereumInstance.contract.coinId(coinName);
+  } catch (err) {
+    console.error('Err: ', err);
   }
 };
 
@@ -83,7 +91,7 @@ export const transfer = async (tx, sendNativeCoin, token) => {
 
     txParams = {
       ...txParams,
-      to: getCurrentChain()[token],
+      to: await getCoinId(token),
     };
     delete txParams.value;
   }
