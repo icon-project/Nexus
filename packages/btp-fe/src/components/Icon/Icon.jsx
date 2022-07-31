@@ -116,24 +116,7 @@ Icon.propTypes = {
   /** Custome width and overrride size */
   width: PropTypes.string,
   /** List of avalable icons */
-  icon: PropTypes.oneOf([
-    wallets.metamask,
-    wallets.iconex,
-    wallets.hana,
-    'ICX',
-    'ETH',
-    'copy',
-    'binance',
-    'BNB',
-    'btc',
-    'bch',
-    'DEV',
-    'NEAR',
-    'ONE',
-    'TBNB',
-    'TICX',
-    '',
-  ]),
+  icon: PropTypes.string,
   /** Display icon with URL */
   iconURL: PropTypes.string,
   /** Display icon with SVG component */

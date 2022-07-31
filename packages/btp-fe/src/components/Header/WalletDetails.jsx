@@ -108,7 +108,7 @@ const TokenSelector = styled(Select)`
   padding: 4px 8px;
   display: inline-flex;
   height: 32px;
-  min-width: 84px;
+  white-space: nowrap;
   position: absolute;
   right: 0;
   top: 50%;
