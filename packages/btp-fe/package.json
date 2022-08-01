@@ -1,6 +1,6 @@
 {
   "name": "btp-fe",
-  "version": "0.0.17",
+  "version": "0.0.25",
   "description": "",
   "main": "index.js",
   "private": true,
@@ -14,6 +14,7 @@
     "deploy:staging": "yarn build:mainnet && aws s3 cp ./build s3://nexusportal-fe-staging --recursive --profile btpdashboard",
     "invalidate:mainnet": "aws cloudfront create-invalidation --distribution-id ENVTP149RCKEL  --paths '/*' --profile btpdashboard",
     "invalidate:staging": "aws cloudfront create-invalidation --distribution-id EFNK7RJAZR8JY  --paths '/*' --profile btpdashboard",
+    "invalidate:testnet": "aws cloudfront create-invalidation --distribution-id EGH9S2YM7I2LW  --paths '/*' --profile btpdashboard",
     "test": "node scripts/test.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
