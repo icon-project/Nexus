@@ -104,8 +104,8 @@ export const TransferCard = ({
     Transfer ONE to ICON
     Transfer ICX to ICON 
     */
-    const targetChains = chainList.map(({ CHAIN_NAME, id, ...others }) => ({
-      value: id,
+    const targetChains = chainList.map(({ CHAIN_NAME, ...others }) => ({
+      value: CHAIN_NAME,
       label: CHAIN_NAME,
       ...others,
     }));
