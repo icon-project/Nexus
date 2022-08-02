@@ -9,6 +9,7 @@ import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransac
 import { getBTPfee } from 'connectors/ICONex/ICONServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
+import { chainConfigs } from 'connectors/chainConfigs';
 import { getService } from 'services/transfer';
 
 import { Header, Text, SubTitle } from 'components/Typography';
@@ -181,7 +182,9 @@ export const Approval = memo(
                   <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
                 </div>
               </CopyToClipboard>
-              <Text className="sm receiver--name">{network}</Text>
+              <Text className="sm receiver--name">
+                {chainConfigs[network]?.CHAIN_NAME || network}
+              </Text>
             </div>
           </div>
           <div className="transfer-fee">
