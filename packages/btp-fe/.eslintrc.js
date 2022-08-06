@@ -25,6 +25,7 @@ module.exports = {
     React: 'writable',
     cy: true,
     before: true,
+    Cypress: true,
   },
   parserOptions: {
     ecmaFeatures: {

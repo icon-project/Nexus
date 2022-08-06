@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 
 export const SuccessSubmittedTxContent = ({ setDisplay }) => {
   return (
-    <Wrapper>
+    <Wrapper id="success-tx-modal">
       <Text className="md">Your transaction was submitted successfully.</Text>
       <Link
         className="sm bold"

@@ -4,6 +4,7 @@ import IconService, { IconBuilder } from 'icon-sdk-js';
 
 import { useSelect } from 'hooks/useRematch';
 import { SubTitle, Text } from 'components/Typography';
+import { rawTransaction } from 'connectors/constants';
 
 const Wrapper = styled.div`
   width: 300px;
@@ -105,7 +106,7 @@ const HanaControlPannel = () => {
             break;
           case 'REQUEST_JSON-RPC':
             setDisplayConnectingRequest(false);
-            window['e2eTx'] = payload;
+            setHide(false);
             break;
           default:
             break;
@@ -145,20 +146,19 @@ const HanaControlPannel = () => {
   };
 
   const onSigning = () => {
-    const tx = window['e2eTx'];
+    const tx = window[rawTransaction];
+    console.log('🚀 ~ file: HanaControlPannel.jsx ~ line 150 ~ onSigning ~ tx', tx);
 
     const {
-      params: {
-        from,
-        nid,
-        nonce,
-        stepLimit,
-        timestamp,
-        to,
-        value,
-        version,
-        data: { method, params },
-      },
+      from,
+      nid,
+      nonce,
+      stepLimit,
+      timestamp,
+      to,
+      value,
+      version,
+      data: { method, params },
     } = tx;
     const { CallTransactionBuilder } = IconBuilder;
 
@@ -217,7 +217,9 @@ const HanaControlPannel = () => {
               <Text className="sm">Nexus would like to sign a transaction.</Text>
               <ButtonControl>
                 <button onClick={onCancel}>Cancel</button>
-                <button onClick={onSigning}>Sign</button>
+                <button onClick={onSigning} id="hana-simulation-sign-button">
+                  Sign
+                </button>
               </ButtonControl>
             </SigningRequest>
           )}

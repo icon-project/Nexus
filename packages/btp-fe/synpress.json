@@ -18,6 +18,5 @@
     },
     "defaultCommandTimeout": 30000,
     "pageLoadTimeout": 30000,
-    "requestTimeout": 30000,
-    "supportFile": "support/index.js"
+    "requestTimeout": 3000
   }

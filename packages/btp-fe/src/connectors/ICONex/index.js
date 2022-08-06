@@ -96,6 +96,7 @@ export const eventHandler = async (event) => {
                     icon: 'checkIcon',
                     desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
                     button: {
+                      id: 'approve-transfer-btn',
                       text: 'Transfer',
                       onClick: sendNonNativeCoin,
                     },

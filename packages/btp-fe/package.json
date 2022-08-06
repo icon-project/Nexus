@@ -24,7 +24,7 @@
     "lint": "eslint --ext .jsx,.js --ignore-path .gitignore",
     "lint:fix": "yarn lint --fix",
     "prettify": "prettier --write",
-    "e2e:run": "SKIP_METAMASK_SETUP=true env-cmd -f .env.e2e npx synpress run -cf synpress.json",
+    "e2e:run": "SKIP_METAMASK_SETUP=true env-cmd -f .env.e2e npx synpress run -cf synpress.json --config supportFile=cypress/support/e2e.js",
     "e2e:ui": "cypress open"
   },
   "browserslist": {
