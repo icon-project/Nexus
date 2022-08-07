@@ -23,7 +23,7 @@ describe('interact with MetaMask', () => {
     });
   });
 
-  it.skip('transfer BNB', () => {
+  it('transfer BNB', () => {
     cy.transferMetaMask({ tokenName: 'BNB', amount: 0.01 });
   });
 
