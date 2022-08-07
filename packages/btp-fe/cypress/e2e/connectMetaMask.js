@@ -3,11 +3,11 @@ describe('interact with MetaMask', () => {
     cy.setupMetamask(
       process.env.SECRET_WORDS,
       {
-        networkName: 'harmony mainnet',
-        rpcUrl: 'https://api.harmony.one',
-        chainId: '1666600000',
-        symbol: 'ONE',
-        blockExplorer: 'https://explorer.harmony.one',
+        networkName: 'BSC testnet',
+        rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        chainId: '97',
+        symbol: 'tBNB',
+        blockExplorer: 'https://testnet.bscscan.com/',
         isTestnet: false,
       },
       process.env.PASSWORD,
@@ -16,28 +16,18 @@ describe('interact with MetaMask', () => {
     });
   });
 
-  it('connect MetaMask', () => {
-    cy.visit('/transfer');
-    cy.get('#confirm-beta-button').click();
-    cy.get('.connect-to-wallet-btn').click();
-    cy.get('#do-connecting-wallet').click();
+  it('first connect to MetaMask', () => {
+    cy.connectMetaMaskWallet();
     cy.acceptMetamaskAccess().then((connected) => {
       expect(connected).to.be.true;
     });
   });
 
-  xit('send 0.1 ONE from Harmony to ICON', () => {
-    cy.get('#assest-selector').click();
-    cy.get('#ONE-select-item').click();
-    cy.get('#transfer-next-button').click();
+  it.skip('transfer BNB', () => {
+    cy.transferMetaMask({ tokenName: 'BNB', amount: 0.01 });
+  });
 
-    cy.get('input[name=tokenAmount]').type('0.1');
-    cy.get('input[name=recipient]').type('hxeffc184905bfff5db8879914690ba6e5cab2f224');
-    cy.get('#Transfer-button').click();
-    cy.get('#Approve-button').click();
-
-    cy.confirmMetamaskTransaction().then((confirmed) => {
-      expect(confirmed).to.be.true;
-    });
+  it('transfer ICX', () => {
+    cy.transferMetaMask({ tokenName: 'ICX', twoStep: true });
   });
 });

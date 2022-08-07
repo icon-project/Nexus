@@ -15,6 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
-
+import '@synthetixio/synpress/support'; // https://github.com/Synthetixio/synpress/issues/346
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

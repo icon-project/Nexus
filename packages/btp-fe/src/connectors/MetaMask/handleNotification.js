@@ -17,6 +17,7 @@ const handleSuccessTx = (txHash) => {
         desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
         button: {
           text: 'Transfer',
+          id: 'approve-transfer-btn',
           onClick: sendNoneNativeCoin,
         },
       });
