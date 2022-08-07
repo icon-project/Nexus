@@ -192,11 +192,7 @@ export const reclaim = async ({ coinName, value }) => {
  * @param {onject} options
  */
 export const signTx = (transaction = {}, options = {}) => {
-  const {
-    from = localStorage.getItem(ADDRESS_LOCAL_STORAGE) || store.getState().account?.address,
-    to,
-    value,
-  } = transaction;
+  const { from = localStorage.getItem(ADDRESS_LOCAL_STORAGE), to, value } = transaction;
   const { method, params, builder, nid, stepLimit, timestamp } = options;
 
   if (!modal.isICONexWalletConnected()) {
