@@ -12,6 +12,7 @@ const currentChain = {
   BSH_PROXY: '0xB39CC4bc36fF53499186B7331C4d07745661Ef9E',
   BEP20: '0x0583589D26a06810DEE3127cbE1E1d4344c4ACA6',
   GAS_LIMIT: '1312D00',
+  coinId: 'abc',
   methods: {},
 };
 const ABI = {
@@ -37,9 +38,7 @@ jest.mock('connectors/MetaMask', () => ({
       encodeFunctionData: jest.fn(),
     },
     contract: {
-      getBalanceOf: jest
-        .fn()
-        .mockReturnValue({ _refundableBalance: { _hex: '0x29e46e036aab4e8b00' } }),
+      coinId: jest.fn().mockReturnValue(currentChain.coinId),
     },
     sendTransaction: jest.fn(),
   },
@@ -101,6 +100,7 @@ describe('MetaMask/services', () => {
       data: functionName,
       from: fromAddress,
       gas: expect.anything(),
+      to: currentChain.coinId,
     });
   });
 
