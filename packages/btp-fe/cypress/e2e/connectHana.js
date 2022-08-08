@@ -30,4 +30,8 @@ describe('interact with Hana', () => {
   it('transfer ETH', () => {
     cy.transferWithHana({ twoStep: true, tokenName: 'ETH' });
   });
+
+  it('transfer BNB', () => {
+    cy.transferWithHana({ twoStep: true, tokenName: 'BNB', amount: 0.01 });
+  });
 });
