@@ -11,6 +11,7 @@ jest.mock('store', () => {
         openModal: jest.fn(),
       },
     },
+    getState: jest.fn(),
   };
 });
 
@@ -18,7 +19,7 @@ describe('event handler', () => {
   test(TYPES.RESPONSE_JSON_RPC, async () => {
     const txHash = '0x2988ec449553a0d0e58f65b744f57b8dab0f7546e4daab4c3b538e4843d1e439';
     jest.spyOn(utils, 'deplay').mockImplementation(() => {});
-    jest.spyOn(btpServices, 'sendLog').mockResolvedValue(true);
+    const mock_sendLog = jest.spyOn(btpServices, 'sendLog').mockResolvedValue(true);
     window[signingActions.globalName] = signingActions.transfer;
     const mock_getTxResult = jest
       .spyOn(ICONService, 'getTxResult')
@@ -34,5 +35,6 @@ describe('event handler', () => {
     await eventHandler(event);
 
     expect(mock_getTxResult).toHaveBeenCalledWith(txHash);
+    expect(mock_sendLog).toHaveBeenCalledWith({ txHash, network: undefined });
   });
 });

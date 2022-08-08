@@ -127,6 +127,7 @@ export const eventHandler = async (event) => {
                 default:
                   break;
               }
+              resolve(true);
               clearInterval(checkTxRs);
               resetTransferStep();
             } catch (err) {
