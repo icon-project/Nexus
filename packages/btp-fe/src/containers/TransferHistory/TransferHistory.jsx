@@ -47,12 +47,12 @@ const columns = [
     title: 'Details',
     dataIndex: 'txHash',
     render: (txHash) => hashShortener(txHash),
-    width: '230px',
+    width: '180px',
   },
   {
     title: 'Source',
     dataIndex: 'networkNameSrc',
-    width: '150px',
+    width: '200px',
   },
   {
     title: 'Destination',
