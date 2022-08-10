@@ -18,7 +18,7 @@ const metamaskURL =
 class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
-    this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum);
+    this.provider = this.ethereum && new ethers.providers.Web3Provider(this.ethereum, 'any');
     this.ABI = new ethers.utils.Interface(ABI);
     this.contract = null;
   }
@@ -55,28 +55,45 @@ class Ethereum {
     return this.ethereum && this.ethereum.isConnected();
   }
 
-  isAllowedNetwork() {
-    if (
-      this.ethereum.chainId &&
-      !chainList
-        .map((chain) =>
-          chain.id === chainConfigs.ICON.id ? '' : chain.NETWORK_ADDRESS?.split('.')[0],
-        )
-        .includes(this.ethereum.chainId)
-    ) {
-      const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
-      modal.openModal({
-        children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
-        button: {
-          text: 'Okay',
-          onClick: () => modal.setDisplay(false),
-        },
-      });
+  async switchChainInMetamask() {
+    const { NETWORK_ADDRESS, EXPLORE_URL, RPC_URL, COIN_SYMBOL, CHAIN_NAME } = chainList[1] || {};
+    const chainId = NETWORK_ADDRESS?.split('.')[0];
 
-      account.resetAccountInfo();
-      return false;
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId }],
+      });
+      return chainId;
+    } catch (error) {
+      // Error Code 4902 means the network we're trying to switch is not available so we have to add it first
+      if (error.code == 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId,
+                chainName: CHAIN_NAME + ' ' + process.env.REACT_APP_ENV,
+                rpcUrls: [RPC_URL],
+                // iconUrls: [logoUrl],
+                blockExplorerUrls: [EXPLORE_URL],
+                nativeCurrency: {
+                  name: COIN_SYMBOL,
+                  symbol: COIN_SYMBOL,
+                  decimals: 18,
+                },
+              },
+            ],
+          });
+          return chainId;
+        } catch (error) {
+          return false;
+        }
+      } else {
+        return false;
+      }
     }
-    return true;
   }
 
   async connectMetaMaskWallet() {
@@ -86,12 +103,23 @@ class Ethereum {
       return;
     }
     try {
-      const isAllowedNetwork = this.isAllowedNetwork();
-
-      if (isAllowedNetwork) {
+      const chainId = await this.switchChainInMetamask();
+      if (chainId) {
         await this.getEthereum.request({ method: 'eth_requestAccounts' });
-        return true;
+      } else {
+        const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
+        modal.openModal({
+          children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
+          button: {
+            text: 'Okay',
+            onClick: () => modal.setDisplay(false),
+          },
+        });
+
+        account.resetAccountInfo();
+        return false;
       }
+      return chainId;
     } catch (error) {
       console.log(error);
     }
@@ -101,44 +129,41 @@ class Ethereum {
     try {
       this.ethereum?.on('chainChanged', (chainId) => {
         console.log('Change Network', chainId);
-        window.location.reload();
+        account.resetAccountInfo();
       });
     } catch (err) {
       console.log(err);
     }
   }
 
-  async getEthereumAccounts() {
+  async getEthereumAccounts(chainId) {
     try {
-      const isAllowedNetwork = this.isAllowedNetwork();
+      const currentNetwork = chainList.find((chain) =>
+        chain.NETWORK_ADDRESS.startsWith(chainId || this.getEthereum.chainId),
+      );
 
-      if (isAllowedNetwork) {
-        const wallet = wallets.metamask;
-        const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
-        const address = toChecksumAddress(accounts[0]);
-        localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
-        const balance = await this.getProvider.getBalance(address);
-        const currentNetwork = chainList.find((chain) =>
-          chain.NETWORK_ADDRESS.startsWith(this.getEthereum.chainId),
-        );
+      if (!currentNetwork) throw new Error('not found chain config');
 
-        if (!currentNetwork) throw new Error('not found chain config');
+      const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
+      const address = toChecksumAddress(accounts[0]);
+      localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
+      const balance = await this.getProvider.getBalance(address);
 
-        const { CHAIN_NAME, id, COIN_SYMBOL, BTS_CORE } = currentNetwork;
-        this.contract = new ethers.Contract(BTS_CORE, ABI, this.provider);
-        customzeChain(id);
+      const { CHAIN_NAME, id, COIN_SYMBOL, BTS_CORE } = currentNetwork;
+      this.contract = new ethers.Contract(BTS_CORE, ABI, this.provider);
+      customzeChain(id);
 
-        account.setAccountInfo({
-          address,
-          balance: ethers.utils.formatEther(balance),
-          wallet,
-          symbol: COIN_SYMBOL,
-          currentNetwork: CHAIN_NAME,
-          id,
-        });
-      }
+      account.setAccountInfo({
+        address,
+        balance: ethers.utils.formatEther(balance),
+        wallet: wallets.metamask,
+        symbol: COIN_SYMBOL,
+        currentNetwork: CHAIN_NAME,
+        id,
+      });
     } catch (error) {
       console.log(error);
+      account.resetAccountInfo();
     }
   }
 

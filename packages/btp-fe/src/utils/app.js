@@ -46,7 +46,7 @@ const shortenNumber = (num) => {
   }
 };
 
-const deplay = (delayInms = 1000) => {
+const delay = (delayInms = 1000) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(2);
@@ -54,4 +54,4 @@ const deplay = (delayInms = 1000) => {
   });
 };
 
-export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString, deplay };
+export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString, delay };
