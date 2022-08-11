@@ -16,7 +16,7 @@ import { hashShortener, toSeparatedNumberString } from 'utils/app';
 
 import { Text } from 'components/Typography';
 import { colors, media, mixins } from 'components/Styles';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, chainList } from 'connectors/chainConfigs';
 
 const StyledHistoryDetails = styled.div`
   width: 100%;
@@ -161,6 +161,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
   const toAddresssOnly = toAddress?.split('/')[3];
 
+  const getChain = (chainName) =>
+    chainList.find(({ CHAIN_NAME }) => CHAIN_NAME?.toLowerCase() === chainName?.toLowerCase());
+
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -174,7 +177,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                 <CopyAddress
                   text={txHash}
                   href={
-                    chainConfigs[networkNameSrc]?.EXPLORE_URL +
+                    chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
                     (exploreURL[networkNameSrc]?.transaction || 'tx/') +
                     txHash
                   }
@@ -211,7 +214,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   text={fromAddress}
                   href={
                     networkNameSrc
-                      ? chainConfigs[networkNameSrc]?.EXPLORE_URL + 'address/' + fromAddress
+                      ? chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
+                        'address/' +
+                        fromAddress
                       : null
                   }
                 />
@@ -227,7 +232,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   copyText={toAddresssOnly}
                   href={
                     networkNameDst
-                      ? chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddresssOnly
+                      ? chainConfigs[getChain(networkNameDst)?.id]?.EXPLORE_URL +
+                        'address/' +
+                        toAddresssOnly
                       : null
                   }
                 />

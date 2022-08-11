@@ -57,7 +57,7 @@ const columns = [
   {
     title: 'Destination',
     dataIndex: 'networkNameDst',
-    width: '150px',
+    width: '200px',
   },
   {
     title: 'Time',
@@ -69,7 +69,7 @@ const columns = [
     title: 'Amount',
     dataIndex: 'value',
     render: (text, dataSource) => text + ' ' + dataSource.tokenName?.toUpperCase(),
-    width: '250px',
+    width: '200px',
   },
   {
     title: 'Status',
