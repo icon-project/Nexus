@@ -16,10 +16,10 @@ const initialDataQuery = [
   `INSERT INTO indexer_stats (network_id, name) VALUES ('${env.BSC_NETWORK_ID}', '${env.BSC_NAME}');`,
 
   // -- ### Token prices ###
-  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('ethereum', 'ETH', 3823.55, 1);`,
-  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('dev-protocol', 'DEV', 0.01, 1);`,
-  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('icon', 'ICX', 2.09, 1);`,
-  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('binancecoin', 'BNB', 493.95, 1);`,
+  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('ethereum', 'ETH', 0, 1);`,
+  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('dev-protocol', 'DEV', 0, 1);`,
+  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('icon', 'ICX', 0, 1);`,
+  `INSERT INTO token_prices (coingecko_id, name, price, active) VALUES ('binancecoin', 'BNB', 0, 1);`,
 ];
 
 module.exports = {
