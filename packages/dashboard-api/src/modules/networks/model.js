@@ -15,26 +15,29 @@ const {
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 
 async function getListNetworkConnectedIcon() {
-  try {
-    const networks = await getNetworkInfo();
 
-    const totalMintTokens = await getTotalMintValue();
-    const totalBurnTokens = await getTotalBurnValue();
-
-    const tokensVolume24h = await getTokensVolume24h();
-    const tokensVolumeAllTime = await getTokenVolumeAllTime();
-
-    return await updateFiatVolume(
-      networks,
-      tokensVolume24h,
-      tokensVolumeAllTime,
-      totalMintTokens,
-      totalBurnTokens,
-    );
-  } catch (err) {
-    logger.error('"getListNetworkConnectedIcon" failed while getting total transaction', err);
-    throw new Error('"getListNetworkConnectedIcon" job failed: ' + err.message);
+  const results = await Promise.allSettled([getNetworkInfo(), getTotalMintValue(), getTotalBurnValue(), getTokensVolume24h(), getTokenVolumeAllTime()]);
+  for (let item of results) {
+    if (item.status === 'rejected') {
+      logger.error('"getListNetworkConnectedIcon" failed while getting total transaction', item.reason);
+      throw new Error('"getListNetworkConnectedIcon" job failed: ' + item.reason);
+    }
   }
+
+  const networks = results[0].value;
+  const totalMintTokens = results[1].value;
+  const totalBurnTokens = results[2].value;
+  const tokensVolume24h = results[3].value;
+  const tokensVolumeAllTime = results[4].value;
+
+  return await updateFiatVolume(
+    networks,
+    tokensVolume24h,
+    tokensVolumeAllTime,
+    totalMintTokens,
+    totalBurnTokens,
+  );
+
 }
 
 async function updateFiatVolume(

@@ -4,7 +4,7 @@ const { logger } = require('../../common');
 const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME, REGISTERED_TOKENS_TABLE } = require('../../common');
 
 async function getTokensVolume24h() {
-  const at24hAgo = new Date().getTime() * 1000 - 86400000000; // current_time(microsecond) - 24h(microsecond)
+  const at24hAgo = new Date().getTime() - 86400000; // current_time - 24h
   try {
     const { rows } = await pgPool.query(
       `SELECT network_id, token_name, sum(value) as token_volume
