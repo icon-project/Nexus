@@ -196,7 +196,7 @@ const TransferHistory = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [historySource, setHistorySource] = useState([]);
-  const [pagination, setPagination] = useState({ totalItem: 0, limit: 20, page: 1 });
+  const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
 
   const [filters, setFilters] = useState({
@@ -223,11 +223,12 @@ const TransferHistory = () => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (intervalFetch) clearInterval(intervalFetch);
+
     intervalFetch = setInterval(() => {
-      if (pagination.page === 1) {
-        fetchDataHandler({ ...filters, page: pagination.page });
+      if (sessionStorage.getItem('page') == 1) {
+        fetchDataHandler({ ...filters, page: 1 });
       }
-    }, 3000);
+    }, 4000);
 
     return () => {
       if (intervalFetch) clearInterval(intervalFetch);
@@ -294,7 +295,8 @@ const TransferHistory = () => {
         };
       });
       setHistorySource(dataSource);
-      setPagination((pagination) => ({ ...pagination, totalItem: transferData.total || 0, page }));
+      setPagination((pagination) => ({ ...pagination, totalItem: transferData.total || 0 }));
+      sessionStorage.setItem('page', page);
       setIsFetching(false);
     } catch (error) {
       handleError(error);
