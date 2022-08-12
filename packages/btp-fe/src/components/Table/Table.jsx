@@ -47,6 +47,10 @@ const TableStyled = styled(antdTable)`
     ${(props) => TextMixin[props.headerText] || TextMixin.md}
   }
 
+  .ant-table-tbody > tr > td {
+    cursor: ${({ onRow }) => (onRow ? 'pointer' : '')};
+  }
+
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
     height: 48px;
