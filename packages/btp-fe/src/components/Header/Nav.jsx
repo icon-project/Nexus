@@ -13,10 +13,8 @@ const NavStyled = styled.ul`
   flex-flow: nowrap;
 
   > li {
-    a.active {
-      .nav-link {
-        background-color: ${colors.brandSecondaryBase};
-      }
+    a.active.nav-link {
+      background-color: ${colors.brandSecondaryBase};
     }
 
     .nav-link {
