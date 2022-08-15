@@ -96,6 +96,28 @@ class Ethereum {
     }
   }
 
+  isAllowedNetwork(chainId) {
+    if (
+      this.ethereum.chainId &&
+      !chainList
+        .map((chain) =>
+          chain.id === chainConfigs.ICON.id ? '' : chain.NETWORK_ADDRESS?.split('.')[0],
+        )
+        .includes(chainId || this.ethereum.chainId)
+    ) {
+      const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
+      modal.openModal({
+        children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
+        button: {
+          text: 'Okay',
+          onClick: () => modal.setDisplay(false),
+        },
+      });
+      return false;
+    }
+    return true;
+  }
+
   async connectMetaMaskWallet() {
     if (!this.isMetaMaskInstalled()) {
       localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
@@ -107,15 +129,7 @@ class Ethereum {
       if (chainId) {
         await this.getEthereum.request({ method: 'eth_requestAccounts' });
       } else {
-        const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
-        modal.openModal({
-          children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
-          button: {
-            text: 'Okay',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
-
+        this.isAllowedNetwork(chainId);
         account.resetAccountInfo();
         return false;
       }
@@ -139,29 +153,32 @@ class Ethereum {
   async getEthereumAccounts(chainId) {
     try {
       const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
+      const isAllowed = this.isAllowedNetwork();
 
-      const currentNetwork = chainList.find((chain) =>
-        chain.NETWORK_ADDRESS.startsWith(chainId || this.getEthereum.chainId),
-      );
+      if (isAllowed) {
+        const currentNetwork = chainList.find((chain) =>
+          chain.NETWORK_ADDRESS.startsWith(chainId || this.getEthereum.chainId),
+        );
 
-      if (!currentNetwork) throw new Error('not found chain config');
+        if (!currentNetwork) throw new Error('not found chain config');
 
-      const address = toChecksumAddress(accounts[0]);
-      localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
-      const balance = await this.getProvider.getBalance(address);
+        const address = toChecksumAddress(accounts[0]);
+        localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
+        const balance = await this.getProvider.getBalance(address);
 
-      const { CHAIN_NAME, id, COIN_SYMBOL, BTS_CORE } = currentNetwork;
-      this.contract = new ethers.Contract(BTS_CORE, ABI, this.provider);
-      customzeChain(id);
+        const { CHAIN_NAME, id, COIN_SYMBOL, BTS_CORE } = currentNetwork;
+        this.contract = new ethers.Contract(BTS_CORE, ABI, this.provider);
+        customzeChain(id);
 
-      account.setAccountInfo({
-        address,
-        balance: ethers.utils.formatEther(balance),
-        wallet: wallets.metamask,
-        symbol: COIN_SYMBOL,
-        currentNetwork: CHAIN_NAME,
-        id,
-      });
+        account.setAccountInfo({
+          address,
+          balance: ethers.utils.formatEther(balance),
+          wallet: wallets.metamask,
+          symbol: COIN_SYMBOL,
+          currentNetwork: CHAIN_NAME,
+          id,
+        });
+      }
     } catch (error) {
       console.log(error);
       account.resetAccountInfo();
