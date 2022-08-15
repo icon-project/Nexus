@@ -13,7 +13,7 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
-import { toSeparatedNumberString, hashShortener } from 'utils/app';
+import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
@@ -275,9 +275,10 @@ const Header = () => {
         break;
 
       case wallets.metamask:
-        const isConnected = await EthereumInstance.connectMetaMaskWallet();
-        if (isConnected) {
-          await EthereumInstance.getEthereumAccounts();
+        const chainId = await EthereumInstance.connectMetaMaskWallet();
+        if (chainId) {
+          await delay(1500);
+          await EthereumInstance.getEthereumAccounts(chainId);
         }
         setLoading(false);
         break;
