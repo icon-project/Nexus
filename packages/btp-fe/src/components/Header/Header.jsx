@@ -263,7 +263,6 @@ const Header = () => {
     e.preventDefault();
     setLoading(true);
     resetAccountInfo();
-    localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
 
     switch (selectedWallet) {
       case wallets.iconex:
@@ -288,6 +287,8 @@ const Header = () => {
       //   setLoading(false);
       //   break;
     }
+    // must be set after all
+    localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
   };
   const handleSelectWallet = (wallet) => {
     if (wallet) setSelectedWallet(wallet);
