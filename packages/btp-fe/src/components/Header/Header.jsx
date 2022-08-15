@@ -277,7 +277,7 @@ const Header = () => {
       case wallets.metamask:
         const chainId = await EthereumInstance.connectMetaMaskWallet();
         if (chainId) {
-          await delay();
+          await delay(1500);
           await EthereumInstance.getEthereumAccounts(chainId);
         }
         setLoading(false);
