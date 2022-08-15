@@ -6,16 +6,15 @@ import { SubTitleMixin } from 'components/Typography/SubTitle';
 
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
+import { resetTransferStep } from 'connectors/ICONex/utils';
 
 const NavStyled = styled.ul`
   display: flex;
   flex-flow: nowrap;
 
   > li {
-    a.active {
-      .nav-link {
-        background-color: ${colors.brandSecondaryBase};
-      }
+    a.active.nav-link {
+      background-color: ${colors.brandSecondaryBase};
     }
 
     .nav-link {
@@ -55,10 +54,8 @@ const buttonContents = [
 const Button = ({ text, ...ots }) => {
   return (
     <li>
-      <NavLink to={`/${text.toLowerCase()}`}>
-        <button className="nav-link" {...ots}>
-          {text}
-        </button>
+      <NavLink to={`/${text.toLowerCase()}`} className="nav-link" {...ots}>
+        {text}
       </NavLink>
     </li>
   );
@@ -73,6 +70,7 @@ const Nav = ({ setShowMenu }) => {
           text={e.text}
           onClick={() => {
             setShowMenu(false);
+            resetTransferStep();
           }}
         />
       ))}
