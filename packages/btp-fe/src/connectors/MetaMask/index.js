@@ -138,13 +138,14 @@ class Ethereum {
 
   async getEthereumAccounts(chainId) {
     try {
+      const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
+
       const currentNetwork = chainList.find((chain) =>
         chain.NETWORK_ADDRESS.startsWith(chainId || this.getEthereum.chainId),
       );
 
       if (!currentNetwork) throw new Error('not found chain config');
 
-      const accounts = await this.getEthereum.request({ method: 'eth_accounts' });
       const address = toChecksumAddress(accounts[0]);
       localStorage.setItem(ADDRESS_LOCAL_STORAGE, address);
       const balance = await this.getProvider.getBalance(address);
