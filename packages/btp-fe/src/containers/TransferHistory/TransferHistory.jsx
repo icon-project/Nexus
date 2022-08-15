@@ -63,7 +63,7 @@ const columns = [
     title: 'Time',
     dataIndex: 'blockTime',
     render: (blockTime) => dayjs(blockTime).fromNow(),
-    width: '180px',
+    width: '193px',
   },
   {
     title: 'Amount',
@@ -89,7 +89,7 @@ const columns = [
       }
       return <Tag color={color}>{status}</Tag>;
     },
-    width: '160px',
+    width: '147px',
   },
 ];
 

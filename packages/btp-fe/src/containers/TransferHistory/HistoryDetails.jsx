@@ -13,6 +13,7 @@ import { Modal } from 'components/NotificationModal';
 
 import { getTransferHistoryByTxHash } from 'services/btpServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
+import { txStatus } from 'utils/constants';
 
 import { Text } from 'components/Typography';
 import { colors, media, mixins } from 'components/Styles';
@@ -87,10 +88,10 @@ const StyledHistoryDetails = styled.div`
 const getStatus = (statusCode) => {
   let color = colors.successState;
   let text = 'Success';
-  if (statusCode === 0) {
+  if (statusCode === txStatus.PENDING) {
     color = colors.warningState;
     text = 'Pending';
-  } else if (statusCode === -1) {
+  } else if (statusCode === txStatus.FAILED) {
     color = colors.errorState;
     text = 'Failed';
   }
@@ -126,21 +127,33 @@ const exploreURL = {
   },
 };
 
+const statusText = 'txStatus';
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
-        const transferData = await getTransferHistoryByTxHash(txHash);
-        setDetails(transferData.content);
-        setIsFetching(false);
+        const status = sessionStorage.getItem(statusText);
+        if (!status || status == txStatus.PENDING) {
+          const transferData = await getTransferHistoryByTxHash(txHash);
+          setDetails(() => transferData.content);
+          setIsFetching(() => false);
+          sessionStorage.setItem(statusText, transferData?.content?.status);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     getTransactionDetails();
+    const intervalFetch = setInterval(getTransactionDetails, 3000);
+
+    return () => {
+      sessionStorage.removeItem(statusText);
+      clearInterval(intervalFetch);
+    };
   }, [txHash]);
 
   const {
