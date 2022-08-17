@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -6,7 +6,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { getBTPfee } from 'connectors/ICONex/ICONServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { chainConfigs } from 'connectors/chainConfigs';
@@ -113,104 +112,93 @@ const Total = styled.div`
   }
 `;
 
-export const Approval = memo(
-  ({ setStep, values, sendingInfo, account, form, isCurrent, usdRate }) => {
-    const [BTPFee, setBTPFee] = useState(0);
-    const { recipient, tokenAmount = 0 } = values;
-    const { token, network } = sendingInfo;
-    const { currentNetwork, symbol, id } = account;
+export const Approval = memo(({ setStep, values, sendingInfo, account, form, usdRate, BTPFee }) => {
+  const { recipient, tokenAmount = 0 } = values;
+  const { token, network } = sendingInfo;
+  const { currentNetwork, symbol } = account;
 
-    /* eslint-disable react-hooks/exhaustive-deps */
-    useEffect(() => {
-      if (isCurrent)
-        getBTPfee(id, network, token).then((result) => {
-          setBTPFee((result / 10000) * tokenAmount);
-        });
-    }, [isCurrent]);
+  useListenForSuccessTransaction(() => {
+    setStep(0);
+    form.restart();
+  });
 
-    useListenForSuccessTransaction(() => {
-      setStep(0);
-      form.restart();
+  const { openModal } = useDispatch(({ modal: { openModal } }) => ({
+    openModal,
+  }));
+
+  const onApprove = () => {
+    const isSendingNativeCoin = symbol === token;
+    const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token, network };
+    openModal({
+      icon: 'loader',
+      desc: 'Waiting for confirmation in your wallet.',
     });
 
-    const { openModal } = useDispatch(({ modal: { openModal } }) => ({
-      openModal,
-    }));
+    getService()?.transfer(tx, isSendingNativeCoin, token);
+  };
 
-    const onApprove = () => {
-      const isSendingNativeCoin = symbol === token;
-      const tx = { to: toChecksumAddress(recipient), value: tokenAmount, coinName: token, network };
-      openModal({
-        icon: 'loader',
-        desc: 'Waiting for confirmation in your wallet.',
-      });
+  return (
+    <Wrapper>
+      <Header className="sm bold heading">Fee & Confirmation</Header>
+      <SendToken>
+        <Text className="sm" color={colors.graySubText}>
+          You will send
+        </Text>
+        <div className="content">
+          <Header className="md bold send-token">
+            {tokenAmount || 0} {token}
+          </Header>
+          <Text className="md">= ${toSeparatedNumberString(usdRate * tokenAmount)}</Text>
+        </div>
+      </SendToken>
 
-      getService()?.transfer(tx, isSendingNativeCoin, token);
-    };
-
-    return (
-      <Wrapper>
-        <Header className="sm bold heading">Fee & Confirmation</Header>
-        <SendToken>
-          <Text className="sm" color={colors.graySubText}>
-            You will send
-          </Text>
-          <div className="content">
-            <Header className="md bold send-token">
-              {tokenAmount || 0} {token}
-            </Header>
-            <Text className="md">= ${toSeparatedNumberString(usdRate * tokenAmount)}</Text>
+      <Details>
+        <SubTitle className="lg">Details</SubTitle>
+        <div className="send">
+          <Text className="md">Send</Text>
+          <div className="sender">
+            <Icon icon={token} size="s" />
+            <Text className="md sender--alias">{token}</Text>
+            <Text className="sm sender--name">{currentNetwork}</Text>
           </div>
-        </SendToken>
+        </div>
+        <div className="to">
+          <Text className="md">To</Text>
+          <div className="receiver">
+            <CopyToClipboard text={recipient}>
+              <div>
+                <Icon icon="copy" size="s" color="#878491" />
+                <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
+              </div>
+            </CopyToClipboard>
+            <Text className="sm receiver--name">
+              {chainConfigs[network]?.CHAIN_NAME || network}
+            </Text>
+          </div>
+        </div>
+        <div className="transfer-fee">
+          <Text className="md">BTP transfer fee</Text>
+          <Text className="md bright">{BTPFee}</Text>
+        </div>
+      </Details>
 
-        <Details>
-          <SubTitle className="lg">Details</SubTitle>
-          <div className="send">
-            <Text className="md">Send</Text>
-            <div className="sender">
-              <Icon icon={token} size="s" />
-              <Text className="md sender--alias">{token}</Text>
-              <Text className="sm sender--name">{currentNetwork}</Text>
-            </div>
-          </div>
-          <div className="to">
-            <Text className="md">To</Text>
-            <div className="receiver">
-              <CopyToClipboard text={recipient}>
-                <div>
-                  <Icon icon="copy" size="s" color="#878491" />
-                  <Text className="md receiver--address">{hashShortener(recipient || '')}</Text>
-                </div>
-              </CopyToClipboard>
-              <Text className="sm receiver--name">
-                {chainConfigs[network]?.CHAIN_NAME || network}
-              </Text>
-            </div>
-          </div>
-          <div className="transfer-fee">
-            <Text className="md">BTP transfer fee</Text>
-            <Text className="md bright">{BTPFee}</Text>
-          </div>
-        </Details>
+      <Total>
+        <div className="total-receive">
+          <SubTitle className="lg bold">Total receive</SubTitle>
+          <SubTitle className="lg bold">
+            {(tokenAmount - BTPFee).toPrecision(4)} {token}
+          </SubTitle>
+        </div>
+        <Text className="xs" color={colors.graySubText}>
+          Please be known that this is NOT the final Total Receive. There will be an amount of
+          network fee deducted from the above Total receive.
+        </Text>
+      </Total>
 
-        <Total>
-          <div className="total-receive">
-            <SubTitle className="lg bold">Total receive</SubTitle>
-            <SubTitle className="lg bold">
-              {(tokenAmount - BTPFee).toPrecision(4)} {token}
-            </SubTitle>
-          </div>
-          <Text className="xs" color={colors.graySubText}>
-            Please be known that this is NOT the final Total Receive. There will be an amount of
-            network fee deducted from the above Total receive.
-          </Text>
-        </Total>
-
-        <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />
-      </Wrapper>
-    );
-  },
-);
+      <ControlButtons executeLabel="Approve" onBack={() => setStep(1)} onExecute={onApprove} />
+    </Wrapper>
+  );
+});
 
 Approval.displayName = 'Approval';
 

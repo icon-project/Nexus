@@ -237,19 +237,22 @@ export const signTx = (transaction = {}, options = {}) => {
  * @return {string} unit: 1/10000
  * ref: https://github.com/icon-project/btp/blob/iconloop/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L40
  */
-export const getBTPfee = async (id, network, token) => {
+export const getBTPfee = async (token) => {
+  if (!token) return 0;
+  console.log('🚀 ~ file: ICONServices.js ~ line 254 ~ getBTPfee ~ chainConfigs', chainConfigs);
+
   const fee = await makeICXCall({
-    to: chainConfigs[id]?.ICON_BTS_CORE || chainConfigs[network]?.ICON_BTS_CORE,
+    to: chainConfigs['BSC']?.ICON_BTS_CORE,
     dataType: 'call',
     data: {
       method: 'feeRatio',
       params: {
-        _name: token,
+        _name: `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${token}`,
       },
     },
   });
 
-  return IconConverter.toNumber(fee.feeNumerator);
+  return IconConverter.toNumber(convertToICX(fee.fixedFee));
 };
 
 /**
