@@ -121,6 +121,7 @@ const createDatabaseQuery = [
 (
     serial_number character varying(50) COLLATE pg_catalog."default" NOT NULL,
     token_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    token_name_raw character varying(50) COLLATE pg_catalog."default" NOT NULL,
     value numeric NOT NULL,
     to_address character varying(100) COLLATE pg_catalog."default",
     from_address character varying(100) COLLATE pg_catalog."default",

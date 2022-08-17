@@ -114,14 +114,16 @@ async function handleTransactionStartEvent(event, txResult, transaction) {
 
   const data = event.data;
   const details = decode(data[2])[0];
-  const tokenName = details[0].toString('utf8');
+  const tokenNameRaw = details[0].toString('utf8');
+  const tokenName = tokenNameRaw?.split('-')?.[2];
   const value = parseInt(details[1].toString('hex'), 16) / ICX_LOOP_UNIT;
   const btpFee = parseInt(details[2].toString('hex'), 16) / ICX_LOOP_UNIT;
 
   // Ref: https://www.icondev.io/docs/step-estimation#transaction-fee
   const transObj = {
     fromAddress: event.indexed[1],
-    tokenName: tokenName,
+    tokenName: tokenName || tokenNameRaw,
+    tokenNameRaw: tokenNameRaw,
     serialNumber: IconConverter.toNumber(data[1]),
     value: value,
     toAddress: data[0],
@@ -183,6 +185,7 @@ async function handleBuyTokenEvent(event, txResult, transaction) {
   const transObj = {
     fromAddress: event.indexed[2],
     tokenName: 'ICX',
+    tokenNameRaw: '',
     serialNumber: IconConverter.toNumber(event.indexed[1]),
     value: value,
     toAddress: `btp://${process.env.HARMONY_NETWORK_ID}.hmny/${event.indexed[3]}`,

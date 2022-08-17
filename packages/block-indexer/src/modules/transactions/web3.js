@@ -95,10 +95,13 @@ class Web3TransactionHandler {
   ); */
   async handleTransferStartEvent(event, tx, receipt, block) {
     try {
+      const tokenNameRaw = event._assetDetails[0].coinName;
+      const tokenName = tokenNameRaw?.split('-')?.[2];
       const txData = {
         fromAddress: event._from.toLowerCase(),
         toAddress: event._to,
-        tokenName: event._assetDetails[0].coinName,
+        tokenName: tokenName || tokenNameRaw,
+        tokenNameRaw: tokenNameRaw,
         value: Number(event._assetDetails[0].value) / ICX_LOOP_UNIT,
         btpFee: Number(event._assetDetails[0].fee) / ICX_LOOP_UNIT,
         serialNumber: event._sn,

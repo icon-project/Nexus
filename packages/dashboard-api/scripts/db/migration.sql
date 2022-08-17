@@ -457,3 +457,6 @@ CREATE TABLE IF NOT EXISTS public.transaction_ips
 
 ALTER TABLE transactions
     ADD COLUMN wps_data json
+
+ALTER TABLE transactions
+    ADD COLUMN token_name_raw character varying(50) COLLATE pg_catalog."default" NOT NULL,

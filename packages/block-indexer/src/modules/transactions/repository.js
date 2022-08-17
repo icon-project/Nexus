@@ -62,8 +62,8 @@ async function saveTransaction(transaction) {
       ${TRANSACTION_TBL.value}, ${TRANSACTION_TBL.toAddress},
       ${TRANSACTION_TBL.txHash}, ${TRANSACTION_TBL.blockTime}, ${TRANSACTION_TBL.networkId}, ${TRANSACTION_TBL.btpFee},
       ${TRANSACTION_TBL.networkFee}, ${TRANSACTION_TBL.status}, ${TRANSACTION_TBL.totalVolume}, ${TRANSACTION_TBL.wpsData},
-      contract_address, log_id1)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`;
+      contract_address, log_id1, token_name_raw)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
 
     const insertValues = [
       transaction.fromAddress,
@@ -80,7 +80,8 @@ async function saveTransaction(transaction) {
       transaction.totalVolume,
       transaction.wpsData,
       transaction.contractAddress,
-      transaction.logId || ''
+      transaction.logId || '',
+      transaction.tokenNameRaw
     ];
 
     debug('saveTransaction SQL %s %O:', insertStatement, insertValues);
