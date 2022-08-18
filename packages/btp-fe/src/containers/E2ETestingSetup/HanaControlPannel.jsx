@@ -147,7 +147,6 @@ const HanaControlPannel = () => {
 
   const onSigning = () => {
     const tx = window[rawTransaction];
-    console.log('🚀 ~ file: HanaControlPannel.jsx ~ line 150 ~ onSigning ~ tx', tx);
 
     const {
       from,

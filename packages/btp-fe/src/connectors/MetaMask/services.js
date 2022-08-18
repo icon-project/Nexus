@@ -9,22 +9,24 @@ import { roundNumber } from 'utils/app';
 import { EthereumInstance } from 'connectors/MetaMask';
 import { ABI } from './ABI';
 import { ABIOfToken } from './ABIOfToken';
+import { formatSymbol } from 'connectors/chainConfigs';
 
 const ICONchain = chainConfigs.ICON || {};
 
 export const getBalanceOf = async ({ address, refundable = false, symbol = 'ICX' }) => {
   try {
     let balance = 0;
+    const fSymbol = formatSymbol(symbol);
 
     if (refundable) {
       balance = await new ethers.Contract(
         getCurrentChain().BTS_CORE,
         ABI,
         EthereumInstance.provider,
-      ).balanceOf(address, symbol);
+      ).balanceOf(address, fSymbol);
     } else {
       balance = await new ethers.Contract(
-        await getCoinId(symbol),
+        await getCoinId(fSymbol),
         ABIOfToken,
         EthereumInstance.provider,
       ).balanceOf(address);
@@ -91,7 +93,7 @@ export const transfer = async (tx, sendNativeCoin, token) => {
 
     txParams = {
       ...txParams,
-      to: await getCoinId(token),
+      to: await getCoinId(formatSymbol(token)),
     };
     delete txParams.value;
   }
@@ -113,7 +115,7 @@ export const sendNoneNativeCoin = async () => {
   const hexValue = ethers.utils.parseEther(value)._hex;
 
   const data = EthereumInstance.ABI.encodeFunctionData('transfer', [
-    coinName,
+    formatSymbol(coinName),
     hexValue,
     `btp://${ICONchain.NETWORK_ADDRESS}/${to}`,
   ]);

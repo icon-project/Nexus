@@ -12,7 +12,7 @@ import {
   iconService,
   httpProvider,
 } from 'connectors/constants';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, formatSymbol } from 'connectors/chainConfigs';
 
 import { requestSigning } from './events';
 import Request, {
@@ -99,7 +99,7 @@ export const getTxResult = (txHash) => {
  */
 export const setApproveForSendNonNativeCoin = async (tx) => {
   const { coinName, value, network } = tx;
-  const bshAddress = await getBSHAddressOfCoinName(coinName);
+  const bshAddress = await getBSHAddressOfCoinName(formatSymbol(coinName));
 
   const transaction = {
     to: bshAddress,
@@ -137,7 +137,7 @@ export const sendNonNativeCoin = () => {
     params: {
       _to: `btp://${NETWORK_ADDRESS}/${to}`,
       _value: IconConverter.toHex(convertToLoopUnit(value)),
-      _coinName: coinName,
+      _coinName: formatSymbol(coinName),
     },
   };
 
@@ -239,7 +239,6 @@ export const signTx = (transaction = {}, options = {}) => {
  */
 export const getBTPfee = async (token) => {
   if (!token) return 0;
-  console.log('🚀 ~ file: ICONServices.js ~ line 254 ~ getBTPfee ~ chainConfigs', chainConfigs);
 
   const fee = await makeICXCall({
     to: chainConfigs['BSC']?.ICON_BTS_CORE,
@@ -247,7 +246,7 @@ export const getBTPfee = async (token) => {
     data: {
       method: 'feeRatio',
       params: {
-        _name: `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${token}`,
+        _name: formatSymbol(token),
       },
     },
   });
@@ -269,7 +268,7 @@ export const getBSHAddressOfCoinName = async (coinName) => {
       data: {
         method: 'coinId',
         params: {
-          _coinName: coinName,
+          _coinName: formatSymbol(coinName),
         },
       },
     };
@@ -299,7 +298,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
     if (refundable) {
       payload.to = getICONBSHAddressforEachChain(symbol);
-      payload.data.params._coinName = symbol;
+      payload.data.params._coinName = formatSymbol(symbol);
     } else {
       const bshAddressToken = await getBSHAddressOfCoinName(symbol);
       if (!bshAddressToken) throw new Error('BSH address not found');
@@ -319,7 +318,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
 export const approveIRC2 = async (tx) => {
   const { value, network, coinName } = tx;
-  const bshAddress = await getBSHAddressOfCoinName(coinName);
+  const bshAddress = await getBSHAddressOfCoinName(formatSymbol(coinName));
 
   const transaction = {
     to: bshAddress,

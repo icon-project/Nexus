@@ -10,6 +10,6 @@ export const minValue = (min, msg) => (value) =>
 export const minValueWithFixedFee = (min, msg) => (value) =>
   !isNaN(value) && +value >= +min
     ? undefined
-    : msg || `Transfer amount must be greater than ${min} for the token fee: `;
+    : msg || `Transfer amount must be greater than ${min} for the token fee`;
 
 export const required = (value) => (value ? undefined : 'Required');

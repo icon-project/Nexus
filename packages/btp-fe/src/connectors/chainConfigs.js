@@ -59,3 +59,5 @@ export const getTokenList = () => {
   return tokenList;
 };
 export const checkIsToken = (token) => getTokenList().find((t) => t.symbol === token);
+
+export const formatSymbol = (symbol) => `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${symbol}`;
