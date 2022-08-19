@@ -268,7 +268,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content btp-fee">
               <Text className="md">BTP fee</Text>
               <Text className="md">
-                {bptFee} {nativeToken}
+                {bptFee} {tokenName}
               </Text>
             </div>
           </div>
