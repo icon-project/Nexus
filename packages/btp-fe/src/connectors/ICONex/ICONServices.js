@@ -99,7 +99,7 @@ export const getTxResult = (txHash) => {
  */
 export const setApproveForSendNonNativeCoin = async (tx) => {
   const { coinName, value, network } = tx;
-  const bshAddress = await getBSHAddressOfCoinName(formatSymbol(coinName));
+  const bshAddress = await getBSHAddressOfCoinName(coinName);
 
   const transaction = {
     to: bshAddress,
@@ -258,7 +258,7 @@ export const getBTPfee = async (token) => {
  * Get BSH address of non-native token
  * In ICON network, every non-native token has their own BSH address
  * @param {string} coinName Token's name, ex: ICX, DEV,
- * @returns {string} BSH address corresponding to the coinName
+ * @returns {Promise<string>} BSH address corresponding to the coinName
  */
 export const getBSHAddressOfCoinName = async (coinName) => {
   try {
@@ -272,8 +272,8 @@ export const getBSHAddressOfCoinName = async (coinName) => {
         },
       },
     };
-
-    return await makeICXCall(payload);
+    const address = await makeICXCall(payload);
+    return address;
   } catch (err) {
     console.log('getBSHAddressOfCoinName err', err);
   }
@@ -318,8 +318,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
 export const approveIRC2 = async (tx) => {
   const { value, network, coinName } = tx;
-  const bshAddress = await getBSHAddressOfCoinName(formatSymbol(coinName));
-
+  const bshAddress = await getBSHAddressOfCoinName(coinName);
   const transaction = {
     to: bshAddress,
   };
