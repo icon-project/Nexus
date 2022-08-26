@@ -28,7 +28,7 @@ import Hana from 'assets/images/hana-wallet.png';
 import NEAR from 'assets/images/near-icon.svg';
 import logo from 'assets/images/logo-nexus-white.png';
 
-const { darkBG, grayText, grayLine, primaryBrand } = colors;
+const { darkBG, grayText, grayLine, primaryBrand, tertiaryBase } = colors;
 
 const Wrapper = styled.div`
   .beta-text {
@@ -64,6 +64,11 @@ const StyledHeader = styled.header`
 
   .left-side {
     min-width: 175px;
+  }
+
+  .extension-link {
+    color: ${tertiaryBase};
+    font-size: 13px;
   }
 
   .right-side {
@@ -324,7 +329,18 @@ const Header = () => {
                 width="352px"
                 display
                 setDisplay={setShowModal}
-              />
+              >
+                {selectedWallet === wallets.iconex && (
+                  <a
+                    className="extension-link"
+                    href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Or click here to install Icon wallet
+                  </a>
+                )}
+              </Modal>
             ) : (
               <>
                 {showDetail && (

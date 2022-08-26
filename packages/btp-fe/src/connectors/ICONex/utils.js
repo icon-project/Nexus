@@ -1,7 +1,7 @@
 import { IconAmount, IconUtil } from 'icon-sdk-js';
 import { SUCCESS_TRANSACTION } from 'utils/constants';
 import { httpProvider } from 'connectors/constants';
-import { chainList } from 'connectors/chainConfigs';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 export default class Request {
   constructor(method, params) {
@@ -54,5 +54,5 @@ export const resetTransferStep = () => {
  */
 export const getICONBSHAddressforEachChain = () => {
   // TODO: implement for mutil-chain, only 2 for current
-  return chainList[1]?.ICON_BTS_CORE;
+  return chainConfigs['BSC']?.ICON_BTS_CORE;
 };

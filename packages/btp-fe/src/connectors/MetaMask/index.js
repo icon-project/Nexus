@@ -56,9 +56,9 @@ class Ethereum {
   }
 
   async switchChainInMetamask() {
-    const { NETWORK_ADDRESS, EXPLORE_URL, RPC_URL, COIN_SYMBOL, CHAIN_NAME } = chainList[1] || {};
+    const { NETWORK_ADDRESS, EXPLORE_URL, RPC_URL, COIN_SYMBOL, CHAIN_NAME } =
+      chainConfigs['BSC'] || {}; // HARD CODE BSC HERE
     const chainId = NETWORK_ADDRESS?.split('.')[0];
-
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',

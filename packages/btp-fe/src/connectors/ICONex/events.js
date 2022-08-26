@@ -28,13 +28,13 @@ export const checkICONexInstalled = (callback) => {
 export const isICONexInstalled = () => window.hasICONexAccount;
 
 // connect to the wallet
-export const requestAddress = () => {
+export const requestAddress = async () => {
   if (!isICONexInstalled()) {
     // handle if the ICONex extension is not installed
     // https://github.com/icon-project/icon-sdk-js/issues/12#issuecomment-781446159
     localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
-    window.open('https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl');
-    return;
+    //window.open('https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl');
+    //return;
   }
   createICONexEvent(TYPES.REQUEST_ADDRESS);
 };
