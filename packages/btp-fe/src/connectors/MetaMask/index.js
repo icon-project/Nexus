@@ -105,14 +105,6 @@ class Ethereum {
         )
         .includes(chainId || this.ethereum.chainId)
     ) {
-      const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
-      modal.openModal({
-        children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
-        button: {
-          text: 'Okay',
-          onClick: () => modal.setDisplay(false),
-        },
-      });
       return false;
     }
     return true;
@@ -129,7 +121,17 @@ class Ethereum {
       if (chainId) {
         await this.getEthereum.request({ method: 'eth_requestAccounts' });
       } else {
-        this.isAllowedNetwork(chainId);
+        const isAllowed = this.isAllowedNetwork(chainId);
+        if (!isAllowed) {
+          const metaMaskSourceList = chainList.filter((item) => item.id !== chainConfigs.ICON?.id);
+          modal.openModal({
+            children: <ConflictNetworkWarning sourceList={metaMaskSourceList} />,
+            button: {
+              text: 'Okay',
+              onClick: () => modal.setDisplay(false),
+            },
+          });
+        }
         account.resetAccountInfo();
         return false;
       }

@@ -337,7 +337,7 @@ const Header = () => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Or click here to install Icon wallet
+                    Or click here to install Hana wallet
                   </a>
                 )}
               </Modal>
