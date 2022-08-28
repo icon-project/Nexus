@@ -14,7 +14,7 @@ import { TextMixin } from 'components/Typography/Text';
 import { media } from 'components/Styles/Media';
 
 import { useDispatch, useSelect } from 'hooks/useRematch';
-import { toSeparatedNumberString, roundNumber } from 'utils/app';
+//import { toSeparatedNumberString, roundNumber } from 'utils/app';
 import { serverEndpoint } from 'connectors/constants';
 
 const Network = ({ iconUrl, name, url }) => {
@@ -51,32 +51,33 @@ const columns = [
         url={record.url}
       />
     ),
-    width: '288px',
+    width: '1056px',
+    //width: '288px',
   },
-  {
-    title: 'Volume (24hr)',
-    dataIndex: 'usd24h',
-    render: (value) => toSeparatedNumberString(roundNumber(value)),
-    width: '216px',
-  },
-  {
-    title: 'Volume (All time)',
-    dataIndex: 'usdAllTime',
-    render: (value) => toSeparatedNumberString(roundNumber(value)),
-    width: '236px',
-  },
-  {
-    title: 'Mint fee',
-    dataIndex: 'mintFee',
-    render: (value) => toSeparatedNumberString(roundNumber(value)),
-    width: '163px',
-  },
-  {
-    title: 'Burn fee',
-    dataIndex: 'burnFee',
-    render: (value) => toSeparatedNumberString(roundNumber(value)),
-    width: '163px',
-  },
+  // {
+  //   title: 'Volume (24hr)',
+  //   dataIndex: 'usd24h',
+  //   render: (value) => toSeparatedNumberString(roundNumber(value)),
+  //   width: '216px',
+  // },
+  // {
+  //   title: 'Volume (All time)',
+  //   dataIndex: 'usdAllTime',
+  //   render: (value) => toSeparatedNumberString(roundNumber(value)),
+  //   width: '236px',
+  // },
+  // {
+  //   title: 'Mint fee',
+  //   dataIndex: 'mintFee',
+  //   render: (value) => toSeparatedNumberString(roundNumber(value)),
+  //   width: '163px',
+  // },
+  // {
+  //   title: 'Burn fee',
+  //   dataIndex: 'burnFee',
+  //   render: (value) => toSeparatedNumberString(roundNumber(value)),
+  //   width: '163px',
+  // },
 ];
 
 const NetworkStyled = styled.div`
