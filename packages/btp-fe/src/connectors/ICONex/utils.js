@@ -1,7 +1,7 @@
 import { IconAmount, IconUtil } from 'icon-sdk-js';
 import { SUCCESS_TRANSACTION } from 'utils/constants';
 import { httpProvider } from 'connectors/constants';
-import { chainList } from 'connectors/chainConfigs';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 export default class Request {
   constructor(method, params) {
@@ -52,19 +52,7 @@ export const resetTransferStep = () => {
  * @param {string} coinName
  * @returns {string} BSH address on ICON side for that coin OR token from other chains
  */
-export const getICONBSHAddressforEachChain = (coinName) => {
-  const chain = chainList.find(({ COIN_SYMBOL, id, tokens }) => {
-    if (tokens && tokens.length > 0) {
-      const hasToken = tokens.find(({ symbol }) => symbol === coinName);
-      if (hasToken) return true;
-    }
-    return COIN_SYMBOL === coinName || coinName.endsWith(id);
-  });
-
-  if (!chain) {
-    console.error('relevant chain not found');
-    return null;
-  }
-
-  return chain.ICON_BSH_ADDRESS;
+export const getICONBSHAddressforEachChain = () => {
+  // TODO: implement for mutil-chain, only 2 for current
+  return chainConfigs['BSC']?.ICON_BTS_CORE;
 };

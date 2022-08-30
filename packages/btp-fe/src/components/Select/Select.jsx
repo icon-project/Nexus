@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Text } from 'components/Typography';
 import { Loader } from 'components/Loader';
-import { colors } from 'components/Styles/Colors';
+import { colors, mixins } from 'components/Styles';
 
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 
@@ -59,6 +59,15 @@ const Wrapper = styled.button`
     background-color: ${grayBG};
     padding: 4px 0;
 
+    ${({ maxHeight }) =>
+      maxHeight &&
+      `
+    max-height: ${maxHeight};
+    overflow-y: auto;
+
+    ${mixins.scrollBar};
+    `}
+
     li {
       padding: 10px 16px;
       text-align: left;
@@ -95,6 +104,7 @@ const Select = ({
   onChange = () => {},
   name: fieldName,
   dependInput,
+  maxHeight,
   ...ots
 }) => {
   const ref = useRef();
@@ -130,6 +140,7 @@ const Select = ({
       isOpenSelect={isOpenSelect}
       customeArrow={customeArrow}
       showCheck={showCheck}
+      maxHeight={maxHeight}
       {...ots}
     >
       {loading ? (
@@ -146,6 +157,7 @@ const Select = ({
             const { label, name, value, renderItem } = opt;
             return (
               <li
+                id={value + '-select-item'}
                 key={idx}
                 onClick={() => {
                   setSelectedValue(opt);
@@ -177,7 +189,7 @@ Select.propTypes = {
       /** Same as label */
       name: PropTypes.string,
       /** Value */
-      value: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       /** Custome label */
       renderItem: PropTypes.func,
     }),
@@ -192,6 +204,8 @@ Select.propTypes = {
   onChange: PropTypes.func,
   /** Field name */
   name: PropTypes.string,
+  /** max height of dropdown */
+  maxHeight: PropTypes.string,
 };
 
 export default Select;

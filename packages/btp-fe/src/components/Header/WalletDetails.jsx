@@ -7,13 +7,12 @@ import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 import { getService } from 'services/transfer';
-import { chainList, chainConfigs } from 'connectors/chainConfigs';
+import { chainList, chainConfigs, getTokenList } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
 import { TextMixin } from 'components/Typography/Text';
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
+import { colors, media, mixins } from 'components/Styles';
 import { PrimaryButton, SecondaryButton } from 'components/Button';
 import { Avatar } from 'components/Avatar';
 
@@ -26,9 +25,7 @@ const Wrapper = styled.div`
   max-height: 80vh;
   overflow-y: auto;
 
-  &::-webkit-scrollbar {
-    width: 0;
-  }
+  ${mixins.scrollBar};
 
   .network-name {
     margin-bottom: 42px;
@@ -44,11 +41,10 @@ const Wrapper = styled.div`
   }
 
   .wallet-balance {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 72px;
-    margin-bottom: 4px;
+    margin: 0 auto 4px;
+    position: relative;
+    width: fit-content;
+    max-width: 227px;
   }
 
   .sub-title {
@@ -110,10 +106,13 @@ const Wrapper = styled.div`
 const TokenSelector = styled(Select)`
   border: solid 1px ${grayLine};
   padding: 4px 8px;
-  margin-left: 10px;
   display: inline-flex;
   height: 32px;
-  min-width: 84px;
+  white-space: nowrap;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(calc(100% + 10px), -50%);
 
   > .md {
     ${TextMixin.bold};
@@ -171,7 +170,10 @@ export const WalletDetails = ({
 }) => {
   const tokens = [
     { label: symbol, value: symbol },
-    { label: 'ETH', value: 'ETH' },
+    ...getTokenList().map(({ symbol: COIN_SYMBOL }) => ({
+      label: COIN_SYMBOL,
+      value: COIN_SYMBOL,
+    })),
     ...chainList
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== symbol),
@@ -196,7 +198,7 @@ export const WalletDetails = ({
             ?.getBalanceOf({
               address,
               refundable: true,
-              symbol: value,
+              symbol: ICONChain?.COIN_SYMBOL,
             })
             .then((refund) => {
               if (refund > 0) {
@@ -247,7 +249,7 @@ export const WalletDetails = ({
       <Avatar className="user-avatar" size={120} />
       <Header className="md bold wallet-balance">
         {toSeparatedNumberString(currentBalance)}
-        <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" />
+        <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" maxHeight="130px" />
       </Header>
 
       <Text className="md dark-text">~ ${toSeparatedNumberString(usdBalance)}</Text>

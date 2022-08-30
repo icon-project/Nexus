@@ -47,6 +47,10 @@ const TableStyled = styled(antdTable)`
     ${(props) => TextMixin[props.headerText] || TextMixin.md}
   }
 
+  .ant-table-tbody > tr > td {
+    cursor: ${({ onRow }) => (onRow ? 'pointer' : '')};
+  }
+
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
     height: 48px;
@@ -67,6 +71,18 @@ const TableStyled = styled(antdTable)`
 
   table {
     border-spacing: 0;
+    tr {
+      ${({ columns }) => {
+        return columns[0].width
+          ? columns
+              .map(
+                (col, idx) =>
+                  `td:nth-child(${idx + 1}),th:nth-child(${idx + 1}){min-width:${col.width};}`,
+              )
+              .join('')
+          : '';
+      }}
+    }
   }
 
   ${media.md`
@@ -91,6 +107,7 @@ export const Table = ({
   getItemsHandler,
   sortOptions = {},
   dataSource,
+  filterParams = '',
   ...rest
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -98,10 +115,18 @@ export const Table = ({
   const { totalItem, limit } = pagination;
   const { order, orderBy } = sortOptions;
 
+  // reset page index when params change
+  useEffect(() => {
+    if (filterParams) {
+      setCurrent(1);
+    }
+  }, [filterParams]);
+
+  // onPagechanged
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (getItemsHandler) getItemsHandler(current)();
-  }, [current]);
+  }, [current + filterParams]);
 
   // we don't set loading immediately to avoid blinking UI
   useEffect(() => {

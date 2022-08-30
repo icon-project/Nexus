@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { Text, Header } from 'components/Typography';
 import { Helmet } from 'components/Helmet';
@@ -21,6 +21,10 @@ const PageWrapper = styled.div`
       text-align: center;
       margin-top: 30px;
     }
+
+    > img {
+      cursor: pointer;
+    }
   }
 
   .plain-text {
@@ -35,15 +39,23 @@ const PageWrapper = styled.div`
 `;
 
 const TermsOfUse = () => {
+  const history = useHistory();
+
+  const onClose = () => {
+    const { prevPath } = history.location?.state || {};
+    if (prevPath && prevPath !== '/terms-of-use') {
+      history.goBack();
+    } else {
+      history.push('/');
+    }
+  };
   return (
     <PageWrapper>
       <Helmet title="Terms of use" />
       <div className="heading">
         <span></span>
         <Header className="sm">TERMS OF USE</Header>
-        <NavLink to="/">
-          <Icon iconURL={closeIcon} size="s" />
-        </NavLink>
+        <Icon iconURL={closeIcon} size="s" onClick={onClose} />
       </div>
 
       <Text className="md">

@@ -11,7 +11,7 @@ import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
 import { useTokenBalance } from 'hooks/useTokenBalance';
-import { composeValidators, maxValue } from 'utils/inputValidation';
+import { composeValidators, maxValue, minValueWithFixedFee } from 'utils/inputValidation';
 import { toSeparatedNumberString } from 'utils/app';
 import { chainConfigs } from 'connectors/chainConfigs';
 
@@ -117,19 +117,22 @@ export const Details = memo(
     account,
     usdRate,
     form,
+    BTPFee,
   }) => {
     const { token, network } = sendingInfo;
+
     const { currentNetwork, wallet } = account;
     const [currentBalance] = useTokenBalance(token, step, step !== 0);
 
     const max = maxValue(currentBalance, 'Insufficient balance');
+    const minFixedFee = minValueWithFixedFee(BTPFee);
 
     return (
       <Wrapper>
         <Header className="sm bold heading">Transfer</Header>
         <Field
           name={fields.tokenAmount}
-          validate={composeValidators(required, max)}
+          validate={composeValidators(required, max, minFixedFee)}
           render={({ input, meta }) => (
             <TokenInput
               placeholder={`0 ${token}`}

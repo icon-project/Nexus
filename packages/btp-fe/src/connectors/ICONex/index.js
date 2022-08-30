@@ -1,17 +1,11 @@
 import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
-import {
-  getBalance,
-  sendTransaction,
-  getTxResult,
-  sendNonNativeCoin,
-  transferIRC2,
-} from './ICONServices';
+import { getBalance, sendTransaction, getTxResult, sendNonNativeCoin } from './ICONServices';
 import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
 import { resetTransferStep } from './utils';
-import { deplay } from 'utils/app';
+import { delay } from 'utils/app';
 
 import store from 'store';
 import {
@@ -25,11 +19,13 @@ import { chainConfigs, customzeChain } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
-const eventHandler = async (event) => {
+export const eventHandler = async (event) => {
   const { type, payload = {} } = event.detail;
   const address = localStorage.getItem(ADDRESS_LOCAL_STORAGE);
 
-  console.info('%cICONex event', 'color: green;', event.detail);
+  if (process.env.JEST_WORKER_ID === undefined) {
+    console.info('%cICONex event', 'color: green;', event.detail);
+  }
 
   if (payload.error) {
     modal.openModal({
@@ -70,7 +66,7 @@ const eventHandler = async (event) => {
         });
 
         const txHash = payload.result || (await sendTransaction(payload));
-        await deplay();
+        await delay();
 
         await new Promise((resolve, reject) => {
           const checkTxRs = setInterval(async () => {
@@ -98,13 +94,11 @@ const eventHandler = async (event) => {
                 case signingActions.approveIRC2:
                   modal.openModal({
                     icon: 'checkIcon',
-                    desc: `You've approved to tranfer your token! Please click the Transfer button to continue.`,
+                    desc: `You've approved to transfer your token! Please click the Transfer button to continue.`,
                     button: {
+                      id: 'approve-transfer-btn',
                       text: 'Transfer',
-                      onClick:
-                        window[signingActions.globalName] === signingActions.approve
-                          ? sendNonNativeCoin
-                          : transferIRC2,
+                      onClick: sendNonNativeCoin,
                     },
                   });
                   break;
@@ -133,6 +127,7 @@ const eventHandler = async (event) => {
                 default:
                   break;
               }
+              resolve(true);
               clearInterval(checkTxRs);
               resetTransferStep();
             } catch (err) {
@@ -143,6 +138,7 @@ const eventHandler = async (event) => {
           }, 2000);
         });
       } catch (err) {
+        console.error(err);
         switch (window[signingActions.globalName]) {
           case signingActions.bid:
             modal.openModal({

@@ -113,9 +113,9 @@ export const TransferCard = ({
     if (!nativeCoin) return targetChains;
     if (checkIsToken(sendingInfo.token)) {
       if (nativeCoin === chainConfigs.ICON.COIN_SYMBOL) {
-        return targetChains.filter(({ value }) => value === chainConfigs.HARMONY.id);
+        return targetChains.filter(({ value }) => value === chainConfigs.BSC?.id);
       }
-      if (nativeCoin === chainConfigs.HARMONY.COIN_SYMBOL) {
+      if (nativeCoin === chainConfigs.HARMONY?.COIN_SYMBOL) {
         return targetChains.filter(({ value }) => value === chainConfigs.ICON.id);
       }
     }
@@ -163,7 +163,13 @@ export const TransferCard = ({
           <Text className="sm">Powered by ICON Bridge</Text>
 
           {isConnected ? (
-            <PrimaryButton width={416} height={64} onClick={onNext} type="button">
+            <PrimaryButton
+              width={416}
+              height={64}
+              onClick={onNext}
+              type="button"
+              id="transfer-next-button"
+            >
               Next
             </PrimaryButton>
           ) : (

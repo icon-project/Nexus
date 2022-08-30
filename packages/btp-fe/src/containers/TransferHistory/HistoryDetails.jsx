@@ -13,11 +13,11 @@ import { Modal } from 'components/NotificationModal';
 
 import { getTransferHistoryByTxHash } from 'services/btpServices';
 import { hashShortener, toSeparatedNumberString } from 'utils/app';
+import { txStatus } from 'utils/constants';
 
 import { Text } from 'components/Typography';
-import { colors } from 'components/Styles/Colors';
-import { media } from 'components/Styles/Media';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { colors, media, mixins } from 'components/Styles';
+import { chainConfigs, chainList } from 'connectors/chainConfigs';
 
 const StyledHistoryDetails = styled.div`
   width: 100%;
@@ -25,6 +25,7 @@ const StyledHistoryDetails = styled.div`
   justify-content: center;
   top: 0;
   left: 0;
+
   .history-details {
     width: 100%;
     height: fit-content;
@@ -39,22 +40,28 @@ const StyledHistoryDetails = styled.div`
     ${media.smallDesktop`
       max-height: 65vh;
   `};
+
+    ${mixins.scrollBar};
   }
+
   .heading {
     text-align: center;
     margin-bottom: 33px;
     width: 100%;
     position: relative;
   }
+
   .content {
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 29px;
   }
+
   .btp-fee {
     margin-bottom: 0;
   }
+
   .internal-trx {
     width: 100%;
     display: flex;
@@ -81,10 +88,10 @@ const StyledHistoryDetails = styled.div`
 const getStatus = (statusCode) => {
   let color = colors.successState;
   let text = 'Success';
-  if (statusCode === 0) {
+  if (statusCode === txStatus.PENDING) {
     color = colors.warningState;
     text = 'Pending';
-  } else if (statusCode === -1) {
+  } else if (statusCode === txStatus.FAILED) {
     color = colors.errorState;
     text = 'Failed';
   }
@@ -118,26 +125,35 @@ const exploreURL = {
   ICON: {
     transaction: 'transaction/',
   },
-  HARMONY: {
-    transaction: 'tx/',
-  },
 };
 
+const statusText = 'txStatus';
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const getTransactionDetails = async () => {
       try {
-        const transferData = await getTransferHistoryByTxHash(txHash);
-        setDetails(transferData.content);
-        setIsFetching(false);
+        const status = sessionStorage.getItem(statusText);
+        if (!status || status == txStatus.PENDING) {
+          const transferData = await getTransferHistoryByTxHash(txHash);
+          setDetails(() => transferData.content);
+          setIsFetching(() => false);
+          sessionStorage.setItem(statusText, transferData?.content?.status);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     getTransactionDetails();
+    const intervalFetch = setInterval(getTransactionDetails, 3000);
+
+    return () => {
+      sessionStorage.removeItem(statusText);
+      clearInterval(intervalFetch);
+    };
   }, [txHash]);
 
   const {
@@ -158,11 +174,14 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   const nativeTokenPrice = useTokenToUsd(nativeToken, 1, tokenName !== nativeToken);
   const toAddresssOnly = toAddress?.split('/')[3];
 
+  const getChain = (chainName) =>
+    chainList.find(({ CHAIN_NAME }) => CHAIN_NAME?.toLowerCase() === chainName?.toLowerCase());
+
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
         {isFetching ? (
-          <Loader size={'24px'} borderSize={'2px'} />
+          <Loader size="24px" borderSize="2px" />
         ) : (
           <div className="history-details">
             <div className="content">
@@ -171,8 +190,8 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                 <CopyAddress
                   text={txHash}
                   href={
-                    chainConfigs[networkNameSrc]?.EXPLORE_URL +
-                    exploreURL[networkNameSrc]?.transaction +
+                    chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
+                    (exploreURL[networkNameSrc]?.transaction || 'tx/') +
                     txHash
                   }
                 />
@@ -208,7 +227,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   text={fromAddress}
                   href={
                     networkNameSrc
-                      ? chainConfigs[networkNameSrc]?.EXPLORE_URL + 'address/' + fromAddress
+                      ? chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
+                        'address/' +
+                        fromAddress
                       : null
                   }
                 />
@@ -224,7 +245,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   copyText={toAddresssOnly}
                   href={
                     networkNameDst
-                      ? chainConfigs[networkNameDst]?.EXPLORE_URL + 'address/' + toAddresssOnly
+                      ? chainConfigs[getChain(networkNameDst)?.id]?.EXPLORE_URL +
+                        'address/' +
+                        toAddresssOnly
                       : null
                   }
                 />
@@ -245,7 +268,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
             <div className="content btp-fee">
               <Text className="md">BTP fee</Text>
               <Text className="md">
-                {bptFee} {nativeToken}
+                {bptFee} {tokenName}
               </Text>
             </div>
           </div>

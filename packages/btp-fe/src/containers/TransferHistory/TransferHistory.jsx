@@ -21,7 +21,8 @@ import { Text } from 'components/Typography';
 
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { serverEndpoint } from 'connectors/constants';
-import { chainList } from 'connectors/chainConfigs';
+import { chainList, getTokenList } from 'connectors/chainConfigs';
+import { txStatus } from 'utils/constants';
 
 import VectorSrc from 'assets/images/vector.svg';
 
@@ -46,29 +47,29 @@ const columns = [
     title: 'Details',
     dataIndex: 'txHash',
     render: (txHash) => hashShortener(txHash),
-    width: '230px',
+    width: '180px',
   },
   {
     title: 'Source',
     dataIndex: 'networkNameSrc',
-    width: '150px',
+    width: '200px',
   },
   {
     title: 'Destination',
     dataIndex: 'networkNameDst',
-    width: '150px',
+    width: '200px',
   },
   {
     title: 'Time',
     dataIndex: 'blockTime',
     render: (blockTime) => dayjs(blockTime).fromNow(),
-    width: '180px',
+    width: '193px',
   },
   {
     title: 'Amount',
     dataIndex: 'value',
-    render: (text, dataSource) => text + ' ' + dataSource.tokenName?.toUpperCase(),
-    width: '250px',
+    render: (text, dataSource) => text + ' ' + dataSource.tokenName,
+    width: '200px',
   },
   {
     title: 'Status',
@@ -77,18 +78,18 @@ const columns = [
       let status = 'Success';
       let color = '#5EF38C';
       switch (text) {
-        case 0:
+        case txStatus.PENDING:
           color = '#FFBA49';
           status = 'Pending';
           break;
-        case -1:
+        case txStatus.FAILED:
           color = '#F05365';
           status = 'Failed';
           break;
       }
       return <Tag color={color}>{status}</Tag>;
     },
-    width: '160px',
+    width: '147px',
   },
 ];
 
@@ -107,15 +108,21 @@ const TransferHistoryStyled = styled.div`
       display: flex;
 
       .exchange-icon {
-        margin: 22px 32px 0 32px;
+        margin: 40px 32px 0 32px;
+        width: 18.33px;
       }
 
       .select-asset {
         margin-right: 128px;
+
+        > div:last-child {
+          margin-top: 20px;
+        }
       }
 
       .select-network {
         display: flex;
+        align-items: flex-start;
       }
     }
   }
@@ -160,12 +167,20 @@ const TransferHistoryStyled = styled.div`
 
       .select-asset {
         width: 100%;
+
+        > div:last-child {
+          margin-top: 0 !important;
+        }
       }
 
       .select-network {
         flex-direction: column;
         width: 100%;
         margin-bottom: 30px;
+
+        > div {
+          width: 100%;
+        }
 
         > .exchange-icon {
           display: none;
@@ -174,6 +189,8 @@ const TransferHistoryStyled = styled.div`
     }
   `};
 `;
+
+let intervalFetch = null;
 
 const TransferHistory = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -186,8 +203,8 @@ const TransferHistory = () => {
     assetName: '',
     from: '',
     to: '',
+    status: '',
   });
-  const { from, to, assetName } = filters;
 
   const { handleError, getNetworks } = useDispatch(
     ({ modal: { handleError }, network: { getNetworks } }) => ({
@@ -203,6 +220,21 @@ const TransferHistory = () => {
     getNetworks({ cache: true });
   }, [getNetworks]);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (intervalFetch) clearInterval(intervalFetch);
+
+    intervalFetch = setInterval(() => {
+      if (sessionStorage.getItem('page') == 1) {
+        fetchDataHandler({ ...filters, page: 1 });
+      }
+    }, 4000);
+
+    return () => {
+      if (intervalFetch) clearInterval(intervalFetch);
+    };
+  }, [JSON.stringify(filters)]);
+
   const assets = [
     {
       value: '',
@@ -210,11 +242,26 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All assets</Text>,
       renderItem: () => <Text className="md">All assets</Text>,
     },
-    ...chainList.map(({ COIN_SYMBOL }) => ({
-      value: COIN_SYMBOL,
-      label: COIN_SYMBOL,
-      renderLabel: () => <TextWithIcon icon={COIN_SYMBOL}>{COIN_SYMBOL}</TextWithIcon>,
-      renderItem: () => <TextWithIcon icon={COIN_SYMBOL}>{COIN_SYMBOL}</TextWithIcon>,
+    ...[...getTokenList(), ...chainList].map(({ symbol, COIN_SYMBOL }) => {
+      const value = COIN_SYMBOL || symbol;
+
+      return {
+        label: value,
+        value,
+        renderLabel: () => <TextWithIcon icon={value}>{value}</TextWithIcon>,
+        renderItem: () => <TextWithIcon icon={value}>{value}</TextWithIcon>,
+      };
+    }),
+  ];
+
+  const transactionStatus = [
+    {
+      value: '',
+      label: 'All status',
+    },
+    ...Object.keys(txStatus).map((key) => ({
+      value: txStatus[key],
+      label: key[0] + key.slice(1, key.length).toLocaleLowerCase(), // capitalizeFirstLetter
     })),
   ];
 
@@ -226,6 +273,7 @@ const TransferHistory = () => {
       renderItem: () => <Text className="md">All networks</Text>,
     },
   ];
+
   networks.forEach((network) => {
     const iconURL = serverEndpoint + network.pathLogo.substring(1);
     networkOptions.push({
@@ -236,10 +284,10 @@ const TransferHistory = () => {
     });
   });
 
-  const fetchDataHandler = async ({ page, assetName, from, to }) => {
+  const fetchDataHandler = async ({ page, assetName, from, to, status }) => {
     try {
       const transferData =
-        (await getTransferHistory(page - 1, pagination.limit, assetName, from, to)) || {};
+        (await getTransferHistory(page - 1, pagination.limit, assetName, from, to, status)) || {};
       const dataSource = transferData?.content?.map((history, index) => {
         return {
           ...history,
@@ -248,6 +296,7 @@ const TransferHistory = () => {
       });
       setHistorySource(dataSource);
       setPagination((pagination) => ({ ...pagination, totalItem: transferData.total || 0 }));
+      sessionStorage.setItem('page', page);
       setIsFetching(false);
     } catch (error) {
       handleError(error);
@@ -264,7 +313,6 @@ const TransferHistory = () => {
 
     if (value !== filters[selectorName]) {
       setFilters({ ...filters, [selectorName]: value });
-      fetchDataHandler({ page: 1, assetName, from, to, [selectorName]: value });
     }
   };
   return (
@@ -279,6 +327,12 @@ const TransferHistory = () => {
               onChange={(e) => onSelectChange(e, 'assetName')}
               label="Assets type"
               options={assets}
+              maxHeight="180px"
+            />
+            <SelectWithBorder
+              onChange={(e) => onSelectChange(e, 'status')}
+              label="Status"
+              options={transactionStatus}
             />
           </div>
           <div className="select-network">
@@ -307,7 +361,7 @@ const TransferHistory = () => {
       <TableStyled
         headerColor={colors.grayAccent}
         backgroundColor={colors.darkBG}
-        bodyText={'md'}
+        bodyText="md"
         columns={columns}
         dataSource={historySource}
         onRow={(r) => ({
@@ -315,7 +369,8 @@ const TransferHistory = () => {
         })}
         pagination={pagination}
         loading={isFetching}
-        getItemsHandler={(page) => () => fetchDataHandler({ page, assetName, from, to })}
+        getItemsHandler={(page) => () => fetchDataHandler({ ...filters, page })}
+        filterParams={JSON.stringify(filters)}
       />
       {showDetails && (
         <HistoryDetails

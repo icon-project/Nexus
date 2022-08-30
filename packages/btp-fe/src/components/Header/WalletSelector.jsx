@@ -55,25 +55,15 @@ const StyledWalletItem = styled.button`
   `};
 `;
 
-export const WalletSelector = ({
-  wallet,
-  type,
-  active,
-  onClick,
-  isInstalled,
-  isCheckingInstalled,
-}) => {
+export const WalletSelector = ({ wallet, type, active, onClick, isCheckingInstalled }) => {
   return (
     <StyledWalletItem
-      className="wallet-selector"
+      className={`${wallet[type].id}-wallet-selector${isCheckingInstalled ? '-checking' : ''}`}
       autoFocus={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
       <Icon className="wallet-img" iconURL={wallet[type].icon} width="32px" />
-      <Text className="md wallet-title">
-        {!isInstalled && !isCheckingInstalled && 'Install '}
-        {wallet[type].title}
-      </Text>
+      <Text className="md wallet-title">{wallet[type].title}</Text>
       {!active && isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
       {active && <img src={checkIcon} alt="icon" />}
     </StyledWalletItem>

@@ -13,7 +13,7 @@ import { useDispatch, useSelect } from 'hooks/useRematch';
 import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
 import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
-import { toSeparatedNumberString, hashShortener } from 'utils/app';
+import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
 
@@ -28,7 +28,27 @@ import Hana from 'assets/images/hana-wallet.png';
 import NEAR from 'assets/images/near-icon.svg';
 import logo from 'assets/images/logo-nexus-white.png';
 
-const { darkBG, grayText, grayLine } = colors;
+const { darkBG, grayText, grayLine, primaryBrand, tertiaryBase } = colors;
+
+const Wrapper = styled.div`
+  .beta-text {
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+    background-color: ${primaryBrand};
+    padding: 8px 0;
+
+    a {
+      font-weight: bold;
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    ${media.md`
+      font-size: 10px;
+    `};
+  }
+`;
 
 const StyledHeader = styled.header`
   height: 80px;
@@ -46,12 +66,18 @@ const StyledHeader = styled.header`
     min-width: 175px;
   }
 
+  .extension-link {
+    color: ${tertiaryBase};
+    font-size: 13px;
+  }
+
   .right-side {
     ${SubTitleMixin.smBold};
 
     flex: 1;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: nowrap;
     min-width: 305px;
 
@@ -66,6 +92,10 @@ const StyledHeader = styled.header`
 
       .wallet-info {
         margin-left: 8px;
+
+        .subtitle-text {
+          white-space: nowrap;
+        }
 
         .address {
           margin-bottom: 4px;
@@ -200,6 +230,7 @@ const Header = () => {
       // case wallets.near:
       //   getNearAccountInfo();
     }
+
     // wait after 2s for initial addICONexListener
     setTimeout(() => {
       checkICONexInstalled(() => {
@@ -237,7 +268,6 @@ const Header = () => {
     e.preventDefault();
     setLoading(true);
     resetAccountInfo();
-    localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
 
     switch (selectedWallet) {
       case wallets.iconex:
@@ -249,9 +279,10 @@ const Header = () => {
         break;
 
       case wallets.metamask:
-        const isConnected = await EthereumInstance.connectMetaMaskWallet();
-        if (isConnected) {
-          await EthereumInstance.getEthereumAccounts();
+        const chainId = await EthereumInstance.connectMetaMaskWallet();
+        if (chainId) {
+          await delay(1500);
+          await EthereumInstance.getEthereumAccounts(chainId);
         }
         setLoading(false);
         break;
@@ -261,6 +292,8 @@ const Header = () => {
       //   setLoading(false);
       //   break;
     }
+    // must be set after all
+    localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
   };
   const handleSelectWallet = (wallet) => {
     if (wallet) setSelectedWallet(wallet);
@@ -285,97 +318,119 @@ const Header = () => {
   };
 
   return (
-    <StyledHeader $showMenu={showMenu}>
-      {showModal && (
-        <>
-          {loading && !cancelConfirmation ? (
-            <Modal
-              icon="loader"
-              desc="Please wait a moment."
-              width="352px"
-              display
-              setDisplay={setShowModal}
-            />
-          ) : (
-            <>
-              {showDetail && (
-                <Modal
-                  display
-                  setDisplay={setShowModal}
-                  title={wallet && mockWallets[wallet].title}
-                >
-                  <WalletDetails
-                    networkName={currentNetwork}
-                    symbol={symbol}
-                    address={address}
-                    shortedAddress={shortedAddress}
-                    onDisconnectWallet={onDisconnectWallet}
-                    onSwitchWallet={onSwitchWallet}
-                    networkID={id}
-                  />
-                </Modal>
-              )}
-              {showConnector && (
-                <Modal
-                  title="Connect a wallet"
-                  button={{ onClick: handleConnect, text: 'Next' }}
-                  display
-                  setDisplay={setShowModal}
-                >
-                  <div className="connect-a-wallet-card">
-                    <WalletSelector
-                      type={wallets.metamask}
-                      wallet={mockWallets}
-                      active={selectedWallet == wallets.metamask}
-                      onClick={() => handleSelectWallet(wallets.metamask)}
-                      isInstalled={EthereumInstance.isMetaMaskInstalled()}
+    <Wrapper>
+      <StyledHeader $showMenu={showMenu}>
+        {showModal && (
+          <>
+            {loading && !cancelConfirmation ? (
+              <Modal
+                icon="loader"
+                desc="Please wait a moment."
+                width="352px"
+                display
+                setDisplay={setShowModal}
+              >
+                {selectedWallet === wallets.iconex && (
+                  <a
+                    className="extension-link"
+                    href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Or click here to install Hana wallet
+                  </a>
+                )}
+              </Modal>
+            ) : (
+              <>
+                {showDetail && (
+                  <Modal
+                    display
+                    setDisplay={setShowModal}
+                    title={wallet && mockWallets[wallet].title}
+                  >
+                    <WalletDetails
+                      networkName={currentNetwork}
+                      symbol={symbol}
+                      address={address}
+                      shortedAddress={shortedAddress}
+                      onDisconnectWallet={onDisconnectWallet}
+                      onSwitchWallet={onSwitchWallet}
+                      networkID={id}
                     />
-                    <WalletSelector
-                      type={wallets.iconex}
-                      wallet={mockWallets}
-                      active={selectedWallet == wallets.iconex}
-                      onClick={() => handleSelectWallet(wallets.iconex)}
-                      isCheckingInstalled={checkingICONexInstalled}
-                      isInstalled={isICONexInstalled()}
-                    />
-                  </div>
-                </Modal>
-              )}
-            </>
-          )}
-        </>
-      )}
-      <BetaText>
-        <NavLink to="/">
-          <Logo src={logo} alt="btp logo" />
-          <SubTitle>NEXUS (BETA)</SubTitle>
-        </NavLink>
-      </BetaText>
-
-      <HamburgerButton
-        className={`menu-icon ${showMenu && 'active'}`}
-        onClick={() => setShowMenu(!showMenu)}
-      />
-      <div className="right-side">
-        <Nav setShowMenu={setShowMenu} />
-        {address ? (
-          <div className="account-info">
-            <SubTitle className="sm">{currentNetwork}</SubTitle>
-            <Avatar className="user-avatar" size={48} onClick={onAvatarClicked} />
-            <span className="wallet-info">
-              <Text className="xs address">{shortedAddress}</Text>
-              <SubTitle className="md bold">
-                {toSeparatedNumberString(balance)} {symbol}
-              </SubTitle>
-            </span>
-          </div>
-        ) : (
-          <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
-            Connect a Wallet
-          </PrimaryButton>
+                  </Modal>
+                )}
+                {showConnector && (
+                  <Modal
+                    title="Connect a wallet"
+                    button={{ onClick: handleConnect, text: 'Next', id: 'do-connecting-wallet' }}
+                    display
+                    setDisplay={setShowModal}
+                  >
+                    <div className="connect-a-wallet-card">
+                      <WalletSelector
+                        type={wallets.metamask}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.metamask}
+                        onClick={() => handleSelectWallet(wallets.metamask)}
+                        isInstalled={EthereumInstance.isMetaMaskInstalled()}
+                      />
+                      <WalletSelector
+                        type={wallets.iconex}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.iconex}
+                        onClick={() => handleSelectWallet(wallets.iconex)}
+                        isCheckingInstalled={checkingICONexInstalled}
+                        isInstalled={isICONexInstalled()}
+                      />
+                    </div>
+                  </Modal>
+                )}
+              </>
+            )}
+          </>
         )}
-      </div>
-    </StyledHeader>
+        <BetaText>
+          <NavLink to="/">
+            <Logo src={logo} alt="btp logo" />
+            <SubTitle>NEXUS (BETA)</SubTitle>
+          </NavLink>
+        </BetaText>
+
+        <HamburgerButton
+          className={`menu-icon ${showMenu && 'active'}`}
+          onClick={() => setShowMenu(!showMenu)}
+        />
+        <div className="right-side">
+          <Nav setShowMenu={setShowMenu} />
+
+          {address ? (
+            <div className="account-info">
+              <SubTitle className="sm">{currentNetwork}</SubTitle>
+              <Avatar className="user-avatar" size={48} onClick={onAvatarClicked} />
+              <span className="wallet-info">
+                <Text className="xs address">{shortedAddress}</Text>
+                <SubTitle className="md bold">
+                  {toSeparatedNumberString(balance)} {symbol}
+                </SubTitle>
+              </span>
+            </div>
+          ) : (
+            <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+              Connect a Wallet
+            </PrimaryButton>
+          )}
+        </div>
+      </StyledHeader>
+      <SubTitle className="beta-text">
+        Nexus is in beta while ICON Bridge is currently being audited. Please ensure you have read
+        the{' '}
+        <NavLink to={{ pathname: '/terms-of-use', state: { prevPath: location.pathname } }}>
+          terms of use
+        </NavLink>
+        .
+      </SubTitle>
+    </Wrapper>
   );
 };
 

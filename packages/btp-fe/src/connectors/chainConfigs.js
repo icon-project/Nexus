@@ -1,5 +1,6 @@
 import { custom } from './chainCustomization';
 import { ABI as currentABI } from 'connectors/MetaMask/ABI';
+import { ICON_SYMBOL } from './constants';
 
 export const chainConfigs = {};
 Object.keys(process.env).forEach((e) => {
@@ -59,3 +60,10 @@ export const getTokenList = () => {
   return tokenList;
 };
 export const checkIsToken = (token) => getTokenList().find((t) => t.symbol === token);
+
+export const formatSymbol = (symbol) => {
+  if (ICON_SYMBOL.includes(symbol)) {
+    return `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${symbol}`;
+  }
+  return `btp-${chainConfigs?.BSC?.NETWORK_ADDRESS}-${symbol}`;
+};

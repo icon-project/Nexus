@@ -8,15 +8,22 @@ import { colors } from 'components/Styles/Colors';
 import { ReactComponent as metaMaskIcon } from 'assets/images/metal-mask.svg';
 import { ReactComponent as ethIcon } from 'assets/images/eth-icon.svg';
 import { ReactComponent as copyIcon } from 'assets/images/copy-icon.svg';
-import { ReactComponent as binanceIcon } from 'assets/images/binance-icon.svg';
 import { ReactComponent as btcIcon } from 'assets/images/btc-icon.svg';
 import { ReactComponent as bchIcon } from 'assets/images/bch-icon.svg';
 import { ReactComponent as nearIcon } from 'assets/images/near-icon.svg';
 
 import HamornyICon from 'assets/images/harmony-icon.png';
+import defaultCoin from 'assets/images/default-coin.png';
 import hanaIcon from 'assets/images/hana-wallet.png';
 import iconexIcon from 'assets/images/icon-ex.png';
 import MBIcon from 'assets/images/moonbeam.jpeg';
+import binanceIcon from 'assets/images/BNB.png';
+import bnUSDIcon from 'assets/images/bnUSD.png';
+import BTCBIcon from 'assets/images/BTCB.png';
+import BUSDIcon from 'assets/images/BUSD.png';
+import sICXIcon from 'assets/images/sICX.png';
+import USDCIcon from 'assets/images/USDC.png';
+import USDTIcon from 'assets/images/USDT.png';
 
 const sizes = {
   s: '20px',
@@ -79,9 +86,16 @@ export const Icon = memo(
       DEV: MBIcon,
       NEAR: nearIcon,
       ONE: HamornyICon,
+      bnUSD: bnUSDIcon,
+      BTCB: BTCBIcon,
+      BUSD: BUSDIcon,
+      sICX: sICXIcon,
+      USDC: USDCIcon,
+      USDT: USDTIcon,
+      defaultCoin,
     };
 
-    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.ICX;
+    const MySource = SVGComp || (!iconURL && icons[icon]) || iconURL || icons.defaultCoin;
     const isImagePath = iconURL || (typeof MySource === 'string' && MySource.includes('/'));
 
     return (
@@ -114,22 +128,7 @@ Icon.propTypes = {
   /** Custome width and overrride size */
   width: PropTypes.string,
   /** List of avalable icons */
-  icon: PropTypes.oneOf([
-    wallets.metamask,
-    wallets.iconex,
-    wallets.hana,
-    'ICX',
-    'ETH',
-    'copy',
-    'binance',
-    'BNB',
-    'btc',
-    'bch',
-    'DEV',
-    'NEAR',
-    'ONE',
-    '',
-  ]),
+  icon: PropTypes.string,
   /** Display icon with URL */
   iconURL: PropTypes.string,
   /** Display icon with SVG component */

@@ -48,9 +48,9 @@ export const getNetwork = (id) => {
   return fetchAPI(`/networks/${id}`);
 };
 
-export const getTransferHistory = (page, limit = 20, assetName, from, to) => {
+export const getTransferHistory = (page, limit = 20, assetName, from, to, status) => {
   return fetchAPI(
-    `/transactions?page=${page}&limit=${limit}&assetName=${assetName}&from=${from}&to=${to}`,
+    `/transactions?page=${page}&limit=${limit}&assetName=${assetName}&from=${from}&to=${to}&status=${status}`,
   );
 };
 

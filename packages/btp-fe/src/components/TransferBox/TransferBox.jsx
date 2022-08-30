@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { Form } from 'react-final-form';
 
@@ -9,6 +9,7 @@ import { TransferCard } from 'components/TransferCard';
 import { colors } from 'components/Styles/Colors';
 import { media } from 'components/Styles/Media';
 
+import { getBTPfee } from 'connectors/ICONex/ICONServices';
 import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useSelect } from 'hooks/useRematch';
 
@@ -34,6 +35,8 @@ const Wrapper = styled.div`
 
 export const TransferBox = () => {
   const [step, setStep] = useState(0);
+  const [BTPFee, setBTPFee] = useState(0);
+
   const [tokenValue, setTokenValue] = useState('');
   const [sendingInfo, setSendingInfo] = useState({ token: '', network: '' });
 
@@ -56,6 +59,13 @@ export const TransferBox = () => {
   const memoizedSetStep = useCallback((param) => setStep(param), [setStep]);
   const memoizedSetTokenValue = useCallback((param) => setTokenValue(param), [setTokenValue]);
   const onSubmit = () => {};
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    getBTPfee(sendingInfo.token).then((result) => {
+      setBTPFee(result);
+    });
+  }, [sendingInfo.token]);
 
   return (
     <Wrapper>
@@ -86,6 +96,7 @@ export const TransferBox = () => {
                   sendingInfo={sendingInfo}
                   account={account}
                   form={form}
+                  BTPFee={BTPFee}
                 />
               </div>
               <div className={`container ${isCurrentStep(2) && 'active'}`}>
@@ -97,6 +108,7 @@ export const TransferBox = () => {
                   account={account}
                   form={form}
                   usdRate={usdRate}
+                  BTPFee={BTPFee}
                 />
               </div>
             </form>
