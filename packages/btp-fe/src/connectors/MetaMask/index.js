@@ -1,6 +1,6 @@
 import { ethers, utils } from 'ethers';
 import store from 'store';
-import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { ADDRESS_LOCAL_STORAGE } from 'connectors/constants';
 import { ABI } from './ABI';
 
 import { ConflictNetworkWarning } from 'components/NotificationModal/ConflictNetworkWarning';
@@ -12,9 +12,6 @@ import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs'
 
 const { modal, account } = store.dispatch;
 
-const metamaskURL =
-  'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
-
 class Ethereum {
   constructor() {
     this.ethereum = window.ethereum;
@@ -25,7 +22,6 @@ class Ethereum {
 
   get getEthereum() {
     if (!this.isMetaMaskInstalled()) {
-      window.open(metamaskURL);
       throw new Error('MetaMask has not been installed');
     }
     return this.ethereum;
@@ -37,7 +33,6 @@ class Ethereum {
 
   get getProvider() {
     if (!this.isMetaMaskInstalled()) {
-      window.open(metamaskURL);
       throw new Error('MetaMask has not been installed');
     }
     return this.provider;
@@ -111,11 +106,6 @@ class Ethereum {
   }
 
   async connectMetaMaskWallet() {
-    if (!this.isMetaMaskInstalled()) {
-      localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
-      window.open(metamaskURL);
-      return;
-    }
     try {
       const chainId = await this.switchChainInMetamask();
       if (chainId) {
