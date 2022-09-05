@@ -19,6 +19,8 @@ export const TYPES = {
   CANCEL_JSON_RPC: 'CANCEL_JSON-RPC',
 };
 
+export const NEAR_NODE = {};
+
 export const ADDRESS_LOCAL_STORAGE = 'address';
 export const CONNECTED_WALLET_LOCAL_STORAGE = 'connected-wallet';
 

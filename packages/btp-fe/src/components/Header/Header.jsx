@@ -16,6 +16,7 @@ import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
+import { connect } from 'connectors/NearWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -287,10 +288,10 @@ const Header = () => {
         setLoading(false);
         break;
 
-      // case wallets.near:
-      //   await connect();
-      //   setLoading(false);
-      //   break;
+      case wallets.near:
+        await connect();
+        setLoading(false);
+        break;
     }
     // must be set after all
     localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
