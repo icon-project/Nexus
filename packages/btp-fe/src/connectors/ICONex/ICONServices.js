@@ -241,7 +241,7 @@ export const getBTPfee = async (token) => {
   if (!token) return 0;
 
   const fee = await makeICXCall({
-    to: chainConfigs['BSC']?.ICON_BTS_CORE,
+    to: chainConfigs['NEAR']?.ICON_BTS_CORE,
     dataType: 'call',
     data: {
       method: 'feeRatio',

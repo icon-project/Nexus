@@ -16,7 +16,7 @@ import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
-import { connect } from 'connectors/NearWallet';
+import { connect, getNearAccountInfo, signOut } from 'connectors/NearWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -228,8 +228,8 @@ const Header = () => {
       case wallets.metamask:
         EthereumInstance.getEthereumAccounts();
         break;
-      // case wallets.near:
-      //   getNearAccountInfo();
+      case wallets.near:
+        getNearAccountInfo();
     }
 
     // wait after 2s for initial addICONexListener
@@ -249,6 +249,18 @@ const Header = () => {
   const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
     resetAccountInfo,
   }));
+
+  useEffect(() => {
+    // handle callback url from NEAR wallet
+    // https://docs.near.org/docs/api/naj-quick-reference#sign-in
+    const { search, pathname } = location;
+
+    if (search.startsWith('?near=true') && address) {
+      setShowDetail(true);
+      setShowModal(true);
+      window.history.replaceState(null, '', pathname);
+    }
+  }, [address]);
 
   useEffect(() => {
     if (address) {
@@ -301,6 +313,7 @@ const Header = () => {
   };
 
   const onDisconnectWallet = () => {
+    signOut();
     resetTransferStep();
     resetAccountInfo();
     toggleModal();
@@ -383,6 +396,13 @@ const Header = () => {
                         onClick={() => handleSelectWallet(wallets.iconex)}
                         isCheckingInstalled={checkingICONexInstalled}
                         isInstalled={isICONexInstalled()}
+                      />
+                      <WalletSelector
+                        type={wallets.near}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.near}
+                        onClick={() => handleSelectWallet(wallets.near)}
+                        isInstalled
                       />
                     </div>
                   </Modal>
