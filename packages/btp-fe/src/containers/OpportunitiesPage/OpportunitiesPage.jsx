@@ -5,6 +5,7 @@ import { useState } from 'react';
 import styled from 'styled-components/macro';
 import { highlightApyData, opportunitiesAssets } from './data';
 import greaterThanIcon from 'assets/images/greater-than.svg';
+import IconExIcon from 'assets/images/icon-ex.svg';
 
 const OpportunitiesStyled = styled.div`
   max-width: 1120px;
@@ -58,8 +59,23 @@ const OpportunitiesStyled = styled.div`
       border-radius: 5px;
       & .left {
         display: flex;
-        gap: 8px;
+        gap: 16px;
         align-items: center;
+        & .icon-wrapper {
+          position: relative;
+          .main-image {
+            width: 64px;
+          }
+          .highlight-float-image {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ffffff;
+            border-radius: 65px;
+          }
+        }
         & .info {
           display: flex;
           flex-direction: column;
@@ -156,6 +172,7 @@ const OpportunitiesPage = () => {
                 <div className="left">
                   <div className="icon-wrapper">
                     <img src={image} alt={pool} />
+                    <img src={IconExIcon} alt="icon" className="highlight-float-image" />
                   </div>
                   <div className="info">
                     <h4>{pool}</h4>
