@@ -8,6 +8,7 @@ import TransferHistory from 'containers/TransferHistory';
 import TermsOfUse from 'containers/TermsOfUse';
 import E2ETestingSetup from 'containers/E2ETestingSetup';
 import HanaControlPannel from 'containers/E2ETestingSetup/HanaControlPannel';
+import OpportunitiesPage from 'containers/OpportunitiesPage';
 
 // import Overview from 'containers/Overview';
 // import FeeAuctionPage from 'containers/FeeAuctionPage';
@@ -28,6 +29,7 @@ function Routes() {
             <Route path="/transfer" exact component={Transfer} />
             <Route path="/history" exact component={TransferHistory} />
             <Route path="/network" exact component={NetworkPage} />
+            <Route path="/opportunities" exact component={OpportunitiesPage} />
             <Route path="/terms-of-use" exact component={TermsOfUse} />
             <Route path={E2ETestingRoute} exact component={E2ETestingSetup} />
 

@@ -48,6 +48,7 @@ const buttonContents = [
   { text: 'History', effect: null },
   // { text: 'Overview', effect: null },
   { text: 'Network', effect: null },
+  { text: 'opportunities', effect: null },
   // { text: 'Governance', effect: null },
   // { text: 'Auction', effect: null },
 ];
