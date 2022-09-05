@@ -292,6 +292,7 @@ const Header = () => {
         break;
 
       case wallets.metamask:
+        if (!EthereumInstance.isMetaMaskInstalled()) return;
         const chainId = await EthereumInstance.connectMetaMaskWallet();
         if (chainId) {
           await delay(1500);
@@ -331,6 +332,13 @@ const Header = () => {
     setShowModal(true);
   };
 
+  const onConnectAWallet = () => {
+    setLoading(false);
+    setSelectedWallet(wallets.metamask);
+    localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
+    toggleModal();
+  };
+
   return (
     <Wrapper>
       <StyledHeader $showMenu={showMenu}>
@@ -344,14 +352,21 @@ const Header = () => {
                 display
                 setDisplay={setShowModal}
               >
-                {selectedWallet === wallets.iconex && (
+                {((selectedWallet == wallets.metamask && !EthereumInstance.isMetaMaskInstalled()) ||
+                  ((selectedWallet == wallets.iconex || selectedWallet == wallets.hana) &&
+                    !isICONexInstalled())) && (
                   <a
                     className="extension-link"
-                    href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl"
+                    href={
+                      selectedWallet == wallets.metamask
+                        ? 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'
+                        : 'https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl'
+                    }
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Or click here to install Hana wallet
+                    Or click here to install{' '}
+                    {selectedWallet == wallets.metamask ? 'MetaMask' : 'Hana'} wallet
                   </a>
                 )}
               </Modal>
@@ -437,7 +452,7 @@ const Header = () => {
               </span>
             </div>
           ) : (
-            <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+            <PrimaryButton className="connect-to-wallet-btn" onClick={onConnectAWallet}>
               Connect a Wallet
             </PrimaryButton>
           )}

@@ -24,6 +24,8 @@ const StyledWalletItem = styled.button`
   background: transparent;
   color: ${grayText};
 
+  ${({ $active }) => ($active ? `background: ${grayAccent};` : '')}
+
   .wallet-title {
     margin-right: auto;
     margin-left: 13.3px;
@@ -38,8 +40,7 @@ const StyledWalletItem = styled.button`
     color: ${successState};
   }
 
-  &:hover,
-  :focus {
+  &:hover {
     background: ${grayAccent};
     border-radius: 4px;
   }
@@ -59,7 +60,7 @@ export const WalletSelector = ({ wallet, type, active, onClick, isCheckingInstal
   return (
     <StyledWalletItem
       className={`${wallet[type].id}-wallet-selector${isCheckingInstalled ? '-checking' : ''}`}
-      autoFocus={active}
+      $active={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
       <Icon className="wallet-img" iconURL={wallet[type].icon} width="32px" />
