@@ -3,9 +3,12 @@ import { colors, media } from 'components/Styles';
 import { Table } from 'components/Table';
 import { useState } from 'react';
 import styled from 'styled-components/macro';
-import { highlightApyData, opportunitiesAssets } from './data';
+import { highlightApyData, opportunitiesAssets, opportunitiesPools, opportunityType } from './data';
 import greaterThanIcon from 'assets/images/greater-than.svg';
 import IconExIcon from 'assets/images/icon-ex.svg';
+import { Modal } from 'components/NotificationModal';
+import { OpportunityDetail } from './OpportunityDetail';
+import { OpportunitySwitch } from './OpportunitySwitch';
 
 const OpportunitiesStyled = styled.div`
   max-width: 1120px;
@@ -13,7 +16,7 @@ const OpportunitiesStyled = styled.div`
   display: flex;
   justify-content: center;
 
-  .content {
+  .contents {
     width: 1120px;
     ${media.md`
           width: ${`${window.screen.width}px`};
@@ -99,71 +102,103 @@ const OpportunitiesStyled = styled.div`
   }
 `;
 
-const columns = [
-  {
-    title: 'Pool',
-    dataIndex: 'pool',
-    align: 'left',
-    // eslint-disable-next-line react/display-name
-    render: (text, { image }) => (
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <img src={image} alt={text} style={{ width: '36px' }} />
-        <h4>{text}</h4>
-      </div>
-    ),
-  },
-  {
-    title: 'Chain',
-    dataIndex: 'pool',
-    align: 'left',
-  },
-  {
-    title: 'Protocol',
-    dataIndex: 'protocol',
-    align: 'left',
-  },
-  {
-    title: 'APY',
-    dataIndex: 'apy',
-    align: 'left',
-  },
-  {
-    title: 'Total Assets',
-    dataIndex: 'totalAssets',
-    align: 'left',
-  },
-  {
-    title: '',
-    dataIndex: '',
-    align: '',
-  },
-  {
-    title: '',
-    // eslint-disable-next-line react/display-name
-    render: (_text, record) => (
-      <Button
-        disabled={!!record.explored || false}
-        textColor={'#83DEFD'}
-        borderRadius={64}
-        style={{ padding: '5px 17px' }}
-        disabledTextColor={'#83DEFD'}
-        disabledBackgroundColor={'red'}
-      >
-        Explore
-      </Button>
-    ),
-  },
-];
-
 const OpportunitiesPage = () => {
   const [selectedApy, setSelectedApy] = useState(0);
+  const [selectedOpportunityType, setSelectedOpportunityType] = useState(opportunityType.asset);
+  const [exploreData, setExploreData] = useState(null);
+
+  const baseColumns = [
+    {
+      title: 'Chain',
+      dataIndex: 'chain',
+      align: 'left',
+    },
+    {
+      title: 'Protocol',
+      dataIndex: 'protocol',
+      align: 'left',
+    },
+    {
+      title: 'APY',
+      dataIndex: 'apy',
+      align: 'left',
+    },
+    {
+      title: 'Total Assets',
+      dataIndex: 'totalAssets',
+      align: 'left',
+    },
+    {
+      title: '',
+      dataIndex: '',
+      align: '',
+    },
+    {
+      title: '',
+      // eslint-disable-next-line react/display-name
+      render: (_text, record) => (
+        <Button
+          disabled={!record.explored}
+          borderRadius={64}
+          style={{ padding: '5px 17px' }}
+          disabledTextColor={'#83DEFD'}
+          disabledBackgroundColor={'#312F39'}
+          onClick={() => setExploreData(record)}
+        >
+          Explore
+        </Button>
+      ),
+    },
+  ];
+
+  const assetColumns = [
+    {
+      title: 'Asset',
+      dataIndex: 'title',
+      align: 'left',
+      // eslint-disable-next-line react/display-name
+      render: (text, { image }) => (
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <img src={image} alt={text} style={{ width: '36px' }} />
+          <h4>{text}</h4>
+        </div>
+      ),
+    },
+    ...baseColumns,
+  ];
+
+  const poolColumns = [
+    {
+      title: 'Pool',
+      dataIndex: 'title',
+      align: 'left',
+      // eslint-disable-next-line react/display-name
+      render: (text, { image }) => (
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <img src={image} alt={text} style={{ width: '36px' }} />
+          <h4>{text}</h4>
+        </div>
+      ),
+    },
+    ...baseColumns,
+  ];
+  const handleChangeOpportunityType = () => {
+    if (selectedOpportunityType === opportunityType.asset) {
+      setSelectedOpportunityType(opportunityType.pool);
+      return;
+    }
+    if (selectedOpportunityType === opportunityType.pool) {
+      setSelectedOpportunityType(opportunityType.asset);
+    }
+  };
+
   return (
     <OpportunitiesStyled>
-      <div className="content">
+      <div className="contents">
         <div className="apy">
           <h4>Highest APY</h4>
           <div className="apy-list">
-            {highlightApyData.map(({ apy, pool, image }, idx) => (
+            {highlightApyData.map(({ apy, title, image }, idx) => (
               <div
                 key={`apy_${idx}`}
                 onClick={() => setSelectedApy(idx)}
@@ -171,11 +206,11 @@ const OpportunitiesPage = () => {
               >
                 <div className="left">
                   <div className="icon-wrapper">
-                    <img src={image} alt={pool} />
+                    <img src={image} alt={title} />
                     <img src={IconExIcon} alt="icon" className="highlight-float-image" />
                   </div>
                   <div className="info">
-                    <h4>{pool}</h4>
+                    <h4>{title}</h4>
                     <h3>{apy}</h3>
                   </div>
                 </div>
@@ -186,11 +221,21 @@ const OpportunitiesPage = () => {
             ))}
           </div>
         </div>
+        <div className="switch-wrapper">
+          <OpportunitySwitch
+            handleChangeOpportunityType={handleChangeOpportunityType}
+            selectedOpportunityType={selectedOpportunityType}
+          />
+        </div>
         <div className="table">
           <Table
             rowKey="id"
-            columns={columns}
-            dataSource={opportunitiesAssets}
+            columns={selectedOpportunityType === opportunityType.asset ? assetColumns : poolColumns}
+            dataSource={
+              selectedOpportunityType === opportunityType.asset
+                ? opportunitiesAssets
+                : opportunitiesPools
+            }
             headerColor={colors.grayAccent}
             backgroundColor={colors.darkBG}
             bodyText={'md'}
@@ -198,6 +243,15 @@ const OpportunitiesPage = () => {
           />
         </div>
       </div>
+      <Modal
+        display={!!exploreData}
+        setDisplay={() => setExploreData(null)}
+        contentPadding="20px"
+        title={exploreData?.pool || '-'}
+        titleStyle={{ textAlign: 'left' }}
+      >
+        <OpportunityDetail {...exploreData} />
+      </Modal>
     </OpportunitiesStyled>
   );
 };

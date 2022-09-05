@@ -19,10 +19,10 @@ const ButtonStyle = styled.button`
     color: ${(props) => props.$textColor};
     border: solid ${({ $borderColor }) => ($borderColor ? `1px ${$borderColor}` : '0 transparent')};
   }
-
-  &:disabled {
-    color: ${(props) => props.$disabledTextColor ?? colors.grayScaleSubText};
-    background-color: ${(props) => props.$disabledBackgroundColor ?? colors.grayScaleDisabled};
+  & :disabled {
+    color: ${({ disabledTextColor }) => disabledTextColor ?? colors.grayScaleSubText};
+    background-color: ${({ disabledBackgroundColor }) =>
+      disabledBackgroundColor ?? colors.grayScaleDisabled};
     cursor: 'not-allowed';
   }
 `;
@@ -37,6 +37,8 @@ const Button = ({
   className,
   disabled,
   disabledBackgroundColor,
+  disabledTextColor,
+
   ...rest
 }) => {
   return (
@@ -50,6 +52,7 @@ const Button = ({
       className={className}
       disabled={disabled}
       disabledBackgroundColor={disabledBackgroundColor}
+      disabledTextColor={disabledTextColor}
       {...rest}
     >
       {children}

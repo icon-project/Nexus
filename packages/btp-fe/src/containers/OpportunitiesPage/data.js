@@ -1,4 +1,3 @@
-// import IconExIcon from 'assets/images/icon-ex.svg';
 import BAINIcon from 'assets/images/bain.svg';
 import IconLogo from 'assets/images/icon-logo.svg';
 import DollarIcon from 'assets/images/dollar.svg';
@@ -9,34 +8,32 @@ import BTCIcon from 'assets/images/btc-large.svg';
 
 const opportunitiesAssets = [
   {
-    pool: 'ICX/ETH',
+    title: 'ICX',
     chain: 'ICON',
     protocol: '',
     apy: 'NEW ✨',
     totalAssets: '29,453,798',
-    explored: true,
     image: IconLogo,
   },
   {
-    pool: 'BALN/sICX',
+    title: 'BALN',
     chain: 'ICON',
     protocol: 'Balance',
     apy: 'NEW ✨',
     totalAssets: '13,445,372',
-    explored: true,
     image: BAINIcon,
   },
   {
-    pool: 'bnUSD/BALN',
+    title: 'bnUSD',
     chain: 'ICON',
     protocol: 'Balance',
     apy: 'NEW ✨',
     totalAssets: '3,410,552',
     explored: true,
     image: DollarIcon,
-
+    type: 'BALN LP tokens',
     about:
-      'Curve is an exchange liquidity pool on Ethereum designed for: extremely efficient stablecoin trading, low risk, supplemental fee income for liquidity providers, without an opportunity cost.',
+      'Curve is an exchange liquidity title on Ethereum designed for: extremely efficient stablecoin trading, low risk, supplemental fee income for liquidity providers, without an opportunity cost.',
     opportunityText: (
       <div>
         <h4>Convex Reinvest</h4>
@@ -47,17 +44,106 @@ const opportunitiesAssets = [
         </p>
       </div>
     ),
+    url: 'https://app.balanced.network',
   },
   {
-    pool: 'CFT/ICX',
+    title: 'CFT',
     chain: 'ICON',
     protocol: '-',
     apy: '27.04%',
     totalAssets: '2,334,109',
     image: CFTIcon,
+    explored: true,
+    type: 'BALN LP tokens',
+    about:
+      'Curve is an exchange liquidity title on Ethereum designed for: extremely efficient stablecoin trading, low risk, supplemental fee income for liquidity providers, without an opportunity cost.',
+    opportunityText: (
+      <div>
+        <h4>Convex Reinvest</h4>
+        <p>
+          Supplies RAI3CRV to Convex Finance to earn CRV and CVX (and any other available tokens).
+          Earned tokens are harvested, sold for more RAI3CRV which is deposited back into the
+          strategy.
+        </p>
+      </div>
+    ),
+    url: 'https://app.balanced.network',
   },
   {
-    pool: 'FIN/ETH',
+    title: 'FIN',
+    chain: 'ICON',
+    protocol: 'Yearn',
+    apy: '7.24%',
+    totalAssets: '2,144,469',
+    image: FINIcon,
+  },
+];
+
+const opportunitiesPools = [
+  {
+    title: 'ICX/ETH',
+    chain: 'ICON',
+    protocol: '',
+    apy: 'NEW ✨',
+    totalAssets: '29,453,798',
+    image: IconLogo,
+  },
+  {
+    title: 'BALN/sICX',
+    chain: 'ICON',
+    protocol: 'Balance',
+    apy: 'NEW ✨',
+    totalAssets: '13,445,372',
+    image: BAINIcon,
+  },
+  {
+    title: 'bnUSD/BALN',
+    chain: 'ICON',
+    protocol: 'Balance',
+    apy: 'NEW ✨',
+    totalAssets: '3,410,552',
+    explored: true,
+    image: DollarIcon,
+    type: 'BALN LP tokens',
+    about:
+      'Curve is an exchange liquidity title on Ethereum designed for: extremely efficient stablecoin trading, low risk, supplemental fee income for liquidity providers, without an opportunity cost.',
+    opportunityText: (
+      <div>
+        <h4>Convex Reinvest</h4>
+        <p>
+          Supplies RAI3CRV to Convex Finance to earn CRV and CVX (and any other available tokens).
+          Earned tokens are harvested, sold for more RAI3CRV which is deposited back into the
+          strategy.
+        </p>
+      </div>
+    ),
+    url: 'https://app.balanced.network',
+  },
+  {
+    title: 'CFT/ICX',
+    chain: 'ICON',
+    protocol: '-',
+    apy: '27.04%',
+    totalAssets: '2,334,109',
+    image: CFTIcon,
+    explored: true,
+    type: 'BALN LP tokens',
+    about:
+      'Curve is an exchange liquidity title on Ethereum designed for: extremely efficient stablecoin trading, low risk, supplemental fee income for liquidity providers, without an opportunity cost.',
+    opportunityText: (
+      <div>
+        <h4>Convex Reinvest</h4>
+        <p>
+          Supplies RAI3CRV to Convex Finance to earn CRV and CVX (and any other available tokens).
+          Earned tokens are harvested, sold for more RAI3CRV which is deposited back into the
+          strategy.
+        </p>
+      </div>
+    ),
+    url: 'https://app.balanced.network',
+  },
+  {
+    title: 'FIN/ETH',
     chain: 'ICON',
     protocol: 'Yearn',
     apy: '7.24%',
@@ -68,20 +154,25 @@ const opportunitiesAssets = [
 
 const highlightApyData = [
   {
-    pool: 'BaIn/sICX',
+    title: 'BaIn/sICX',
     apy: '27.04%',
     image: BAINIcon,
   },
   {
-    pool: 'ETH/sICX',
+    title: 'ETH/sICX',
     apy: '18.43%',
     image: ETHIcon,
   },
   {
-    pool: 'BTC/sICX',
+    title: 'BTC/sICX',
     apy: '12.07%',
     image: BTCIcon,
   },
 ];
 
-export { opportunitiesAssets, highlightApyData };
+const opportunityType = {
+  asset: 'asset',
+  pool: 'pool',
+};
+
+export { opportunitiesAssets, highlightApyData, opportunityType, opportunitiesPools };

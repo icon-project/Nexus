@@ -41,6 +41,7 @@ module.exports = {
     'react/prop-types': 0,
     'react/jsx-uses-vars': [2],
     'no-console': 0,
+    'no-unused-vars': 'warn',
     'react/react-in-jsx-scope': 'off',
     'linebreak-style': ['error', 'unix'],
     'react-hooks/rules-of-hooks': 'error',
