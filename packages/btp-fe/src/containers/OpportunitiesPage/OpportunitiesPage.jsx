@@ -247,7 +247,7 @@ const OpportunitiesPage = () => {
         display={!!exploreData}
         setDisplay={() => setExploreData(null)}
         contentPadding="20px"
-        title={exploreData?.pool || '-'}
+        title={exploreData?.title || '-'}
         titleStyle={{ textAlign: 'left' }}
       >
         <OpportunityDetail {...exploreData} />
