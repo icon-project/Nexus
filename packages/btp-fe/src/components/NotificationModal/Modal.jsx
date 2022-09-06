@@ -16,6 +16,8 @@ import exclamationPointIcon from 'assets/images/orange-exclamation-point-icon.sv
 
 const Wapper = styled.div`
   min-height: 100vh;
+  height: 100%;
+  overflow: scroll;
   width: 100%;
   display: ${({ isShowed }) => (isShowed ? 'grid' : 'none')};
   place-items: center;
