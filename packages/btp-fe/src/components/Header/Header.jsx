@@ -256,8 +256,6 @@ const Header = () => {
     const { search, pathname } = location;
 
     if (search.startsWith('?near=true') && address) {
-      setShowDetail(true);
-      setShowModal(true);
       window.history.replaceState(null, '', pathname);
     }
   }, [address]);
