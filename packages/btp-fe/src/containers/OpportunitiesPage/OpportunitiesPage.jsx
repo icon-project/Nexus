@@ -100,6 +100,20 @@ const OpportunitiesStyled = styled.div`
       background: #353242;
     }
   }
+
+  ${media.md`
+    width:100%;
+  `}
+
+  ${media.xs`
+
+    & .apy{
+        & .each-apy{
+            width: 100%;
+        }
+    }
+    
+  `}
 `;
 
 const OpportunitiesPage = () => {
@@ -112,29 +126,29 @@ const OpportunitiesPage = () => {
       title: 'Chain',
       dataIndex: 'chain',
       align: 'left',
+      width: '150px',
     },
     {
       title: 'Protocol',
       dataIndex: 'protocol',
       align: 'left',
+      width: '150px',
     },
     {
       title: 'APY',
       dataIndex: 'apy',
       align: 'left',
+      width: '150px',
     },
     {
       title: 'Total Assets',
       dataIndex: 'totalAssets',
       align: 'left',
+      width: '150px',
     },
     {
       title: '',
-      dataIndex: '',
-      align: '',
-    },
-    {
-      title: '',
+      width: '200px',
       // eslint-disable-next-line react/display-name
       render: (_text, record) => (
         <Button
@@ -156,6 +170,7 @@ const OpportunitiesPage = () => {
       title: 'Asset',
       dataIndex: 'title',
       align: 'left',
+      width: '200px',
       // eslint-disable-next-line react/display-name
       render: (text, { image }) => (
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -172,6 +187,7 @@ const OpportunitiesPage = () => {
       title: 'Pool',
       dataIndex: 'title',
       align: 'left',
+      width: '250px',
       // eslint-disable-next-line react/display-name
       render: (text, { image }) => (
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
