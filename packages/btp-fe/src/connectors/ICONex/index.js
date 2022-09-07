@@ -93,7 +93,7 @@ export const eventHandler = async (event) => {
                 case signingActions.approve:
                 case signingActions.approveIRC2:
                   modal.openModal({
-                    icon: 'checkIcon',
+                    icon: 'approveIcon',
                     desc: `You've approved to transfer your token! Please click the Transfer button to continue.`,
                     button: {
                       id: 'approve-transfer-btn',

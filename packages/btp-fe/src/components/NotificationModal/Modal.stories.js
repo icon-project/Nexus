@@ -36,7 +36,20 @@ const WaitingTemplate = () => (
   <Modal icon="loader" desc="Waiting for confirmation in your wallet." width="325px" display />
 );
 
+const ApproveTemplate = () => (
+  <Modal
+    icon="approveIcon"
+    desc="You've approved to transfer your token! Please click the Transfer button to continue."
+    display
+    button={{
+      text: 'Transfer',
+      id: 'approve-transfer-btn',
+    }}
+  />
+);
+
 export const Success = SuccessTemplate.bind({});
 export const Failure = FailureTemplate.bind({});
 export const FailureBid = FailedBidTemplate.bind({});
 export const Waiting = WaitingTemplate.bind({});
+export const Approve = ApproveTemplate.bind({});

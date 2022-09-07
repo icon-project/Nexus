@@ -13,7 +13,7 @@ const handleSuccessTx = (txHash) => {
   switch (window[signingActions.globalName]) {
     case signingActions.approve:
       modal.openModal({
-        icon: 'checkIcon',
+        icon: 'approveIcon',
         desc: `You've approved to transfer your token! Please click the Transfer button to continue.`,
         button: {
           text: 'Transfer',
