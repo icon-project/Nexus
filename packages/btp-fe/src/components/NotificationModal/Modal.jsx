@@ -11,6 +11,7 @@ import { media } from 'components/Styles/Media';
 
 import closeIcon from 'assets/images/close-icon.svg';
 import checkIcon from 'assets/images/green-checked-icon.svg';
+import approveIcon from 'assets/images/yellow-checked-icon.svg';
 import xIcon from 'assets/images/red-x-icon.svg';
 import exclamationPointIcon from 'assets/images/orange-exclamation-point-icon.svg';
 
@@ -100,6 +101,7 @@ const StyledButton = styled(PrimaryButton)`
 const Icon = ({ icon }) => <img alt="icon" src={icon} className="icon" />;
 
 const icons = {
+  approveIcon: <Icon icon={approveIcon} />,
   checkIcon: <Icon icon={checkIcon} />,
   xIcon: <Icon icon={xIcon} />,
   exclamationPointIcon: <Icon icon={exclamationPointIcon} />,
@@ -154,7 +156,7 @@ Modal.displayName = 'Modal';
 
 Modal.propTypes = {
   /** Display a available icon */
-  icon: PropTypes.oneOf(['checkIcon', 'xIcon', 'exclamationPointIcon', 'loader']),
+  icon: PropTypes.oneOf(['checkIcon', 'xIcon', 'exclamationPointIcon', 'loader', 'approveIcon']),
   /** Display title */
   title: PropTypes.string,
   /** Display description */
