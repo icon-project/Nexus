@@ -32,13 +32,18 @@ jest.mock('store', () => {
   };
 });
 
-jest.mock('connectors/chainConfigs', () => ({
-  chainConfigs: {
-    HARMONY: harmonyChain,
-  },
-  checkIsToken: jest.fn(),
-  chainList: [harmonyChain],
-}));
+jest.mock('connectors/chainConfigs', () => {
+  const originalChainConfigs = jest.requireActual('connectors/chainConfigs');
+
+  return {
+    ...originalChainConfigs,
+    chainConfigs: {
+      HARMONY: harmonyChain,
+    },
+    checkIsToken: jest.fn(),
+    chainList: [harmonyChain],
+  };
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -146,7 +151,7 @@ describe('ICONService', () => {
           builder: expect.anything(),
           method: 'transfer',
           params: {
-            _coinName: harmonyChain.COIN_SYMBOL,
+            _coinName: 'btp-0x61.bsc-' + harmonyChain.COIN_SYMBOL,
             _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
             _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
@@ -173,7 +178,7 @@ describe('ICONService', () => {
           method: 'transfer',
           params: {
             _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
-            _coinName: harmonyChain.COIN_SYMBOL,
+            _coinName: 'btp-0x61.bsc-' + harmonyChain.COIN_SYMBOL,
             _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
@@ -203,7 +208,7 @@ describe('ICONService', () => {
       expect(mock_makeICXCall).toHaveBeenCalledWith({
         data: {
           method: 'balanceOf',
-          params: { _coinName: symbol, _owner: toAddress },
+          params: { _coinName: 'btp-0x61.bsc-' + symbol, _owner: toAddress },
         },
         dataType: 'call',
         to: ONEBSHAddress,
