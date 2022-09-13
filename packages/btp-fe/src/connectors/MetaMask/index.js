@@ -11,6 +11,7 @@ import { wallets } from 'utils/constants';
 import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
+let EthereumInstance = null;
 
 class Ethereum {
   constructor() {
@@ -255,7 +256,9 @@ class Ethereum {
   }
 }
 
-const EthereumInstance = new Ethereum();
-EthereumInstance.chainChangedListener();
+const initializeEthereumInstance = () => {
+  EthereumInstance = new Ethereum();
+  EthereumInstance.chainChangedListener();
+};
 
-export { EthereumInstance };
+export { EthereumInstance, initializeEthereumInstance };

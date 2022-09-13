@@ -15,7 +15,7 @@ import { resetTransferStep } from 'connectors/ICONex/utils';
 import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
-import { EthereumInstance } from 'connectors/MetaMask';
+import { EthereumInstance, initializeEthereumInstance } from 'connectors/MetaMask';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -223,9 +223,18 @@ const Header = () => {
   const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
 
   useEffect(() => {
+    // When using Hana wallet as MetaMask, Hana wallet does not inject window.ethereum immediately
+    setTimeout(() => {
+      initializeEthereumInstance();
+    }, 300);
+  }, []);
+
+  useEffect(() => {
     switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
       case wallets.metamask:
-        EthereumInstance.getEthereumAccounts();
+        setTimeout(() => {
+          EthereumInstance.getEthereumAccounts();
+        }, 400);
         break;
       // case wallets.near:
       //   getNearAccountInfo();

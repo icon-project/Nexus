@@ -54,7 +54,9 @@ export const eventHandler = async (event) => {
       break;
 
     case TYPES.RESPONSE_HAS_ACCOUNT:
-      window.hasICONexAccount = true;
+      if (payload.hasAccount) {
+        window.hasICONexAccount = true;
+      }
       break;
 
     case TYPES.RESPONSE_SIGNING:
