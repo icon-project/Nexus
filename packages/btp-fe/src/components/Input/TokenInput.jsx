@@ -84,7 +84,11 @@ export const TokenInput = ({
         {value || 0} {token}
       </div>
       <Text className="md center">= ${toSeparatedNumberString(usdRate * value)}</Text>
-      {meta.error && meta.touched && <Text className="xs err-msg">{meta.error}</Text>}
+      {meta.error && meta.touched && (
+        <Text className="xs err-msg" id="input-error-msg">
+          {meta.error}
+        </Text>
+      )}
     </Wrapper>
   );
 };
