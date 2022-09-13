@@ -34,19 +34,23 @@ Cypress.Commands.add('inputTransfer', (amount, recipient) => {
   cy.wait(2000); // wait for fetch balance
   cy.get('input[name=tokenAmount]').type(amount);
   cy.get('input[name=recipient]').type(recipient);
+
+  cy.get('#input-error-msg', { timeout: 2000 }).should('not.exist');
+
   cy.get('#Transfer-button').click();
   cy.get('#Approve-button').click();
 });
 
 Cypress.Commands.add('transferWithHana', (params = {}) => {
   const {
-    amount = 2,
+    amount = 5,
     recipient = '0x07841E2b76dA0C527f5A446a7e3164Be5ec747c5',
     twoStep,
     tokenName,
   } = params;
 
   cy.connectHanaWallet();
+
   cy.selectToken(tokenName);
   cy.inputTransfer(amount, recipient);
   cy.get('#hana-simulation-sign-button').click();
@@ -62,7 +66,7 @@ Cypress.Commands.add('transferWithHana', (params = {}) => {
 
 Cypress.Commands.add('transferMetaMask', (params = {}) => {
   const {
-    amount = 1,
+    amount = 5,
     recipient = 'hx6d338536ac11a0a2db06fb21fe8903e617a6764d',
     twoStep,
     tokenName,
