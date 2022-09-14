@@ -33,9 +33,9 @@ export const StyledText = styled.p`
   }
 `;
 
-export const Text = ({ children, className, color }) => {
+export const Text = ({ children, className, color, ...ots }) => {
   return (
-    <StyledText className={`plain-text ${className}`} $color={color}>
+    <StyledText className={`plain-text ${className}`} $color={color} {...ots}>
       {children}
     </StyledText>
   );
