@@ -68,11 +68,11 @@ export const getNearAccountInfo = async () => {
 };
 
 export const transfer = async ({ value, to }) => {
+  console.log('🚀 ~ file: index.js ~ line 71 ~ transfer ~ to', to);
+  console.log('🚀 ~ file: index.js ~ line 71 ~ transfer ~ value', value);
   const wallet = await getWalletInstance();
-
   // https://github.com/near-examples/guest-book
   // https://explorer.testnet.near.org/accounts/guest-book.testnet
-
   const contract = await new nearAPI.Contract(
     // User's accountId as a string
     wallet.account(),
@@ -82,18 +82,28 @@ export const transfer = async ({ value, to }) => {
     NEAR_NODE.contractId,
     {
       // View methods are read-only – they don't modify the state, but usually return some value
-      viewMethods: ['getMessages'],
+      viewMethods: [],
       // Change methods can modify the state, but you don't receive the returned value when called
-      changeMethods: ['addMessage'],
+      changeMethods: ['transfer'],
       // Sender is the account ID to initialize transactions.
       // getAccountId() will return empty string if user is still unauthorized
       sender: wallet.getAccountId(),
     },
   );
-
-  await contract.addMessage(
-    { text: to },
-    '30000000000000',
-    nearAPI.utils.format.parseNearAmount(value),
+  await contract.transfer(
+    {
+      coin_name: 'NEAR',
+      destination: 'btp://0x2.icon/' + to,
+      amount: nearAPI.utils.format.parseNearAmount(value),
+    },
+    '300000000000000',
   );
+};
+
+export const getTxStatus = async (txHash) => {
+  const wallet = await getWalletInstance();
+  const provider = new nearAPI.providers.JsonRpcProvider(NEAR_NODE.nodeUrl);
+
+  const result = await provider.txStatus(txHash, wallet.getAccountId());
+  console.log('Result: ', result);
 };

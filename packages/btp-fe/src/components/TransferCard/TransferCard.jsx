@@ -7,6 +7,7 @@ import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import { chainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
+import { getTxStatus } from 'connectors/NearWallet';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -141,6 +142,13 @@ export const TransferCard = ({
         <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
         </Text>
+        <PrimaryButton
+          onClick={() => {
+            getTxStatus('H5sJbi6w1YSej1D8Sa4s4LtdrzyP7CZzyvwjFWxptVpX');
+          }}
+        >
+          get TX status
+        </PrimaryButton>
 
         <div className="send">
           <Text className="md">Send</Text>
