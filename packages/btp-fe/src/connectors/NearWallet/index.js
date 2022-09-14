@@ -67,6 +67,17 @@ export const getNearAccountInfo = async () => {
   }
 };
 
+export const deposit = async (amount) => {
+  const wallet = await getWalletInstance();
+  const contract = await new nearAPI.Contract(wallet.account(), NEAR_NODE.contractId, {
+    viewMethods: [],
+    changeMethods: ['deposit'],
+    sender: wallet.getAccountId(),
+  });
+
+  await contract.deposit({}, '300000000000000', nearAPI.utils.format.parseNearAmount(amount));
+};
+
 export const transfer = async ({ value, to }) => {
   console.log('🚀 ~ file: index.js ~ line 71 ~ transfer ~ to', to);
   console.log('🚀 ~ file: index.js ~ line 71 ~ transfer ~ value', value);
@@ -90,14 +101,97 @@ export const transfer = async ({ value, to }) => {
       sender: wallet.getAccountId(),
     },
   );
-  await contract.transfer(
+  const result = await contract.transfer(
     {
-      coin_name: 'NEAR',
+      coin_id: [
+        247,
+        184,
+        188,
+        27,
+        185,
+        62,
+        246,
+        213,
+        77,
+        228,
+        101,
+        193,
+        206,
+        130,
+        171,
+        233,
+        39,
+        148,
+        195,
+        217,
+        177,
+        33,
+        141,
+        212,
+        41,
+        223,
+        44,
+        241,
+        83,
+        209,
+        37,
+        217,
+      ],
       destination: 'btp://0x2.icon/' + to,
       amount: nearAPI.utils.format.parseNearAmount(value),
     },
     '300000000000000',
   );
+  console.log('🚀 ~ file: index.js ~ line 145 ~ transfer ~ result', result);
+};
+
+export const functionCall = async () => {
+  const wallet = await getWalletInstance();
+
+  const response = await wallet.account().functionCall({
+    contractId: NEAR_NODE.contractId,
+    methodName: 'transfer',
+    args: {
+      coin_id: [
+        247,
+        184,
+        188,
+        27,
+        185,
+        62,
+        246,
+        213,
+        77,
+        228,
+        101,
+        193,
+        206,
+        130,
+        171,
+        233,
+        39,
+        148,
+        195,
+        217,
+        177,
+        33,
+        141,
+        212,
+        41,
+        223,
+        44,
+        241,
+        83,
+        209,
+        37,
+        217,
+      ],
+      destination: 'btp://0x2.icon/hx6d338536ac11a0a2db06fb21fe8903e617a6764d',
+      amount: nearAPI.utils.format.parseNearAmount('0.1'),
+    },
+    gas: '300000000000000',
+  });
+  console.log('🚀 ~ file: index.js ~ line 154 ~ response ~ response', response);
 };
 
 export const getTxStatus = async (txHash) => {

@@ -7,7 +7,7 @@ import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import { chainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
-import { getTxStatus } from 'connectors/NearWallet';
+import { getTxStatus, deposit, functionCall } from 'connectors/NearWallet';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -148,6 +148,20 @@ export const TransferCard = ({
           }}
         >
           get TX status
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => {
+            deposit('1');
+          }}
+        >
+          deposit
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => {
+            functionCall();
+          }}
+        >
+          functionCall
         </PrimaryButton>
 
         <div className="send">

@@ -54,5 +54,5 @@ export const resetTransferStep = () => {
  */
 export const getICONBSHAddressforEachChain = () => {
   // TODO: implement for mutil-chain, only 2 for current
-  return chainConfigs['BSC']?.ICON_BTS_CORE;
+  return chainConfigs?.NEAR?.ICON_BTS_CORE;
 };

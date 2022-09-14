@@ -64,5 +64,5 @@ export const formatSymbol = (symbol) => {
   if (['ICX', 'sICX', 'bnUSD'].includes(symbol)) {
     return `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${symbol}`;
   }
-  return `btp-${chainConfigs?.BSC?.NETWORK_ADDRESS}-${symbol}`;
+  return `btp-${chainConfigs?.NEAR?.NETWORK_ADDRESS}-${symbol}`;
 };
