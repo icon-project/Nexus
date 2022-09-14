@@ -193,7 +193,7 @@ class Ethereum {
         desc: 'Waiting for confirmation in your wallet.',
       });
 
-      const gasPrice = utils.hexValue((await this.provider.getGasPrice()) * 1.04);
+      const gasPrice = utils.hexValue(Math.round((await this.provider.getGasPrice()) * 1.04));
 
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',
