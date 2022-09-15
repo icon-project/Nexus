@@ -21,7 +21,7 @@ import { Text } from 'components/Typography';
 
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
 import { serverEndpoint } from 'connectors/constants';
-import { chainList, getTokenList } from 'connectors/chainConfigs';
+import { getTokenList, getCustomizedChainList } from 'connectors/chainConfigs';
 import { txStatus } from 'utils/constants';
 
 import VectorSrc from 'assets/images/vector.svg';
@@ -242,7 +242,7 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All assets</Text>,
       renderItem: () => <Text className="md">All assets</Text>,
     },
-    ...[...getTokenList(), ...chainList].map(({ symbol, COIN_SYMBOL }) => {
+    ...[...getTokenList(), ...getCustomizedChainList()].map(({ symbol, COIN_SYMBOL }) => {
       const value = COIN_SYMBOL || symbol;
 
       return {

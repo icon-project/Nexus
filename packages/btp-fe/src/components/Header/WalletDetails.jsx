@@ -7,7 +7,7 @@ import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 import { getService } from 'services/transfer';
-import { chainList, chainConfigs, getTokenList } from 'connectors/chainConfigs';
+import { getCustomizedChainList, chainConfigs, getTokenList } from 'connectors/chainConfigs';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -174,7 +174,7 @@ export const WalletDetails = ({
       label: COIN_SYMBOL,
       value: COIN_SYMBOL,
     })),
-    ...chainList
+    ...getCustomizedChainList()
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== symbol),
   ];
@@ -191,7 +191,7 @@ export const WalletDetails = ({
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (networkID === ICONChain?.id && selectedToken === ICONChain?.COIN_SYMBOL) {
-      chainList.forEach((chain) => {
+      getCustomizedChainList().forEach((chain) => {
         if (chain.id !== ICONChain?.id) {
           const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
           getService()

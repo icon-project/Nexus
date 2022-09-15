@@ -44,6 +44,8 @@ export const customzeChain = (chainId = '') => {
 
 export const chainList = Object.values(chainConfigs);
 
+export const getCustomizedChainList = () => chainList.filter((chain) => !chain.disabled);
+
 /**
  * get token list (e.g: ETH)
  * @returns {array}
@@ -51,7 +53,7 @@ export const chainList = Object.values(chainConfigs);
 export const getTokenList = () => {
   let tokenList = [];
   for (const c in custom) {
-    if (custom[c].tokens.length > 0) {
+    if (custom[c].tokens.length > 0 && !custom[c]?.disabled) {
       tokenList = [...tokenList, ...custom[c].tokens.map((prop) => ({ ...prop, chainId: c }))];
     }
   }

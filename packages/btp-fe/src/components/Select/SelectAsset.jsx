@@ -5,7 +5,7 @@ import { Icon } from 'components/Icon';
 import { colors } from 'components/Styles';
 import Select from './Select';
 
-import { chainConfigs, chainList, getTokenList } from 'connectors/chainConfigs';
+import { chainConfigs, getTokenList, getCustomizedChainList } from 'connectors/chainConfigs';
 
 const StyledItem = styled.div`
   display: flex;
@@ -38,7 +38,7 @@ const Item = ({ symbol, children, width, ...props }) => {
 const SelectAsset = ({ onChange, nativeCoin, networkId }) => {
   /* eslint-disable react/display-name */
   const getOptions = () => {
-    const options = [...chainList, ...getTokenList()].map(
+    const options = [...getCustomizedChainList(), ...getTokenList()].map(
       ({ CHAIN_NAME, COIN_SYMBOL, symbol, chain, ...others }) => {
         const tokenSymbol = COIN_SYMBOL || symbol;
         return {
