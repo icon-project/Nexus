@@ -125,6 +125,10 @@ const exploreURL = {
   ICON: {
     transaction: 'transaction/',
   },
+  NEAR: {
+    transaction: 'transactions/',
+    address: 'acounts/',
+  },
 };
 
 const statusText = 'txStatus';
@@ -228,7 +232,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   href={
                     networkNameSrc
                       ? chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
-                        'address/' +
+                        (exploreURL[networkNameSrc]?.address || 'address/') +
                         fromAddress
                       : null
                   }
@@ -246,7 +250,7 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                   href={
                     networkNameDst
                       ? chainConfigs[getChain(networkNameDst)?.id]?.EXPLORE_URL +
-                        'address/' +
+                        (exploreURL[networkNameSrc]?.address || 'address/') +
                         toAddresssOnly
                       : null
                   }
