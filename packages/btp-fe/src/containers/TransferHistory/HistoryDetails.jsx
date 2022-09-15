@@ -140,7 +140,10 @@ export const HistoryDetails = ({ txHash, onClose }) => {
         const status = sessionStorage.getItem(statusText);
         if (!status || status == txStatus.PENDING) {
           const transferData = await getTransferHistoryByTxHash(txHash);
-          if (!transferData) throw new Error('Not found');
+          if (!transferData)
+            throw new Error(
+              'Your transaction is being synced or not found. Please try again later.',
+            );
           setDetails(() => transferData.content);
           setIsFetching(() => false);
           sessionStorage.setItem(statusText, transferData?.content?.status);
