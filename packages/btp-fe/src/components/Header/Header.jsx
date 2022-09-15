@@ -282,7 +282,7 @@ const Header = () => {
         if (!EthereumInstance.isMetaMaskInstalled()) return;
         const chainId = await EthereumInstance.connectMetaMaskWallet();
         if (chainId) {
-          await delay(1500);
+          await delay(1500); // waiting for switchChainInMetamask
           await EthereumInstance.getEthereumAccounts(chainId);
         }
         setLoading(false);
