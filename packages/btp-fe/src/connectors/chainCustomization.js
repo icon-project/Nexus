@@ -1,6 +1,14 @@
 import { tokenTypes } from 'utils/constants';
 
+/**
+ * exploreSuffix: { transaction: string, address: string} - Define suffix URL for chain explore
+ * disabled: boolean - Disable a chain
+ */
+
 export const custom = {
+  ICON: {
+    exploreSuffix: { transaction: 'transaction/' },
+  },
   BSC: {
     disabled: true,
     tokens: [
@@ -16,5 +24,8 @@ export const custom = {
       { symbol: 'BTCB', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
       { symbol: 'ETH', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
     ],
+  },
+  NEAR: {
+    exploreSuffix: { transaction: 'transactions/', address: 'acounts/' },
   },
 };

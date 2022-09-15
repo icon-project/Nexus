@@ -53,7 +53,7 @@ export const getCustomizedChainList = () => chainList.filter((chain) => !chain.d
 export const getTokenList = () => {
   let tokenList = [];
   for (const c in custom) {
-    if (custom[c].tokens.length > 0 && !custom[c]?.disabled) {
+    if (custom[c].tokens?.length > 0 && !custom[c]?.disabled) {
       tokenList = [...tokenList, ...custom[c].tokens.map((prop) => ({ ...prop, chainId: c }))];
     }
   }
