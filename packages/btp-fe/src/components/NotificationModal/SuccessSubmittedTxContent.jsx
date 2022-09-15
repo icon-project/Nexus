@@ -21,13 +21,13 @@ const Wrapper = styled.div`
   }
 `;
 
-export const SuccessSubmittedTxContent = ({ setDisplay }) => {
+export const SuccessSubmittedTxContent = ({ setDisplay, txHash }) => {
   return (
     <Wrapper id="success-tx-modal">
       <Text className="md">Your transaction was submitted successfully.</Text>
       <Link
         className="sm bold"
-        to="/history"
+        to={'/history/' + txHash}
         center
         onClick={() => {
           setDisplay(false);

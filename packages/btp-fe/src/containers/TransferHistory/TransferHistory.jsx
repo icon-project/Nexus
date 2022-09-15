@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
@@ -206,6 +207,8 @@ const TransferHistory = () => {
     status: '',
   });
 
+  let { txHash } = useParams();
+
   const { handleError, getNetworks } = useDispatch(
     ({ modal: { handleError }, network: { getNetworks } }) => ({
       handleError,
@@ -215,6 +218,12 @@ const TransferHistory = () => {
   const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
     networks: selectNetwotks,
   }));
+
+  useEffect(() => {
+    if (txHash) {
+      setShowDetails(true);
+    }
+  }, [txHash]);
 
   useEffect(() => {
     getNetworks({ cache: true });
@@ -374,8 +383,11 @@ const TransferHistory = () => {
       />
       {showDetails && (
         <HistoryDetails
-          txHash={selectedRow.txHash}
-          onClose={() => setShowDetails(false)}
+          txHash={selectedRow.txHash || txHash}
+          onClose={() => {
+            setShowDetails(false);
+            window.history.replaceState(null, '', '/history');
+          }}
         ></HistoryDetails>
       )}
     </TransferHistoryStyled>
