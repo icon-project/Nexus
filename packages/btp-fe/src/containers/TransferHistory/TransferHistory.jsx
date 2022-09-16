@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'hooks/useRematch';
+import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -212,6 +212,12 @@ const TransferHistory = () => {
     handleError,
   }));
 
+  const {
+    accountInfo: { id: networkID },
+  } = useSelect(({ account: { selectAccountInfo } }) => ({
+    accountInfo: selectAccountInfo,
+  }));
+
   useEffect(() => {
     if (txHash) {
       setShowDetails(true);
@@ -333,6 +339,7 @@ const TransferHistory = () => {
           </div>
           <div className="select-network">
             <SelectWithBorder
+              initialValue={networkID}
               onChange={(e) => onSelectChange(e, 'from')}
               label="Sending from"
               width="326px"
