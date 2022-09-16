@@ -105,29 +105,36 @@ const Select = ({
   name: fieldName,
   dependInput,
   maxHeight,
+  initialValue,
   ...ots
 }) => {
   const ref = useRef();
   const [isOpenSelect, setIsOpenSelect] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(options[0] || {});
+  const [selectedValue, setSelectedValue] = useState({});
 
+  // set intial value for select
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!loading) {
-      setSelectedValue(options[0] || {});
+      const defaultValue = initialValue
+        ? options.find((option) => option.value == initialValue)
+        : options[0] || {};
+      setSelectedValue(defaultValue);
+
       onChange({
         target: {
-          value: options[0] ? options[0].value : '',
+          value: defaultValue ? defaultValue.value : '',
           name: fieldName,
           type: 'input',
         },
       });
     }
-  }, [loading, options.length, dependInput]);
+  }, [loading, options.length, dependInput, initialValue]);
 
   const onToggleSelect = () => {
     setIsOpenSelect(!isOpenSelect);
   };
+
   useOnClickOutside(ref, () => setIsOpenSelect(false));
 
   return (
