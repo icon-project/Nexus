@@ -24,6 +24,8 @@ import BUSDIcon from 'assets/images/BUSD.png';
 import sICXIcon from 'assets/images/sICX.png';
 import USDCIcon from 'assets/images/USDC.png';
 import USDTIcon from 'assets/images/USDT.png';
+import iconLogo from 'assets/images/icon-logo.png';
+import binanceLogo from 'assets/images/binance-logo.png';
 
 const sizes = {
   s: '20px',
@@ -74,11 +76,13 @@ export const Icon = memo(
   ({ icon = 'metamask', width = '25.67px', size, iconURL, SVGComp, color, ...props }) => {
     const icons = {
       metamask: metaMaskIcon,
+      ICON: iconLogo,
       ICX: iconexIcon,
       [wallets.iconex]: iconexIcon,
       [wallets.hana]: hanaIcon,
       ETH: ethIcon,
       copy: copyIcon,
+      BSC: binanceLogo,
       binance: binanceIcon,
       BNB: binanceIcon,
       btc: btcIcon,

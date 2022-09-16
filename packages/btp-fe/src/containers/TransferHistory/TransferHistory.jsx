@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelect } from 'hooks/useRematch';
+import { useDispatch } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -21,7 +21,6 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
-import { serverEndpoint } from 'connectors/constants';
 import { chainList, getTokenList } from 'connectors/chainConfigs';
 import { txStatus } from 'utils/constants';
 
@@ -209,14 +208,8 @@ const TransferHistory = () => {
 
   let { txHash } = useParams();
 
-  const { handleError, getNetworks } = useDispatch(
-    ({ modal: { handleError }, network: { getNetworks } }) => ({
-      handleError,
-      getNetworks,
-    }),
-  );
-  const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
-    networks: selectNetwotks,
+  const { handleError } = useDispatch(({ modal: { handleError } }) => ({
+    handleError,
   }));
 
   useEffect(() => {
@@ -224,10 +217,6 @@ const TransferHistory = () => {
       setShowDetails(true);
     }
   }, [txHash]);
-
-  useEffect(() => {
-    getNetworks({ cache: true });
-  }, [getNetworks]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -281,17 +270,15 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All networks</Text>,
       renderItem: () => <Text className="md">All networks</Text>,
     },
+    ...chainList.map(({ CHAIN_NAME, id }) => {
+      return {
+        value: id,
+        label: CHAIN_NAME,
+        renderLabel: () => <TextWithIcon icon={id}>{CHAIN_NAME}</TextWithIcon>,
+        renderItem: () => <TextWithIcon icon={id}>{CHAIN_NAME}</TextWithIcon>,
+      };
+    }),
   ];
-
-  networks.forEach((network) => {
-    const iconURL = serverEndpoint + network.pathLogo.substring(1);
-    networkOptions.push({
-      value: network.id,
-      label: network.name,
-      renderLabel: () => <TextWithIcon iconURL={iconURL}>{network.name}</TextWithIcon>,
-      renderItem: () => <TextWithIcon iconURL={iconURL}>{network.name}</TextWithIcon>,
-    });
-  });
 
   const fetchDataHandler = async ({ page, assetName, from, to, status }) => {
     try {
