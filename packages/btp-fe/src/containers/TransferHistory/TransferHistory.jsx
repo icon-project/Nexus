@@ -21,7 +21,7 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
-import { chainList, getTokenList } from 'connectors/chainConfigs';
+import { chainList, getTokenList, chainConfigs } from 'connectors/chainConfigs';
 import { txStatus } from 'utils/constants';
 
 import VectorSrc from 'assets/images/vector.svg';
@@ -276,9 +276,9 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All networks</Text>,
       renderItem: () => <Text className="md">All networks</Text>,
     },
-    ...chainList.map(({ CHAIN_NAME, id }) => {
+    ...chainList.map(({ CHAIN_NAME, id, NETWORK_ADDRESS }) => {
       return {
-        value: id,
+        value: NETWORK_ADDRESS?.split('.')[0],
         label: CHAIN_NAME,
         renderLabel: () => <TextWithIcon icon={id}>{CHAIN_NAME}</TextWithIcon>,
         renderItem: () => <TextWithIcon icon={id}>{CHAIN_NAME}</TextWithIcon>,
@@ -339,7 +339,7 @@ const TransferHistory = () => {
           </div>
           <div className="select-network">
             <SelectWithBorder
-              initialValue={networkID}
+              initialValue={chainConfigs[networkID]?.NETWORK_ADDRESS?.split('.')[0]}
               onChange={(e) => onSelectChange(e, 'from')}
               label="Sending from"
               width="326px"
