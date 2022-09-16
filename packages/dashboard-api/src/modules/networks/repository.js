@@ -150,6 +150,7 @@ async function getVolumeToken24hByNid(name, networkId) {
   }
 }
 
+
 async function getTokensbyNetworkId(networkId) {
   try {
     const { rows } = await pgPool.query(
@@ -183,6 +184,30 @@ async function getVolumeTokenAllTimeByNid(name, networkId) {
   }
 }
 
+async function getDataFromTable(tableName, conditions = {}, options = {}){
+  try{
+    let { select } = options;
+    const { where = {} } = conditions;
+    let whereQuery = '';
+    select = select ? select.split(' ').join(', ') : '*';
+    Object.keys(where).forEach((key, index) => {
+      if(!index){
+        return whereQuery += `${key} ${where[key]}`;
+      }
+      return whereQuery += ` AND ${key} ${where[key]}`;
+    });
+
+    const queryString = `SELECT ${select} FROM ${tableName} WHERE ${whereQuery}`;
+    console.log('query string', queryString)
+    const result = await pgPool.query(queryString);
+    return result.rows;
+  }
+  catch(error){
+    logger.error('getAllTransactionByNetworkId fails', { error });
+    throw error;
+  }
+}
+
 module.exports = {
   getNetworkInfo,
   getTokensVolume24h,
@@ -192,5 +217,6 @@ module.exports = {
   getNetworkById,
   getTotalMintValue,
   getTotalBurnValue,
-  getTokensbyNetworkId
+  getTokensbyNetworkId,
+  getDataFromTable,
 };

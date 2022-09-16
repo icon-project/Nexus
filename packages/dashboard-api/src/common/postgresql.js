@@ -1,6 +1,8 @@
 const { Pool } = require('pg');
 const logger = require('./logger');
 
+console.log('connecting database', process.env.POSTGRES_DB_URL);
+
 // Ref: https://node-postgres.com/features/connecting
 const pool = new Pool({
   connectionString: process.env.POSTGRES_DB_URL,

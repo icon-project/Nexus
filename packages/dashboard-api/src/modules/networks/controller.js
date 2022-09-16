@@ -26,7 +26,20 @@ async function getNetworkInfoById(request, response) {
   });
 }
 
+async function getNetworkInfoByIdV2(request, response) {
+  const networkInfo = await model.getNetworkByIdV2(request.params.id);
+  if(!networkInfo){
+    return response.sendStatus(HttpStatus.NotFound);
+  }
+  response.status(HttpStatus.OK).json({
+    content: {
+      tokens: [...networkInfo]
+    }
+  });
+}
+
 module.exports = {
   getNetworksInfo,
-  getNetworkInfoById
+  getNetworkInfoById,
+  getNetworkInfoByIdV2
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger } = require('../../common');
+const { logger, TRANSACTION_TBL_NAME } = require('../../common');
 const {
   getNetworkInfo,
   getTokensVolume24h,
@@ -11,6 +11,7 @@ const {
   getTotalBurnValue,
   getTokensbyNetworkId,
   getNetworkById: getNetworkByIdInDB,
+  getDataFromTable
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 
@@ -124,8 +125,69 @@ async function getNetworkById(networkId) {
   return result;
 }
 
+async function getNetworkByIdV2(networkId){
+  const tokens = (await getTokensbyNetworkId(networkId)).map(element => element.token_name);
+
+  const tokenNameQueryString = tokens.reduce((a, b) => a + `${a ? ', ' : ''}'${b}'`, ''); 
+  // get all transaction by nameList and network id
+  const transactions = await getDataFromTable(
+    TRANSACTION_TBL_NAME,
+    {
+      where: {
+        network_id: `= '${networkId}'`,
+        token_name: `IN (${tokenNameQueryString})`,
+      },
+    },
+    { select: 'token_name value block_time network_id' },
+  );
+  const prices = await getDataFromTable(
+    'token_prices',
+    {
+      where: {
+        name: `IN (${tokenNameQueryString})`
+      }
+    }
+  );
+  const priceProperty = {};
+  prices.forEach(price => {
+    priceProperty[price.name] = price.price;
+  });
+
+  const at24hAgo = Date.now() - 60*60*24*1000;
+  const result = [];
+  tokens.forEach(token => {
+    let volume24h = 0;
+    let volume24hUSD = 0;
+    let volumeAllTime = 0;
+    let volumeAllTimeUSD = 0;
+
+    transactions.forEach(transaction => {
+      if(transaction.token_name !== token){
+        return;
+      }
+      if(Number(transaction.block_time) >= at24hAgo){
+        volume24h += Number(transaction.value);
+      }
+      volumeAllTime += Number(transaction.value);
+    });
+    volume24hUSD = Number((volume24h * Number(priceProperty[token])).toFixed(2));
+    volumeAllTimeUSD =Number((volume24h * Number(priceProperty[token])).toFixed(2));
+    result.push({
+      nameToken: token,
+      volume24h,
+      volume24hUSD,
+      volumeAllTime,
+      volumeAllTimeUSD
+    });
+  });
+  return result;
+}
+
+// async function getPrices
+
 module.exports = {
   getListNetworkConnectedIcon,
   getNetworkById,
+  getNetworkByIdV2,
   getNetworkByIdInDB
 };
