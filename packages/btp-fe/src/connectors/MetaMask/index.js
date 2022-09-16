@@ -8,7 +8,7 @@ import { toChecksumAddress } from './utils';
 import { findReplacementTx } from './findReplacementTx';
 import { handleFailedTx, handleSuccessTx, handleError } from './handleNotification';
 import { wallets } from 'utils/constants';
-import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs';
+import { chainList, chainConfigs } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
@@ -160,7 +160,6 @@ class Ethereum {
 
         const { CHAIN_NAME, id, COIN_SYMBOL, BTS_CORE } = currentNetwork;
         this.contract = new ethers.Contract(BTS_CORE, ABI, this.provider);
-        customzeChain(id);
 
         account.setAccountInfo({
           address,

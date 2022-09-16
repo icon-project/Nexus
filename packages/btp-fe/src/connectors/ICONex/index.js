@@ -15,7 +15,7 @@ import {
   signingActions,
   getCurrentChain,
 } from 'connectors/constants';
-import { chainConfigs, customzeChain } from 'connectors/chainConfigs';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
@@ -191,7 +191,6 @@ const getAccountInfo = async (address) => {
     const wallet = localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE);
     const balance = +(await getBalance(address));
     const id = 'ICON';
-    customzeChain(id);
     await account.setAccountInfo({
       address,
       balance,

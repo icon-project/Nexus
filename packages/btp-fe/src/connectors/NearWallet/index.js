@@ -3,7 +3,6 @@ import { NEAR_NODE } from 'connectors/constants';
 import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
-import { customzeChain } from 'connectors/chainConfigs';
 
 const { account } = store.dispatch;
 
@@ -57,14 +56,15 @@ export const getNearAccountInfo = async () => {
   if (wallet && wallet.isSignedIn()) {
     const accountInfo = await getAccountInstance();
     const balance = await getBalanceOf();
-    customzeChain('NEAR');
+    const id = 'NEAR';
 
     account.setAccountInfo({
       address: accountInfo.accountId,
       balance: ethers.utils.formatUnits(balance.total, 24),
       wallet: wallets.near,
-      symbol: 'NEAR',
-      currentNetwork: 'NEAR',
+      symbol: id,
+      currentNetwork: id,
+      id,
     });
   }
 };

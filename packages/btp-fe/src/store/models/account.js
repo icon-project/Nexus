@@ -1,5 +1,6 @@
 import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { roundNumber } from 'utils/app';
+import { customzeChain } from 'connectors/chainConfigs';
 
 const initState = {
   symbol: '',
@@ -17,6 +18,9 @@ const account = {
   },
   reducers: {
     setAccountInfo(state, payload) {
+      if (!payload.id) throw new Error('missing id');
+      customzeChain(payload.id);
+
       return {
         ...state,
         ...payload,
