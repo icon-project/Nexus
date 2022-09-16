@@ -198,7 +198,6 @@ async function getDataFromTable(tableName, conditions = {}, options = {}){
     });
 
     const queryString = `SELECT ${select} FROM ${tableName} WHERE ${whereQuery}`;
-    console.log('query string', queryString)
     const result = await pgPool.query(queryString);
     return result.rows;
   }

@@ -129,7 +129,7 @@ async function getNetworkByIdV2(networkId){
   const tokens = (await getTokensbyNetworkId(networkId)).map(element => element.token_name);
 
   const tokenNameQueryString = tokens.reduce((a, b) => a + `${a ? ', ' : ''}'${b}'`, ''); 
-  // get all transaction by nameList and network id
+  
   const transactions = await getDataFromTable(
     TRANSACTION_TBL_NAME,
     {
