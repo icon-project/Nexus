@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger, TRANSACTION_TBL_NAME } = require('../../common');
+const { logger } = require('../../common');
 const {
   getNetworkInfo,
   getTokensVolume24h,
@@ -11,7 +11,8 @@ const {
   getTotalBurnValue,
   getTokensbyNetworkId,
   getNetworkById: getNetworkByIdInDB,
-  getDataFromTable
+  getTransactionsByNetworkIdAndTokenNames,
+  getPricesByTokenNames
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 
@@ -127,27 +128,12 @@ async function getNetworkById(networkId) {
 
 async function getNetworkByIdV2(networkId){
   const tokens = (await getTokensbyNetworkId(networkId)).map(element => element.token_name);
-
-  const tokenNameQueryString = tokens.reduce((a, b) => a + `${a ? ', ' : ''}'${b}'`, ''); 
   
-  const transactions = await getDataFromTable(
-    TRANSACTION_TBL_NAME,
-    {
-      where: {
-        network_id: `= '${networkId}'`,
-        token_name: `IN (${tokenNameQueryString})`,
-      },
-    },
-    { select: 'token_name value block_time network_id' },
-  );
-  const prices = await getDataFromTable(
-    'token_prices',
-    {
-      where: {
-        name: `IN (${tokenNameQueryString})`
-      }
-    }
-  );
+  const [transactions, prices] = await Promise.all([
+    getTransactionsByNetworkIdAndTokenNames(networkId, tokens),
+    getPricesByTokenNames(tokens),
+  ]);
+
   const priceProperty = {};
   prices.forEach(price => {
     priceProperty[price.name] = price.price;
@@ -170,14 +156,14 @@ async function getNetworkByIdV2(networkId){
       }
       volumeAllTime += Number(transaction.value);
     });
-    volume24hUSD = Number((volume24h * Number(priceProperty[token])).toFixed(2));
-    volumeAllTimeUSD =Number((volume24h * Number(priceProperty[token])).toFixed(2));
+    volume24hUSD = Number(Number(volume24h * Number(priceProperty[token])).toFixed(2));
+    volumeAllTimeUSD = Number(Number(volumeAllTime * Number(priceProperty[token])).toFixed(2));
     result.push({
       nameToken: token,
-      volume24h,
-      volume24hUSD,
-      volumeAllTime,
-      volumeAllTimeUSD
+      volume24h: numberToFixedAmount(volume24h),
+      volume24hUSD: numberToFixedAmount(volume24hUSD),
+      volumeAllTime: numberToFixedAmount(volumeAllTime),
+      volumeAlTimeUSD: numberToFixedAmount(volumeAllTimeUSD)
     });
   });
   return result;
