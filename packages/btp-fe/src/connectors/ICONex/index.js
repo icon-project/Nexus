@@ -15,7 +15,6 @@ import {
   signingActions,
   getCurrentChain,
 } from 'connectors/constants';
-import { chainConfigs } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
 
@@ -197,8 +196,8 @@ const getAccountInfo = async (address) => {
       address,
       balance,
       wallet,
-      symbol: 'ICX',
-      currentNetwork: chainConfigs.ICON?.CHAIN_NAME,
+      symbol: process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL,
+      currentNetwork: process.env.REACT_APP_CHAIN_ICON_CHAIN_NAME,
       id,
     });
   } catch (err) {

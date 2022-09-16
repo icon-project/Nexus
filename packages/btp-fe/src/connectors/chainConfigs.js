@@ -63,8 +63,11 @@ export const getTokenList = () => {
 export const checkIsToken = (token) => getTokenList().find((t) => t.symbol === token);
 
 export const formatSymbol = (symbol) => {
-  if (['ICX', 'sICX', 'bnUSD'].includes(symbol)) {
-    return `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${symbol}`;
+  let chain = chainList.find((chain) => symbol == chain.COIN_SYMBOL);
+  if (!chain) {
+    chain = getTokenList().find((chain) => symbol == chain.symbol);
+    if (!chain) throw new Error('not found chain');
   }
-  return `btp-${chainConfigs?.NEAR?.NETWORK_ADDRESS}-${symbol}`;
+
+  return `btp-${chainConfigs[chain.id || chain.tokenOf].NETWORK_ADDRESS}-${symbol}`;
 };
