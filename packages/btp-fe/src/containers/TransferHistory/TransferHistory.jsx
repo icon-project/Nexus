@@ -199,9 +199,15 @@ const TransferHistory = () => {
   const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
 
+  const {
+    accountInfo: { id: networkID },
+  } = useSelect(({ account: { selectAccountInfo } }) => ({
+    accountInfo: selectAccountInfo,
+  }));
+
   const [filters, setFilters] = useState({
     assetName: '',
-    from: '',
+    from: networkID || '',
     to: '',
     status: '',
   });
@@ -210,12 +216,6 @@ const TransferHistory = () => {
 
   const { handleError } = useDispatch(({ modal: { handleError } }) => ({
     handleError,
-  }));
-
-  const {
-    accountInfo: { id: networkID },
-  } = useSelect(({ account: { selectAccountInfo } }) => ({
-    accountInfo: selectAccountInfo,
   }));
 
   useEffect(() => {
