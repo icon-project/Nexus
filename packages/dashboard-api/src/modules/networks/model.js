@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger } = require('../../common');
+const { logger, ONE_DAY_IN_MILLISECONDS } = require('../../common');
 const {
   getNetworkInfo,
   getTokensVolume24h,
@@ -139,7 +139,7 @@ async function getNetworkByIdV2(networkId){
     priceProperty[price.name] = price.price;
   });
 
-  const at24hAgo = Date.now() - 60*60*24*1000;
+  const at24hAgo = Date.now() - ONE_DAY_IN_MILLISECONDS;
   const result = [];
   tokens.forEach(token => {
     let volume24h = 0;
