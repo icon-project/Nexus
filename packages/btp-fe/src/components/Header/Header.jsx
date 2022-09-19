@@ -323,7 +323,9 @@ const Header = () => {
   };
 
   const onSwitchWallet = () => {
+    signOut();
     resetTransferStep();
+    resetAccountInfo();
     setShowDetail(false);
     setShowModal(true);
     setShowConnector(true);
