@@ -10,7 +10,7 @@ export const custom = {
     exploreSuffix: { transaction: 'transaction/' },
   },
   BSC: {
-    // disabled: true,
+    disabled: true,
     tokens: [
       {
         symbol: 'sICX',
