@@ -9,7 +9,6 @@
       "request": "launch",
       "name": "BTP-DB",
       "envFile": "${workspaceRoot}/packages/dashboard-api/.env",
-      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -20,7 +19,6 @@
       "request": "launch",
       "name": "BSC-Idxer",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
-      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "args": ["BSC"],
       "skipFiles": [
         "<node_internals>/**"
@@ -32,7 +30,6 @@
       "request": "launch",
       "name": "MOONBEAM-Idxer",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
-      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "args": ["MOONBEAM"],
       "skipFiles": [
         "<node_internals>/**"
@@ -44,7 +41,6 @@
       "request": "launch",
       "name": "ICON-Idxer",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
-      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "args": ["ICON"],
       "skipFiles": [
         "<node_internals>/**"
@@ -56,8 +52,18 @@
       "request": "launch",
       "name": "Harmony-Idxer",
       "envFile": "${workspaceRoot}/packages/block-indexer/.env",
-      "runtimeExecutable": "/usr/local/opt/node@12/bin/node",
       "args": ["HARMONY"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/packages/block-indexer/index.js"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Near-Idxer",
+      "envFile": "${workspaceRoot}/packages/block-indexer/.env",
+      "args": ["NEAR"],
       "skipFiles": [
         "<node_internals>/**"
       ],
