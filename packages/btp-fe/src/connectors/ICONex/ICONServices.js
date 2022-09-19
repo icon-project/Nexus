@@ -297,6 +297,9 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
     };
 
     if (refundable) {
+      // TODO: Hard-coded because we haven't had the way how to display ICX refundable balance for multi-chains
+      if (symbol === 'ICX') return 0;
+
       payload.to = getICONBSHAddressforEachChain(symbol);
       payload.data.params._coinName = formatSymbol(symbol);
     } else {
