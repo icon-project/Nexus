@@ -5,8 +5,11 @@ const debugTx = require('debug')('near_tx');
 const nearApi = require('near-api-js');
 const { createLogger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../common/repository');
+const { handleMintBurnEvents } = require('../mint-burn/near');
+const { handleTransactionEvents } = require('../transactions/near');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
+const archivalProvider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_ARCHIVAL_API_URL);
 const pollingInterval = Number(process.env.POLLING_INTERVAL);
 const pollingRetryInterval = Number(process.env.POLLING_RETRY_INTERVAL);
 const pollingTimeout = Number(process.env.POLLING_TIMEOUT);
@@ -19,13 +22,15 @@ const logger = createLogger();
 async function runTransactionHandlers(tx, result, block) {
   try {
     debugTx(result);
+    await handleTransactionEvents(tx, result, block);
+    await handleMintBurnEvents(tx, result, block);
   } catch (error) {
     logger.error('near:runTransactionHandlers fails %O', error);
   }
 }
 
 async function retryGetTransactionReceipt(tx, block) {
-  const result = await provider.txStatus(tx.hash, tx.signer_id);
+  const result = await archivalProvider.txStatus(tx.hash, tx.signer_id);
 
   if (result) {
     debugTx('Transaction receipt: %O', result);
@@ -37,7 +42,7 @@ async function retryGetTransactionReceipt(tx, block) {
 
 async function runBlockHandlers(block) {
   for (const chunk of block.chunks) {
-    const result = await provider.chunk(chunk.chunk_hash);
+    const result = await archivalProvider.chunk(chunk.chunk_hash);
 
     for (const tx of result.transactions) {
       debugTx('Transaction: %O', tx);
@@ -50,7 +55,7 @@ async function runBlockHandlers(block) {
 
 async function getBlockData() {
   try {
-    const block = await provider.block({ blockId: blockHeight });
+    const block = await archivalProvider.block(blockHeight);
 
     if (block.chunks.length > 0) {
       logger.info(`near:getBlockData received block ${block.header.height}, ${block.header.hash}`);

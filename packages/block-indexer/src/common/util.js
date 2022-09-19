@@ -68,11 +68,20 @@ function parseIndexerHealthCheckPeriod() {
   });
 }
 
+function isJSON(str) {
+  try {
+    return (JSON.parse(str) && !!str);
+  } catch (e) {
+    return false;
+  }
+}
+
 module.exports = {
   hexToFixedAmount,
   hexToIcxUnit,
   tokenToUsd,
   logDbError,
   getNameOfTransactionStatus,
-  parseIndexerHealthCheckPeriod
+  parseIndexerHealthCheckPeriod,
+  isJSON
 };
