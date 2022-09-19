@@ -1,7 +1,13 @@
 /* eslint-disable indent */
 'use strict';
-const { logger } = require('../../common');
-const { pgPool, TRANSACTION_TBL_NAME, NETWORK_TBL_NAME, REGISTERED_TOKENS_TABLE } = require('../../common');
+const { logger, TOKEN_PRICE_TABLE } = require('../../common');
+const {
+  pgPool,
+  TRANSACTION_TBL_NAME,
+  NETWORK_TBL_NAME,
+  REGISTERED_TOKENS_TABLE,
+} = require('../../common');
+const { getDataFromTable } = require('../../common/queries');
 
 async function getTokensVolume24h() {
   const at24hAgo = new Date().getTime() - 86400000; // current_time - 24h
@@ -72,13 +78,15 @@ async function getNetworkInfo() {
 async function getTotalMintValue() {
   try {
     let result = [];
-    const { rows } = await pgPool.query('SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id FROM minted_tokens ORDER BY token_name, create_at DESC');
+    const { rows } = await pgPool.query(
+      'SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id FROM minted_tokens ORDER BY token_name, create_at DESC',
+    );
 
     for (let data of rows) {
       result.push({
         tokenName: data.token_name,
         tokenValue: data.total_token_amount,
-        networkId: data.network_id
+        networkId: data.network_id,
       });
     }
 
@@ -93,15 +101,17 @@ async function getTotalBurnValue() {
   try {
     let result = [];
 
-    const { rows } = await pgPool.query('SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id \
+    const { rows } = await pgPool.query(
+      'SELECT DISTINCT ON (token_name) token_name, total_token_amount, network_id \
     FROM burned_tokens \
-    ORDER BY token_name, create_at DESC');
+    ORDER BY token_name, create_at DESC',
+    );
 
     for (let data of rows) {
       result.push({
         tokenName: data.token_name,
         tokenValue: data.total_token_amount,
-        networkId: data.network_id
+        networkId: data.network_id,
       });
     }
 
@@ -156,7 +166,7 @@ async function getTokensbyNetworkId(networkId) {
       `SELECT token_name
       FROM ${REGISTERED_TOKENS_TABLE}
       WHERE network_id = $1`,
-      [networkId]
+      [networkId],
     );
 
     return rows;
@@ -183,6 +193,36 @@ async function getVolumeTokenAllTimeByNid(name, networkId) {
   }
 }
 
+async function getTransactionsByNetworkIdAndTokenNames(networkId, tokenNames) {
+  try {
+    const tokenNameQueryString = tokenNames.reduce(
+      (accumulate, token) => accumulate + `${accumulate ? ', ' : ''}'${token}'`,
+      '',
+    );
+    const result = getDataFromTable(TRANSACTION_TBL_NAME, {
+      where: { network_id: `= '${networkId}'`, token_name: `IN (${tokenNameQueryString})` },
+    });
+    return result;
+  } catch (error) {
+    logger.error('getTransactionsByNetworkIdAndTokenNames', { error });
+  }
+}
+
+async function getPricesByTokenNames(tokenNames){
+  try {
+    const tokenNameQueryString = tokenNames.reduce(
+      (accumulate, token) => accumulate + `${accumulate ? ', ' : ''}'${token}'`,
+      '',
+    );
+    const result = getDataFromTable(TOKEN_PRICE_TABLE, {
+      where: { name: `IN (${tokenNameQueryString})` },
+    });
+    return result;
+  } catch (error) {
+    logger.error('getTransactionsByNetworkIdAndTokenNames', { error });
+  }
+}
+
 module.exports = {
   getNetworkInfo,
   getTokensVolume24h,
@@ -192,5 +232,7 @@ module.exports = {
   getNetworkById,
   getTotalMintValue,
   getTotalBurnValue,
-  getTokensbyNetworkId
+  getTokensbyNetworkId,
+  getPricesByTokenNames,
+  getTransactionsByNetworkIdAndTokenNames
 };

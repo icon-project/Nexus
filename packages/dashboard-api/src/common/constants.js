@@ -21,6 +21,7 @@ const COINs = {
 const TRANSACTION_TBL_NAME = 'transactions';
 const NETWORK_TBL_NAME = 'networks';
 const REGISTERED_TOKENS_TABLE = 'registered_tokens';
+const TOKEN_PRICE_TABLE = 'token_prices';
 
 const BLOCK_INDEXER_STOPPED = (lastBlock, indexerName) => `🐛 *${indexerName}*-indexer was \`STOPPED\` at block \`${lastBlock}\` 🚫`;
 const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good at block \`${lastBlock}\` ✅`;
@@ -45,6 +46,8 @@ const TRANSACTION_TBL = {
 
 const ICX_LOOP_UNIT = 10 ** 18;
 
+const ONE_DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
+
 module.exports = {
   TRANSACTION_TBL_NAME,
   TRANSACTION_TBL,
@@ -55,6 +58,8 @@ module.exports = {
   COINs,
   ICX_LOOP_UNIT,
   REGISTERED_TOKENS_TABLE,
+  TOKEN_PRICE_TABLE,
+  ONE_DAY_IN_MILLISECONDS,
   BLOCK_INDEXER_STOPPED,
   BLOCK_INDEXER_HEALTHY
 };

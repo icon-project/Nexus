@@ -1,6 +1,6 @@
 'use strict';
 
-const { logger } = require('../../common');
+const { logger, ONE_DAY_IN_MILLISECONDS } = require('../../common');
 const {
   getNetworkInfo,
   getTokensVolume24h,
@@ -11,6 +11,8 @@ const {
   getTotalBurnValue,
   getTokensbyNetworkId,
   getNetworkById: getNetworkByIdInDB,
+  getTransactionsByNetworkIdAndTokenNames,
+  getPricesByTokenNames
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 
@@ -124,8 +126,54 @@ async function getNetworkById(networkId) {
   return result;
 }
 
+async function getNetworkByIdV2(networkId){
+  const tokens = (await getTokensbyNetworkId(networkId)).map(element => element.token_name);
+  
+  const [transactions, prices] = await Promise.all([
+    getTransactionsByNetworkIdAndTokenNames(networkId, tokens),
+    getPricesByTokenNames(tokens),
+  ]);
+
+  const priceProperty = {};
+  prices.forEach(price => {
+    priceProperty[price.name] = price.price;
+  });
+
+  const at24hAgo = Date.now() - ONE_DAY_IN_MILLISECONDS;
+  const result = [];
+  tokens.forEach(token => {
+    let volume24h = 0;
+    let volume24hUSD = 0;
+    let volumeAllTime = 0;
+    let volumeAllTimeUSD = 0;
+
+    transactions.forEach(transaction => {
+      if(transaction.token_name !== token){
+        return;
+      }
+      if(Number(transaction.block_time) >= at24hAgo){
+        volume24h += Number(transaction.value);
+      }
+      volumeAllTime += Number(transaction.value);
+    });
+    volume24hUSD = Number(Number(volume24h * Number(priceProperty[token])).toFixed(2));
+    volumeAllTimeUSD = Number(Number(volumeAllTime * Number(priceProperty[token])).toFixed(2));
+    result.push({
+      nameToken: token,
+      volume24h: numberToFixedAmount(volume24h),
+      volume24hUSD: numberToFixedAmount(volume24hUSD),
+      volumeAllTime: numberToFixedAmount(volumeAllTime),
+      volumeAlTimeUSD: numberToFixedAmount(volumeAllTimeUSD)
+    });
+  });
+  return result;
+}
+
+// async function getPrices
+
 module.exports = {
   getListNetworkConnectedIcon,
   getNetworkById,
+  getNetworkByIdV2,
   getNetworkByIdInDB
 };
