@@ -45,7 +45,6 @@ async function retryGetTransactionReceipt(tx, block) {
 async function runBlockHandlers(block) {
   for (const chunk of block.chunks) {
     const result = await archivalProvider.chunk(chunk.chunk_hash);
-    // console.log('result', result);
     for (const tx of result.transactions) {
       debugTx('Transaction: %O', tx);
       await retryGetTransactionReceipt(tx, block);
@@ -57,8 +56,7 @@ async function runBlockHandlers(block) {
 
 async function getBlockData() {
   try {
-    const block = await archivalProvider.block({ blockId: '2FKTujpQjNvMTbqR7TRUBAeu7wqK8UveHGCreqMs8jja' });
-    // console.log('block', block);
+    const block = await archivalProvider.block({ blockId: blockHeight });
     if (block.chunks.length > 0) {
       logger.info(`near:getBlockData received block ${block.header.height}, ${block.header.hash}`);
       debug('Block: %O', block);
