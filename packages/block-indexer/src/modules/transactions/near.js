@@ -1,10 +1,11 @@
 const { TRANSACTION_STATUS, TRANSFER_START_EVENT, TRANSFER_END_EVENT } = require('../../common');
-const logger = require('../../common/logger');
+const { createLogger } = require('../../common/logger');
 const { isJSON } = require('../../common/util');
 const { logTxHashToSlack } = require('../../slack-bot');
 const { getRegisteredTokens } = require('../tokens/model');
 const { calculateTotalVolume } = require('./model');
 const { getLatestTransactionByToken, saveTransaction, setTransactionConfirmed, findTxBySerialNumber } = require('./repository');
+const logger = createLogger();
 
 async function handleTransactionEvents(tx, txResult, block) {
   const tokenMap = await getRegisteredTokens();
@@ -26,24 +27,27 @@ async function handleTransactionStartEvent(tx, txResult, block) {
         logger.info(`near:handleTransactionStartEvent get TransferStart event in tx ${tx.hash}`);
 
         const data = JSON.parse(log);
-        const tokenNameRaw = ''; // TODO
+        const tokenNameRaw = data.assets ? data.assets[0]?.token_name : ''; // TODO
         const tokenName = tokenNameRaw?.split('-')?.[2];
-
+        const btpFee = data.assets ? Number(data.assets[0]?.fee) : 0;
+        const amount = data.assets ? Number(data.assets[0]?.amount) : 0;
         const transObj = {
           fromAddress: data.sender_address || tx.signer_id,
           tokenName: tokenName || tokenNameRaw,
           tokenNameRaw: tokenNameRaw,
           serialNumber: data.serial_number,
-          value: data.amount,
+          value: amount,
           toAddress: data.receiver_address,
           txHash: tx.hash,
           status: TRANSACTION_STATUS.pending,
           blockTime: Math.floor(block.header.timestamp / 1000), // microsecond to millisecond
           networkId: process.env.NEAR_NETWORK_ID,
-          btpFee: data.fee,
-          networkFee: '', // TODO
+          btpFee,
+          networkFee: btpFee, // TODO
           contractAddress: tx.receiver_id
         };
+
+        console.log('transObject', transObj);
 
         // Calculating total volume when the system has a new transaction.
         const latestTransaction = await getLatestTransactionByToken(transObj.tokenName);
