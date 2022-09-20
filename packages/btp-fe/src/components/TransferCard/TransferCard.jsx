@@ -7,7 +7,13 @@ import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import { getCustomizedChainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
-import { getTxStatus, deposit, functionCall } from 'connectors/NearWallet';
+import {
+  getTxStatus,
+  deposit,
+  functionCall,
+  getBalance,
+  getUsableBalance,
+} from 'connectors/NearWallet';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -162,6 +168,21 @@ export const TransferCard = ({
           }}
         >
           functionCall
+        </PrimaryButton>
+
+        <PrimaryButton
+          onClick={() => {
+            getBalance();
+          }}
+        >
+          getBalance
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => {
+            getUsableBalance();
+          }}
+        >
+          getUsableBalance
         </PrimaryButton>
 
         <div className="send">

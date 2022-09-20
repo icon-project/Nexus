@@ -18,7 +18,6 @@ const account = {
   },
   reducers: {
     setAccountInfo(state, payload) {
-      if (!payload.id) throw new Error('missing id');
       customzeChain(payload.id);
 
       return {

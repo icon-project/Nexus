@@ -16,7 +16,7 @@ import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
-import { connect, getNearAccountInfo, signOut } from 'connectors/NearWallet';
+import { connect, getNearAccountInfo, signOut, handleNEARCallback } from 'connectors/NearWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -254,14 +254,9 @@ const Header = () => {
     resetAccountInfo,
   }));
 
+  // handle callback url from NEAR wallet
   useEffect(() => {
-    // handle callback url from NEAR wallet
-    // https://docs.near.org/docs/api/naj-quick-reference#sign-in
-    const { search, pathname } = location;
-
-    if (search.startsWith('?near=true') && address) {
-      window.history.replaceState(null, '', pathname);
-    }
+    handleNEARCallback(location, address);
   }, [address]);
 
   useEffect(() => {
