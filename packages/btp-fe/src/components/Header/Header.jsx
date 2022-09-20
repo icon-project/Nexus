@@ -256,7 +256,7 @@ const Header = () => {
 
   // handle callback url from NEAR wallet
   useEffect(() => {
-    handleNEARCallback(location, address);
+    handleNEARCallback(location);
   }, [address]);
 
   useEffect(() => {

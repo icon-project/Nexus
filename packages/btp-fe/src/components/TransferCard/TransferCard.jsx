@@ -7,13 +7,7 @@ import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import { getCustomizedChainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
-import {
-  getTxStatus,
-  deposit,
-  functionCall,
-  getBalance,
-  getUsableBalance,
-} from 'connectors/NearWallet';
+import { getBalance, getUsableBalance } from 'connectors/NearWallet';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -148,27 +142,6 @@ export const TransferCard = ({
         <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
         </Text>
-        <PrimaryButton
-          onClick={() => {
-            getTxStatus('H5sJbi6w1YSej1D8Sa4s4LtdrzyP7CZzyvwjFWxptVpX');
-          }}
-        >
-          get TX status
-        </PrimaryButton>
-        <PrimaryButton
-          onClick={() => {
-            deposit('1');
-          }}
-        >
-          deposit
-        </PrimaryButton>
-        <PrimaryButton
-          onClick={() => {
-            functionCall();
-          }}
-        >
-          functionCall
-        </PrimaryButton>
 
         <PrimaryButton
           onClick={() => {

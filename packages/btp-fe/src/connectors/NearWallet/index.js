@@ -3,20 +3,20 @@ import { NEAR_NODE } from 'connectors/constants';
 import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
+import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 const { account, modal } = store.dispatch;
 
-export const handleNEARCallback = (location, address) => {
-  const { search, pathname } = location;
+export const handleNEARCallback = async (location) => {
+  const { search } = location;
 
   switch (true) {
     // https://docs.near.org/docs/api/naj-quick-reference#sign-in
     // handle NEAR wallet connecting
     case search.startsWith('?near=true'):
-      if (address) window.history.replaceState(null, '', pathname);
       break;
+    // reject connecting wallet
     case search.startsWith('?near=false'):
-      window.history.replaceState(null, '', pathname);
       modal.openModal({
         icon: 'exclamationPointIcon',
         desc: 'Wallet rejected.',
@@ -26,9 +26,37 @@ export const handleNEARCallback = (location, address) => {
         },
       });
       break;
+    case search.startsWith('?errorCode='):
+      const msg = search.split('errorMessage=')?.[1];
+      modal.openModal({
+        icon: 'exclamationPointIcon',
+        desc: msg,
+        button: {
+          text: 'Dismiss',
+          onClick: () => modal.setDisplay(false),
+        },
+      });
+      break;
+    case search.includes('transactionHashes='):
+      const searchParams = new URLSearchParams(search.substring(1));
+      const result = await getTxStatus(searchParams.get('transactionHashes'));
+      if (result?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
+        modal.openModal({
+          icon: 'approveIcon',
+          desc: `You've deposited to transfer your token! Please click the Transfer button to continue.`,
+          button: {
+            id: 'approve-transfer-btn',
+            text: 'Transfer',
+            onClick: transfer,
+          },
+        });
+      }
+      break;
     default:
       break;
   }
+
+  // window.history.replaceState(null, '', pathname);
 };
 
 const getNearInstance = async () =>
@@ -105,7 +133,7 @@ export const getNearAccountInfo = async () => {
   }
 };
 
-export const deposit = async (amount) => {
+export const deposit = async (amount, to, isNativeCoin) => {
   const wallet = await getWalletInstance();
   const contract = await new nearAPI.Contract(wallet.account(), NEAR_NODE.contractId, {
     viewMethods: [],
@@ -113,22 +141,66 @@ export const deposit = async (amount) => {
     sender: wallet.getAccountId(),
   });
 
-  return await contract.deposit(
-    {},
-    '300000000000000',
-    nearAPI.utils.format.parseNearAmount(amount),
-  );
+  return await contract.deposit({
+    callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, isNativeCoin }).toString(),
+    args: {},
+    gas: '300000000000000',
+    amount: nearAPI.utils.format.parseNearAmount(amount),
+  });
 };
 
 export const transfer = async ({ value, to }) => {
-  const depositResult = await deposit(value);
-  console.log('🚀 ~ file: index.js ~ line 97 ~ transfer ~ depositResult', depositResult);
-  const transferResult = await functionCall('transfer', {
-    coin_name: 'btp-0x1.near-NEAR',
-    destination: 'btp://0x2.icon/' + to,
-    amount: nearAPI.utils.format.parseNearAmount(value),
-  });
-  console.log('🚀 ~ file: index.js ~ line 108 ~ transfer ~ transferResult', transferResult);
+  try {
+    const searchParams = new URLSearchParams(location.search.substring(1)) || {};
+
+    if (!searchParams.get('transactionHashes')) {
+      await deposit(value, to, true);
+      return;
+    }
+
+    modal.openModal({
+      icon: 'loader',
+      desc: 'Please wait a moment.',
+    });
+
+    if (searchParams.get('isNativeCoin')) {
+      const transferResult = await functionCall('transfer', {
+        coin_name: 'btp-0x1.near-NEAR',
+        destination: 'btp://0x2.icon/' + searchParams.get('to'),
+        amount: nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
+      });
+
+      if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
+        modal.openModal({
+          icon: 'checkIcon',
+          children: (
+            <SuccessSubmittedTxContent
+              setDisplay={modal.setDisplay}
+              txHash={searchParams.get('transactionHashes')}
+            />
+          ),
+          button: {
+            text: 'Continue transfer',
+            onClick: () => modal.setDisplay(false),
+          },
+        });
+      } else {
+        throw new Error('transaction failed');
+      }
+    } else {
+      console.log('not implemented yet');
+    }
+  } catch (err) {
+    console.log(err);
+    modal.openModal({
+      icon: 'xIcon',
+      desc: 'Your transaction has failed. Please go back and try again.',
+      button: {
+        text: 'Back to transfer',
+        onClick: () => modal.setDisplay(false),
+      },
+    });
+  }
 };
 
 export const functionCall = async (methodName, args) => {
@@ -147,6 +219,8 @@ export const getTxStatus = async (txHash) => {
 
   const result = await provider.txStatus(txHash, wallet.getAccountId());
   console.log('Result: ', result);
+
+  return result;
 };
 
 export const getBalance = async () => {
