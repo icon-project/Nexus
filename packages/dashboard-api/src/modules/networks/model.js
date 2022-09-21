@@ -16,12 +16,12 @@ const {
 } = require('./repository');
 const { tokenToUsd, numberToFixedAmount } = require('../../common/util');
 
-function setKeyValueTokenPrices(tokenPrices = []){
-  const tokenProperties = {};
-  tokenPrices.forEach(tokenPrice => {
-    tokenProperties[tokenPrice.name] = Number(tokenPrice.price);
+function setKeyValueTokenPrices(tokenPrices = []) {
+  const tokenProps = {};
+  tokenPrices.forEach((tokenPrice) => {
+    tokenProps[tokenPrice.name] = Number(tokenPrice.price);
   });
-  return tokenProperties;
+  return tokenProps;
 }
 
 async function getListNetworkConnectedIcon() {
@@ -113,10 +113,16 @@ async function updateFiatVolumeV2(
   totalMintTokens = [],
   totalBurnTokens = [],
 ) {
-  let tokenNames = tokensVolume24h.concat(tokensVolumeAllTime).concat(totalMintTokens).concat(totalBurnTokens).map(item => item.tokenName);
+  let tokenNames = [
+    ...tokensVolume24h,
+    ...tokensVolumeAllTime,
+    ...totalMintTokens,
+    ...totalBurnTokens,
+  ].map((item) => item.tokenName);
   tokenNames = [...new Set(tokenNames)];
+
   const tokenPrices = await getPricesByTokenNames(tokenNames);
-  const tokenPriceProperties = setKeyValueTokenPrices(tokenPrices);
+  const tokenPriceProps = setKeyValueTokenPrices(tokenPrices);
   for (let networkInfo of networks) {
     let USD24h = 0;
     let USDAllTime = 0;
@@ -125,28 +131,36 @@ async function updateFiatVolumeV2(
 
     for (const data of tokensVolume24h) {
       if (data.networkId == networkInfo.id) {
-        const fiat = Number((Number(data.tokenVolume) * (tokenPriceProperties[data.tokenName] || 0)).toFixed(2));
+        const fiat = Number(
+          (Number(data.tokenVolume) * (tokenPriceProps[data.tokenName] || 0)).toFixed(2),
+        );
         USD24h += fiat;
       }
     }
 
     for (const data of tokensVolumeAllTime) {
       if (data.networkId == networkInfo.id) {
-        const fiat = Number((Number(data.tokenVolume) * (tokenPriceProperties[data.tokenName] || 0)).toFixed(2));
+        const fiat = Number(
+          (Number(data.tokenVolume) * (tokenPriceProps[data.tokenName] || 0)).toFixed(2),
+        );
         USDAllTime += fiat;
       }
     }
 
     for (const data of totalMintTokens) {
       if (data.networkId == networkInfo.id) {
-        const fiat = Number((Number(data.tokenValue) * (tokenPriceProperties[data.tokenName] || 0)).toFixed(2));
+        const fiat = Number(
+          (Number(data.tokenValue) * (tokenPriceProps[data.tokenName] || 0)).toFixed(2),
+        );
         USDMint += fiat;
       }
     }
 
     for (const data of totalBurnTokens) {
       if (data.networkId == networkInfo.id) {
-        const fiat = Number((Number(data.tokenValue) * (tokenPriceProperties[data.tokenName] || 0)).toFixed(2));
+        const fiat = Number(
+          (Number(data.tokenValue) * (tokenPriceProps[data.tokenName] || 0)).toFixed(2),
+        );
         USDBurn += fiat;
       }
     }
@@ -201,7 +215,7 @@ async function getNetworkByIdV2(networkId) {
     getPricesByTokenNames(tokens),
   ]);
 
-  const priceProperty = setKeyValueTokenPrices(prices);
+  const priceProps = setKeyValueTokenPrices(prices);
 
   const at24hAgo = Date.now() - ONE_DAY_IN_MILLISECONDS;
   const result = [];
@@ -220,8 +234,8 @@ async function getNetworkByIdV2(networkId) {
       }
       volumeAllTime += Number(transaction.value);
     });
-    volume24hUSD = Number(Number(volume24h * Number(priceProperty[token])).toFixed(2));
-    volumeAllTimeUSD = Number(Number(volumeAllTime * Number(priceProperty[token])).toFixed(2));
+    volume24hUSD = Number(Number(volume24h * Number(priceProps[token])).toFixed(2));
+    volumeAllTimeUSD = Number(Number(volumeAllTime * Number(priceProps[token])).toFixed(2));
     result.push({
       nameToken: token,
       volume24h: numberToFixedAmount(volume24h),
