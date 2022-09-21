@@ -6,6 +6,7 @@ const nearApi = require('near-api-js');
 const { createLogger } = require('../../common');
 const { saveIndexedBlockHeight, getIndexedBlockHeight } = require('../common/repository');
 const { handleMintBurnEvents } = require('../mint-burn/near');
+const { handleTokenRegister } = require('../tokens/near');
 const { handleTransactionEvents } = require('../transactions/near');
 
 const provider = new nearApi.providers.JsonRpcProvider(process.env.NEAR_API_URL);
@@ -24,6 +25,7 @@ async function runTransactionHandlers(tx, result, block) {
     debugTx(result);
     await handleTransactionEvents(tx, result, block);
     await handleMintBurnEvents(tx, result, block);
+    await handleTokenRegister(tx, result);
   } catch (error) {
     logger.error('near:runTransactionHandlers fails %O', error);
   }
@@ -43,7 +45,6 @@ async function retryGetTransactionReceipt(tx, block) {
 async function runBlockHandlers(block) {
   for (const chunk of block.chunks) {
     const result = await archivalProvider.chunk(chunk.chunk_hash);
-
     for (const tx of result.transactions) {
       debugTx('Transaction: %O', tx);
       await retryGetTransactionReceipt(tx, block);
@@ -55,8 +56,7 @@ async function runBlockHandlers(block) {
 
 async function getBlockData() {
   try {
-    const block = await archivalProvider.block(blockHeight);
-
+    const block = await archivalProvider.block({ blockId: blockHeight });
     if (block.chunks.length > 0) {
       logger.info(`near:getBlockData received block ${block.header.height}, ${block.header.hash}`);
       debug('Block: %O', block);
@@ -112,12 +112,16 @@ async function start() {
   if (blockHeight === -1) {
     blockHeight = await getIndexedBlockHeight(process.env.NEAR_NETWORK_ID);
 
-    if (blockHeight > 0) { ++blockHeight; }
+    if (blockHeight > 0) {
+      ++blockHeight;
+    }
   }
 
   const height = await getHeadBlockNumber();
 
-  if (blockHeight === 0 || blockHeight > height) { blockHeight = height; }
+  if (blockHeight === 0 || blockHeight > height) {
+    blockHeight = height;
+  }
 
   logger.info('Starting NEAR block indexer at block %d...', blockHeight);
   await retryGetBlockData();
