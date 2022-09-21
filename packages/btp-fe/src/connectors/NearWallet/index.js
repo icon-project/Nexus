@@ -122,10 +122,18 @@ export const getBalanceOf = async (options) => {
       return nearAPI.utils.format.formatNearAmount(await getUsableBalance(symbol));
     }
 
-    return 0;
+    const contract = await getContractInstance(NEAR_NODE.ICXNEP141Address);
+    const wallet = await getWalletInstance();
+
+    const result = await contract.ft_balance_of({
+      account_id: wallet.getAccountId(),
+      coin_name: formatSymbol(symbol),
+    });
+
+    return +result;
   } catch (err) {
     console.log(err);
-    return 1;
+    return 0;
   }
 };
 
@@ -146,20 +154,19 @@ export const getNearAccountInfo = async () => {
   }
 };
 
-export const deposit = async (amount, to, isNativeCoin) => {
+export const deposit = async (amount, to, coinName, isNativeCoin) => {
   const amountInYocto = nearAPI.utils.format.parseNearAmount(amount);
 
   if (isNativeCoin) {
     (await getContractInstance()).deposit({
-      callbackUrl:
-        location.href + '?' + new URLSearchParams({ amount, to, isNativeCoin }).toString(),
+      callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, coinName }).toString(),
       args: {},
       gas: NEAR_NODE.GAS_LIMIT,
       amount: amountInYocto,
     });
   } else {
     (await getContractInstance(NEAR_NODE.ICXNEP141Address)).ft_transfer_call({
-      callbackUrl: location.href + '?' + new URLSearchParams({ amount, to }).toString(),
+      callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, coinName }).toString(),
       args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: amountInYocto, msg: '' },
       gas: NEAR_NODE.GAS_LIMIT,
       amount: amountInYocto,
@@ -167,12 +174,12 @@ export const deposit = async (amount, to, isNativeCoin) => {
   }
 };
 
-export const transfer = async ({ value, to }) => {
+export const transfer = async ({ value, to, coinName }, isSendingNativeCoin) => {
   try {
     const searchParams = new URLSearchParams(location.search.substring(1)) || {};
 
     if (!searchParams.get('transactionHashes')) {
-      await deposit(value, to, true);
+      await deposit(value, to, coinName, isSendingNativeCoin);
       return;
     }
 
@@ -182,8 +189,8 @@ export const transfer = async ({ value, to }) => {
     });
 
     const transferResult = await functionCall('transfer', {
-      coin_name: searchParams.get('isNativeCoin') ? 'btp-0x1.near-NEAR' : 'btp-0x2.icon-ICX',
-      destination: 'btp://0x2.icon/' + searchParams.get('to'),
+      coin_name: formatSymbol(searchParams.get('coinName')),
+      destination: 'btp://' + chainConfigs.ICON?.NETWORK_ADDRESS + '/' + searchParams.get('to'),
       amount: nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
     });
 
@@ -237,21 +244,6 @@ export const getTxStatus = async (txHash) => {
   console.log('Result: ', result);
 
   return result;
-};
-
-export const getBalance = async () => {
-  const wallet = await getWalletInstance();
-  const contract = await new nearAPI.Contract(wallet.account(), 'btp-icx.bts.iconbridge.testnet', {
-    viewMethods: ['ft_balance_of'],
-    changeMethods: [],
-    sender: wallet.getAccountId(),
-  });
-
-  const result = await contract.ft_balance_of({
-    account_id: wallet.getAccountId(),
-    // coin_name: 'btp-0x2.icon-ICX',
-  });
-  console.log('🚀 ~ file: index.js ~ line 219 ~ getBalance ~ result', result);
 };
 
 export const getUsableBalance = async (symbol) => {
