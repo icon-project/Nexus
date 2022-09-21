@@ -7,7 +7,7 @@ import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import { getCustomizedChainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
-import { getBalance, getUsableBalance } from 'connectors/NearWallet';
+import { getBalance, getUsableBalance, withdraw } from 'connectors/NearWallet';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -156,6 +156,13 @@ export const TransferCard = ({
           }}
         >
           getUsableBalance
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => {
+            withdraw();
+          }}
+        >
+          withdraw ICX
         </PrimaryButton>
 
         <div className="send">

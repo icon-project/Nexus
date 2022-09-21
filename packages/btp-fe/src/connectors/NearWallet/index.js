@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
-import { chainConfigs } from 'connectors/chainConfigs';
+import { chainConfigs, formatSymbol } from 'connectors/chainConfigs';
 
 const { account, modal } = store.dispatch;
 
@@ -87,7 +87,7 @@ export const getContractInstance = async (contractId) => {
   const wallet = await getWalletInstance();
   const contract = new nearAPI.Contract(wallet.account(), contractId || NEAR_NODE.contractId, {
     viewMethods: ['balance_of', 'ft_balance_of'],
-    changeMethods: ['deposit', 'ft_transfer_call'],
+    changeMethods: ['deposit', 'ft_transfer_call', 'withdraw'],
     sender: wallet.getAccountId(),
   });
 
@@ -114,23 +114,26 @@ export const signOut = async () => {
 export const getBalanceOf = async (options) => {
   const { refundable } = options || {};
 
-  if (refundable) {
-    return Promise.resolve(0); // TODO: implementation
+  try {
+    if (refundable) {
+      return 0; // TODO: implementation
+    }
+    return 1;
+  } catch (err) {
+    console.log(err);
+    return 1;
   }
-  const account = await getAccountInstance();
-  return account.getAccountBalance();
 };
 
 export const getNearAccountInfo = async () => {
   const wallet = await getWalletInstance();
   if (wallet && wallet.isSignedIn()) {
     const accountInfo = await getAccountInstance();
-    const balance = await getBalanceOf();
     const id = 'NEAR';
 
     account.setAccountInfo({
       address: accountInfo.accountId,
-      balance: ethers.utils.formatUnits(balance.total, 24),
+      balance: ethers.utils.formatUnits((await accountInfo.getAccountBalance()).total, 24),
       wallet: wallets.near,
       symbol: id,
       currentNetwork: id,
@@ -147,14 +150,14 @@ export const deposit = async (amount, to, isNativeCoin) => {
       callbackUrl:
         location.href + '?' + new URLSearchParams({ amount, to, isNativeCoin }).toString(),
       args: {},
-      gas: '300000000000000',
+      gas: NEAR_NODE.GAS_LIMIT,
       amount: amountInYocto,
     });
   } else {
     (await getContractInstance(NEAR_NODE.ICXNEP141Address)).ft_transfer_call({
       callbackUrl: location.href + '?' + new URLSearchParams({ amount, to }).toString(),
       args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: amountInYocto, msg: '' },
-      gas: '300000000000000',
+      gas: NEAR_NODE.GAS_LIMIT,
       amount: amountInYocto,
     });
   }
@@ -218,7 +221,7 @@ export const functionCall = async (methodName, args) => {
     contractId: NEAR_NODE.contractId,
     methodName,
     args,
-    gas: '300000000000000',
+    gas: NEAR_NODE.GAS_LIMIT,
   });
 };
 
@@ -260,4 +263,17 @@ export const getUsableBalance = async () => {
     coin_name: 'btp-0x2.icon-ICX',
   });
   console.log('🚀 ~ file: index.js ~ line 219 ~ getBalance ~ result', result);
+};
+
+export const withdraw = async (token, amount) => {
+  const amountInYocto = nearAPI.utils.format.parseNearAmount(amount);
+
+  (await getContractInstance()).withdraw({
+    args: {
+      coin_name: formatSymbol(token),
+      amount: amountInYocto,
+    },
+    gas: NEAR_NODE.GAS_LIMIT,
+    amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
+  });
 };
