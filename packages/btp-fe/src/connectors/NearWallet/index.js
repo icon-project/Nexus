@@ -112,13 +112,17 @@ export const signOut = async () => {
 };
 
 export const getBalanceOf = async (options) => {
-  const { refundable } = options || {};
+  const { refundable, lockedBalance, symbol } = options || {};
 
   try {
     if (refundable) {
       return 0; // TODO: implementation
     }
-    return 1;
+    if (lockedBalance) {
+      return nearAPI.utils.format.formatNearAmount(await getUsableBalance(symbol));
+    }
+
+    return 0;
   } catch (err) {
     console.log(err);
     return 1;
@@ -250,19 +254,16 @@ export const getBalance = async () => {
   console.log('🚀 ~ file: index.js ~ line 219 ~ getBalance ~ result', result);
 };
 
-export const getUsableBalance = async () => {
+export const getUsableBalance = async (symbol) => {
   const wallet = await getWalletInstance();
-  const contract = await new nearAPI.Contract(wallet.account(), NEAR_NODE.contractId, {
-    viewMethods: ['balance_of'],
-    changeMethods: [],
-    sender: wallet.getAccountId(),
-  });
+  const contract = await getContractInstance();
 
   const result = await contract.balance_of({
     account_id: wallet.getAccountId(),
-    coin_name: 'btp-0x2.icon-ICX',
+    coin_name: formatSymbol(symbol),
   });
-  console.log('🚀 ~ file: index.js ~ line 219 ~ getBalance ~ result', result);
+
+  return result;
 };
 
 export const withdraw = async (token, amount) => {

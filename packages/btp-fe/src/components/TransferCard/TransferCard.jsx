@@ -7,7 +7,6 @@ import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
 import { getCustomizedChainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
-import { getBalance, getUsableBalance, withdraw } from 'connectors/NearWallet';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -142,28 +141,6 @@ export const TransferCard = ({
         <Text className="sm desc-txt">
           Select an asset and destination chain, to begin or resume a mint.
         </Text>
-
-        <PrimaryButton
-          onClick={() => {
-            getBalance();
-          }}
-        >
-          getBalance
-        </PrimaryButton>
-        <PrimaryButton
-          onClick={() => {
-            getUsableBalance();
-          }}
-        >
-          getUsableBalance
-        </PrimaryButton>
-        <PrimaryButton
-          onClick={() => {
-            withdraw();
-          }}
-        >
-          withdraw ICX
-        </PrimaryButton>
 
         <div className="send">
           <Text className="md">Send</Text>

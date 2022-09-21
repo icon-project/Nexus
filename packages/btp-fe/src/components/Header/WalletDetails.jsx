@@ -250,6 +250,7 @@ export const WalletDetails = ({
         ?.getBalanceOf({
           address,
           symbol: selectedToken,
+          lockedBalance: true,
         })
         .then((lockedToken) => {
           if (lockedToken > 0) {
@@ -292,7 +293,7 @@ export const WalletDetails = ({
       {lockedToken > 0 && (
         <Withdraw>
           <Text className="sm">
-            You have {lockedToken} locked {selectedToken}{' '}
+            You have {lockedToken} locked {selectedToken}.{' '}
             <button
               onClick={() => {
                 withdraw(selectedToken, lockedToken);
