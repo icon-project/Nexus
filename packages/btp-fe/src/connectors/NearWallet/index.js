@@ -4,19 +4,22 @@ import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
+import { chainConfigs } from 'connectors/chainConfigs';
 
 const { account, modal } = store.dispatch;
 
 export const handleNEARCallback = async (location) => {
-  const { search } = location;
+  const { search, pathname } = location;
 
   switch (true) {
     // https://docs.near.org/docs/api/naj-quick-reference#sign-in
     // handle NEAR wallet connecting
     case search.startsWith('?near=true'):
+      window.history.replaceState(null, '', pathname);
       break;
     // reject connecting wallet
     case search.startsWith('?near=false'):
+      window.history.replaceState(null, '', pathname);
       modal.openModal({
         icon: 'exclamationPointIcon',
         desc: 'Wallet rejected.',
@@ -27,6 +30,7 @@ export const handleNEARCallback = async (location) => {
       });
       break;
     case search.startsWith('?errorCode='):
+      window.history.replaceState(null, '', pathname);
       const msg = search.split('errorMessage=')?.[1];
       modal.openModal({
         icon: 'exclamationPointIcon',
@@ -59,15 +63,16 @@ export const handleNEARCallback = async (location) => {
   // window.history.replaceState(null, '', pathname);
 };
 
-const getNearInstance = async () =>
-  nearAPI.connect({
+const getNearInstance = async () => {
+  return nearAPI.connect({
     ...NEAR_NODE,
     keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore(),
   });
+};
 
 const getWalletInstance = async (near) => {
-  const nearIntance = near || (await getNearInstance());
-  return new nearAPI.WalletConnection(nearIntance);
+  const nearInstance = near || (await getNearInstance());
+  return new nearAPI.WalletConnection(nearInstance);
 };
 
 const getAccountInstance = async () => {
@@ -78,14 +83,15 @@ const getAccountInstance = async () => {
   return account;
 };
 
-export const getContractInstance = async () => {
+export const getContractInstance = async (contractId) => {
   const wallet = await getWalletInstance();
-
-  return await new nearAPI.Contract(wallet.account(), {
+  const contract = new nearAPI.Contract(wallet.account(), contractId || NEAR_NODE.contractId, {
     viewMethods: ['balance_of', 'ft_balance_of'],
-    changeMethods: ['deposit'],
+    changeMethods: ['deposit', 'ft_transfer_call'],
     sender: wallet.getAccountId(),
   });
+
+  return contract;
 };
 
 export const connect = async () => {
@@ -134,19 +140,24 @@ export const getNearAccountInfo = async () => {
 };
 
 export const deposit = async (amount, to, isNativeCoin) => {
-  const wallet = await getWalletInstance();
-  const contract = await new nearAPI.Contract(wallet.account(), NEAR_NODE.contractId, {
-    viewMethods: [],
-    changeMethods: ['deposit'],
-    sender: wallet.getAccountId(),
-  });
+  const amountInYocto = nearAPI.utils.format.parseNearAmount(amount);
 
-  return await contract.deposit({
-    callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, isNativeCoin }).toString(),
-    args: {},
-    gas: '300000000000000',
-    amount: nearAPI.utils.format.parseNearAmount(amount),
-  });
+  if (isNativeCoin) {
+    (await getContractInstance()).deposit({
+      callbackUrl:
+        location.href + '?' + new URLSearchParams({ amount, to, isNativeCoin }).toString(),
+      args: {},
+      gas: '300000000000000',
+      amount: amountInYocto,
+    });
+  } else {
+    (await getContractInstance(NEAR_NODE.ICXNEP141Address)).ft_transfer_call({
+      callbackUrl: location.href + '?' + new URLSearchParams({ amount, to }).toString(),
+      args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: amountInYocto, msg: '' },
+      gas: '300000000000000',
+      amount: amountInYocto,
+    });
+  }
 };
 
 export const transfer = async ({ value, to }) => {
@@ -163,32 +174,28 @@ export const transfer = async ({ value, to }) => {
       desc: 'Please wait a moment.',
     });
 
-    if (searchParams.get('isNativeCoin')) {
-      const transferResult = await functionCall('transfer', {
-        coin_name: 'btp-0x1.near-NEAR',
-        destination: 'btp://0x2.icon/' + searchParams.get('to'),
-        amount: nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
-      });
+    const transferResult = await functionCall('transfer', {
+      coin_name: searchParams.get('isNativeCoin') ? 'btp-0x1.near-NEAR' : 'btp-0x2.icon-ICX',
+      destination: 'btp://0x2.icon/' + searchParams.get('to'),
+      amount: nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
+    });
 
-      if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
-        modal.openModal({
-          icon: 'checkIcon',
-          children: (
-            <SuccessSubmittedTxContent
-              setDisplay={modal.setDisplay}
-              txHash={searchParams.get('transactionHashes')}
-            />
-          ),
-          button: {
-            text: 'Continue transfer',
-            onClick: () => modal.setDisplay(false),
-          },
-        });
-      } else {
-        throw new Error('transaction failed');
-      }
+    if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
+      modal.openModal({
+        icon: 'checkIcon',
+        children: (
+          <SuccessSubmittedTxContent
+            setDisplay={modal.setDisplay}
+            txHash={searchParams.get('transactionHashes')}
+          />
+        ),
+        button: {
+          text: 'Continue transfer',
+          onClick: () => modal.setDisplay(false),
+        },
+      });
     } else {
-      console.log('not implemented yet');
+      throw new Error('transaction failed');
     }
   } catch (err) {
     console.log(err);
@@ -200,6 +207,8 @@ export const transfer = async ({ value, to }) => {
         onClick: () => modal.setDisplay(false),
       },
     });
+  } finally {
+    window.history.replaceState(null, '', location.pathname);
   }
 };
 
