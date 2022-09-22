@@ -1,7 +1,6 @@
 import { IconUtil, IconConverter, IconBuilder, HttpProvider } from 'icon-sdk-js';
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
-
 import { ethers } from 'ethers';
 
 import {
@@ -315,6 +314,8 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
     return refundable
       ? convertToICX(balance.refundable)
+      : process.env.REACT_APP_CHAIN_NEAR_CHAIN_NAME === symbol
+      ? roundNumber(ethers.utils.formatUnits(balance, 24), 6)
       : roundNumber(ethers.utils.formatEther(balance), 6);
   } catch (err) {
     console.log('getBalanceOf err', err);
