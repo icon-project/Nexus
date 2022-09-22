@@ -45,15 +45,32 @@ export const handleNEARCallback = async (location) => {
       const searchParams = new URLSearchParams(search.substring(1));
       const result = await getTxStatus(searchParams.get('transactionHashes'));
       if (result?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
-        modal.openModal({
-          icon: 'approveIcon',
-          desc: `You've deposited to transfer your token! Please click the Transfer button to continue.`,
-          button: {
-            id: 'approve-transfer-btn',
-            text: 'Transfer',
-            onClick: transfer,
-          },
-        });
+        if (searchParams.get('coinName')) {
+          modal.openModal({
+            icon: 'approveIcon',
+            desc: `You've deposited to transfer your token! Please click the Transfer button to continue.`,
+            button: {
+              id: 'approve-transfer-btn',
+              text: 'Transfer',
+              onClick: transfer,
+            },
+          });
+        } else {
+          modal.openModal({
+            icon: 'checkIcon',
+            children: (
+              <SuccessSubmittedTxContent
+                setDisplay={modal.setDisplay}
+                txHash={searchParams.get('transactionHashes')}
+              />
+            ),
+            button: {
+              text: 'Continue transfer',
+              onClick: () => modal.setDisplay(false),
+            },
+          });
+          window.history.replaceState(null, '', location.pathname);
+        }
       }
       break;
     default:
@@ -156,20 +173,19 @@ export const getNearAccountInfo = async () => {
 
 export const deposit = async (amount, to, coinName, isNativeCoin) => {
   const amountInYocto = nearAPI.utils.format.parseNearAmount(amount);
+  const payload = {
+    callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, coinName }).toString(),
+    args: {},
+    gas: chainConfigs.NEAR?.GAS_LIMIT,
+    amount: amountInYocto,
+  };
 
   if (isNativeCoin) {
-    (await getContractInstance()).deposit({
-      callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, coinName }).toString(),
-      args: {},
-      gas: NEAR_NODE.GAS_LIMIT,
-      amount: amountInYocto,
-    });
+    (await getContractInstance()).deposit(payload);
   } else {
     (await getContractInstance(NEAR_NODE.ICXNEP141Address)).ft_transfer_call({
-      callbackUrl: location.href + '?' + new URLSearchParams({ amount, to, coinName }).toString(),
+      ...payload,
       args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: amountInYocto, msg: '' },
-      gas: NEAR_NODE.GAS_LIMIT,
-      amount: amountInYocto,
     });
   }
 };
@@ -232,7 +248,7 @@ export const functionCall = async (methodName, args) => {
     contractId: NEAR_NODE.contractId,
     methodName,
     args,
-    gas: NEAR_NODE.GAS_LIMIT,
+    gas: chainConfigs.NEAR?.GAS_LIMIT,
   });
 };
 
@@ -262,11 +278,12 @@ export const withdraw = async (token, amount) => {
   const amountInYocto = nearAPI.utils.format.parseNearAmount(amount);
 
   (await getContractInstance()).withdraw({
+    callbackUrl: location.origin + location.pathname,
     args: {
       coin_name: formatSymbol(token),
       amount: amountInYocto,
     },
-    gas: NEAR_NODE.GAS_LIMIT,
+    gas: chainConfigs.NEAR?.GAS_LIMIT,
     amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
   });
 };
