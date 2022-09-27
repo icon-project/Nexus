@@ -25,7 +25,7 @@ async function logTxHashToSlack(toAddress, fromAddress, txHash, blockTime, btpFe
     const data = {
       transaction_hash: txHash,
       amount: Number(value),
-      status: await getNameOfTransactionStatus(status),
+      status: getNameOfTransactionStatus(status),
       time: new Date(Number(blockTime)),
       from_network: (await getNetworkById(networkId)).name,
       to_network: (await getNetworkByToAddress(toAddress)).name,

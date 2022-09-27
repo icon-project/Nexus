@@ -1,8 +1,10 @@
 const { MINT_EVENT, BURN_EVENT } = require('../../common');
-const logger = require('../../common/logger');
+const { createLogger } = require('../../common/logger');
 const { isJSON } = require('../../common/util');
 const { getTokenName } = require('../tokens/model');
 const { getTotalTokenAmount, saveToken } = require('./repository');
+
+const logger = createLogger();
 
 async function handleMintBurnEvents(tx, txResult, block) {
   if (process.env.NEAR_BMC_ADDRESS === tx.receiver_id) {

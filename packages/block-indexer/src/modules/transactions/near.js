@@ -9,7 +9,6 @@ const logger = createLogger();
 
 async function handleTransactionEvents(tx, txResult, block) {
   const tokenMap = await getRegisteredTokens();
-
   if (tokenMap.has(tx.receiver_id)) {
     await handleTransactionStartEvent(tx, txResult, block);
   } else if (process.env.NEAR_BMC_ADDRESS === tx.receiver_id) {
@@ -47,8 +46,6 @@ async function handleTransactionStartEvent(tx, txResult, block) {
           contractAddress: tx.receiver_id
         };
 
-        console.log('transObject', transObj);
-
         // Calculating total volume when the system has a new transaction.
         const latestTransaction = await getLatestTransactionByToken(transObj.tokenName);
         const totalVolume = calculateTotalVolume(transObj, latestTransaction);
@@ -83,8 +80,7 @@ async function handleTransactionEndEvent(tx, txResult, block) {
         const data = JSON.parse(log);
         try {
           const statusCode = Number(data.code) === 0 ? TRANSACTION_STATUS.success : TRANSACTION_STATUS.failed;
-          const updatingTx = await findTxBySerialNumber(data.serial_number, process.env.NEAR_NETWORK_ID, tx.receiver_id);
-
+          const updatingTx = await findTxBySerialNumber(data.serial_number, process.env.NEAR_NETWORK_ID, receiptOutcome.outcome.executor_id);
           const txData = {
             txHash: tx.hash,
             error: TRANSACTION_STATUS.failed === statusCode ? data.message : ''

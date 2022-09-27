@@ -33,7 +33,6 @@ async function runTransactionHandlers(tx, result, block) {
 
 async function retryGetTransactionReceipt(tx, block) {
   const result = await archivalProvider.txStatus(tx.hash, tx.signer_id);
-
   if (result) {
     debugTx('Transaction receipt: %O', result);
     await runTransactionHandlers(tx, result, block);
