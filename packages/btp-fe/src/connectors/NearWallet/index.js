@@ -5,6 +5,7 @@ import store from 'store';
 import { wallets } from 'utils/constants';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 import { chainConfigs, formatSymbol } from 'connectors/chainConfigs';
+import { convertToICX, convertToLoopUnit } from 'connectors/ICONex/utils';
 
 const { account, modal } = store.dispatch;
 
@@ -136,7 +137,11 @@ export const getBalanceOf = async (options) => {
       return 0; // TODO: implementation
     }
     if (lockedBalance) {
-      return nearAPI.utils.format.formatNearAmount(await getUsableBalance(symbol));
+      const balance = await getUsableBalance(symbol);
+      if (symbol === process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL) {
+        return convertToICX(balance);
+      }
+      return nearAPI.utils.format.formatNearAmount(balance);
     }
 
     const contract = await getContractInstance(NEAR_NODE.ICXNEP141Address);
@@ -147,7 +152,7 @@ export const getBalanceOf = async (options) => {
       coin_name: formatSymbol(symbol),
     });
 
-    return +result;
+    return convertToICX(result);
   } catch (err) {
     console.log(err);
     return 0;
@@ -185,7 +190,8 @@ export const deposit = async (amount, to, coinName, isNativeCoin) => {
   } else {
     (await getContractInstance(NEAR_NODE.ICXNEP141Address)).ft_transfer_call({
       ...payload,
-      args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: amountInYocto, msg: '' },
+      args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: convertToLoopUnit(amount), msg: '' },
+      amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
     });
   }
 };
@@ -207,7 +213,10 @@ export const transfer = async ({ value, to, coinName }, isSendingNativeCoin) => 
     const transferResult = await functionCall('transfer', {
       coin_name: formatSymbol(searchParams.get('coinName')),
       destination: 'btp://' + chainConfigs.ICON?.NETWORK_ADDRESS + '/' + searchParams.get('to'),
-      amount: nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
+      amount:
+        process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL === searchParams.get('coinName')
+          ? convertToLoopUnit(searchParams.get('amount'))
+          : nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
     });
 
     if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
@@ -267,21 +276,22 @@ export const getUsableBalance = async (symbol) => {
   const contract = await getContractInstance();
 
   const result = await contract.balance_of({
-    account_id: wallet.getAccountId(),
+    owner_id: wallet.getAccountId(),
     coin_name: formatSymbol(symbol),
   });
 
   return result;
 };
 
-export const withdraw = async (token, amount) => {
-  const amountInYocto = nearAPI.utils.format.parseNearAmount(amount);
-
+export const withdraw = async (symbol, amount) => {
   (await getContractInstance()).withdraw({
     callbackUrl: location.origin + location.pathname,
     args: {
-      coin_name: formatSymbol(token),
-      amount: amountInYocto,
+      coin_name: formatSymbol(symbol),
+      amount:
+        process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL === symbol
+          ? convertToLoopUnit(amount)
+          : nearAPI.utils.format.parseNearAmount(amount),
     },
     gas: chainConfigs.NEAR?.GAS_LIMIT,
     amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
