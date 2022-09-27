@@ -104,7 +104,7 @@ const getAccountInstance = async () => {
 export const getContractInstance = async (contractId) => {
   const wallet = await getWalletInstance();
   const contract = new nearAPI.Contract(wallet.account(), contractId || NEAR_NODE.contractId, {
-    viewMethods: ['balance_of', 'ft_balance_of'],
+    viewMethods: ['balance_of', 'ft_balance_of', 'locked_balance_of'],
     changeMethods: ['deposit', 'ft_transfer_call', 'withdraw'],
     sender: wallet.getAccountId(),
   });
@@ -296,4 +296,17 @@ export const withdraw = async (symbol, amount) => {
     gas: chainConfigs.NEAR?.GAS_LIMIT,
     amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
   });
+};
+
+export const getLockedBalance = async (symbol) => {
+  const wallet = await getWalletInstance();
+  const contract = await getContractInstance();
+
+  const result = await contract.locked_balance_of({
+    owner_id: wallet.getAccountId(),
+    coin_name: formatSymbol(symbol),
+  });
+  console.log('🚀 ~ file: index.js ~ line 309 ~ getLockedBalance ~ result', result);
+
+  return result;
 };

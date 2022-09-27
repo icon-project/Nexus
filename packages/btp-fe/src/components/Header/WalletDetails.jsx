@@ -255,7 +255,7 @@ export const WalletDetails = ({
         .then((lockedToken) => {
           if (lockedToken > 0) {
             setLockedToken(lockedToken);
-          }
+          } else setLockedToken(0);
         });
     }
   }, [selectedToken]);
