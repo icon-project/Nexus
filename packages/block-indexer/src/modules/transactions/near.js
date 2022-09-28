@@ -73,7 +73,6 @@ async function handleTransactionStartEvent(tx, txResult, block) {
       }
     }
   }
-  console.log('totalFee', networkFee);
 }
 
 async function handleTransactionEndEvent(tx, txResult, block) {
