@@ -34,7 +34,6 @@ async function saveToken(object, totalToken, tokenType) {
       object.logId || '',
       BURN_EVENT === tokenType ? object.from : object.to
     ];
-
     await pgPool.query(query, values);
   } catch (error) {
     logger.error(`saveToken failed save ${tokenType} value`, { error });
