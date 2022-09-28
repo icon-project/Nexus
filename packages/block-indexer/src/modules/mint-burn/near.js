@@ -1,6 +1,7 @@
-const { MINT_EVENT, BURN_EVENT, NEAR_LOOP_UNIT } = require('../../common');
+const { MINT_EVENT, BURN_EVENT } = require('../../common');
 const { createLogger } = require('../../common/logger');
 const { isJSON } = require('../../common/util');
+const { getLoopUnitByTokenName } = require('../common/loop-units');
 const { getTotalTokenAmount, saveToken } = require('./repository');
 
 const logger = createLogger();
@@ -14,27 +15,27 @@ async function handleMintBurnEvents(tx, txResult, block) {
         }
 
         const data = JSON.parse(log);
-        if (!data.token_name) {
+        if (data.code !== '0' && !data.token_name) {
           continue;
         }
-
         const tokenName = data.token_name.split('-')[2];
+        if (!tokenName) {
+          logger.warn(`near:handleMintBurnEvents found unregistered token in tx ${tx.hash}`);
+          return false;
+        }
+
+        const loopUnit = getLoopUnitByTokenName(tokenName);
         const mintBurn = {
           txHash: tx.hash,
           networkId: process.env.NEAR_NETWORK_ID,
           blockTime: Math.floor(block.header.timestamp / 1000)
         };
         try {
-          if (!tokenName) {
-            logger.warn(`near:handleMintBurnEvents found unregistered token in tx ${tx.hash}`);
-            return false;
-          }
-
           if (data?.event.toLowerCase() === MINT_EVENT) {
             logger.info(`near:handleMintBurnEvents handle Mint event in tx ${tx.hash}`);
 
             mintBurn.tokenName = tokenName;
-            mintBurn.tokenValue = Number(data.amount) / (NEAR_LOOP_UNIT);
+            mintBurn.tokenValue = Number(data.amount) / (loopUnit);
             mintBurn.to = data.mintTo;
 
             const totalToken = await getTotalTokenAmount(mintBurn.tokenName, MINT_EVENT);
@@ -42,8 +43,8 @@ async function handleMintBurnEvents(tx, txResult, block) {
           } else if (data?.event.toLowerCase() === BURN_EVENT) {
             logger.info(`near:handleMintBurnEvents handle Burn event in tx ${tx.hash}`);
 
-            mintBurn.tokenName = data.tokenName;
-            mintBurn.tokenValue = Number(data.value);
+            mintBurn.tokenName = tokenName;
+            mintBurn.tokenValue = Number(data.amount) / (loopUnit);
             mintBurn.from = data.tokenContract;
 
             const totalToken = await getTotalTokenAmount(mintBurn.tokenName, BURN_EVENT);
