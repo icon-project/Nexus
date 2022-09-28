@@ -1,4 +1,4 @@
-const { TRANSACTION_STATUS, TRANSFER_START_EVENT, TRANSFER_END_EVENT } = require('../../common');
+const { TRANSACTION_STATUS, TRANSFER_START_EVENT, TRANSFER_END_EVENT, NEAR_GAS_UNIT } = require('../../common');
 const { createLogger } = require('../../common/logger');
 const { isJSON } = require('../../common/util');
 const { logTxHashToSlack } = require('../../slack-bot');
@@ -20,7 +20,11 @@ async function handleTransactionEvents(tx, txResult, block) {
 TransferStart
 */
 async function handleTransactionStartEvent(tx, txResult, block) {
+  let networkFee = Number(Number((txResult.transaction_outcome?.outcome?.gas_burnt || 0) / NEAR_GAS_UNIT).toFixed(5));
   for (const receiptOutcome of txResult?.receipts_outcome) {
+    const gasFee = Number(Number((receiptOutcome.outcome.gas_burnt || 0) / NEAR_GAS_UNIT).toFixed(5));
+    networkFee += gasFee;
+
     for (const log of receiptOutcome?.outcome?.logs) {
       if (log.includes(TRANSFER_START_EVENT) && isJSON(log)) {
         logger.info(`near:handleTransactionStartEvent get TransferStart event in tx ${tx.hash}`);
@@ -42,7 +46,7 @@ async function handleTransactionStartEvent(tx, txResult, block) {
           blockTime: Math.floor(block.header.timestamp / 1000), // microsecond to millisecond
           networkId: process.env.NEAR_NETWORK_ID,
           btpFee,
-          networkFee: btpFee, // TODO
+          networkFee, // TODO
           contractAddress: tx.receiver_id
         };
 
@@ -69,6 +73,7 @@ async function handleTransactionStartEvent(tx, txResult, block) {
       }
     }
   }
+  console.log('totalFee', networkFee);
 }
 
 async function handleTransactionEndEvent(tx, txResult, block) {
