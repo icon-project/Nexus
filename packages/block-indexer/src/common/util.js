@@ -70,7 +70,7 @@ function parseIndexerHealthCheckPeriod() {
 
 function isJSON(str) {
   try {
-    return (JSON.parse(str) && !!str);
+    return (!!str && typeof JSON.parse(str) === 'object');
   } catch (e) {
     return false;
   }
