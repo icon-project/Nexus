@@ -2,6 +2,7 @@ const { TRANSACTION_STATUS, TRANSFER_START_EVENT, TRANSFER_END_EVENT, NEAR_GAS_U
 const { createLogger } = require('../../common/logger');
 const { isJSON } = require('../../common/util');
 const { logTxHashToSlack } = require('../../slack-bot');
+const { getLoopUnitByTokenName } = require('../common/loop-units');
 const { getRegisteredTokens } = require('../tokens/model');
 const { calculateTotalVolume } = require('./model');
 const { getLatestTransactionByToken, saveTransaction, setTransactionConfirmed, findTxBySerialNumber } = require('./repository');
@@ -32,8 +33,9 @@ async function handleTransactionStartEvent(tx, txResult, block) {
         const data = JSON.parse(log);
         const tokenNameRaw = data.assets ? data.assets[0]?.token_name : ''; // TODO
         const tokenName = tokenNameRaw?.split('-')?.[2];
-        const btpFee = data.assets ? Number(data.assets[0]?.fee) : 0;
-        const amount = data.assets ? Number(data.assets[0]?.amount) : 0;
+        const loopUnit = getLoopUnitByTokenName(tokenName);
+        const btpFee = (data.assets ? Number(data.assets[0]?.fee) : 0) / loopUnit;
+        const amount = (data.assets ? Number(data.assets[0]?.amount) : 0) / loopUnit;
         const transObj = {
           fromAddress: data.sender_address || tx.signer_id,
           tokenName: tokenName || tokenNameRaw,
