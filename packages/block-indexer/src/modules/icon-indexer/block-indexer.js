@@ -86,7 +86,6 @@ async function runBlockHandlers(block) {
     if (tx.to) {
       const tokenMap = await getRegisteredTokens();
 
-      // TODO: should remove this line after ICON BMC is merged.
       if (bmcAddressesMap.has(tx.to) || tokenMap.has(tx.to)) {
         await retryGetTransactionResult(tx, block);
       } else {
@@ -154,7 +153,7 @@ async function start() {
   if (blockHeight === -1) {
     blockHeight = await getIndexedBlockHeight(process.env.ICON_NETWORK_ID);
   }
-  // TODO: should remove this line after ICON BMC is merged.
+
   bmcAddressesMap = getBMCAddressesMap();
 
   const block = await iconService.getLastBlock().execute();
