@@ -1,7 +1,6 @@
 import { IconUtil, IconConverter, IconBuilder, HttpProvider } from 'icon-sdk-js';
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
-import { ethers } from 'ethers';
 
 import {
   ADDRESS_LOCAL_STORAGE,
@@ -11,7 +10,7 @@ import {
   iconService,
   httpProvider,
 } from 'connectors/constants';
-import { chainConfigs, formatSymbol } from 'connectors/chainConfigs';
+import { chainConfigs, formatSymbol, formatUnitsBySymbol } from 'connectors/chainConfigs';
 
 import { requestSigning } from './events';
 import Request, {
@@ -314,9 +313,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
     return refundable
       ? convertToICX(balance.refundable)
-      : process.env.REACT_APP_CHAIN_NEAR_CHAIN_NAME === symbol
-      ? roundNumber(ethers.utils.formatUnits(balance, 22), 6)
-      : roundNumber(ethers.utils.formatEther(balance), 6);
+      : roundNumber(formatUnitsBySymbol(balance, symbol), 6);
   } catch (err) {
     console.log('getBalanceOf err', err);
     return 0;

@@ -4,8 +4,12 @@ import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
 import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
-import { chainConfigs, formatSymbol } from 'connectors/chainConfigs';
-import { convertToICX, convertToLoopUnit } from 'connectors/ICONex/utils';
+import {
+  chainConfigs,
+  formatSymbol,
+  parseUnitsBySymbol,
+  formatUnitsBySymbol,
+} from 'connectors/chainConfigs';
 
 const { account, modal } = store.dispatch;
 
@@ -30,6 +34,7 @@ export const handleNEARCallback = async (location) => {
         },
       });
       break;
+    // handle error
     case search.startsWith('?errorCode='):
       window.history.replaceState(null, '', pathname);
       const msg = search.split('errorMessage=')?.[1];
@@ -77,8 +82,6 @@ export const handleNEARCallback = async (location) => {
     default:
       break;
   }
-
-  // window.history.replaceState(null, '', pathname);
 };
 
 const getNearInstance = async () => {
@@ -138,10 +141,7 @@ export const getBalanceOf = async (options) => {
     }
     if (lockedBalance) {
       const balance = await getUsableBalance(symbol);
-      if (symbol === process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL) {
-        return convertToICX(balance);
-      }
-      return nearAPI.utils.format.formatNearAmount(balance);
+      return formatUnitsBySymbol(balance, symbol);
     }
 
     const contract = await getContractInstance(NEAR_NODE.ICXNEP141Address);
@@ -152,7 +152,7 @@ export const getBalanceOf = async (options) => {
       coin_name: formatSymbol(symbol),
     });
 
-    return convertToICX(result);
+    return formatUnitsBySymbol(result, symbol);
   } catch (err) {
     console.log(err);
     return 0;
@@ -190,7 +190,11 @@ export const deposit = async (amount, to, coinName, isNativeCoin) => {
   } else {
     (await getContractInstance(NEAR_NODE.ICXNEP141Address)).ft_transfer_call({
       ...payload,
-      args: { receiver_id: chainConfigs.NEAR.BTS_CORE, amount: convertToLoopUnit(amount), msg: '' },
+      args: {
+        receiver_id: chainConfigs.NEAR.BTS_CORE,
+        amount: parseUnitsBySymbol(amount, coinName),
+        msg: '',
+      },
       amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
     });
   }
@@ -213,10 +217,7 @@ export const transfer = async ({ value, to, coinName }, isSendingNativeCoin) => 
     const transferResult = await functionCall('transfer', {
       coin_name: formatSymbol(searchParams.get('coinName')),
       destination: 'btp://' + chainConfigs.ICON?.NETWORK_ADDRESS + '/' + searchParams.get('to'),
-      amount:
-        process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL === searchParams.get('coinName')
-          ? convertToLoopUnit(searchParams.get('amount'))
-          : nearAPI.utils.format.parseNearAmount(searchParams.get('amount')),
+      amount: parseUnitsBySymbol(searchParams.get('amount'), searchParams.get('coinName')),
     });
 
     if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
@@ -288,10 +289,7 @@ export const withdraw = async (symbol, amount) => {
     callbackUrl: location.origin + location.pathname,
     args: {
       coin_name: formatSymbol(symbol),
-      amount:
-        process.env.REACT_APP_CHAIN_ICON_COIN_SYMBOL === symbol
-          ? convertToLoopUnit(amount)
-          : nearAPI.utils.format.parseNearAmount(amount),
+      amount: parseUnitsBySymbol(amount, symbol),
     },
     gas: chainConfigs.NEAR?.GAS_LIMIT,
     amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR

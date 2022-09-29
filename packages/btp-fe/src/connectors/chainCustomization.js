@@ -8,6 +8,7 @@ import { tokenTypes } from 'utils/constants';
 export const custom = {
   ICON: {
     exploreSuffix: { transaction: 'transaction/' },
+    decimals: 18,
   },
   BSC: {
     disabled: true,
@@ -31,5 +32,6 @@ export const custom = {
   },
   NEAR: {
     exploreSuffix: { transaction: 'transactions/', address: 'acounts/' },
+    decimals: 24,
   },
 };
