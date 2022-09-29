@@ -77,7 +77,7 @@ function isJSON(str) {
 }
 
 function formatReceiverAddress(address, networkId, tokenName) {
-  const btpAddressRegex = /btp:\/\/0x[0-9]*\.[a-zA-Z0-9]*\/[a-zA-Z0-9]x[a-fA-F0-9]*/;
+  const btpAddressRegex = /btp:\/\/0x[0-9]*\.[a-zA-Z0-9]*\/.*/;
   if (btpAddressRegex.test(address)) {
     return address;
   }
