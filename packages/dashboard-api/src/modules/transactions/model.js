@@ -38,7 +38,7 @@ async function getNetworkName(btpAddress) {
   // Ref the pattern of a btp address
   // btp://0x1.icon/cx87ed9048b594b95199f326fc76e76a9d33dd665b
   // https://github.com/icon-project/btp#introduction
-  if (addressPaths.length == 4) {
+  if (addressPaths.length >= 4) {
     if (networkMap.has(addressPaths[1])) {
       return networkMap.get(addressPaths[1]);
     } else {
