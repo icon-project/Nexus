@@ -200,7 +200,7 @@ async function getTransactionsByNetworkIdAndTokenNames(networkId, tokenNames) {
       '',
     );
     const result = getDataFromTable(TRANSACTION_TBL_NAME, {
-      where: { network_id: `= '${networkId}'`, token_name: `IN (${tokenNameQueryString})` },
+      where: { network_id: `= '${networkId}'`, token_name: `IN (${tokenNameQueryString})`, status:'= 1' },
     });
     return result;
   } catch (error) {
