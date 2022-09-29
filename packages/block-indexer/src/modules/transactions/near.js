@@ -31,7 +31,7 @@ async function handleTransactionStartEvent(tx, txResult, block) {
         logger.info(`near:handleTransactionStartEvent get TransferStart event in tx ${tx.hash}`);
 
         const data = JSON.parse(log);
-        const tokenNameRaw = data.assets ? data.assets[0]?.token_name : ''; // TODO
+        const tokenNameRaw = data.assets ? data.assets[0]?.token_name : '';
         const tokenName = tokenNameRaw?.split('-')?.[2];
         const loopUnit = getLoopUnitByTokenName(tokenName);
         const btpFee = (data.assets ? Number(data.assets[0]?.fee) : 0) / loopUnit;
@@ -45,10 +45,10 @@ async function handleTransactionStartEvent(tx, txResult, block) {
           toAddress: data.receiver_address,
           txHash: tx.hash,
           status: TRANSACTION_STATUS.pending,
-          blockTime: Math.floor(block.header.timestamp / 1000), // microsecond to millisecond
+          blockTime: Math.floor(block.header.timestamp / 1000000), // microsecond to millisecond
           networkId: process.env.NEAR_NETWORK_ID,
           btpFee,
-          networkFee, // TODO
+          networkFee,
           contractAddress: tx.receiver_id
         };
 

@@ -14,7 +14,6 @@ const logger = createLogger();
 // Ref: https://github.com/icon-project/btp/blob/icondao/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L103
 async function handleTokenRegister(transaction) {
   const bshAddresses = getBSHAddressesMap();
-  // TODO: should remove this line after ICON BMC is merged.
   if (bshAddresses.has(transaction.to) && 'register' === transaction.data.method) {
     logger.info('Found token register on %s', transaction.txHash);
     await registerIRC2Token(transaction);
