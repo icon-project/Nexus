@@ -34,7 +34,7 @@ async function getNetworkName(btpAddress) {
   if (!btpAddress) {
     return;
   }
-  let addressPaths = btpAddress.match(/\w+/g);
+  const addressPaths = btpAddress.match(/\w+/g);
   // Ref the pattern of a btp address
   // btp://0x1.icon/cx87ed9048b594b95199f326fc76e76a9d33dd665b
   // https://github.com/icon-project/btp#introduction
@@ -42,8 +42,11 @@ async function getNetworkName(btpAddress) {
     if (networkMap.has(addressPaths[1])) {
       return networkMap.get(addressPaths[1]);
     } else {
-      let networkDst = await getNetworkById(addressPaths[1]);
-      networkMap.set(addressPaths[1], networkDst[0].name);
+      const networkDst = await getNetworkById(addressPaths[1]);
+      if (!networkDst[0]) {
+        return '';
+      }
+      networkMap.set(addressPaths[1], networkDst[0]?.name);
       return networkDst[0].name;
     }
   }
