@@ -3,7 +3,6 @@ import { NEAR_NODE } from 'connectors/constants';
 import { ethers } from 'ethers';
 import store from 'store';
 import { wallets } from 'utils/constants';
-import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 import {
   chainConfigs,
   formatSymbol,
@@ -52,29 +51,9 @@ export const handleNEARCallback = async (location) => {
       const result = await getTxStatus(searchParams.get('transactionHashes'));
       if (result?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
         if (searchParams.get('coinName')) {
-          modal.openModal({
-            icon: 'approveIcon',
-            desc: `You've deposited to transfer your token! Please click the Transfer button to continue.`,
-            button: {
-              id: 'approve-transfer-btn',
-              text: 'Transfer',
-              onClick: transfer,
-            },
-          });
+          modal.informApprovedTransfer({ onClick: transfer, action: 'deposited' });
         } else {
-          modal.openModal({
-            icon: 'checkIcon',
-            children: (
-              <SuccessSubmittedTxContent
-                setDisplay={modal.setDisplay}
-                txHash={searchParams.get('transactionHashes')}
-              />
-            ),
-            button: {
-              text: 'Continue transfer',
-              onClick: () => modal.setDisplay(false),
-            },
-          });
+          modal.informSubmittedTx(searchParams.get('transactionHashes'));
           window.history.replaceState(null, '', location.pathname);
         }
       }
@@ -221,32 +200,13 @@ export const transfer = async ({ value, to, coinName }, isSendingNativeCoin) => 
     });
 
     if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
-      modal.openModal({
-        icon: 'checkIcon',
-        children: (
-          <SuccessSubmittedTxContent
-            setDisplay={modal.setDisplay}
-            txHash={searchParams.get('transactionHashes')}
-          />
-        ),
-        button: {
-          text: 'Continue transfer',
-          onClick: () => modal.setDisplay(false),
-        },
-      });
+      modal.informSubmittedTx(searchParams.get('transactionHashes'));
     } else {
       throw new Error('transaction failed');
     }
   } catch (err) {
     console.log(err);
-    modal.openModal({
-      icon: 'xIcon',
-      desc: 'Your transaction has failed. Please go back and try again.',
-      button: {
-        text: 'Back to transfer',
-        onClick: () => modal.setDisplay(false),
-      },
-    });
+    modal.informFailedTx();
   } finally {
     window.history.replaceState(null, '', location.pathname);
   }

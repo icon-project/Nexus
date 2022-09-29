@@ -1,6 +1,3 @@
-import { FailedBidContent } from 'components/NotificationModal/FailedBidContent';
-import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
-
 import { getBalance, sendTransaction, getTxResult, sendNonNativeCoin } from './ICONServices';
 import { sendLog } from 'services/btpServices';
 import { requestHasAddress } from './events';
@@ -27,14 +24,7 @@ export const eventHandler = async (event) => {
   }
 
   if (payload.error) {
-    modal.openModal({
-      icon: 'xIcon',
-      desc: payload.error.message,
-      button: {
-        text: 'Try again',
-        onClick: () => modal.setDisplay(false),
-      },
-    });
+    modal.handleError(payload.error);
     return;
   }
 
@@ -78,41 +68,13 @@ export const eventHandler = async (event) => {
               }
 
               switch (window[signingActions.globalName]) {
-                case signingActions.bid:
-                  modal.openModal({
-                    icon: 'checkIcon',
-                    desc: 'Congratulation! Your bid successfully placed.',
-                    button: {
-                      text: 'Continue bidding',
-                      onClick: () => modal.setDisplay(false),
-                    },
-                  });
-                  break;
-
                 case signingActions.approve:
                 case signingActions.approveIRC2:
-                  modal.openModal({
-                    icon: 'approveIcon',
-                    desc: `You've approved to transfer your token! Please click the Transfer button to continue.`,
-                    button: {
-                      id: 'approve-transfer-btn',
-                      text: 'Transfer',
-                      onClick: sendNonNativeCoin,
-                    },
-                  });
+                  modal.informApprovedTransfer({ onClick: sendNonNativeCoin });
                   break;
 
                 case signingActions.transfer:
-                  modal.openModal({
-                    icon: 'checkIcon',
-                    children: (
-                      <SuccessSubmittedTxContent setDisplay={modal.setDisplay} txHash={txHash} />
-                    ),
-                    button: {
-                      text: 'Continue transfer',
-                      onClick: () => modal.setDisplay(false),
-                    },
-                  });
+                  modal.informSubmittedTx(txHash);
 
                   sendLog({
                     txHash,
@@ -141,40 +103,16 @@ export const eventHandler = async (event) => {
       } catch (err) {
         console.error(err);
         switch (window[signingActions.globalName]) {
-          case signingActions.bid:
-            modal.openModal({
-              icon: 'xIcon',
-              children: <FailedBidContent message={err.message || err} />,
-              button: {
-                text: 'Try again',
-                onClick: () => modal.setDisplay(false),
-              },
-            });
-            break;
           case signingActions.transfer:
           default:
-            modal.openModal({
-              icon: 'xIcon',
-              desc: 'Your transaction has failed. Please go back and try again.',
-              button: {
-                text: 'Back to transfer',
-                onClick: () => modal.setDisplay(false),
-              },
-            });
+            modal.informFailedTx();
             break;
         }
       }
       break;
     case TYPES.CANCEL_SIGNING:
     case TYPES.CANCEL_JSON_RPC:
-      modal.openModal({
-        icon: 'exclamationPointIcon',
-        desc: 'Transaction rejected.',
-        button: {
-          text: 'Dismiss',
-          onClick: () => modal.setDisplay(false),
-        },
-      });
+      modal.informRejectedTx();
       break;
 
     case 'CANCEL':

@@ -66,16 +66,18 @@ export const checkIsToken = (token) => getTokenList().find((t) => t.symbol === t
 export const findChainbySymbol = (symbol) => {
   let chain = chainList.find((chain) => symbol == chain.COIN_SYMBOL);
   if (!chain) {
-    chain = getTokenList().find((chain) => symbol == chain.symbol);
-    if (!chain) throw new Error('not found chain');
+    const tokenChain = getTokenList().find((chain) => symbol == chain.symbol);
+    if (!tokenChain) throw new Error('not found chain');
+    chain = { ...chainConfigs[tokenChain.chainId], tokenOf: tokenChain.tokenOf };
   }
+
   return chain;
 };
 
 export const formatSymbol = (symbol) => {
   const chain = findChainbySymbol(symbol);
 
-  return `btp-${chainConfigs[chain.id || chain.tokenOf].NETWORK_ADDRESS}-${symbol}`;
+  return `btp-${chainConfigs[chain.tokenOf || chain.id].NETWORK_ADDRESS}-${symbol}`;
 };
 
 export const parseUnitsBySymbol = (amount, symbol) => {

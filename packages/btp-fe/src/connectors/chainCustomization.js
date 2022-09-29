@@ -11,7 +11,7 @@ export const custom = {
     decimals: 18,
   },
   BSC: {
-    disabled: true,
+    // disabled: true,
     tokens: [
       {
         symbol: 'sICX',
