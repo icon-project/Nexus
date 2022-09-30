@@ -31,7 +31,7 @@ export const custom = {
     ],
   },
   NEAR: {
-    disabled: true,
+    // disabled: true,
     exploreSuffix: { transaction: 'transactions/', address: 'accounts/' },
     decimals: 24,
   },
