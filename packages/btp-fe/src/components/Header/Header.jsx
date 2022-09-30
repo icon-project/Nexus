@@ -211,6 +211,7 @@ const Header = () => {
       icon: NEAR,
       onClick: () => handleSelectWallet(wallets.near),
       isInstalled: true,
+      disabled: true,
     },
     {
       id: wallets.iconex,
