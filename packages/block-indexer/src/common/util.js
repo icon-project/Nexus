@@ -68,11 +68,29 @@ function parseIndexerHealthCheckPeriod() {
   });
 }
 
+function isJSON(str) {
+  try {
+    return (!!str && typeof JSON.parse(str) === 'object');
+  } catch (e) {
+    return false;
+  }
+}
+
+function formatReceiverAddress(address, networkId, tokenName) {
+  const btpAddressRegex = /btp:\/\/0x[0-9]*\.[a-zA-Z0-9]*\/.*/;
+  if (btpAddressRegex.test(address)) {
+    return address;
+  }
+  return `btp://${networkId}.${tokenName.toLowerCase()}/${address}`;
+}
+
 module.exports = {
   hexToFixedAmount,
   hexToIcxUnit,
   tokenToUsd,
   logDbError,
   getNameOfTransactionStatus,
-  parseIndexerHealthCheckPeriod
+  parseIndexerHealthCheckPeriod,
+  isJSON,
+  formatReceiverAddress
 };

@@ -25,6 +25,8 @@ const TRANSACTION_TBL = {
 };
 
 const ICX_LOOP_UNIT = 10 ** 18;
+const NEAR_LOOP_UNIT = 10 ** 24;
+const NEAR_GAS_UNIT = 10 ** 16;
 const CONTRACT_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const ICON_ZERO_ADDRESS = 'hx0000000000000000000000000000000000000000';
 const MINT_EVENT = 'mint';
@@ -36,6 +38,7 @@ const BUY_TOKEN_END_EVENT = 'BuyTokenEndEvent';
 const TRANSFER_SINGLE_EVENT = 'TransferSingle';
 const ADD_RELAY_ACTION = 'addRelay';
 const REMOVE_RELAY_ACTION = 'removeRelay';
+const TOKEN_REGISTERED_EVENT = 'register';
 const BLOCK_INDEXER_STOPPED = (lastBlock, indexerName) => `🐛 *${indexerName}*-indexer was \`STOPPED\` at block \`${lastBlock}\` 🚫`;
 const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good ✅`;
 
@@ -44,6 +47,8 @@ module.exports = {
   TRANSACTION_TBL,
   TRANSACTION_STATUS,
   ICX_LOOP_UNIT,
+  NEAR_LOOP_UNIT,
+  NEAR_GAS_UNIT,
   CONTRACT_ZERO_ADDRESS,
   ICON_ZERO_ADDRESS,
   MINT_EVENT,
@@ -55,6 +60,7 @@ module.exports = {
   REMOVE_RELAY_ACTION,
   BUY_TOKEN_EVENT,
   BUY_TOKEN_END_EVENT,
+  TOKEN_REGISTERED_EVENT,
   BLOCK_INDEXER_STOPPED,
   BLOCK_INDEXER_HEALTHY
 };

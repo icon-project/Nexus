@@ -10,6 +10,7 @@ const bscBshAbi = require('../modules/web3-indexer/abi/bsc/BSHPeriphery.json');
 const { getBscEventMap } = require('../modules/common/events');
 const { getBscActionMap } = require('../modules/common/actions');
 const { setBMCAddressMap, setBSHAddressMap } = require('../modules/common/addresses');
+const { setLoopUnitConverter } = require('../modules/common/loop-units');
 const logger = createLogger();
 
 async function start(indexerName) {
@@ -64,6 +65,7 @@ async function start(indexerName) {
       break;
     }
     case 'NEAR':
+      setLoopUnitConverter();
       nearIndexer.start();
       break;
 
