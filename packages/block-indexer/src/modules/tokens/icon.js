@@ -46,7 +46,7 @@ async function getTokenContractAddress(name) {
   const callBuilder = new IconService.IconBuilder.CallBuilder();
 
   const txObject = callBuilder
-    .to(process.env.ICON_NATIVE_COIN_BSH_ADDRESS)
+    .to(process.env.ICON_NATIVE_COIN_BSC_BSH_ADDRESS)
     .method('coinAddress')
     .params({ _coinName: name })
     .build();

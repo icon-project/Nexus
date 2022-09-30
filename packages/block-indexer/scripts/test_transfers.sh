@@ -21,7 +21,7 @@ ICX_ERC20_ADDRESS=0x7b329aA204fe2c790f714C5A25123bb2DaC86632
 
 echo Alice sends 0.1 ICX to Bob
 
-goloop rpc sendtx call --uri $ICON_API_URL --to $ICON_NATIVE_COIN_BSH_ADDRESS --method transferNativeCoin \
+goloop rpc sendtx call --uri $ICON_API_URL --to $ICON_NATIVE_COIN_BSC_BSH_ADDRESS --method transferNativeCoin \
   --param _to=$BOB_BTP_ADDRESS --value=100000000000000000 \
   --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_NETWORK_ID
 
@@ -30,15 +30,15 @@ sleep 1s
 echo Alice sends 0.1 DEV to Bob
 
 goloop rpc sendtx call --uri $ICON_API_URL --to $DEV_IRC2_ADDRESS --method approve \
-  --param spender=$ICON_NATIVE_COIN_BSH_ADDRESS --param amount=100000000000000000 \
+  --param spender=$ICON_NATIVE_COIN_BSC_BSH_ADDRESS --param amount=100000000000000000 \
   --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_NETWORK_ID
 
 sleep 1s
 
 goloop rpc call --uri $ICON_API_URL --to $DEV_IRC2_ADDRESS --method allowance \
-  --param owner=$ALICE_ADDRESS --param spender=$ICON_NATIVE_COIN_BSH_ADDRESS
+  --param owner=$ALICE_ADDRESS --param spender=$ICON_NATIVE_COIN_BSC_BSH_ADDRESS
 
-goloop rpc sendtx call --uri $ICON_API_URL --to $ICON_NATIVE_COIN_BSH_ADDRESS --method transfer \
+goloop rpc sendtx call --uri $ICON_API_URL --to $ICON_NATIVE_COIN_BSC_BSH_ADDRESS --method transfer \
   --param _to=$BOB_BTP_ADDRESS --param _coinName=DEV --param _value=100000000000000000 \
   --key_store $ALICE_KS --key_password $ALICE_SECRET --step_limit 10000000000 --nid $ICON_NETWORK_ID
 

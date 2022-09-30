@@ -8,7 +8,7 @@ const { pgPool } = require('../../common');
 
 async function getRelayerFromContract(iconService) {
   const callBuilder = new IconBuilder.CallBuilder();
-  const call = callBuilder.to(process.env.ICON_BMC_ADDRESS).method('getRelayers').build();
+  const call = callBuilder.to(process.env.ICON_BSC_BMC_ADDRESS).method('getRelayers').build();
   const relayers = await iconService.call(call).execute();
   const relayerMap = new Map();
 

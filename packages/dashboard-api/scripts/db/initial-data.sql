@@ -37,7 +37,7 @@ INSERT INTO token_prices (cmc_id, name, price, active) VALUES (3945, 'ONE', 0.11
 -- ICON
 
 -- md5(random()::text || clock_timestamp()::text)::uuid
-INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x7', 'ICX', 'ICX', 'ICON_NATIVE_COIN_BSH_ADDRESS', '0x294c1e27198ae3b159f93eedd6a478966d725c4d12dd69915992afc50cb10f24');
+INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x7', 'ICX', 'ICX', 'ICON_NATIVE_COIN_BSC_BSH_ADDRESS', '0x294c1e27198ae3b159f93eedd6a478966d725c4d12dd69915992afc50cb10f24');
 INSERT INTO registered_tokens (network_id, token_name, token_id, contract_address, tx_hash) VALUES ('0x7', 'DEV', 'DEV', 'IRC2_CONTRACT_ADDRESS', '0xd27a921020404b62e60160634b624e372329461cc44995f40ecd30cafa0e176d');
 
 -- Moonbeam

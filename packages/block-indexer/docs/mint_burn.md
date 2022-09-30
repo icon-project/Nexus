@@ -100,7 +100,7 @@ Obsolete.
 ```json
   icon_tx Transaction result: e {
   icon_tx   status: 1,
-  icon_tx   to: 'cx439c888f491198c800b2e2c5566282b93e6fdab9', // ICON_BMC_ADDRESS
+  icon_tx   to: 'cx439c888f491198c800b2e2c5566282b93e6fdab9', // ICON_BSC_BMC_ADDRESS
   icon_tx   txHash: '0x0bf8083bdf17667c9f91c0d321f1c64a775868441a71cae6ca0656b64fbab933',
   icon_tx   txIndex: 0,
   icon_tx   blockHeight: 600,
