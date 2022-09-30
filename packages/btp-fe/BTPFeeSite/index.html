@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg" href="./images/icon-ex.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <title>BTP Fee</title>
+</head>
+
+<body>
+
+  <header>
+    BTP FEE
+    <div class="connect-wallet-controls">
+      <button class="btn" id="connect-btn" onclick="onConnectWallet()">Connect to ICONex</button>
+      <p id="from-address"></p>
+      <button class="btn" id="logout-btn" onclick="onLogout()" >Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <input type="number" id="fee-input" placeholder="Enter BTP fee in % (1 - 99)" />
+    <button class="btn" id="submit-btn" onclick="onSubmit()">SUBMIT</button>
+  </main>
+
+</body>
+<script src="https://cdn.jsdelivr.net/gh/icon-project/icon-sdk-js@latest/build/icon-sdk-js.web.min.js"></script>
+<script src="./js/scripts.js"></script>
+
+</html>

@@ -1,0 +1,123 @@
+/*------------------------------------*\
+  #CSS-RESET
+\*------------------------------------*/
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Poppins', sans-serif;
+}
+
+/*------------------------------------*\
+  #VARIABLES
+\*------------------------------------*/
+
+:root {
+  --brand-secondary-dark: #131217;
+  --brand-primary-light: #99a3ff;
+  --brand-primary-base: #5465ff;
+  --gray-scale-text: #eff1ed;
+  --gray-scale-line: #353242;
+}
+
+/*------------------------------------*\
+  #HEADER
+\*------------------------------------*/
+
+header {
+  height: 80px;
+  padding: 0 40px;
+
+  background-color: var(--brand-secondary-dark);
+  border-bottom: solid 1px var(--gray-scale-line);
+
+  color: var(--brand-primary-light);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 28px;
+  letter-spacing: 1px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header > .connect-wallet-controls {
+  display: flex;
+  align-items: center;
+}
+
+header > .connect-wallet-controls > #from-address {
+  margin-right: 20px;
+}
+
+/*------------------------------------*\
+  #MAIN
+\*------------------------------------*/
+
+main {
+  background-color: var(--brand-secondary-dark);
+  min-height: calc(100vh - 80px);
+  padding-top: 10vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main > input {
+  margin-bottom: 30px;
+  padding: 0 10px;
+
+  color: var(--gray-scale-text);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.75px;
+  background-color: transparent;
+  border: solid 1px var(--gray-scale-line);
+  border-radius: 4px;
+  text-align: center;
+  outline: 0;
+
+  padding: 20px 16px;
+  width: 300px;
+}
+
+/* remove number arrows */
+/* Chrome, Safari, Edge, Opera */
+main > input::-webkit-outer-spin-button,
+main > input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+main > input:focus {
+  border-color: var(--brand-primary-base);
+}
+
+/*------------------------------------*\
+  #BUTTON-COMPONENT
+\*------------------------------------*/
+
+.btn {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 1px;
+  color: var(--gray-scale-text);
+  background-color: var(--brand-primary-base);
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+
+  padding: 12px 16px;
+}
+
+.btn:disabled {
+  background-color: var(--gray-scale-line);
+}

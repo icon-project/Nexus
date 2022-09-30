@@ -1,116 +1,437 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Layout, Avatar } from 'antd';
-import { MenuUnfoldOutlined } from '@ant-design/icons';
-import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components/macro';
+import { NavLink } from 'react-router-dom';
 
-import { colors } from '../Styles/Colors';
-import { BellOutlined } from '@ant-design/icons';
-import { Logo } from '../Logo';
-import { LanguageSwitcher } from '../LanguageSwitcher';
+import Nav from './Nav';
+import { WalletSelector } from './WalletSelector';
+import { WalletDetails } from './WalletDetails';
+import { Modal } from 'components/NotificationModal';
+import { PrimaryButton, HamburgerButton } from 'components/Button';
+import { Avatar } from 'components/Avatar';
 
-import { media } from '../Styles/Media';
-import { Dropdown } from '../Dropdown';
-import defaultAvatar from '../../assets/images/profile-img.png';
+import { useDispatch, useSelect } from 'hooks/useRematch';
+import { requestAddress, isICONexInstalled, checkICONexInstalled } from 'connectors/ICONex/events';
+import { resetTransferStep } from 'connectors/ICONex/utils';
+import { wallets } from 'utils/constants';
+import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
+import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { EthereumInstance } from 'connectors/MetaMask';
 
-const StyledHeader = styled(Layout.Header)`
-  padding: 0px;
-  height: 48px;
+import { SubTitle, Text } from 'components/Typography';
+import { SubTitleMixin } from 'components/Typography/SubTitle';
+import { colors } from 'components/Styles/Colors';
+import { media } from 'components/Styles/Media';
+
+import MetaMask from 'assets/images/metal-mask.svg';
+import ICONex from 'assets/images/icon-ex.svg';
+import Hana from 'assets/images/hana-wallet.png';
+import NEAR from 'assets/images/near-icon.svg';
+import logo from 'assets/images/logo-nexus-white.png';
+
+const { darkBG, grayText, grayLine, primaryBrand, tertiaryBase } = colors;
+
+const Wrapper = styled.div`
+  .beta-text {
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+    background-color: ${primaryBrand};
+    padding: 8px 0;
+
+    a {
+      font-weight: bold;
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    ${media.md`
+      font-size: 10px;
+    `};
+  }
+`;
+
+const StyledHeader = styled.header`
+  height: 80px;
   width: 100%;
-  color: ${colors.textColor};
-  background-color: ${colors.backgroundColor};
-  .admin-header-layout-side {
-    position: relative;
+  padding: 0 40.5px;
+  color: ${grayText};
+  background-color: ${darkBG};
+  border-bottom: 1px solid ${grayLine};
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left-side {
+    min-width: 175px;
+  }
+
+  .extension-link {
+    color: ${tertiaryBase};
+    font-size: 13px;
+  }
+
+  .right-side {
+    ${SubTitleMixin.smBold};
+
+    flex: 1;
     display: flex;
     align-items: center;
-    height: 100%;
-    padding: 0 16px;
-    box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-    background-color: ${colors.backgroundColor};
-    .left-side,
-    .right-side {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    min-width: 305px;
+
+    .user-avatar {
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    .account-info {
       display: flex;
-      .admin-header-index-action {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        padding: 0 12px;
-        cursor: pointer;
-        transition: all 0.3s;
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.025);
+      align-items: center;
+
+      .wallet-info {
+        margin-left: 8px;
+
+        .subtitle-text {
+          white-space: nowrap;
         }
-        .admin-avatar {
-          margin: 20px 8px 20px 0;
+
+        .address {
+          margin-bottom: 4px;
         }
       }
     }
-    .left-side {
-      flex: 1 1 0%;
-      height: 100%;
-      .admin-header-index-action {
-        padding: 0;
-      }
+  }
+
+  .connect-a-wallet-card {
+    margin-top: 21px;
+  }
+
+  .connect-to-wallet-btn {
+    ${SubTitleMixin.smBold};
+    height: 44px;
+    min-width: 170px;
+    border-radius: 100px;
+    text-align: center;
+
+    ${media.md`
+      width: 50%;
+    `};
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  ${media.smallDesktop`
+    padding: 0 40.5px;
+  `};
+
+  ${media.minWidthHeader`
+    padding: 0 20px;
+    position: relative;
+
+    .menu-icon {
+      display: block;
     }
+
     .right-side {
-      height: 100%;
-      overflow: hidden;
-    }
-  }
+      display: ${({ $showMenu }) => ($showMenu ? 'flex' : 'none')};
+      position: absolute;
+      top: 80px;
+      left: 0;
+      z-index: 101;
+      padding: 0 20px;
+      border-radius: 0 0 20px 20px;
 
-  .anticon-menu-unfold {
-    display: flex;
-    align-items: center;
-    margin-left: 16px;
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-  }
+      min-height: calc(70vh - 80px);
+      width: 100%;
+      background-color: ${grayLine};
+      flex-direction: column-reverse;
+      justify-content: flex-end;
 
-  ${media.md`
-    .admin-header-layout-side {
-      .left-side .admin-header-index-action {
-        display: none;
+      .connect-to-wallet-btn {
+        margin-top: 100px;
       }
-    }
-    .anticon-menu-unfold {
-      display: none;
+      .account-info {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+
+        .user-avatar, .wallet-info {
+          margin: 5px 0;
+          text-align: center;
+        }
+      }
     }
   `}
 `;
 
-const Header = ({ toggleSidebar = () => {}, items, userName }) => {
-  return (
-    <StyledHeader>
-      <div className="admin-header-layout-side">
-        <div className="left-side">
-          <span className="admin-header-index-action">
-            <Logo height="28px" />
-          </span>
-          <MenuUnfoldOutlined onClick={toggleSidebar} />
-        </div>
-        <div className="right-side">
-          <span className="admin-header-index-action">
-            <BellOutlined />
-          </span>
-          <Dropdown items={items} fullWidthOnMobile>
-            <span className="admin-header-index-action">
-              <Avatar className="admin-avatar" src={defaultAvatar} size={24} />
-              {userName}
-            </span>
-          </Dropdown>
-          <LanguageSwitcher />
-        </div>
-      </div>
-    </StyledHeader>
-  );
+const Logo = styled.img`
+  width: 42px;
+  height: 36px;
+  object-fit: cover;
+  object-position: 0 0;
+`;
+
+const BetaText = styled.div`
+  margin-right: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .subtitle-text {
+    font-weight: bold;
+    margin-right: 3px;
+  }
+`;
+
+const mockWallets = {
+  [wallets.metamask]: {
+    id: 'metamask',
+    title: 'MetaMask Wallet',
+    icon: MetaMask,
+  },
+  [wallets.iconex]: {
+    id: 'iconex',
+    title: 'ICON Wallet',
+    icon: ICONex,
+  },
+  [wallets.hana]: {
+    id: 'hana',
+    title: 'ICON Wallet',
+    icon: Hana,
+  },
+  [wallets.near]: {
+    id: 'near',
+    title: 'NEAR Wallet',
+    icon: NEAR,
+  },
 };
 
-Header.propTypes = {
-  toggleSidebar: PropTypes.func,
-  userName: PropTypes.string,
-  items: PropTypes.array.isRequired,
+const Header = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState(
+    localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) || wallets.metamask,
+  );
+  const [loading, setLoading] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [showConnector, setShowConnector] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
+
+  useEffect(() => {
+    switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
+      case wallets.metamask:
+        EthereumInstance.getEthereumAccounts();
+        break;
+      // case wallets.near:
+      //   getNearAccountInfo();
+    }
+
+    // wait after 2s for initial addICONexListener
+    setTimeout(() => {
+      checkICONexInstalled(() => {
+        setCheckingICONexInstalled(false);
+      });
+    }, 2001);
+  }, []);
+
+  const {
+    accountInfo: { address, balance, symbol, wallet, cancelConfirmation, currentNetwork, id },
+  } = useSelect(({ account }) => ({
+    accountInfo: account.selectAccountInfo,
+  }));
+
+  const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
+    resetAccountInfo,
+  }));
+
+  useEffect(() => {
+    if (address) {
+      setLoading(false);
+      setShowConnector(false);
+    }
+  }, [address]);
+
+  const shortedAddress = hashShortener(address);
+
+  const toggleModal = () => {
+    setShowModal((prev) => !prev);
+    setShowDetail(false);
+    setShowConnector(true);
+  };
+
+  const handleConnect = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    resetAccountInfo();
+
+    switch (selectedWallet) {
+      case wallets.iconex:
+      case wallets.hana:
+        const hasAccount = requestAddress();
+        if (!hasAccount) {
+          setLoading(false);
+        }
+        break;
+
+      case wallets.metamask:
+        const chainId = await EthereumInstance.connectMetaMaskWallet();
+        if (chainId) {
+          await delay(1500);
+          await EthereumInstance.getEthereumAccounts(chainId);
+        }
+        setLoading(false);
+        break;
+
+      // case wallets.near:
+      //   await connect();
+      //   setLoading(false);
+      //   break;
+    }
+    // must be set after all
+    localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
+  };
+  const handleSelectWallet = (wallet) => {
+    if (wallet) setSelectedWallet(wallet);
+  };
+
+  const onDisconnectWallet = () => {
+    resetTransferStep();
+    resetAccountInfo();
+    toggleModal();
+  };
+
+  const onSwitchWallet = () => {
+    resetTransferStep();
+    setShowDetail(false);
+    setShowModal(true);
+    setShowConnector(true);
+  };
+
+  const onAvatarClicked = () => {
+    setShowDetail(true);
+    setShowModal(true);
+  };
+
+  return (
+    <Wrapper>
+      <StyledHeader $showMenu={showMenu}>
+        {showModal && (
+          <>
+            {loading && !cancelConfirmation ? (
+              <Modal
+                icon="loader"
+                desc="Please wait a moment."
+                width="352px"
+                display
+                setDisplay={setShowModal}
+              >
+                {selectedWallet === wallets.iconex && (
+                  <a
+                    className="extension-link"
+                    href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Or click here to install Hana wallet
+                  </a>
+                )}
+              </Modal>
+            ) : (
+              <>
+                {showDetail && (
+                  <Modal
+                    display
+                    setDisplay={setShowModal}
+                    title={wallet && mockWallets[wallet].title}
+                  >
+                    <WalletDetails
+                      networkName={currentNetwork}
+                      symbol={symbol}
+                      address={address}
+                      shortedAddress={shortedAddress}
+                      onDisconnectWallet={onDisconnectWallet}
+                      onSwitchWallet={onSwitchWallet}
+                      networkID={id}
+                    />
+                  </Modal>
+                )}
+                {showConnector && (
+                  <Modal
+                    title="Connect a wallet"
+                    button={{ onClick: handleConnect, text: 'Next', id: 'do-connecting-wallet' }}
+                    display
+                    setDisplay={setShowModal}
+                  >
+                    <div className="connect-a-wallet-card">
+                      <WalletSelector
+                        type={wallets.metamask}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.metamask}
+                        onClick={() => handleSelectWallet(wallets.metamask)}
+                        isInstalled={EthereumInstance.isMetaMaskInstalled()}
+                      />
+                      <WalletSelector
+                        type={wallets.iconex}
+                        wallet={mockWallets}
+                        active={selectedWallet == wallets.iconex}
+                        onClick={() => handleSelectWallet(wallets.iconex)}
+                        isCheckingInstalled={checkingICONexInstalled}
+                        isInstalled={isICONexInstalled()}
+                      />
+                    </div>
+                  </Modal>
+                )}
+              </>
+            )}
+          </>
+        )}
+        <BetaText>
+          <NavLink to="/">
+            <Logo src={logo} alt="btp logo" />
+            <SubTitle>NEXUS (BETA)</SubTitle>
+          </NavLink>
+        </BetaText>
+
+        <HamburgerButton
+          className={`menu-icon ${showMenu && 'active'}`}
+          onClick={() => setShowMenu(!showMenu)}
+        />
+        <div className="right-side">
+          <Nav setShowMenu={setShowMenu} />
+
+          {address ? (
+            <div className="account-info">
+              <SubTitle className="sm">{currentNetwork}</SubTitle>
+              <Avatar className="user-avatar" size={48} onClick={onAvatarClicked} />
+              <span className="wallet-info">
+                <Text className="xs address">{shortedAddress}</Text>
+                <SubTitle className="md bold">
+                  {toSeparatedNumberString(balance)} {symbol}
+                </SubTitle>
+              </span>
+            </div>
+          ) : (
+            <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+              Connect a Wallet
+            </PrimaryButton>
+          )}
+        </div>
+      </StyledHeader>
+      <SubTitle className="beta-text">
+        Nexus is in beta while ICON Bridge is currently being audited. Please ensure you have read
+        the{' '}
+        <NavLink to={{ pathname: '/terms-of-use', state: { prevPath: location.pathname } }}>
+          terms of use
+        </NavLink>
+        .
+      </SubTitle>
+    </Wrapper>
+  );
 };
 
 export default Header;

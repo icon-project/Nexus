@@ -6,7 +6,9 @@ export const sizes = {
   sm: '576',
   md: '768',
   lg: '992',
+  minWidthHeader: '1050',
   xl: '1200',
+  smallDesktop: '1366',
   xxl: '1600',
 };
 
@@ -17,7 +19,7 @@ export const media = Object.keys(sizes).reduce((accumulator, label) => {
   const pxSize = sizes[label];
 
   accumulator[label] = (...args) => css`
-    @media (min-width: ${pxSize}px) {
+    @media (max-width: ${pxSize}px) {
       ${css(...args)};
     }
   `;

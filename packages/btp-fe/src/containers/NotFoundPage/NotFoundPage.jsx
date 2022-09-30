@@ -1,41 +1,56 @@
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Helmet } from 'react-helmet-async';
+import styled from 'styled-components/macro';
 
-import { Result, Button } from 'antd';
-import { Footer } from 'components/Footer';
+import { Link, Header } from 'components/Typography';
+import { Helmet } from 'components/Helmet';
+import { media } from 'components/Styles/Media';
+
+import notFoundSrc from 'assets/images/not-found.svg';
+import backArrow from 'assets/images/blue-left-arrow.svg';
 
 const NotFoundPageWrapper = styled.div`
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  text-align: center;
+  padding: 80px 0;
+
+  > .not-found-img {
+    width: 500px;
+    height: 500px;
+  }
+
+  > .header-text {
+    margin: 10px 0 34px;
+  }
+
+  .icon {
+    margin-right: 15.5px;
+    width: 8px;
+    height: 14px;
+  }
+
+  ${media.smallDesktop`
+    padding: 0;
+  `};
+
+  ${media.md`
+    > .not-found-img {
+      width: 300px;
+      height: 300px;
+    }
+  `};
 `;
 
-const NotFoundPage = ({ history }) => {
-  const { t } = useTranslation();
+const NotFoundPage = () => {
   return (
     <NotFoundPageWrapper>
-      <Helmet>
-        <title>{t('not_found_page.page_title', 'Page Not Found')}</title>
-      </Helmet>
-      <Result
-        status="404"
-        title={t('not_found_page.title', '404')}
-        subTitle={t('not_found_page.description', 'Sorry, the page you visited does not exist.')}
-        extra={
-          <Button
-            onClick={() => {
-              history.push(`/`);
-            }}
-            type="primary"
-          >
-            {t('not_found_page.back_home', 'Back Home')}
-          </Button>
-        }
-      />
-      <Footer className="footer" companyName={t('footer.company_name', 'Lecle Vietnam')} />
+      <Helmet title="Not found" />
+
+      <img className="not-found-img" src={notFoundSrc} />
+      <Header className="xs" color="white">
+        Something’s missing
+      </Header>
+      <Link className="md bold" to="/">
+        <img width="8px" height="14px" className="icon" src={backArrow} />
+        Go back to Home
+      </Link>
     </NotFoundPageWrapper>
   );
 };

@@ -1,22 +1,44 @@
-import { push } from 'connected-react-router';
+import { fetchAPI } from 'utils/fetch';
+
 const app = {
   state: {
-    isFirstLoad: false,
+    appInfo: {
+      content: {
+        minted: [],
+      },
+    },
   },
   reducers: {
-    setFirstLoad(state, payload) {
+    setAppState(state, prop = []) {
+      const [property, payload] = prop;
       return {
         ...state,
-        isFirstLoad: payload,
+        [property]: payload,
       };
     },
   },
   effects: (dispatch) => ({
-    async navigateExample() {
-      dispatch(push('/login'));
+    async getAppInfo() {
+      try {
+        const appInfo = await fetchAPI('/btpnetwork?mintLast24h=true&volumeLast24h=true');
+        this.setAppState(['appInfo', appInfo || {}]);
+        return appInfo;
+      } catch (error) {
+        dispatch.modal.handleError(error);
+      }
     },
-    async getLocation(payload, rootState) {
-      return rootState.router.location;
+  }),
+  selectors: (slice) => ({
+    selectAppInfo() {
+      return slice((state) => state.appInfo);
+    },
+    selectValueMint() {
+      return slice((state) => {
+        return state.appInfo?.content?.minted.reduce(
+          (accumulator, { mintedVolume }) => accumulator + mintedVolume,
+          0,
+        );
+      });
     },
   }),
 };

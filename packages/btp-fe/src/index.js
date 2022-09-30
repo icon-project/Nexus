@@ -2,11 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import WebFont from 'webfontloader';
 
 import App from './App';
-import 'i18n';
+/* When enable i18n again, remember to uncomment code in .babelrc.js */
+// import 'i18n';
 import reportWebVitals from './reportWebVitals';
 import store, { history } from './store';
+
+WebFont.load({
+  google: {
+    families: ['Poppins:300,500&display=swap'],
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
