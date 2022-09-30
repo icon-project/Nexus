@@ -33,7 +33,7 @@ async function handleTransactionStartEvent(tx, txResult, block) {
         const data = JSON.parse(log);
         const tokenNameRaw = data.assets ? data.assets[0]?.token_name : '';
         const tokenName = tokenNameRaw?.split('-')?.[2];
-        const [sourceNetworkId = '', rawTokenName = ''] = tokenNameRaw?.split('-')[1]?.split('.');
+        const [sourceNetworkId = '', fullTokenName = ''] = tokenNameRaw?.split('-')[1]?.split('.');
         const loopUnit = getLoopUnitByTokenName(tokenName);
         const btpFee = (data.assets ? Number(data.assets[0]?.fee) : 0) / loopUnit;
         const amount = (data.assets ? Number(data.assets[0]?.amount) : 0) / loopUnit;
@@ -43,7 +43,7 @@ async function handleTransactionStartEvent(tx, txResult, block) {
           tokenNameRaw: tokenNameRaw,
           serialNumber: data.serial_number,
           value: amount,
-          toAddress: formatReceiverAddress(data.receiver_address, sourceNetworkId, rawTokenName || tokenName),
+          toAddress: formatReceiverAddress(data.receiver_address, sourceNetworkId, fullTokenName || tokenName),
           txHash: tx.hash,
           status: TRANSACTION_STATUS.pending,
           blockTime: Math.floor(block.header.timestamp / 1000000), // microsecond to millisecond
