@@ -121,12 +121,6 @@ const CopyAddress = ({ text, href, copyText }) => {
   );
 };
 
-const exploreURL = {
-  ICON: {
-    transaction: 'transaction/',
-  },
-};
-
 const statusText = 'txStatus';
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
@@ -185,6 +179,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   const getChain = (chainName) =>
     chainList.find(({ CHAIN_NAME }) => CHAIN_NAME?.toLowerCase() === chainName?.toLowerCase());
 
+  const srcChain = chainConfigs[getChain(networkNameSrc)?.id];
+  const dstChain = chainConfigs[getChain(networkNameDst)?.id];
+
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -202,8 +199,8 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                     <CopyAddress
                       text={txHash}
                       href={
-                        chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
-                        (exploreURL[networkNameSrc]?.transaction || 'tx/') +
+                        srcChain?.EXPLORE_URL +
+                        (srcChain?.exploreSuffix?.transaction || 'tx/') +
                         txHash
                       }
                     />
@@ -239,8 +236,8 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                       text={fromAddress}
                       href={
                         networkNameSrc
-                          ? chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
-                            'address/' +
+                          ? srcChain?.EXPLORE_URL +
+                            (srcChain?.exploreSuffix?.address || 'address/') +
                             fromAddress
                           : null
                       }
@@ -257,8 +254,8 @@ export const HistoryDetails = ({ txHash, onClose }) => {
                       copyText={toAddresssOnly}
                       href={
                         networkNameDst
-                          ? chainConfigs[getChain(networkNameDst)?.id]?.EXPLORE_URL +
-                            'address/' +
+                          ? dstChain?.EXPLORE_URL +
+                            (dstChain?.exploreSuffix?.address || 'address/') +
                             toAddresssOnly
                           : null
                       }

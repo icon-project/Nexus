@@ -2,8 +2,6 @@ import { IconUtil, IconConverter, IconBuilder, HttpProvider } from 'icon-sdk-js'
 const { IcxTransactionBuilder, CallTransactionBuilder } = IconBuilder;
 const { serialize } = IconUtil;
 
-import { ethers } from 'ethers';
-
 import {
   ADDRESS_LOCAL_STORAGE,
   signingActions,
@@ -12,7 +10,7 @@ import {
   iconService,
   httpProvider,
 } from 'connectors/constants';
-import { chainConfigs, formatSymbol } from 'connectors/chainConfigs';
+import { chainConfigs, formatSymbol, formatUnitsBySymbol } from 'connectors/chainConfigs';
 
 import { requestSigning } from './events';
 import Request, {
@@ -237,16 +235,19 @@ export const signTx = (transaction = {}, options = {}) => {
  * @return {string} unit: 1/10000
  * ref: https://github.com/icon-project/btp/blob/iconloop/javascore/nativecoin/src/main/java/foundation/icon/btp/nativecoin/NativeCoinService.java#L40
  */
-export const getBTPfee = async (token) => {
-  if (!token) return 0;
+export const getBTPfee = async (symbol, toNetwork, currentNetwork, currentNetworkId) => {
+  if (!symbol) return 0;
 
   const fee = await makeICXCall({
-    to: chainConfigs['BSC']?.ICON_BTS_CORE,
+    to:
+      currentNetwork === process.env.REACT_APP_CHAIN_ICON_CHAIN_NAME
+        ? chainConfigs[toNetwork]?.ICON_BTS_CORE
+        : chainConfigs[currentNetworkId].ICON_BTS_CORE,
     dataType: 'call',
     data: {
       method: 'feeRatio',
       params: {
-        _name: formatSymbol(token),
+        _name: formatSymbol(symbol),
       },
     },
   });
@@ -297,6 +298,9 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
     };
 
     if (refundable) {
+      // TODO: Hard-coded because we haven't had the way how to display ICX refundable balance for multi-chains
+      if (symbol === 'ICX') return 0;
+
       payload.to = getICONBSHAddressforEachChain(symbol);
       payload.data.params._coinName = formatSymbol(symbol);
     } else {
@@ -309,7 +313,7 @@ export const getBalanceOf = async ({ address, refundable = false, symbol }) => {
 
     return refundable
       ? convertToICX(balance.refundable)
-      : roundNumber(ethers.utils.formatEther(balance), 6);
+      : roundNumber(formatUnitsBySymbol(balance, symbol), 6);
   } catch (err) {
     console.log('getBalanceOf err', err);
     return 0;

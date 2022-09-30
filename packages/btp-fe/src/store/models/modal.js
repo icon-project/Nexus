@@ -1,4 +1,5 @@
 import { wallets } from 'utils/constants';
+import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
 
 const modal = {
   name: 'modal',
@@ -48,6 +49,52 @@ const modal = {
         return false;
       }
       return true;
+    },
+    informFailedTx(msg) {
+      this.openModal({
+        icon: 'xIcon',
+        desc: msg || 'Your transaction has failed. Please go back and try again.',
+        button: {
+          text: 'Back to transfer',
+          onClick: () => this.setDisplay(false),
+        },
+      });
+    },
+    informSubmittedTx({ txHash, callback }) {
+      this.openModal({
+        icon: 'checkIcon',
+        children: <SuccessSubmittedTxContent setDisplay={this.setDisplay} txHash={txHash} />,
+        button: {
+          text: 'Continue transfer',
+          onClick: () => {
+            if (callback) callback();
+            this.setDisplay(false);
+          },
+        },
+      });
+    },
+    informApprovedTransfer({ onClick, action }) {
+      this.openModal({
+        icon: 'approveIcon',
+        desc: `You've ${
+          action || 'approved'
+        } to transfer your token! Please click the Transfer button to continue.`,
+        button: {
+          id: 'approve-transfer-btn',
+          text: 'Transfer',
+          onClick,
+        },
+      });
+    },
+    informRejectedTx() {
+      this.openModal({
+        icon: 'exclamationPointIcon',
+        desc: 'Transaction rejected.',
+        button: {
+          text: 'Dismiss',
+          onClick: () => this.setDisplay(false),
+        },
+      });
     },
   }),
 

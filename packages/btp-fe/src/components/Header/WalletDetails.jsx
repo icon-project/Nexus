@@ -7,7 +7,8 @@ import { useTokenToUsd } from 'hooks/useTokenToUsd';
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { toSeparatedNumberString } from 'utils/app';
 import { getService } from 'services/transfer';
-import { chainList, chainConfigs, getTokenList } from 'connectors/chainConfigs';
+import { getCustomizedChainList, chainConfigs, getTokenList } from 'connectors/chainConfigs';
+import { withdraw } from 'connectors/NearWallet';
 
 import { Select } from 'components/Select';
 import { Text, Header } from 'components/Typography';
@@ -159,6 +160,24 @@ const ActionBtn = styled.button`
   }
 `;
 
+const Withdraw = styled.div`
+  margin: 20px 0;
+  padding: 10px 0;
+  border: solid 1px ${grayLine};
+  border-radius: 4px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    font-size: inherit;
+    color: ${tertiaryBase};
+    text-decoration: underline;
+    background-color: transparent;
+  }
+`;
+
 export const WalletDetails = ({
   networkName,
   symbol,
@@ -174,7 +193,7 @@ export const WalletDetails = ({
       label: COIN_SYMBOL,
       value: COIN_SYMBOL,
     })),
-    ...chainList
+    ...getCustomizedChainList()
       .map(({ COIN_SYMBOL }) => ({ label: COIN_SYMBOL, value: COIN_SYMBOL }))
       .filter((item) => item.label !== symbol),
   ];
@@ -183,6 +202,7 @@ export const WalletDetails = ({
   const [selectedRefundToken, setSelectedRefundToken] = useState(symbol);
   const [refundedTokens, setRefundedTokens] = useState([]);
   const [refund, setRefund] = useState(0);
+  const [lockedToken, setLockedToken] = useState(0);
   const [currentBalance, currentSymbol] = useTokenBalance(selectedToken);
   const usdBalance = useTokenToUsd(currentSymbol, currentBalance);
   const ICONChain = chainConfigs.ICON;
@@ -191,7 +211,7 @@ export const WalletDetails = ({
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (networkID === ICONChain?.id && selectedToken === ICONChain?.COIN_SYMBOL) {
-      chainList.forEach((chain) => {
+      getCustomizedChainList().forEach((chain) => {
         if (chain.id !== ICONChain?.id) {
           const value = ICONChain?.COIN_SYMBOL + '-' + chain.id;
           getService()
@@ -219,6 +239,23 @@ export const WalletDetails = ({
             setRefund(refund);
             setRefundedTokens([{ label: selectedRefundToken, value: selectedRefundToken }]);
           }
+        });
+    }
+  }, [selectedToken]);
+
+  // handle query locked token for NEAR network
+  useEffect(() => {
+    if (chainConfigs.NEAR?.id === networkID) {
+      getService()
+        ?.getBalanceOf({
+          address,
+          symbol: selectedToken,
+          lockedBalance: true,
+        })
+        .then((lockedToken) => {
+          if (lockedToken > 0) {
+            setLockedToken(lockedToken);
+          } else setLockedToken(0);
         });
     }
   }, [selectedToken]);
@@ -251,8 +288,23 @@ export const WalletDetails = ({
         {toSeparatedNumberString(currentBalance)}
         <TokenSelector options={tokens} onChange={onTokenChange} name="tokens" maxHeight="130px" />
       </Header>
-
       <Text className="md dark-text">~ ${toSeparatedNumberString(usdBalance)}</Text>
+
+      {lockedToken > 0 && (
+        <Withdraw>
+          <Text className="sm">
+            You have {lockedToken} locked {selectedToken}.{' '}
+            <button
+              onClick={() => {
+                withdraw(selectedToken, lockedToken);
+              }}
+            >
+              Withdraw now
+            </button>
+          </Text>
+        </Withdraw>
+      )}
+
       {refundedTokens.length > 0 && (
         <>
           <Text className="sm sub-title">Refunds</Text>

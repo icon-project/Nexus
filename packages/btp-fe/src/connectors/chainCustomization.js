@@ -1,19 +1,37 @@
 import { tokenTypes } from 'utils/constants';
 
+/**
+ * exploreSuffix: { transaction: string, address: string} - Define suffix URL for chain explore
+ * disabled: boolean - Disable a chain
+ */
+
 export const custom = {
+  ICON: {
+    exploreSuffix: { transaction: 'transaction/' },
+    decimals: 18,
+  },
   BSC: {
+    // disabled: true,
     tokens: [
-      { symbol: 'sICX', chain: process.env.REACT_APP_CHAIN_ICON_CHAIN_NAME, type: tokenTypes.IRC2 },
+      {
+        symbol: 'sICX',
+        type: tokenTypes.IRC2,
+        tokenOf: 'ICON',
+      },
       {
         symbol: 'bnUSD',
-        chain: process.env.REACT_APP_CHAIN_ICON_CHAIN_NAME,
         type: tokenTypes.IRC2,
+        tokenOf: 'ICON',
       },
-      { symbol: 'BUSD', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
-      { symbol: 'USDT', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
-      { symbol: 'USDC', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
-      { symbol: 'BTCB', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
-      { symbol: 'ETH', chain: process.env.REACT_APP_CHAIN_BSC_CHAIN_NAME },
+      { symbol: 'BUSD', tokenOf: 'BSC' },
+      { symbol: 'USDT', tokenOf: 'BSC' },
+      { symbol: 'USDC', tokenOf: 'BSC' },
+      { symbol: 'BTCB', tokenOf: 'BSC' },
+      { symbol: 'ETH', tokenOf: 'BSC' },
     ],
+  },
+  NEAR: {
+    exploreSuffix: { transaction: 'transactions/', address: 'accounts/' },
+    decimals: 24,
   },
 };
