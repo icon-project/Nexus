@@ -49,7 +49,7 @@ export const TransferBox = () => {
 
   const isCurrentStep = (s) => s === step;
 
-  const { symbol, id } = account;
+  const { symbol, id, currentNetwork } = account;
   const usdRate = useTokenToUsd(sendingInfo.token, 1, isCurrentStep(1));
 
   const onSendingInfoChange = (info = {}) => {
@@ -62,10 +62,12 @@ export const TransferBox = () => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    getBTPfee(sendingInfo.token).then((result) => {
-      setBTPFee(result);
-    });
-  }, [sendingInfo.token]);
+    if (isConnected && step === 1) {
+      getBTPfee(sendingInfo.token, sendingInfo.network, currentNetwork, id).then((result) => {
+        setBTPFee(result);
+      });
+    }
+  }, [sendingInfo.token, isConnected, step]);
 
   return (
     <Wrapper>

@@ -6,7 +6,7 @@ import { PrimaryButton } from 'components/Button';
 import { Header, Text } from 'components/Typography';
 import { media } from 'components/Styles/Media';
 
-import { chainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
+import { getCustomizedChainList, chainConfigs, checkIsToken } from 'connectors/chainConfigs';
 
 import transferIcon from 'assets/images/vector-icon.svg';
 
@@ -104,7 +104,7 @@ export const TransferCard = ({
     Transfer ONE to ICON
     Transfer ICX to ICON 
     */
-    const targetChains = chainList.map(({ CHAIN_NAME, id, ...others }) => ({
+    const targetChains = getCustomizedChainList().map(({ CHAIN_NAME, id, ...others }) => ({
       value: id,
       label: CHAIN_NAME,
       ...others,

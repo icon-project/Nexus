@@ -1,5 +1,6 @@
 import { custom } from './chainCustomization';
 import { ABI as currentABI } from 'connectors/MetaMask/ABI';
+import { ethers } from 'ethers';
 
 export const chainConfigs = {};
 Object.keys(process.env).forEach((e) => {
@@ -44,6 +45,8 @@ export const customzeChain = (chainId = '') => {
 
 export const chainList = Object.values(chainConfigs);
 
+export const getCustomizedChainList = () => chainList.filter((chain) => !chain.disabled);
+
 /**
  * get token list (e.g: ETH)
  * @returns {array}
@@ -51,7 +54,7 @@ export const chainList = Object.values(chainConfigs);
 export const getTokenList = () => {
   let tokenList = [];
   for (const c in custom) {
-    if (custom[c].tokens.length > 0) {
+    if (custom[c].tokens?.length > 0 && !custom[c]?.disabled) {
       tokenList = [...tokenList, ...custom[c].tokens.map((prop) => ({ ...prop, chainId: c }))];
     }
   }
@@ -60,9 +63,29 @@ export const getTokenList = () => {
 };
 export const checkIsToken = (token) => getTokenList().find((t) => t.symbol === token);
 
-export const formatSymbol = (symbol) => {
-  if (['ICX', 'sICX', 'bnUSD'].includes(symbol)) {
-    return `btp-${chainConfigs?.ICON?.NETWORK_ADDRESS}-${symbol}`;
+export const findChainbySymbol = (symbol) => {
+  let chain = chainList.find((chain) => symbol == chain.COIN_SYMBOL);
+  if (!chain) {
+    const tokenChain = getTokenList().find((chain) => symbol == chain.symbol);
+    if (!tokenChain) throw new Error('not found chain');
+    chain = { ...chainConfigs[tokenChain.chainId], tokenOf: tokenChain.tokenOf };
   }
-  return `btp-${chainConfigs?.BSC?.NETWORK_ADDRESS}-${symbol}`;
+
+  return chain;
+};
+
+export const formatSymbol = (symbol) => {
+  const chain = findChainbySymbol(symbol);
+
+  return `btp-${chainConfigs[chain.tokenOf || chain.id].NETWORK_ADDRESS}-${symbol}`;
+};
+
+export const parseUnitsBySymbol = (amount, symbol) => {
+  const chain = findChainbySymbol(symbol);
+  return ethers.utils.parseUnits(amount, chain.decimals || 18).toString();
+};
+
+export const formatUnitsBySymbol = (amount, symbol) => {
+  const chain = findChainbySymbol(symbol);
+  return ethers.utils.formatUnits(amount, chain.decimals || 18).toString();
 };

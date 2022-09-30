@@ -187,13 +187,13 @@ describe('ICONService', () => {
   });
 
   describe('getBalanceOf', () => {
-    test('refundable', async () => {
-      const symbol = 'ONE';
-      const ONEBSHAddress = 'abc';
+    test.only('refundable', async () => {
+      const symbol = 'BNB';
+      const BSHAddress = 'abc';
       jest
         .spyOn(constants, 'getCurrentChain')
         .mockImplementation(() => ({ methods: { getBalanceOf: {} } }));
-      jest.spyOn(utils, 'getICONBSHAddressforEachChain').mockImplementation(() => ONEBSHAddress);
+      jest.spyOn(utils, 'getICONBSHAddressforEachChain').mockImplementation(() => BSHAddress);
       const mock_makeICXCall = jest
         .spyOn(utils, 'makeICXCall')
         .mockImplementation(() => Promise.resolve({ refundable: '0x29e46e036aab4e8b00' }));
@@ -211,7 +211,7 @@ describe('ICONService', () => {
           params: { _coinName: 'btp-0x61.bsc-' + symbol, _owner: toAddress },
         },
         dataType: 'call',
-        to: ONEBSHAddress,
+        to: BSHAddress,
       });
     });
   });
