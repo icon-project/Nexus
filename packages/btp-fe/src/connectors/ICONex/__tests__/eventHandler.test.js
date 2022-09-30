@@ -8,6 +8,8 @@ jest.mock('store', () => {
   return {
     dispatch: {
       modal: {
+        informSubmittedTx: jest.fn(),
+        informFailedTx: jest.fn(),
         openModal: jest.fn(),
       },
     },

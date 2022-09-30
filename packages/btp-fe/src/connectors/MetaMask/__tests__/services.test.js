@@ -88,7 +88,7 @@ describe('MetaMask/services', () => {
       .spyOn(ABI, 'encodeFunctionData')
       .mockImplementation(() => functionName);
 
-    const params = await transfer({ value: amount, to: toAddress }, false);
+    const params = await transfer({ value: amount, to: toAddress }, false, 'ICX');
 
     expect(window[constants.signingActions.globalName]).toEqual(constants.signingActions.approve);
     expect(encodeFunctionDataSpy).toHaveBeenCalledWith(functionName, [

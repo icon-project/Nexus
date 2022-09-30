@@ -5,12 +5,13 @@ import { createMemoryHistory } from 'history';
 
 test('render', () => {
   const history = createMemoryHistory();
+  const txHash = 'abc';
   render(
     <Router location={history.location} history={history}>
-      <SuccessSubmittedTxContent />
+      <SuccessSubmittedTxContent txHash={txHash} />
     </Router>,
   );
   expect(screen.getByText(/^Your transaction was submitted successfully.$/i)).toBeInTheDocument();
   expect(screen.getByText(/^View on history$/i)).toBeInTheDocument();
-  expect(screen.getByRole('link')).toHaveAttribute('href', '/history');
+  expect(screen.getByRole('link')).toHaveAttribute('href', '/history/' + txHash);
 });
