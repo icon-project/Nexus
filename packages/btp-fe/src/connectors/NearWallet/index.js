@@ -53,7 +53,7 @@ export const handleNEARCallback = async (location) => {
         if (searchParams.get('coinName')) {
           modal.informApprovedTransfer({ onClick: transfer, action: 'deposited' });
         } else {
-          modal.informSubmittedTx(searchParams.get('transactionHashes'));
+          modal.informSubmittedTx({ txHash: searchParams.get('transactionHashes') });
           window.history.replaceState(null, '', location.pathname);
         }
       }
@@ -200,7 +200,7 @@ export const transfer = async ({ value, to, coinName }, isSendingNativeCoin) => 
     });
 
     if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
-      modal.informSubmittedTx(searchParams.get('transactionHashes'));
+      modal.informSubmittedTx({ txHash: searchParams.get('transactionHashes') });
     } else {
       throw new Error('transaction failed');
     }

@@ -74,7 +74,7 @@ export const eventHandler = async (event) => {
                   break;
 
                 case signingActions.transfer:
-                  modal.informSubmittedTx(txHash);
+                  modal.informSubmittedTx({ txHash });
 
                   sendLog({
                     txHash,
