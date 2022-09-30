@@ -78,3 +78,7 @@ https://explorer.testnet.near.org/`transactions/`AmxFL5U8uesKcw3gBk9NZdd127UBeRe
 - `disabled: boolean` - enable/disable a chain
 
 - `tokens: array` - a list of tokens
+
+### Add icon for a new coin/token
+
+Access to `srx/components/Icon.jsx` file, import your new icon image and add it to the `icons` list.
