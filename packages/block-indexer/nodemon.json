@@ -1,8 +1,11 @@
 {
   "env": {
     "NODE_ENV": "development",
-    "DEBUG": "app,indexer,icon,block",
+    "DEBUG": "app,indexer,db",
     "DEBUG_DEPTH": 5
+  },
+  "execMap": {
+    "js": "node --unhandled-rejections=strict"
   },
   "watch": [
     "src"

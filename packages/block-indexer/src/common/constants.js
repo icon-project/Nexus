@@ -1,25 +1,60 @@
-var TBL_NAME = {
-    AbpTransferFees: 'transfer_fees',
+const TRANSACTION_STATUS = {
+  success: 1,
+  failed: -1,
+  pending: 0
 };
 
-const ABP_FAS = {
-    id: 'id',
-    blockHeight: 'block_height',
-    receiveAt: 'receive_at',
-    createAt: 'create_at',
-    updateAt: 'update_at',
-    deleteAt: 'delete_at',
-    blockHash: 'block_hash',
-    prevBlockHash :'prev_block_hash',
-    txHash :'tx_hash',
-    scoreAddress :'score_address',
-    fromAddress :'from_address',
-    toAddress :'to_address',
-    nameToken :'name_token',
-    value :'value',
-  };
+const TRANSACTION_TBL_NAME = 'transactions';
+
+const TRANSACTION_TBL = {
+  fromAddress: 'from_address',
+  tokenName: 'token_name',
+  serialNumber: 'serial_number',
+  value: 'value',
+  toAddress: 'to_address',
+  txHash: 'tx_hash',
+  blockTime: 'block_time',
+  networkId: 'network_id',
+  btpFee: 'btp_fee',
+  networkFee: 'network_fee',
+  status: 'status',
+  totalVolume: 'total_volume',
+  wpsData: 'wps_data',
+  createAt: 'create_at',
+  updateAt: 'update_at'
+};
+
+const ICX_LOOP_UNIT = 10 ** 18;
+const CONTRACT_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const ICON_ZERO_ADDRESS = 'hx0000000000000000000000000000000000000000';
+const MINT_EVENT = 'mint';
+const BURN_EVENT = 'burn';
+const TRANSFER_START_EVENT = 'TransferStart';
+const TRANSFER_END_EVENT = 'TransferEnd';
+const BUY_TOKEN_EVENT = 'BuyTokenEvent';
+const BUY_TOKEN_END_EVENT = 'BuyTokenEndEvent';
+const TRANSFER_SINGLE_EVENT = 'TransferSingle';
+const ADD_RELAY_ACTION = 'addRelay';
+const REMOVE_RELAY_ACTION = 'removeRelay';
+const BLOCK_INDEXER_STOPPED = (lastBlock, indexerName) => `🐛 *${indexerName}*-indexer was \`STOPPED\` at block \`${lastBlock}\` 🚫`;
+const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good ✅`;
 
 module.exports = {
-    TBL_NAME,
-    ABP_FAS
+  TRANSACTION_TBL_NAME,
+  TRANSACTION_TBL,
+  TRANSACTION_STATUS,
+  ICX_LOOP_UNIT,
+  CONTRACT_ZERO_ADDRESS,
+  ICON_ZERO_ADDRESS,
+  MINT_EVENT,
+  BURN_EVENT,
+  TRANSFER_START_EVENT,
+  TRANSFER_END_EVENT,
+  TRANSFER_SINGLE_EVENT,
+  ADD_RELAY_ACTION,
+  REMOVE_RELAY_ACTION,
+  BUY_TOKEN_EVENT,
+  BUY_TOKEN_END_EVENT,
+  BLOCK_INDEXER_STOPPED,
+  BLOCK_INDEXER_HEALTHY
 };

@@ -1,5 +1,5 @@
 .DS_Store
-.env
+*.env
 .data
 .log
 .vscode
@@ -8,3 +8,5 @@ coverage
 dist
 logs
 node_modules
+
+__pycache__

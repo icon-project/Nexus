@@ -1,5 +1,15 @@
 # dashboard-api
 
+## Drop, re-create, and initial database
+`$ node ./db-init/index.js`
+
+## Slack command for checking block-indexer'status
+
+Go to slack's workspace, create slack app then go to feature `Slash Commands` and configure commands
+
+- `/btp-status`: `<domain>`/v1/health-check/?apiKey=`<SLACK_COMMAND_API_KEY>`
+
+
 ## Development Environment
 
 PostgreSQL container
@@ -13,11 +23,16 @@ Connect to PostgreSQL with shell
 - Install packages:
   `yarn install`
 
-- Start server:
+- Start development server:
   `yarn start`
 
 - Access URL:
   `http://localhost:8000`
+
+## Production
+
+`yarn start:pm2`
+
 
 ## Documentations
 
@@ -26,3 +41,13 @@ Connect to PostgreSQL with shell
 [Coding Style Guide](https://google.github.io/styleguide/javascriptguide.xml) Generally we follow Google style guide, not exactly 100%.
 
 [Git Commit Guidelines](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#commits) Generally we follow AngularJS style guide, not exactly 100%.
+
+## Known Issues
+
+Postgres database reset password after ever restart, change it back with:
+
+```bash
+$ docker exec -it postgres-btp bash
+$ psql postgres postgres
+$ alter user postgres with password 'test123';
+```

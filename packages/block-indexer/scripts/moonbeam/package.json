@@ -1,0 +1,10 @@
+{
+  "name": "moonbeam",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "4.2.0",
+    "@openzeppelin/test-helpers": "0.5.12"
+  }
+}

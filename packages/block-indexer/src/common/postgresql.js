@@ -1,5 +1,7 @@
 const { Pool } = require('pg');
-const logger = require('./logger');
+const { createLogger } = require('./logger');
+
+const logger = createLogger();
 
 // Ref: https://node-postgres.com/features/connecting
 const pool = new Pool({

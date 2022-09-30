@@ -1,89 +1,264 @@
 'use strict';
 
-const { logger, pgPool } = require('../../common');
-const IconService = require('icon-sdk-js');
-const {countNetWork} = require('./repository')
-const { HttpProvider } = IconService;
-const { IconBuilder } = IconService;
+const IconService = require('icon-sdk-js').default;
+const {
+  countNetwork,
+  countTransaction,
+  getAllTimeFeeOfAssets,
+  getVolumeMintedNetworks,
+  getLatestTokensMinted,
+  getTotalTokensMintedLast24h,
+  getAllIndexerStats,
+} = require('./repository');
+const { getNetworkInfo } = require('../networks/repository');
+const { getTotalBondedRelayCandidates } = require('../relay-candidates/repository');
+const {
+  logger,
+  hexToFixedAmount,
+  hexToIcxUnit,
+  tokenToUsd,
+  numberToFixedAmount,
+} = require('../../common');
 
-// Create icon services 
-const provider = new HttpProvider(process.env.NODE_URL);
+const { HttpProvider, IconBuilder } = IconService;
+const { getTotalTransactionVolume } = require('../transactions/repository');
+
+const provider = new HttpProvider(process.env.ICON_API_URL);
 const iconService = new IconService(provider);
 
-// Init call builder 
-const { CallBuilder } = IconBuilder;
-const callBuilder = new CallBuilder();
-
-async function getListToken() {
-    const call = callBuilder
-        .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
-        .method('tokens')
-        .build();
-    try {
-        const tokens = await iconService.call(call).execute();
-        return tokens;
-    } catch (e) {
-        logger.error(e, 'getListToken() failed when execute get list tokens');
-        throw new Error('"getListToken" job failed: ' + e.message);
-    }
-}
-
+// Get list tokens registered in FAS and show amount of each token
 async function getAmountFeeAggregationSCORE() {
-    let result = [];
-    const tokens = await getListToken();
+  return {
+    assets: [],
+    totalUSD: 0,
+  };
+  /*const callBuilder = new IconBuilder.CallBuilder();
+
+  try {
+    const call = callBuilder.to(process.env.ICON_FAS_ADDRESS).method('tokens').build();
+    const tokens = await iconService.call(call).execute();
+
+    let assets = [];
+    let promises = [];
+
     for (let data of tokens) {
-        logger.debug(`[getAmountFeeAggregationSCORE] token: ${data.name}, address: ${data.address}`);
-        try {
-            let hexBalance = await getAvailableBalance(data.name);
-            let decBalance = parseInt(hexBalance.toString(16), 16);
-            result.push({ name: data.name, value: decBalance })
-        } catch (e) {
-            logger.error(e, 'getAmountFeeAggregationSCORE() failed when execute get avilable balance');
-            throw new Error('"getAmountFeeAggregationSCORE" job failed: ' + e.message);
-        }
+      let hexBalance = await getAvailableBalance(data.name);
+
+      logger.debug(`Token: ${data.name}, balance: ${hexBalance}`);
+      assets.push({ name: data.name, value: hexToFixedAmount(hexBalance) });
+
+      if ('0x0' !== hexBalance) {
+        const amount = hexToIcxUnit(hexBalance);
+        promises.push(tokenToUsd(data.name, amount));
+      }
     }
-    return result;
-}
-async function getTotalCumulativeAmountFeeAggregationSCORE() {
-    let result = [];
-    const client = await pgPool.connect();
-    const tokens = await getListToken();
-    for (let data of tokens) {
-        let { rows: [{ sum: totalValue }] } = await client.query('SELECT SUM(value) FROM transfer_fees WHERE name_token = $1', [data.name]);
-        logger.debug(`[getTotalCumulativeAmountFeeAggregationSCORE] token: ${data.name} total value: ${totalValue}`);
-        result.push({ name: data.name, value: parseInt(totalValue, 10) })
-    }
-    return result;
+
+    let totalAssets = await Promise.all(promises);
+    let totalUSD = 0;
+
+    totalAssets.forEach((item) => (totalUSD += item));
+
+    return {
+      assets,
+      totalUSD: Number(totalUSD.toFixed(2)),
+    };
+  } catch (error) {
+    logger.error('getAmountFeeAggregationSCORE failed', { error });
+    throw error;
+  }*/
 }
 
-async function getAvailableBalance(nameToken) {
-  const callBuilder = new CallBuilder();
+// Get available of token registered in FAS by name of token
+async function getAvailableBalance(tokenName) {
+  const callBuilder = new IconBuilder.CallBuilder();
   const call = callBuilder
-    .to(process.env.FEE_AGGREGATION_SCORE_ADDRESS)
+    .to(process.env.ICON_FAS_ADDRESS)
     .method('availableBalance')
-    .params({ _tokenName: nameToken })
+    .params({ _tokenName: tokenName })
     .build();
+
   try {
     const availableBalance = await iconService.call(call).execute();
-    logger.debug(`[getAvailableBalance] availableBalance: ${availableBalance}`);
+    logger.debug(
+      `getAvailableBalance tokeName: ${tokenName}, availableBalance: ${availableBalance}`,
+    );
     return availableBalance;
-  } catch (e) {
-    logger.error(e, 'getAvailableBalance() failed when execute get balance FAS');
-    throw new Error('"getAvailableBalance" job failed: ' + e.message);
+  } catch (error) {
+    logger.error('getAvailableBalance failed', { error });
+    throw error;
   }
 }
 
 async function getTotalNetworks() {
   try {
-    return countNetWork();
-  } catch (err) {
-    logger.error(err, '"getTotalNetworks" failed while getting total networks');
-    throw new Error('"getTotalNetworks" job failed: ' + err.message);
+    return countNetwork();
+  } catch (error) {
+    logger.error('getTotalNetworks failed', { error });
+    throw error;
   }
+}
+
+async function calculateVolumePercents() {
+  let totalVolume = await getTotalTransactionAmount(false);
+  let totalVolume24hAgo = await getTotalTransactionAmount(true);
+
+  if (totalVolume && totalVolume24hAgo) {
+    const percentage = ((totalVolume - totalVolume24hAgo) / totalVolume) * 100;
+    return Number(percentage.toFixed(2));
+  }
+
+  return 0;
+}
+
+async function getTotalTransactionAmount(is24hAgo) {
+  try {
+    let tokenTransAmount = [];
+    let totalUSD = 0;
+    let promises = [];
+
+    if (is24hAgo) {
+      tokenTransAmount = await getTotalTransactionVolume(true, 'ASC');
+    } else {
+      tokenTransAmount = await getTotalTransactionVolume(false, 'DESC');
+    }
+
+    for (let item of tokenTransAmount) {
+      promises.push(tokenToUsd(item.tokenName, Number(item.totalVolume)));
+    }
+
+    const results = await Promise.all(promises);
+    results.forEach((item) => (totalUSD += item));
+
+    return Number(totalUSD.toFixed(2));
+  } catch (error) {
+    logger.error('getTotalTransactionAmount failed', { error });
+    throw error;
+  }
+}
+
+async function getTotalTransaction() {
+  try {
+    return countTransaction();
+  } catch (error) {
+    logger.error('getTotalTransaction failed', { error });
+    throw error;
+  }
+}
+
+async function getBondedVolumeByRelayCandidates() {
+  try {
+    return await getTotalBondedRelayCandidates();
+  } catch (error) {
+    logger.error('getBondedVolumeByRelayCandidates failed', { error });
+    throw error;
+  }
+}
+
+async function getAllTimeFee() {
+  let totalUSD = 0;
+  let promises = [];
+  const assets = await getAllTimeFeeOfAssets();
+
+  for (let item of assets) {
+    if (0 !== item.value) {
+      promises.push(tokenToUsd(item.name, item.value));
+    }
+  }
+
+  let totalAssets = await Promise.all(promises);
+  totalAssets.forEach((item) => {
+    totalUSD += item['USD'] ? item['USD'] : 0;
+  });
+  totalUSD = numberToFixedAmount(totalUSD);
+
+  let feeAssets = assets.map((item) => ({
+    name: item.name,
+    value: numberToFixedAmount(item.value),
+  }));
+
+  return {
+    feeAssets,
+    totalUSD,
+  };
+}
+
+async function getMintedNetworks() {
+  const mintedTokens = await getVolumeMintedNetworks();
+  const networks = await getNetworkInfo();
+  let results = [];
+  let mapTokensVolume = new Map();
+
+  for (let token of mintedTokens) {
+    let volume = await tokenToUsd(token.tokenName, token.tokenVolume);
+
+    if (mapTokensVolume.has(token.networkId)) {
+      volume += mapTokensVolume.get(token.networkId);
+    }
+    mapTokensVolume.set(token.networkId, volume);
+  }
+
+  for (let data of networks) {
+    results.push({
+      networkId: data.id,
+      networkName: data.name,
+      mintedVolume: mapTokensVolume.has(data.id)
+        ? numberToFixedAmount(mapTokensVolume.get(data.id))
+        : 0,
+    });
+  }
+
+  return results;
+}
+
+async function getPercentsMintVolumeLast24h() {
+  const tokensCurrent = await getLatestTokensMinted();
+  const tokensLast24h = await getTotalTokensMintedLast24h();
+
+  // in the first 23 hours
+  if (0 === tokensLast24h) return 0;
+
+  if (tokensCurrent && tokensLast24h) {
+    try {
+      const totalUSD = await totalTokensToUSD(tokensCurrent);
+      const last24hUSD = await totalTokensToUSD(tokensLast24h);
+      const percentage = ((totalUSD - last24hUSD) / last24hUSD) * 100;
+
+      return Number(percentage.toFixed(2));
+    } catch (error) {
+      logger.error('Fails to convert tokens to usd', { error });
+      return 0;
+    }
+  }
+
+  return 0;
+}
+
+async function totalTokensToUSD(tokens) {
+  let promises = [];
+
+  for (let item of tokens) {
+    promises.push(tokenToUsd(item.tokenName, item.tokenAmount));
+  }
+
+  const totalAssets = await Promise.all(promises);
+  const totalUSD = totalAssets.reduce((total, value) => total + value, 0);
+
+  return totalUSD;
+}
+
+async function getIndexerStats() {
+  return await getAllIndexerStats();
 }
 
 module.exports = {
   getAmountFeeAggregationSCORE,
-  getTotalCumulativeAmountFeeAggregationSCORE,
   getTotalNetworks,
+  getTotalTransactionAmount,
+  getTotalTransaction,
+  getBondedVolumeByRelayCandidates,
+  getAllTimeFee,
+  getMintedNetworks,
+  calculateVolumePercents,
+  getPercentsMintVolumeLast24h,
+  getIndexerStats,
 };

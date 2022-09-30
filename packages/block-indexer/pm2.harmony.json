@@ -1,0 +1,15 @@
+{
+  "apps": [
+    {
+      "name": "harmony-indexer",
+      "script": "./index.js",
+      "args": "harmony",
+      "cwd": "./",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_ENV": "production",
+        "LOGGER_NAME": "harmony"
+      }
+    }
+  ]
+}

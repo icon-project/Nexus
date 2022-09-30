@@ -5,14 +5,13 @@ services:
   pgdb:
     image: postgres
     container_name: postgres-btp
-    restart: always
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test123
     volumes:
-      - ./.data/postgres:/var/lib/postgresql/data
+      - /home/ubuntu/node-deployment/.data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: dashboard
+      POSTGRES_PASSWORD: dashboard
 
   pgadmin:
     image: dpage/pgadmin4

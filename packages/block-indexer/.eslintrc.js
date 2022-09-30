@@ -1,35 +1,26 @@
 module.exports = {
-  'env': {
-    'es6': true,
-    'jest': true,
-    'jest/globals': true,
-    'node': true
+  env: {
+    commonjs: true,
+    es2021: true,
+    node: true
   },
-  'extends': [
-    'eslint:recommended', // eslint
-    'plugin:jest/recommended'
+  extends: [
+    'standard'
   ],
-  'parser': 'babel-eslint',
-  'parserOptions': {
-    'ecmaVersion': 6
+  parserOptions: {
+    ecmaVersion: 'latest'
   },
-  'plugins': [
-    'jest'
-  ],
-  'rules': {
-    'no-console': 1,
-    'no-unused-vars': 1,
-    'indent': [
-      'warn',
-      2
-    ],
-    'quotes': [
+  rules: {
+    semi: [
       'error',
-      'single'
+      'always'
     ],
-    'semi': [
-      'warn',
-      'always',
-    ]
+    'space-before-function-paren': [
+      'error', {
+        anonymous: 'always',
+        named: 'never',
+        asyncArrow: 'always'
+      }],
+    'multiline-ternary': ['error', 'never']
   }
 };

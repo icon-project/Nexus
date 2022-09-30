@@ -1,3 +1,5 @@
+/* eslint-disable curly */
+/* eslint-disable yoda */
 function debugLogMiddleware(debug) {
   return function (request, response, next) {
     if ('GET' === request.method)

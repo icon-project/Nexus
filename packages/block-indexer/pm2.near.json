@@ -1,0 +1,15 @@
+{
+  "apps": [
+    {
+      "name": "near-indexer",
+      "script": "./index.js",
+      "args": "near",
+      "cwd": "./",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env": {
+        "NODE_ENV": "production",
+        "LOGGER_NAME": "near"
+      }
+    }
+  ]
+}
