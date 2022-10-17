@@ -1,7 +1,7 @@
 /* eslint-disable yoda */
 'use strict';
 
-const { createLogger, TOKEN_REGISTERED_EVENT } = require('../../common');
+const { createLogger, TOKEN_REGISTERED_EVENT_UPPER } = require('../../common');
 const { saveToken } = require('./repository');
 const { refreshRegisteredTokens } = require('./model');
 const { isJSON } = require('../../common/util');
@@ -11,38 +11,32 @@ const logger = createLogger();
 async function handleTokenRegister(tx, txResult) {
   for (const receiptOutcome of txResult?.receipts_outcome) {
     for (const log of receiptOutcome?.outcome?.logs) {
-      if (log.includes(TOKEN_REGISTERED_EVENT) && isJSON(log)) {
+      if (log.includes(TOKEN_REGISTERED_EVENT_UPPER) && isJSON(log)) {
         const data = JSON.parse(log);
-        await registerIRC2Token(data, tx.hash);
+        await registerNEP21Token(data, tx.hash);
       }
     }
   }
 }
-
-async function registerIRC2Token(data, txHash) {
+// Defination for ERC20 is NEP-21 on NEAR https://github.com/near/NEPs/pull/21
+async function registerNEP21Token(data, txHash) {
   try {
-    const address = await getTokenContractAddress(data.tokenName);
-
+    const tokenName = data.token_name?.split('-')?.[2];
     const token = {
       networkId: process.env.NEAR_NETWORK_ID,
-      tokenName: data.tokenName,
-      tokenId: data.tokenId,
-      contractAddress: address,
+      tokenName: tokenName,
+      tokenId: tokenName,
+      contractAddress: data.token_account,
       txHash
     };
 
     if (await saveToken(token)) {
-      logger.info(`registerIRC2Token saved new token ${token.tokenName} on tx ${token.txHash}`);
+      logger.info(`registerNEP21Token saved new token ${token.tokenName} on tx ${token.txHash}`);
       await refreshRegisteredTokens();
     }
   } catch (error) {
-    logger.error('registerIRC2Token fails on tx %s with %O', txHash, error);
+    logger.error('registerNEP21Token fails on tx %s with %O', txHash, error);
   }
-}
-
-async function getTokenContractAddress(name) {
-  // TODO
-  return 'address of token';
 }
 
 module.exports = {

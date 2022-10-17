@@ -39,6 +39,7 @@ const TRANSFER_SINGLE_EVENT = 'TransferSingle';
 const ADD_RELAY_ACTION = 'addRelay';
 const REMOVE_RELAY_ACTION = 'removeRelay';
 const TOKEN_REGISTERED_EVENT = 'register';
+const TOKEN_REGISTERED_EVENT_UPPER = 'Register';
 const BLOCK_INDEXER_STOPPED = (lastBlock, indexerName) => `🐛 *${indexerName}*-indexer was \`STOPPED\` at block \`${lastBlock}\` 🚫`;
 const BLOCK_INDEXER_HEALTHY = (lastBlock, indexerName) => `🎉 *${indexerName}*-indexer is good ✅`;
 
@@ -61,6 +62,7 @@ module.exports = {
   BUY_TOKEN_EVENT,
   BUY_TOKEN_END_EVENT,
   TOKEN_REGISTERED_EVENT,
+  TOKEN_REGISTERED_EVENT_UPPER,
   BLOCK_INDEXER_STOPPED,
   BLOCK_INDEXER_HEALTHY
 };
