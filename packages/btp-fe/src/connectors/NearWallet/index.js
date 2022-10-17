@@ -237,7 +237,7 @@ export const getUsableBalance = async (symbol) => {
   const contract = await getContractInstance();
 
   const result = await contract.balance_of({
-    owner_id: wallet.getAccountId(),
+    account_id: wallet.getAccountId(),
     coin_name: formatSymbol(symbol),
   });
 

@@ -10,7 +10,12 @@ import {
   iconService,
   httpProvider,
 } from 'connectors/constants';
-import { chainConfigs, formatSymbol, formatUnitsBySymbol } from 'connectors/chainConfigs';
+import {
+  chainConfigs,
+  formatSymbol,
+  formatUnitsBySymbol,
+  parseUnitsBySymbol,
+} from 'connectors/chainConfigs';
 
 import { requestSigning } from './events';
 import Request, {
@@ -108,7 +113,7 @@ export const setApproveForSendNonNativeCoin = async (tx) => {
     method: 'approve',
     params: {
       spender: chainConfigs[network].ICON_BTS_CORE,
-      amount: IconConverter.toHex(convertToLoopUnit(value)),
+      amount: parseUnitsBySymbol(value, coinName),
     },
   };
 
@@ -134,7 +139,7 @@ export const sendNonNativeCoin = () => {
     method: 'transfer',
     params: {
       _to: `btp://${NETWORK_ADDRESS}/${to}`,
-      _value: IconConverter.toHex(convertToLoopUnit(value)),
+      _value: parseUnitsBySymbol(value, coinName),
       _coinName: formatSymbol(coinName),
     },
   };
@@ -252,7 +257,7 @@ export const getBTPfee = async (symbol, toNetwork, currentNetwork, currentNetwor
     },
   });
 
-  return IconConverter.toNumber(convertToICX(fee.fixedFee));
+  return formatUnitsBySymbol(fee.fixedFee, symbol);
 };
 
 /**

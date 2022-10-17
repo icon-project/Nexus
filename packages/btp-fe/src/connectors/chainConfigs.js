@@ -1,6 +1,7 @@
 import { custom } from './chainCustomization';
 import { ABI as currentABI } from 'connectors/MetaMask/ABI';
 import { ethers } from 'ethers';
+import { IconConverter } from 'icon-sdk-js';
 
 export const chainConfigs = {};
 Object.keys(process.env).forEach((e) => {
@@ -82,7 +83,8 @@ export const formatSymbol = (symbol) => {
 
 export const parseUnitsBySymbol = (amount, symbol) => {
   const chain = findChainbySymbol(symbol);
-  return ethers.utils.parseUnits(amount, chain.decimals || 18).toString();
+  const result = ethers.utils.parseUnits(amount, chain.decimals || 18).toString();
+  return chain.decimals === 24 ? result : IconConverter.toHex(result);
 };
 
 export const formatUnitsBySymbol = (amount, symbol) => {
