@@ -5,22 +5,12 @@ import { resetTransferStep } from 'connectors/ICONex/utils';
 import { sendNoneNativeCoin } from 'connectors/MetaMask/services';
 import { EthereumInstance } from 'connectors/MetaMask';
 
-import { SuccessSubmittedTxContent } from 'components/NotificationModal/SuccessSubmittedTxContent';
-
 const { modal } = store.dispatch;
 
 const handleSuccessTx = (txHash) => {
   switch (window[signingActions.globalName]) {
     case signingActions.approve:
-      modal.openModal({
-        icon: 'checkIcon',
-        desc: `You've approved to transfer your token! Please click the Transfer button to continue.`,
-        button: {
-          text: 'Transfer',
-          id: 'approve-transfer-btn',
-          onClick: sendNoneNativeCoin,
-        },
-      });
+      modal.informApprovedTransfer({ onClick: sendNoneNativeCoin });
       break;
 
     default:
@@ -30,31 +20,13 @@ const handleSuccessTx = (txHash) => {
         network: getCurrentChain()?.NETWORK_ADDRESS?.split('.')[0],
       });
 
-      modal.openModal({
-        icon: 'checkIcon',
-        children: <SuccessSubmittedTxContent setDisplay={modal.setDisplay} />,
-        button: {
-          text: 'Continue transfer',
-          onClick: () => {
-            // back to transfer box
-            resetTransferStep();
-            modal.setDisplay(false);
-          },
-        },
-      });
+      modal.informSubmittedTx({ txHash, callback: resetTransferStep });
       break;
   }
 };
 
 const handleFailedTx = (message) => {
-  modal.openModal({
-    icon: 'xIcon',
-    desc: message || 'Transaction failed',
-    button: {
-      text: 'Back to transfer',
-      onClick: () => modal.setDisplay(false),
-    },
-  });
+  modal.informFailedTx(message);
 };
 
 const handleError = (error) => {
@@ -69,14 +41,7 @@ const handleError = (error) => {
     });
     return;
   } else {
-    modal.openModal({
-      icon: 'xIcon',
-      desc: error.message,
-      button: {
-        text: 'Back to transfer',
-        onClick: () => modal.setDisplay(false),
-      },
-    });
+    modal.informFailedTx(error.message);
   }
 };
 

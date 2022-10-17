@@ -1,6 +1,6 @@
 import { ethers, utils } from 'ethers';
 import store from 'store';
-import { ADDRESS_LOCAL_STORAGE, CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
+import { ADDRESS_LOCAL_STORAGE } from 'connectors/constants';
 import { ABI } from './ABI';
 
 import { ConflictNetworkWarning } from 'components/NotificationModal/ConflictNetworkWarning';
@@ -8,12 +8,9 @@ import { toChecksumAddress } from './utils';
 import { findReplacementTx } from './findReplacementTx';
 import { handleFailedTx, handleSuccessTx, handleError } from './handleNotification';
 import { wallets } from 'utils/constants';
-import { chainList, customzeChain, chainConfigs } from 'connectors/chainConfigs';
+import { chainList, chainConfigs } from 'connectors/chainConfigs';
 
 const { modal, account } = store.dispatch;
-
-const metamaskURL =
-  'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 
 class Ethereum {
   constructor() {
@@ -25,7 +22,6 @@ class Ethereum {
 
   get getEthereum() {
     if (!this.isMetaMaskInstalled()) {
-      window.open(metamaskURL);
       throw new Error('MetaMask has not been installed');
     }
     return this.ethereum;
@@ -37,7 +33,6 @@ class Ethereum {
 
   get getProvider() {
     if (!this.isMetaMaskInstalled()) {
-      window.open(metamaskURL);
       throw new Error('MetaMask has not been installed');
     }
     return this.provider;
@@ -111,11 +106,6 @@ class Ethereum {
   }
 
   async connectMetaMaskWallet() {
-    if (!this.isMetaMaskInstalled()) {
-      localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
-      window.open(metamaskURL);
-      return;
-    }
     try {
       const chainId = await this.switchChainInMetamask();
       if (chainId) {
@@ -170,7 +160,6 @@ class Ethereum {
 
         const { CHAIN_NAME, id, COIN_SYMBOL, BTS_CORE } = currentNetwork;
         this.contract = new ethers.Contract(BTS_CORE, ABI, this.provider);
-        customzeChain(id);
 
         account.setAccountInfo({
           address,
@@ -203,7 +192,7 @@ class Ethereum {
         desc: 'Waiting for confirmation in your wallet.',
       });
 
-      const gasPrice = utils.hexValue((await this.provider.getGasPrice()) * 1.04);
+      const gasPrice = utils.hexValue(Math.round((await this.provider.getGasPrice()) * 1.04));
 
       const txHash = await this.ethereum.request({
         method: 'eth_sendTransaction',

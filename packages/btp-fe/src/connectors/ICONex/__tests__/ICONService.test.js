@@ -32,13 +32,18 @@ jest.mock('store', () => {
   };
 });
 
-jest.mock('connectors/chainConfigs', () => ({
-  chainConfigs: {
-    HARMONY: harmonyChain,
-  },
-  checkIsToken: jest.fn(),
-  chainList: [harmonyChain],
-}));
+jest.mock('connectors/chainConfigs', () => {
+  const originalChainConfigs = jest.requireActual('connectors/chainConfigs');
+
+  return {
+    ...originalChainConfigs,
+    chainConfigs: {
+      HARMONY: harmonyChain,
+    },
+    checkIsToken: jest.fn(),
+    chainList: [harmonyChain],
+  };
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -146,7 +151,7 @@ describe('ICONService', () => {
           builder: expect.anything(),
           method: 'transfer',
           params: {
-            _coinName: harmonyChain.COIN_SYMBOL,
+            _coinName: 'btp-0x61.bsc-' + harmonyChain.COIN_SYMBOL,
             _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
             _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
@@ -173,7 +178,7 @@ describe('ICONService', () => {
           method: 'transfer',
           params: {
             _to: `btp://${harmonyChain.NETWORK_ADDRESS}/${toAddress}`,
-            _coinName: harmonyChain.COIN_SYMBOL,
+            _coinName: 'btp-0x61.bsc-' + harmonyChain.COIN_SYMBOL,
             _value: IconConverter.toHex(utils.convertToLoopUnit(amount)),
           },
         },
@@ -182,13 +187,13 @@ describe('ICONService', () => {
   });
 
   describe('getBalanceOf', () => {
-    test('refundable', async () => {
-      const symbol = 'ONE';
-      const ONEBSHAddress = 'abc';
+    test.only('refundable', async () => {
+      const symbol = 'BNB';
+      const BSHAddress = 'abc';
       jest
         .spyOn(constants, 'getCurrentChain')
         .mockImplementation(() => ({ methods: { getBalanceOf: {} } }));
-      jest.spyOn(utils, 'getICONBSHAddressforEachChain').mockImplementation(() => ONEBSHAddress);
+      jest.spyOn(utils, 'getICONBSHAddressforEachChain').mockImplementation(() => BSHAddress);
       const mock_makeICXCall = jest
         .spyOn(utils, 'makeICXCall')
         .mockImplementation(() => Promise.resolve({ refundable: '0x29e46e036aab4e8b00' }));
@@ -203,10 +208,10 @@ describe('ICONService', () => {
       expect(mock_makeICXCall).toHaveBeenCalledWith({
         data: {
           method: 'balanceOf',
-          params: { _coinName: symbol, _owner: toAddress },
+          params: { _coinName: 'btp-0x61.bsc-' + symbol, _owner: toAddress },
         },
         dataType: 'call',
-        to: ONEBSHAddress,
+        to: BSHAddress,
       });
     });
   });

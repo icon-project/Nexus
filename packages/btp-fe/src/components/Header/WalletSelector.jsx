@@ -8,7 +8,6 @@ import { media } from 'components/Styles/Media';
 import { Icon } from 'components/Icon';
 
 import checkIcon from 'assets/images/check-icon.svg';
-import { wallets } from 'utils/constants';
 
 const { grayText, successState, grayAccent } = colors;
 
@@ -24,6 +23,8 @@ const StyledWalletItem = styled.button`
   background: transparent;
   color: ${grayText};
 
+  ${({ $active }) => ($active ? `background: ${grayAccent};` : '')}
+
   .wallet-title {
     margin-right: auto;
     margin-left: 13.3px;
@@ -38,8 +39,7 @@ const StyledWalletItem = styled.button`
     color: ${successState};
   }
 
-  &:hover,
-  :focus {
+  &:hover {
     background: ${grayAccent};
     border-radius: 4px;
   }
@@ -55,15 +55,15 @@ const StyledWalletItem = styled.button`
   `};
 `;
 
-export const WalletSelector = ({ wallet, type, active, onClick, isCheckingInstalled }) => {
+export const WalletSelector = ({ id, icon, title, active, onClick, isCheckingInstalled }) => {
   return (
     <StyledWalletItem
-      className={`${wallet[type].id}-wallet-selector${isCheckingInstalled ? '-checking' : ''}`}
-      autoFocus={active}
+      className={`${id}-wallet-selector${isCheckingInstalled ? '-checking' : ''}`}
+      $active={active}
       onClick={isCheckingInstalled ? () => {} : onClick}
     >
-      <Icon className="wallet-img" iconURL={wallet[type].icon} width="32px" />
-      <Text className="md wallet-title">{wallet[type].title}</Text>
+      <Icon className="wallet-img" iconURL={icon} width="32px" />
+      <Text className="md wallet-title">{title}</Text>
       {!active && isCheckingInstalled && <Loader size="25px" borderSize="3px" />}
       {active && <img src={checkIcon} alt="icon" />}
     </StyledWalletItem>
@@ -71,10 +71,6 @@ export const WalletSelector = ({ wallet, type, active, onClick, isCheckingInstal
 };
 
 WalletSelector.propTypes = {
-  /** Allowed wallets defination */
-  wallet: PropTypes.object,
-  /** Current selected wallet */
-  type: PropTypes.oneOf([wallets.metamask, wallets.iconex, wallets.hana, wallets.near]),
   /** Is selected wallet */
   active: PropTypes.bool,
   /** Handle clicking */

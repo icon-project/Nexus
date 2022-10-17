@@ -121,16 +121,11 @@ const CopyAddress = ({ text, href, copyText }) => {
   );
 };
 
-const exploreURL = {
-  ICON: {
-    transaction: 'transaction/',
-  },
-};
-
 const statusText = 'txStatus';
 export const HistoryDetails = ({ txHash, onClose }) => {
   const [details, setDetails] = useState({});
   const [isFetching, setIsFetching] = useState(true);
+  const [error, setError] = useState();
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -139,11 +134,18 @@ export const HistoryDetails = ({ txHash, onClose }) => {
         const status = sessionStorage.getItem(statusText);
         if (!status || status == txStatus.PENDING) {
           const transferData = await getTransferHistoryByTxHash(txHash);
+          if (!transferData)
+            throw new Error(
+              'Your transaction is being synced or not found. Please try again later.',
+            );
           setDetails(() => transferData.content);
           setIsFetching(() => false);
           sessionStorage.setItem(statusText, transferData?.content?.status);
         }
       } catch (error) {
+        clearInterval(intervalFetch);
+        setIsFetching(false);
+        setError(error.message);
         console.log(error);
       }
     };
@@ -177,6 +179,9 @@ export const HistoryDetails = ({ txHash, onClose }) => {
   const getChain = (chainName) =>
     chainList.find(({ CHAIN_NAME }) => CHAIN_NAME?.toLowerCase() === chainName?.toLowerCase());
 
+  const srcChain = chainConfigs[getChain(networkNameSrc)?.id];
+  const dstChain = chainConfigs[getChain(networkNameDst)?.id];
+
   return (
     <Modal display title="Transfer details" width="840px" setDisplay={() => onClose()}>
       <StyledHistoryDetails>
@@ -184,93 +189,99 @@ export const HistoryDetails = ({ txHash, onClose }) => {
           <Loader size="24px" borderSize="2px" />
         ) : (
           <div className="history-details">
-            <div className="content">
-              <Text className="md">Transaction hash</Text>
-              <Text className="md">
-                <CopyAddress
-                  text={txHash}
-                  href={
-                    chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
-                    (exploreURL[networkNameSrc]?.transaction || 'tx/') +
-                    txHash
-                  }
-                />
-              </Text>
-            </div>
+            {error ? (
+              <Text className="md">{error}</Text>
+            ) : (
+              <>
+                <div className="content">
+                  <Text className="md">Transaction hash</Text>
+                  <Text className="md">
+                    <CopyAddress
+                      text={txHash}
+                      href={
+                        srcChain?.EXPLORE_URL +
+                        (srcChain?.exploreSuffix?.transaction || 'tx/') +
+                        txHash
+                      }
+                    />
+                  </Text>
+                </div>
 
-            <div className="content">
-              <Text className="md">Amount</Text>
-              <Text className="md">
-                {value} {tokenName} (~ ${toSeparatedNumberString(tokenPrice * value)})
-              </Text>
-            </div>
+                <div className="content">
+                  <Text className="md">Amount</Text>
+                  <Text className="md">
+                    {value} {tokenName} (~ ${toSeparatedNumberString(tokenPrice * value)})
+                  </Text>
+                </div>
 
-            <div className="content">
-              <Text className="md">Status</Text>
-              <Tag color={getStatus(status).color}>{getStatus(status).text}</Tag>
-            </div>
-            <div className="content">
-              <Text className="md">Time</Text>
-              <Text className="md">
-                {dayjs(blockTime).fromNow()}{' '}
-                <span className="hide-in-mobile">
-                  ({dayjs(blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
-                </span>
-              </Text>
-            </div>
+                <div className="content">
+                  <Text className="md">Status</Text>
+                  <Tag color={getStatus(status).color}>{getStatus(status).text}</Tag>
+                </div>
+                <div className="content">
+                  <Text className="md">Time</Text>
+                  <Text className="md">
+                    {dayjs(blockTime).fromNow()}{' '}
+                    <span className="hide-in-mobile">
+                      ({dayjs(blockTime).format('MMM-DD-YYYY hh:mm:ss A Z')})
+                    </span>
+                  </Text>
+                </div>
 
-            <div className="content">
-              <Text className="md">From</Text>
-              <Text className="md">
-                <span className="hide-in-mobile">({networkNameSrc || 'Unknown'}) </span>
-                <CopyAddress
-                  text={fromAddress}
-                  href={
-                    networkNameSrc
-                      ? chainConfigs[getChain(networkNameSrc)?.id]?.EXPLORE_URL +
-                        'address/' +
-                        fromAddress
-                      : null
-                  }
-                />
-              </Text>
-            </div>
+                <div className="content">
+                  <Text className="md">From</Text>
+                  <Text className="md">
+                    <span className="hide-in-mobile">({networkNameSrc || 'Unknown'}) </span>
+                    <CopyAddress
+                      text={fromAddress}
+                      href={
+                        networkNameSrc
+                          ? srcChain?.EXPLORE_URL +
+                            (srcChain?.exploreSuffix?.address || 'address/') +
+                            fromAddress
+                          : null
+                      }
+                    />
+                  </Text>
+                </div>
 
-            <div className="content">
-              <Text className="md">To</Text>
-              <Text className="md">
-                <span className="hide-in-mobile">({networkNameDst || 'Unknown'}) </span>
-                <CopyAddress
-                  text={toAddress}
-                  copyText={toAddresssOnly}
-                  href={
-                    networkNameDst
-                      ? chainConfigs[getChain(networkNameDst)?.id]?.EXPLORE_URL +
-                        'address/' +
-                        toAddresssOnly
-                      : null
-                  }
-                />
-              </Text>
-            </div>
+                <div className="content">
+                  <Text className="md">To</Text>
+                  <Text className="md">
+                    <span className="hide-in-mobile">({networkNameDst || 'Unknown'}) </span>
+                    <CopyAddress
+                      text={toAddress}
+                      copyText={toAddresssOnly}
+                      href={
+                        networkNameDst
+                          ? dstChain?.EXPLORE_URL +
+                            (dstChain?.exploreSuffix?.address || 'address/') +
+                            toAddresssOnly
+                          : null
+                      }
+                    />
+                  </Text>
+                </div>
 
-            <div className="content">
-              <Text className="md">Network fee</Text>
-              <Text className="md">
-                {networkFee} {nativeToken} (~ $
-                {toSeparatedNumberString(
-                  (tokenName === nativeToken ? tokenPrice : nativeTokenPrice) * networkFee,
-                )}
-                )
-              </Text>
-            </div>
+                <div className="content">
+                  <Text className="md">Network fee</Text>
+                  <Text className="md">
+                    {networkFee} {nativeToken} (~ $
+                    {toSeparatedNumberString(
+                      (tokenName === nativeToken ? tokenPrice : nativeTokenPrice) * networkFee,
+                    )}
+                    )
+                  </Text>
+                </div>
 
-            <div className="content btp-fee">
-              <Text className="md">BTP fee</Text>
-              <Text className="md">
-                {bptFee} {tokenName}
-              </Text>
-            </div>
+                <div className="content btp-fee">
+                  <Text className="md">BTP fee</Text>
+                  <Text className="md">
+                    {bptFee} {tokenName}
+                  </Text>
+                </div>
+              </>
+            )}
           </div>
         )}
       </StyledHistoryDetails>

@@ -16,6 +16,7 @@ import { wallets } from 'utils/constants';
 import { toSeparatedNumberString, hashShortener, delay } from 'utils/app';
 import { CONNECTED_WALLET_LOCAL_STORAGE } from 'connectors/constants';
 import { EthereumInstance } from 'connectors/MetaMask';
+import { connect, getNearAccountInfo, signOut, handleNEARCallback } from 'connectors/NearWallet';
 
 import { SubTitle, Text } from 'components/Typography';
 import { SubTitleMixin } from 'components/Typography/SubTitle';
@@ -24,7 +25,6 @@ import { media } from 'components/Styles/Media';
 
 import MetaMask from 'assets/images/metal-mask.svg';
 import ICONex from 'assets/images/icon-ex.svg';
-import Hana from 'assets/images/hana-wallet.png';
 import NEAR from 'assets/images/near-icon.svg';
 import logo from 'assets/images/logo-nexus-white.png';
 
@@ -188,47 +188,53 @@ const BetaText = styled.div`
   }
 `;
 
-const mockWallets = {
-  [wallets.metamask]: {
-    id: 'metamask',
-    title: 'MetaMask Wallet',
-    icon: MetaMask,
-  },
-  [wallets.iconex]: {
-    id: 'iconex',
-    title: 'ICON Wallet',
-    icon: ICONex,
-  },
-  [wallets.hana]: {
-    id: 'hana',
-    title: 'ICON Wallet',
-    icon: Hana,
-  },
-  [wallets.near]: {
-    id: 'near',
-    title: 'NEAR Wallet',
-    icon: NEAR,
-  },
-};
-
 const Header = () => {
+  const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState(
-    localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) || wallets.metamask,
-  );
   const [loading, setLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showConnector, setShowConnector] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [checkingICONexInstalled, setCheckingICONexInstalled] = useState(true);
+
+  const walletList = [
+    {
+      id: wallets.metamask,
+      title: 'MetaMask Wallet',
+      icon: MetaMask,
+      onClick: () => handleSelectWallet(wallets.metamask),
+      isInstalled: EthereumInstance.isMetaMaskInstalled(),
+      // disabled: true,
+    },
+    {
+      id: wallets.near,
+      title: 'NEAR Wallet',
+      icon: NEAR,
+      onClick: () => handleSelectWallet(wallets.near),
+      isInstalled: true,
+      disabled: true,
+    },
+    {
+      id: wallets.iconex,
+      title: 'ICON Wallet',
+      icon: ICONex,
+      onClick: () => handleSelectWallet(wallets.iconex),
+      isInstalled: isICONexInstalled(),
+      isCheckingInstalled: checkingICONexInstalled,
+    },
+  ];
+
+  const defaultWallet = walletList.filter((w) => !w.disabled)[0].id;
+  const [selectedWallet, setSelectedWallet] = useState(
+    localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE) || defaultWallet,
+  );
 
   useEffect(() => {
     switch (localStorage.getItem(CONNECTED_WALLET_LOCAL_STORAGE)) {
       case wallets.metamask:
         EthereumInstance.getEthereumAccounts();
         break;
-      // case wallets.near:
-      //   getNearAccountInfo();
+      case wallets.near:
+        getNearAccountInfo();
     }
 
     // wait after 2s for initial addICONexListener
@@ -248,6 +254,11 @@ const Header = () => {
   const { resetAccountInfo } = useDispatch(({ account: { resetAccountInfo } }) => ({
     resetAccountInfo,
   }));
+
+  // handle callback url from NEAR wallet
+  useEffect(() => {
+    if (address) handleNEARCallback(location);
+  }, [address]);
 
   useEffect(() => {
     if (address) {
@@ -279,18 +290,19 @@ const Header = () => {
         break;
 
       case wallets.metamask:
+        if (!EthereumInstance.isMetaMaskInstalled()) return;
         const chainId = await EthereumInstance.connectMetaMaskWallet();
         if (chainId) {
-          await delay(1500);
+          await delay(1500); // waiting for switchChainInMetamask
           await EthereumInstance.getEthereumAccounts(chainId);
         }
         setLoading(false);
         break;
 
-      // case wallets.near:
-      //   await connect();
-      //   setLoading(false);
-      //   break;
+      case wallets.near:
+        await connect();
+        setLoading(false);
+        break;
     }
     // must be set after all
     localStorage.setItem(CONNECTED_WALLET_LOCAL_STORAGE, selectedWallet);
@@ -300,13 +312,16 @@ const Header = () => {
   };
 
   const onDisconnectWallet = () => {
+    signOut();
     resetTransferStep();
     resetAccountInfo();
     toggleModal();
   };
 
   const onSwitchWallet = () => {
+    signOut();
     resetTransferStep();
+    resetAccountInfo();
     setShowDetail(false);
     setShowModal(true);
     setShowConnector(true);
@@ -315,6 +330,13 @@ const Header = () => {
   const onAvatarClicked = () => {
     setShowDetail(true);
     setShowModal(true);
+  };
+
+  const onConnectAWallet = () => {
+    setLoading(false);
+    setSelectedWallet(defaultWallet);
+    localStorage.removeItem(CONNECTED_WALLET_LOCAL_STORAGE);
+    toggleModal();
   };
 
   return (
@@ -330,14 +352,21 @@ const Header = () => {
                 display
                 setDisplay={setShowModal}
               >
-                {selectedWallet === wallets.iconex && (
+                {((selectedWallet == wallets.metamask && !EthereumInstance.isMetaMaskInstalled()) ||
+                  ((selectedWallet == wallets.iconex || selectedWallet == wallets.hana) &&
+                    !isICONexInstalled())) && (
                   <a
                     className="extension-link"
-                    href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl"
+                    href={
+                      selectedWallet == wallets.metamask
+                        ? 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'
+                        : 'https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl'
+                    }
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Or click here to install Hana wallet
+                    Or click here to install{' '}
+                    {selectedWallet == wallets.metamask ? 'MetaMask' : 'Hana'} wallet
                   </a>
                 )}
               </Modal>
@@ -347,7 +376,7 @@ const Header = () => {
                   <Modal
                     display
                     setDisplay={setShowModal}
-                    title={wallet && mockWallets[wallet].title}
+                    title={wallet && walletList.find((w) => wallet == w.id)?.title}
                   >
                     <WalletDetails
                       networkName={currentNetwork}
@@ -368,21 +397,15 @@ const Header = () => {
                     setDisplay={setShowModal}
                   >
                     <div className="connect-a-wallet-card">
-                      <WalletSelector
-                        type={wallets.metamask}
-                        wallet={mockWallets}
-                        active={selectedWallet == wallets.metamask}
-                        onClick={() => handleSelectWallet(wallets.metamask)}
-                        isInstalled={EthereumInstance.isMetaMaskInstalled()}
-                      />
-                      <WalletSelector
-                        type={wallets.iconex}
-                        wallet={mockWallets}
-                        active={selectedWallet == wallets.iconex}
-                        onClick={() => handleSelectWallet(wallets.iconex)}
-                        isCheckingInstalled={checkingICONexInstalled}
-                        isInstalled={isICONexInstalled()}
-                      />
+                      {walletList
+                        .filter((w) => !w.disabled)
+                        .map((wallet) => (
+                          <WalletSelector
+                            key={wallet.id}
+                            {...wallet}
+                            active={selectedWallet === wallets[wallet.id.toLowerCase()]}
+                          />
+                        ))}
                     </div>
                   </Modal>
                 )}
@@ -416,7 +439,7 @@ const Header = () => {
               </span>
             </div>
           ) : (
-            <PrimaryButton className="connect-to-wallet-btn" onClick={toggleModal}>
+            <PrimaryButton className="connect-to-wallet-btn" onClick={onConnectAWallet}>
               Connect a Wallet
             </PrimaryButton>
           )}

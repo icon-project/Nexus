@@ -88,7 +88,7 @@ describe('MetaMask/services', () => {
       .spyOn(ABI, 'encodeFunctionData')
       .mockImplementation(() => functionName);
 
-    const params = await transfer({ value: amount, to: toAddress }, false);
+    const params = await transfer({ value: amount, to: toAddress }, false, 'ICX');
 
     expect(window[constants.signingActions.globalName]).toEqual(constants.signingActions.approve);
     expect(encodeFunctionDataSpy).toHaveBeenCalledWith(functionName, [
@@ -119,7 +119,7 @@ describe('MetaMask/services', () => {
 
     expect(window[constants.signingActions.globalName]).toEqual(constants.signingActions.transfer);
     expect(encodeFunctionDataSpy).toHaveBeenCalledWith(functionName, [
-      coinName,
+      'btp-0x2.icon-' + coinName,
       ethers.utils.parseEther(amount)._hex,
       expect.stringMatching(/(^btp:\/\/)*(\/hx6d338536ac11a0a2db06fb21fe8903e617a6764d)$/),
     ]);

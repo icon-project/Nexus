@@ -27,6 +27,7 @@ function Routes() {
             <Redirect from="/" to="/transfer" exact />
             <Route path="/transfer" exact component={Transfer} />
             <Route path="/history" exact component={TransferHistory} />
+            <Route path="/history/:txHash" exact component={TransferHistory} />
             <Route path="/network" exact component={NetworkPage} />
             <Route path="/terms-of-use" exact component={TermsOfUse} />
             <Route path={E2ETestingRoute} exact component={E2ETestingSetup} />

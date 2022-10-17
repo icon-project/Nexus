@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelect } from 'hooks/useRematch';
 import styled from 'styled-components/macro';
 import dayjs from 'dayjs';
@@ -20,8 +21,12 @@ import { TextWithIcon } from 'components/TextWithIcon';
 import { Text } from 'components/Typography';
 
 import { toSeparatedNumberString, hashShortener } from 'utils/app';
-import { serverEndpoint } from 'connectors/constants';
-import { chainList, getTokenList } from 'connectors/chainConfigs';
+import {
+  getTokenList,
+  getCustomizedChainList,
+  chainList,
+  chainConfigs,
+} from 'connectors/chainConfigs';
 import { txStatus } from 'utils/constants';
 
 import VectorSrc from 'assets/images/vector.svg';
@@ -199,26 +204,30 @@ const TransferHistory = () => {
   const [pagination, setPagination] = useState({ totalItem: 0, limit: 20 });
   const [isFetching, setIsFetching] = useState(true);
 
+  const {
+    accountInfo: { id: networkID },
+  } = useSelect(({ account: { selectAccountInfo } }) => ({
+    accountInfo: selectAccountInfo,
+  }));
+
   const [filters, setFilters] = useState({
     assetName: '',
-    from: '',
+    from: networkID || '',
     to: '',
     status: '',
   });
 
-  const { handleError, getNetworks } = useDispatch(
-    ({ modal: { handleError }, network: { getNetworks } }) => ({
-      handleError,
-      getNetworks,
-    }),
-  );
-  const { networks } = useSelect(({ network: { selectNetwotks } }) => ({
-    networks: selectNetwotks,
+  let { txHash } = useParams();
+
+  const { handleError } = useDispatch(({ modal: { handleError } }) => ({
+    handleError,
   }));
 
   useEffect(() => {
-    getNetworks({ cache: true });
-  }, [getNetworks]);
+    if (txHash) {
+      setShowDetails(true);
+    }
+  }, [txHash]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
@@ -242,7 +251,7 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All assets</Text>,
       renderItem: () => <Text className="md">All assets</Text>,
     },
-    ...[...getTokenList(), ...chainList].map(({ symbol, COIN_SYMBOL }) => {
+    ...[...getTokenList(), ...getCustomizedChainList()].map(({ symbol, COIN_SYMBOL }) => {
       const value = COIN_SYMBOL || symbol;
 
       return {
@@ -272,17 +281,15 @@ const TransferHistory = () => {
       renderLabel: () => <Text className="md">All networks</Text>,
       renderItem: () => <Text className="md">All networks</Text>,
     },
+    ...chainList.map(({ CHAIN_NAME, id, NETWORK_ADDRESS }) => {
+      return {
+        value: NETWORK_ADDRESS?.split('.')[0],
+        label: CHAIN_NAME,
+        renderLabel: () => <TextWithIcon icon={id}>{CHAIN_NAME}</TextWithIcon>,
+        renderItem: () => <TextWithIcon icon={id}>{CHAIN_NAME}</TextWithIcon>,
+      };
+    }),
   ];
-
-  networks.forEach((network) => {
-    const iconURL = serverEndpoint + network.pathLogo.substring(1);
-    networkOptions.push({
-      value: network.id,
-      label: network.name,
-      renderLabel: () => <TextWithIcon iconURL={iconURL}>{network.name}</TextWithIcon>,
-      renderItem: () => <TextWithIcon iconURL={iconURL}>{network.name}</TextWithIcon>,
-    });
-  });
 
   const fetchDataHandler = async ({ page, assetName, from, to, status }) => {
     try {
@@ -337,6 +344,7 @@ const TransferHistory = () => {
           </div>
           <div className="select-network">
             <SelectWithBorder
+              initialValue={chainConfigs[networkID]?.NETWORK_ADDRESS?.split('.')[0]}
               onChange={(e) => onSelectChange(e, 'from')}
               label="Sending from"
               width="326px"
@@ -374,8 +382,11 @@ const TransferHistory = () => {
       />
       {showDetails && (
         <HistoryDetails
-          txHash={selectedRow.txHash}
-          onClose={() => setShowDetails(false)}
+          txHash={selectedRow.txHash || txHash}
+          onClose={() => {
+            setShowDetails(false);
+            window.history.replaceState(null, '', '/history');
+          }}
         ></HistoryDetails>
       )}
     </TransferHistoryStyled>
