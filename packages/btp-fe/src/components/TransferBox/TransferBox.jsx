@@ -98,6 +98,7 @@ export const TransferBox = () => {
                   sendingInfo={sendingInfo}
                   account={account}
                   form={form}
+                  values={values}
                   BTPFee={BTPFee}
                 />
               </div>

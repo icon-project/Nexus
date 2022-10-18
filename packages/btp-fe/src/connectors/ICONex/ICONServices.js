@@ -257,7 +257,10 @@ export const getBTPfee = async (symbol, toNetwork, currentNetwork, currentNetwor
     },
   });
 
-  return formatUnitsBySymbol(fee.fixedFee, symbol);
+  return {
+    fixedFee: +formatUnitsBySymbol(fee.fixedFee, symbol),
+    feeNumerator: +IconConverter.toNumber(fee.feeNumerator) / 10000,
+  };
 };
 
 /**

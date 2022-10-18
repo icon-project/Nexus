@@ -81,10 +81,10 @@ export const formatSymbol = (symbol) => {
   return `btp-${chainConfigs[chain.tokenOf || chain.id].NETWORK_ADDRESS}-${symbol}`;
 };
 
-export const parseUnitsBySymbol = (amount, symbol) => {
+export const parseUnitsBySymbol = (amount, symbol, toHex = true) => {
   const chain = findChainbySymbol(symbol);
   const result = ethers.utils.parseUnits(amount, chain.decimals || 18).toString();
-  return chain.decimals === 24 ? result : IconConverter.toHex(result);
+  return !toHex || chain.decimals === 24 ? result : IconConverter.toHex(result);
 };
 
 export const formatUnitsBySymbol = (amount, symbol) => {
