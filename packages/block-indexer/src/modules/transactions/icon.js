@@ -22,6 +22,7 @@ const web3 = new Web3(process.env.MOONBEAM_API_URL);
 const logger = createLogger();
 const { logTxHashToSlack } = require('../../slack-bot');
 const { getBMCAddressesMap } = require('../common/addresses');
+const { getLoopUnitByTokenName } = require('../common/loop-units');
 
 /*
 TransferEnd(Address _sender, BigInteger _sn, BigInteger _code, byte[] _msg);
@@ -116,8 +117,9 @@ async function handleTransactionStartEvent(event, txResult, transaction) {
   const details = decode(data[2])[0];
   const tokenNameRaw = details[0].toString('utf8');
   const tokenName = tokenNameRaw?.split('-')?.[2];
-  const value = parseInt(details[1].toString('hex'), 16) / ICX_LOOP_UNIT;
-  const btpFee = parseInt(details[2].toString('hex'), 16) / ICX_LOOP_UNIT;
+  const loopUnit = getLoopUnitByTokenName(tokenName);
+  const value = parseInt(details[1].toString('hex'), 16) / loopUnit;
+  const btpFee = parseInt(details[2].toString('hex'), 16) / loopUnit;
 
   // Ref: https://www.icondev.io/docs/step-estimation#transaction-fee
   const transObj = {

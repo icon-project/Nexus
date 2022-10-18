@@ -8,7 +8,7 @@ function setLoopUnitConverter() {
 }
 
 function getLoopUnitByTokenName(tokenName) {
-  return loopUnitConverter.get(tokenName.toLocaleUpperCase()) || 1;
+  return loopUnitConverter.get(tokenName.toLocaleUpperCase()) || ICX_LOOP_UNIT;
 }
 
 module.exports = {

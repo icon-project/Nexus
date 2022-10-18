@@ -16,7 +16,7 @@ const logger = createLogger();
 async function start(indexerName) {
   const tokens = await getRegisteredTokens();
   logger.info('Registered tokens: %O', tokens);
-
+  setLoopUnitConverter();
   const name = indexerName.toUpperCase();
   switch (name) {
     case 'ICON': {
@@ -65,7 +65,6 @@ async function start(indexerName) {
       break;
     }
     case 'NEAR':
-      setLoopUnitConverter();
       nearIndexer.start();
       break;
 
