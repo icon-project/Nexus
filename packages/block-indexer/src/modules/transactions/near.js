@@ -45,7 +45,7 @@ async function handleTransactionStartEvent(tx, txResult, block) {
           value: amount,
           toAddress: formatReceiverAddress(data.receiver_address, sourceNetworkId, fullTokenName || tokenName),
           txHash: tx.hash,
-          status: TRANSACTION_STATUS.pending,
+          status: data.code === 0 ? TRANSACTION_STATUS.pending : TRANSACTION_STATUS.failed,
           blockTime: Math.floor(block.header.timestamp / 1000000), // microsecond to millisecond
           networkId: process.env.NEAR_NETWORK_ID,
           btpFee,
