@@ -203,7 +203,7 @@ const Header = () => {
       icon: MetaMask,
       onClick: () => handleSelectWallet(wallets.metamask),
       isInstalled: EthereumInstance.isMetaMaskInstalled(),
-      // disabled: true,
+      disabled: true,
     },
     {
       id: wallets.near,

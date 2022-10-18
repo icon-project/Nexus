@@ -171,7 +171,7 @@ export const deposit = async (amount, to, coinName, isNativeCoin) => {
       ...payload,
       args: {
         receiver_id: chainConfigs.NEAR.BTS_CORE,
-        amount: parseUnitsBySymbol(amount, coinName),
+        amount: parseUnitsBySymbol(amount, coinName, false),
         msg: '',
       },
       amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR
@@ -196,7 +196,7 @@ export const transfer = async ({ value, to, coinName }, isSendingNativeCoin) => 
     const transferResult = await functionCall('transfer', {
       coin_name: formatSymbol(searchParams.get('coinName')),
       destination: 'btp://' + chainConfigs.ICON?.NETWORK_ADDRESS + '/' + searchParams.get('to'),
-      amount: parseUnitsBySymbol(searchParams.get('amount'), searchParams.get('coinName')),
+      amount: parseUnitsBySymbol(searchParams.get('amount'), searchParams.get('coinName'), false),
     });
 
     if (transferResult?.transaction_outcome?.outcome?.status?.SuccessReceiptId) {
@@ -237,7 +237,7 @@ export const getUsableBalance = async (symbol) => {
   const contract = await getContractInstance();
 
   const result = await contract.balance_of({
-    owner_id: wallet.getAccountId(),
+    account_id: wallet.getAccountId(),
     coin_name: formatSymbol(symbol),
   });
 
@@ -249,7 +249,7 @@ export const withdraw = async (symbol, amount) => {
     callbackUrl: location.origin + location.pathname,
     args: {
       coin_name: formatSymbol(symbol),
-      amount: parseUnitsBySymbol(amount, symbol),
+      amount: parseUnitsBySymbol(amount, symbol, false),
     },
     gas: chainConfigs.NEAR?.GAS_LIMIT,
     amount: '1', // Requires attached deposit of exactly 1 yoctoNEAR

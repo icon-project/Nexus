@@ -6,7 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useDispatch } from 'hooks/useRematch';
 import { useListenForSuccessTransaction } from 'hooks/useListenForSuccessTransaction';
 
-import { hashShortener, toSeparatedNumberString } from 'utils/app';
+import { hashShortener, toSeparatedNumberString, calculateBTPfee, roundNumber } from 'utils/app';
 import { toChecksumAddress } from 'connectors/MetaMask/utils';
 import { chainConfigs } from 'connectors/chainConfigs';
 import { getService } from 'services/transfer';
@@ -137,6 +137,8 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, usd
     getService()?.transfer(tx, isSendingNativeCoin, token);
   };
 
+  const calculatedBTPfee = calculateBTPfee(BTPFee, tokenAmount);
+
   return (
     <Wrapper>
       <Header className="sm bold heading">Fee & Confirmation</Header>
@@ -178,7 +180,7 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, usd
         </div>
         <div className="transfer-fee">
           <Text className="md">BTP transfer fee</Text>
-          <Text className="md bright">{BTPFee}</Text>
+          <Text className="md bright">{roundNumber(calculatedBTPfee, 6)}</Text>
         </div>
       </Details>
 
@@ -186,7 +188,7 @@ export const Approval = memo(({ setStep, values, sendingInfo, account, form, usd
         <div className="total-receive">
           <SubTitle className="lg bold">Total receive</SubTitle>
           <SubTitle className="lg bold">
-            {(tokenAmount - BTPFee).toPrecision(4)} {token}
+            {(tokenAmount - calculatedBTPfee).toPrecision(4)} {token}
           </SubTitle>
         </div>
         <Text className="xs" color={colors.graySubText}>

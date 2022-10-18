@@ -54,4 +54,8 @@ const delay = (delayInms = 1000) => {
   });
 };
 
-export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString, delay };
+const calculateBTPfee = (fee, amount = 0) => {
+  return fee.fixedFee ? fee.fixedFee + +amount * fee.feeNumerator : 0;
+};
+
+export { isEmpty, hashShortener, shortenNumber, toSeparatedNumberString, delay, calculateBTPfee };

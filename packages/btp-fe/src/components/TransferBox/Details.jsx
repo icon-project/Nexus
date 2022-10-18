@@ -12,7 +12,7 @@ import { media } from 'components/Styles/Media';
 
 import { useTokenBalance } from 'hooks/useTokenBalance';
 import { composeValidators, maxValue, minValueWithFixedFee } from 'utils/inputValidation';
-import { toSeparatedNumberString } from 'utils/app';
+import { toSeparatedNumberString, calculateBTPfee } from 'utils/app';
 import { chainConfigs } from 'connectors/chainConfigs';
 
 const Wrapper = styled.div`
@@ -118,6 +118,7 @@ export const Details = memo(
     usdRate,
     form,
     BTPFee,
+    values,
   }) => {
     const { token, network } = sendingInfo;
 
@@ -125,7 +126,7 @@ export const Details = memo(
     const [currentBalance] = useTokenBalance(token, step, step !== 0);
 
     const max = maxValue(currentBalance, 'Insufficient balance');
-    const minFixedFee = minValueWithFixedFee(BTPFee);
+    const minFixedFee = minValueWithFixedFee(calculateBTPfee(BTPFee, values.tokenAmount));
 
     return (
       <Wrapper>
