@@ -18,6 +18,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> Development for Nexus is paused due to market conditions. This repository has been archived as a result. Please use the smart contracts for making transfers.
+
 # Admin boilerplate
 
 Require install: node (>10), yarn, lerna
